@@ -1,0 +1,8 @@
+# c++
+build
+
+# python
+*.pyc
+
+# vim
+*.session
