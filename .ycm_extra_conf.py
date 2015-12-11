@@ -47,6 +47,8 @@ flags = [
 './external/catch/include',
 '-I',
 './include',
+'-I',
+'./src',
 ]
 
 
