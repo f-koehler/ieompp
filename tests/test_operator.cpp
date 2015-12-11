@@ -3,7 +3,7 @@
 
 #include "hubbard/algebra.hpp"
 
-TEST_CASE("anticommutator", "") {
+TEST_CASE("anticommutator", "[algebra] [operator]") {
     using Operator = Operator<int, bool>;
     SECTION("creator & creator") {
         Operator a(true, 0, true), b(true, 0, true);
