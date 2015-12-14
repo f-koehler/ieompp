@@ -38,3 +38,5 @@ if(${hubbard_ENABLE_TESTS})
     git_submodule(external/catch)
     add_subdirectory(tests)
 endif()
+
+add_executable(main main.cpp)
