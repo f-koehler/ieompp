@@ -2,6 +2,7 @@
 #define ALGEBRA_HPP_
 
 #include <algorithm>
+#include <cmath>
 #include <complex>
 #include <ostream>
 #include <vector>

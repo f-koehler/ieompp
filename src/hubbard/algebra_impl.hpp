@@ -78,11 +78,12 @@ TermList<Term> commutate(const Term& a, const Term& b) {
             new_term.prefactor = prefactor*coefficient;
             auto& new_ops = new_term.operators;
 
-            // k-1 instead of k-2 because the second iterator is an end iterator
-            std::copy(a_ops.begin(), a_ops.begin()+k-1, std::back_inserter(new_ops));
-            std::copy(b_ops.begin(), b_ops.begin()+l-1, std::back_inserter(new_ops));
-            std::copy(a_ops.begin()+l+1, a_ops.end(), std::back_inserter(new_ops));
-            std::copy(b_ops.begin()+k+1, b_ops.end(), std::back_inserter(new_ops));
+            if(k > 1)
+                std::copy(a_ops.begin(), a_ops.begin()+k-1, std::back_inserter(new_ops));
+            if(l > 1)
+                std::copy(b_ops.begin(), b_ops.begin()+l-1, std::back_inserter(new_ops));
+            std::copy(b_ops.begin()+l, b_ops.end(), std::back_inserter(new_ops));
+            std::copy(a_ops.begin()+k, a_ops.end(), std::back_inserter(new_ops));
 
             list.emplace_back(new_term);
         }
@@ -101,7 +102,12 @@ std::ostream& operator<<(std::ostream& strm, const Operator<Index, Spin>& op) {
 
 template<typename Operator>
 std::ostream& operator<<(std::ostream& strm, const Term<Operator>& term) {
-    strm << "(" << term.prefactor.real() << "+" << term.prefactor.imag() << "i) \u22C5";
+    strm << "(" << term.prefactor.real();
+    if(term.prefactor.imag() < 0)
+        strm << "-";
+    else
+        strm << "+";
+    strm << std::abs(term.prefactor.imag()) << "i) \u22C5";
     for(auto& op : term.operators)
         strm << " " << op;
     return strm;
