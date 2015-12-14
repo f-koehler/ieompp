@@ -2,14 +2,14 @@
 
 
 template<typename Index, typename Spin>
-bool Operator<Index, Spin>::operator==(const Operator<Index, Spin>& rhs) const {
+inline bool Operator<Index, Spin>::operator==(const Operator<Index, Spin>& rhs) const {
     return (creator == rhs.creator)
         && (spin    == rhs.spin)
         && (index   == rhs.index);
 }
 
 template<typename Index, typename Spin>
-bool Operator<Index, Spin>::operator!=(const Operator<Index, Spin>& rhs) const {
+inline bool Operator<Index, Spin>::operator!=(const Operator<Index, Spin>& rhs) const {
     return (creator != rhs.creator)
         || (spin    != rhs.spin)
         || (index   != rhs.index);
@@ -23,45 +23,71 @@ inline bool anticommutates(const Operator& a, const Operator& b) {
 }
 
 
+template<typename Operator>
+inline bool Term<Operator>::same_operators(const Term<Operator>& rhs) const {
+    if(operators.size() != rhs.operators.size())
+        return false;
+    return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
+}
+
+template<typename Operator>
+inline bool Term<Operator>::operator==(const Term<Operator>& rhs) const {
+    return same_operators(rhs) && prefactor == rhs.prefactor;
+}
+
+template<typename Operator>
+inline bool Term<Operator>::operator!=(const Term<Operator>& rhs) const {
+    return !same_operators(rhs) || prefactor != rhs.prefactor;
+}
+
+
 template<typename Index, typename Spin>
 Operator<Index, Spin> make_creator(const Index& index, const Spin& spin) {
-    return std::move(Operator<Index, Spin>{ true, index, spin });
+    return Operator<Index, Spin>{ true, index, spin };
 }
 
 template<typename Index, typename Spin>
 Operator<Index, Spin> make_annihilator(const Index& index, const Spin& spin) {
-    return std::move(Operator<Index, Spin>{ false, index, spin });
+    return Operator<Index, Spin>{ false, index, spin };
 }
 
 
 template<typename Term>
-void commutator(const Term& a, const Term& b) {
+TermList<Term> commutate(const Term& a, const Term& b) {
     const auto& a_ops = a.operators;
     const auto& b_ops = b.operators;
     const auto n = a_ops.size();
     const auto m = b_ops.size();
     using UInt = decltype(a_ops.size());
 
-    const auto prefactor = a.prefacor*b.prefacor;
+    assert(m*n % 2 == 0);
+
+    TermList<Term> list;
+
+    const auto prefactor = a.prefactor*b.prefactor;
     for(UInt k = 1; k <= n; ++k) {
         for(UInt l = 1; l <= m; ++l) {
-            if(anticommutates(a[k-1], b[l-1]))
+            if(anticommutates(a_ops[k-1], b_ops[l-1]))
                 continue;
 
-            int coefficient = 1;
+            double coefficient = 1.;
             if((m*(n-k)+l-1) % 2)
-                coefficient = -1;
+                coefficient = -1.;
 
             Term&& new_term = Term();
-            new_term.prefacor = prefactor*coefficient;
+            new_term.prefactor = prefactor*coefficient;
             auto& new_ops = new_term.operators;
 
-            std::copy(a_ops.begin(), a_ops.end()+k, std::back_inserter(new_ops));
-            std::copy(b_ops.begin(), b_ops.end()+l, std::back_inserter(new_ops));
-            std::copy(a_ops.begin()+l, a_ops.end(), std::back_inserter(new_ops));
-            std::copy(b_ops.begin()+k, b_ops.end(), std::back_inserter(new_ops));
+            // k-1 instead of k-2 because the second iterator is an end iterator
+            std::copy(a_ops.begin(), a_ops.begin()+k-1, std::back_inserter(new_ops));
+            std::copy(b_ops.begin(), b_ops.begin()+l-1, std::back_inserter(new_ops));
+            std::copy(a_ops.begin()+l+1, a_ops.end(), std::back_inserter(new_ops));
+            std::copy(b_ops.begin()+k+1, b_ops.end(), std::back_inserter(new_ops));
+
+            list.emplace_back(new_term);
         }
     }
+    return list;
 }
 
 template<typename Index, typename Spin>

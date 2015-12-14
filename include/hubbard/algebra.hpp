@@ -17,14 +17,18 @@ struct Operator {
     Index index;
     Spin  spin;
 
-    bool operator==(const Operator& rhs) const;
-    bool operator!=(const Operator& rhs) const;
+    inline bool operator==(const Operator& rhs) const;
+    inline bool operator!=(const Operator& rhs) const;
 };
 
 template<typename Operator>
 struct Term {
     Complex prefactor;
     std::vector<Operator> operators;
+
+    inline bool same_operators(const Term& rhs) const;
+    inline bool operator==(const Term& rhs) const;
+    inline bool operator!=(const Term& rhs) const;
 };
 
 template<typename Term>
@@ -41,7 +45,7 @@ template<typename Operator>
 inline bool anticommutates(const Operator& a, const Operator& b);
 
 template<typename Term>
-void commutator(const Term& a, const Term& b);
+TermList<Term> commutate(const Term& a, const Term& b);
 
 
 template<typename Index, typename Spin>
