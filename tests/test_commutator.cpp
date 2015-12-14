@@ -49,10 +49,10 @@ TEST_CASE("anticommutates", "[algebra]") {
             make_annihilator(0, true),
             make_annihilator(0, true)
         );
-        REQUIRE(ret == false);
+        REQUIRE(ret == true);
 
         ret = anticommutates(
-            make_annihilator(0, true),
+            make_annihilator(0, false),
             make_annihilator(0, true)
         );
         REQUIRE(ret == true);
