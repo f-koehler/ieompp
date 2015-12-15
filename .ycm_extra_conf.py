@@ -46,6 +46,8 @@ flags = [
 '-I',
 './external/catch/include',
 '-I',
+'./external/benchmark/include',
+'-I',
 './include',
 '-I',
 './src',

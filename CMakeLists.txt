@@ -29,14 +29,20 @@ function(git_submodule DIR)
     endif()
 endfunction()
 
-option(hubbard_ENABLE_TESTS     "Option to enable unittests" ON)
-option(hubbard_ENABLE_COVERAGE  "Option to enable code coverage measurement" OFF)
-option(hubbard_ENABLE_COVERALLS "Option to enable coverage report to coveralls.io" OFF)
+option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
+option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
+option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
+option(hubbard_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
 
 if(${hubbard_ENABLE_TESTS})
     enable_testing()
     git_submodule(external/catch)
     add_subdirectory(tests)
+endif()
+
+if(${hubbard_ENABLE_BENCHMARKS})
+    git_submodule(external/benchmark)
+    add_subdirectory(benchmarks)
 endif()
 
 add_executable(main main.cpp)
