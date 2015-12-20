@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra.hpp"
+#include "hubbard/operators.hpp"
 #include <iostream>
 
-TEST_CASE("anticommutates", "[algebra]") {
+TEST_CASE("anticommutates", "[operators]") {
     SECTION("creator & creator") {
         auto ret = anticommutates(
             make_creator(0, true),
@@ -66,7 +66,7 @@ TEST_CASE("anticommutates", "[algebra]") {
     }
 }
 
-TEST_CASE("commutator", "[algebra]") {
+TEST_CASE("commutator", "[operators]") {
     using Operator = Operator<int, bool>;
     using Term = Term<Operator>;
 

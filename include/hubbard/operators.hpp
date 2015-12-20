@@ -1,5 +1,5 @@
-#ifndef ALGEBRA_HPP_
-#define ALGEBRA_HPP_
+#ifndef OPERATORS_HPP_
+#define OPERATORS_HPP_
 
 #include <algorithm>
 #include <cmath>
@@ -56,6 +56,6 @@ template<typename Operator>
 std::ostream& operator<<(std::ostream& strm, const Term<Operator>& term);
 
 
-#include "hubbard/algebra_impl.hpp"
+#include "hubbard/operators_impl.hpp"
 
 #endif

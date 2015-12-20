@@ -1,4 +1,4 @@
-#include "hubbard/algebra.hpp"
+#include "hubbard/operators.hpp"
 
 
 template<typename Index, typename Spin>
