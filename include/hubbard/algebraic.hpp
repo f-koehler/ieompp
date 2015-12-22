@@ -40,6 +40,6 @@ struct AlgebraicPrefactor {
     Complex prefactor;
 };
 
-#include "hubbard/algebraic.hpp"
+#include "hubbard/algebraic_impl.hpp"
 
 #endif

@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/operators.hpp"
+#include "hubbard/algebra.hpp"
 #include <iostream>
 
 TEST_CASE("anticommutates", "[operators]") {
