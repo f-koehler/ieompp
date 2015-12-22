@@ -1,5 +1,15 @@
 #include "hubbard/abstract/prefactor.hpp"
 
+inline bool Kronecker::operator==(const Kronecker& rhs) const {
+    return ((left == rhs.left)  && (right == rhs.right))
+        || ((left == rhs.right) && (right == rhs.left));
+}
+
+inline bool Kronecker::operator!=(const Kronecker& rhs) const {
+    return ((left != rhs.left)  || (right != rhs.right))
+        && ((left != rhs.right) || (right != rhs.left));
+}
+
 std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs) {
     strm << "\u03B4_{" << rhs.left << ", " << rhs.right << "}";
     return strm;

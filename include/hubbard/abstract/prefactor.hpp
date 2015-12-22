@@ -8,6 +8,9 @@
 
 struct Kronecker {
     std::string left, right;
+
+    inline bool operator==(const Kronecker& rhs) const;
+    inline bool operator!=(const Kronecker& rhs) const;
 };
 std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs);
 

@@ -10,8 +10,8 @@ using AbstractOperator = Operator<AbstractIndex, AbstractSpin>;
 using AbstractTerm = Term<AbstractOperator, AbstractPrefactor>;
 using AbstractTermList = TermList<AbstractTerm>;
 
-inline AbstractOperator make_algebraic_creator(const std::string& index, const std::string& spin);
-inline AbstractOperator make_algebraic_annihilator(const std::string& index, const std::string& spin);
+inline AbstractOperator make_abstract_creator(const std::string& index, const std::string& spin);
+inline AbstractOperator make_abstract_annihilator(const std::string& index, const std::string& spin);
 
 #include "hubbard/abstract/algebra_impl.hpp"
 

@@ -1,7 +1,10 @@
 include_directories(${CMAKE_SOURCE_DIR}/external/catch/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-set(unittests commutator)
+set(unittests
+    commutator
+    abstract
+)
 
 foreach(unittest ${unittests})
     add_executable(${unittest} "test_${unittest}.cpp")
