@@ -1,8 +1,8 @@
 #include "hubbard/operators.hpp"
 
 
-template<typename Operator>
-inline bool Term<Operator>::ordered() const { 
+template<typename Operator, typename Prefactor>
+inline bool Term<Operator, Prefactor>::ordered() const { 
     bool annihilator = false;
     for(auto& op : operators) {
         if(op.creator) {
@@ -14,8 +14,8 @@ inline bool Term<Operator>::ordered() const {
     return true;
 }
 
-template<typename Operator>
-inline bool Term<Operator>::same_operators(const Term<Operator>& rhs) const {
+template<typename Operator, typename Prefactor>
+inline bool Term<Operator, Prefactor>::same_operators(const Term<Operator, Prefactor>& rhs) const {
     if(operators.size() != rhs.operators.size())
         return false;
     return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
@@ -35,13 +35,13 @@ inline bool Operator<Index, Spin>::operator!=(const Operator<Index, Spin>& rhs) 
         || (index   != rhs.index);
 }
 
-template<typename Operator>
-inline bool Term<Operator>::operator==(const Term<Operator>& rhs) const {
+template<typename Operator, typename Prefactor>
+inline bool Term<Operator, Prefactor>::operator==(const Term<Operator, Prefactor>& rhs) const {
     return same_operators(rhs) && prefactor == rhs.prefactor;
 }
 
-template<typename Operator>
-inline bool Term<Operator>::operator!=(const Term<Operator>& rhs) const {
+template<typename Operator, typename Prefactor>
+inline bool Term<Operator, Prefactor>::operator!=(const Term<Operator, Prefactor>& rhs) const {
     return !same_operators(rhs) || prefactor != rhs.prefactor;
 }
 
@@ -113,14 +113,15 @@ std::ostream& operator<<(std::ostream& strm, const Operator<Index, Spin>& op) {
     return strm;
 }
 
-template<typename Operator>
-std::ostream& operator<<(std::ostream& strm, const Term<Operator>& term) {
-    strm << "(" << term.prefactor.real();
-    if(term.prefactor.imag() < 0)
-        strm << "-";
-    else
-        strm << "+";
-    strm << std::abs(term.prefactor.imag()) << "i) \u22C5";
+template<typename Operator, typename Prefactor>
+std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term) {
+    /* strm << "(" << term.prefactor.real(); */
+    /* if(term.prefactor.imag() < 0) */
+    /*     strm << "-"; */
+    /* else */
+    /*     strm << "+"; */
+    /* strm << std::abs(term.prefactor.imag()) << "i) \u22C5"; */
+    strm << term.prefactor << " \u22C5";
     for(auto& op : term.operators)
         strm << " " << op;
     return strm;

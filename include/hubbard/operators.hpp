@@ -18,9 +18,9 @@ struct Operator {
     inline bool operator!=(const Operator& rhs) const;
 };
 
-template<typename Operator>
+template<typename Operator, typename Prefactor = Complex>
 struct Term {
-    Complex prefactor;
+    Prefactor prefactor;
     std::vector<Operator> operators;
 
     inline bool same_operators(const Term& rhs) const;
@@ -50,8 +50,8 @@ TermList<Term> commutate(const Term& a, const Term& b);
 template<typename Index, typename Spin>
 std::ostream& operator<<(std::ostream& strm, const Operator<Index, Spin>& op);
 
-template<typename Operator>
-std::ostream& operator<<(std::ostream& strm, const Term<Operator>& term);
+template<typename Operator, typename Prefactor>
+std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term);
 
 
 #include "hubbard/operators_impl.hpp"
