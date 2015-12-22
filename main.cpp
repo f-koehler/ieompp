@@ -1,4 +1,4 @@
-#include "hubbard/algebra.hpp"
+#include "hubbard/operators.hpp"
 #include <iostream>
 using namespace std;
 

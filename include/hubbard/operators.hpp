@@ -3,14 +3,10 @@
 
 #include <algorithm>
 #include <cmath>
-#include <complex>
 #include <ostream>
 #include <vector>
 
-#include "hubbard/iterator_range.hpp"
-
-using Real = double;
-using Complex = std::complex<Real>;
+#include "hubbard/types.hpp"
 
 template<typename Index, typename Spin>
 struct Operator {
@@ -28,6 +24,8 @@ struct Term {
     std::vector<Operator> operators;
 
     inline bool same_operators(const Term& rhs) const;
+    inline bool ordered() const;
+
     inline bool operator==(const Term& rhs) const;
     inline bool operator!=(const Term& rhs) const;
 };

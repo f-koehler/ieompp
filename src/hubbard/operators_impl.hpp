@@ -1,6 +1,26 @@
 #include "hubbard/operators.hpp"
 
 
+template<typename Operator>
+inline bool Term<Operator>::ordered() const { 
+    bool annihilator = false;
+    for(auto& op : operators) {
+        if(op.creator) {
+            if(annihilator) return false;
+        } else {
+            annihilator = true;
+        }
+    }
+    return true;
+}
+
+template<typename Operator>
+inline bool Term<Operator>::same_operators(const Term<Operator>& rhs) const {
+    if(operators.size() != rhs.operators.size())
+        return false;
+    return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
+}
+
 template<typename Index, typename Spin>
 inline bool Operator<Index, Spin>::operator==(const Operator<Index, Spin>& rhs) const {
     return (creator == rhs.creator)
@@ -16,21 +36,6 @@ inline bool Operator<Index, Spin>::operator!=(const Operator<Index, Spin>& rhs) 
 }
 
 template<typename Operator>
-inline bool anticommutates(const Operator& a, const Operator& b) {
-    return (a.creator == b.creator)
-        || (a.spin    != b.spin)
-        || (a.index   != b.index);
-}
-
-
-template<typename Operator>
-inline bool Term<Operator>::same_operators(const Term<Operator>& rhs) const {
-    if(operators.size() != rhs.operators.size())
-        return false;
-    return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
-}
-
-template<typename Operator>
 inline bool Term<Operator>::operator==(const Term<Operator>& rhs) const {
     return same_operators(rhs) && prefactor == rhs.prefactor;
 }
@@ -38,6 +43,14 @@ inline bool Term<Operator>::operator==(const Term<Operator>& rhs) const {
 template<typename Operator>
 inline bool Term<Operator>::operator!=(const Term<Operator>& rhs) const {
     return !same_operators(rhs) || prefactor != rhs.prefactor;
+}
+
+
+template<typename Operator>
+inline bool anticommutates(const Operator& a, const Operator& b) {
+    return (a.creator == b.creator)
+        || (a.spin    != b.spin)
+        || (a.index   != b.index);
 }
 
 
