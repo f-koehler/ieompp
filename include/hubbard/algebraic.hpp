@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "hubbard/types.hpp"
+#include "hubbard/algebra.hpp"
 
 struct AlgebraicSpin {
     static const std::string Up, Down;
@@ -13,8 +14,8 @@ struct AlgebraicSpin {
 
     AlgebraicSpin(const std::string& spin);
 
-    bool operator==(const AlgebraicSpin& rhs) const;
-    bool operator!=(const AlgebraicSpin& rhs) const;
+    inline bool operator==(const AlgebraicSpin& rhs) const;
+    inline bool operator!=(const AlgebraicSpin& rhs) const;
 };
 
 std::ostream& operator<<(std::ostream& strm, const AlgebraicSpin& spin);
@@ -24,8 +25,8 @@ struct AlgebraicIndex {
 
     AlgebraicIndex(const std::string& index);
 
-    bool operator==(const AlgebraicIndex& rhs) const;
-    bool operator!=(const AlgebraicIndex& rhs) const;
+    inline bool operator==(const AlgebraicIndex& rhs) const;
+    inline bool operator!=(const AlgebraicIndex& rhs) const;
 };
 
 std::ostream& operator<<(std::ostream& strm, const AlgebraicIndex& index);
@@ -38,7 +39,22 @@ struct Kronecker {
 struct AlgebraicPrefactor {
     std::vector<Kronecker> kroneckers;
     Complex prefactor;
+
+    AlgebraicPrefactor& operator*=(const AlgebraicPrefactor& rhs);
+    AlgebraicPrefactor operator*(const AlgebraicPrefactor& rhs) const;
+
+    template<typename T>
+    AlgebraicPrefactor& operator*=(const T& rhs); 
+    template<typename T>
+    AlgebraicPrefactor operator*(const T& rhs) const;
 };
+
+using AlgebraicOperator = Operator<AlgebraicIndex, AlgebraicSpin>;
+using AlgebraicTerm = Term<AlgebraicOperator, AlgebraicPrefactor>;
+using AlgebraicTermList = TermList<AlgebraicTerm>;
+
+inline AlgebraicOperator make_algebraic_creator(const std::string& index, const std::string& spin);
+inline AlgebraicOperator make_algebraic_annihilator(const std::string& index, const std::string& spin);
 
 #include "hubbard/algebraic_impl.hpp"
 

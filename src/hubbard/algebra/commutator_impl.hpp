@@ -7,6 +7,11 @@ inline bool anticommutates(const Operator& a, const Operator& b) {
         || (a.index   != b.index);
 }
 
+template<typename Operator, typename Prefactor>
+inline Prefactor anticommutator(const Operator&, const Operator&) {
+    return -1;
+}
+
 template<typename Term>
 TermList<Term> commutate(const Term& a, const Term& b) {
     const auto& a_ops = a.operators;
