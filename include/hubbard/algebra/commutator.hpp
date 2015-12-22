@@ -1,5 +1,5 @@
-#ifndef COMMUTATOR_HPP_
-#define COMMUTATOR_HPP_
+#ifndef HUBBARD_ALGEBRA_COMMUTATOR_HPP_
+#define HUBBARD_ALGEBRA_COMMUTATOR_HPP_
 
 #include "hubbard/algebra/term.hpp"
 

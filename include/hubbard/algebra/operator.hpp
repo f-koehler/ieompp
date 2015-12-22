@@ -1,5 +1,5 @@
-#ifndef OPERATOR_HPP_
-#define OPERATOR_HPP_
+#ifndef HUBBARD_ALGEBRA_OPERATOR_HPP_
+#define HUBBARD_ALGEBRA_OPERATOR_HPP_
 
 #include <ostream>
 

@@ -1,5 +1,5 @@
-#ifndef TERM_HPP_
-#define TERM_HPP_
+#ifndef HUBBARD_ALGEBRA_TERM_HPP_
+#define HUBBARD_ALGEBRA_TERM_HPP_
 
 #include "hubbard/types.hpp"
 

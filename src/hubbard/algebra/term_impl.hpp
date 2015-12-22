@@ -33,7 +33,7 @@ inline bool Term<Operator, Prefactor>::operator!=(const Term<Operator, Prefactor
 
 template<typename Operator, typename Prefactor>
 std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term) {
-    strm << term.prefactor << " \u22C5";
+    strm << term.prefactor << "\u22C5";
     for(auto& op : term.operators)
         strm << " " << op;
     return strm;
