@@ -1,5 +1,10 @@
 #include "hubbard/abstract/prefactor.hpp"
 
+inline void Kronecker::order_indices() {
+    if(left < right) return;
+    std::swap(left, right);
+}
+
 inline bool Kronecker::operator==(const Kronecker& rhs) const {
     return ((left == rhs.left)  && (right == rhs.right))
         || ((left == rhs.right) && (right == rhs.left));
@@ -48,6 +53,15 @@ AbstractPrefactor AbstractPrefactor::operator*(const T& rhs) const {
     AbstractPrefactor result(*this);
     result.prefactor *= rhs;
     return result;
+}
+
+inline bool AbstractPrefactor::operator==(const AbstractPrefactor& rhs) const {
+    return (prefactor == rhs.prefactor) && (kroneckers.size() == rhs.kroneckers.size())
+           && std::equal(kroneckers.begin(), kroneckers.end(), rhs.kroneckers.begin());
+}
+inline bool AbstractPrefactor::operator!=(const AbstractPrefactor& rhs) const {
+    return (prefactor != rhs.prefactor) || (kroneckers.size() != rhs.kroneckers.size())
+           || !std::equal(kroneckers.begin(), kroneckers.end(), rhs.kroneckers.begin());
 }
 
 std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs) {

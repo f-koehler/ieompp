@@ -9,14 +9,16 @@
 struct Kronecker {
     std::string left, right;
 
+    inline void order_indices();
+
     inline bool operator==(const Kronecker& rhs) const;
     inline bool operator!=(const Kronecker& rhs) const;
 };
 std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs);
 
 struct AbstractPrefactor {
-    std::vector<Kronecker> kroneckers;
     Complex prefactor;
+    std::vector<Kronecker> kroneckers;
 
     AbstractPrefactor& operator*=(const AbstractPrefactor& rhs);
     AbstractPrefactor operator*(const AbstractPrefactor& rhs) const;
@@ -25,6 +27,11 @@ struct AbstractPrefactor {
     AbstractPrefactor& operator*=(const T& rhs); 
     template<typename T>
     AbstractPrefactor operator*(const T& rhs) const;
+
+    AbstractPrefactor& operator+=(const AbstractPrefactor& rhs);
+
+    inline bool operator==(const AbstractPrefactor& rhs) const;
+    inline bool operator!=(const AbstractPrefactor& rhs) const;
 };
 
 std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs);

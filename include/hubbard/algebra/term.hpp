@@ -7,6 +7,9 @@
 
 template<typename Operator, typename Prefactor = Complex>
 struct Term {
+    using OperatorType  = Operator;
+    using PrefactorType = Prefactor;
+
     Prefactor prefactor;
     std::vector<Operator> operators;
 
@@ -23,6 +26,12 @@ struct TermList : public std::vector<Term> {
 
 template<typename Operator, typename Prefactor>
 std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term);
+
+
+template <typename Prefactor, typename Operator>
+Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
+                                    const std::initializer_list<Operator>& operators);
+
 
 #include "hubbard/algebra/term_impl.hpp"
 

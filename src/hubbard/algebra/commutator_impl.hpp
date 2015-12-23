@@ -1,5 +1,7 @@
 #include "hubbard/algebra/commutator.hpp"
 
+#include <cassert>
+
 template<typename Operator>
 inline bool anticommutates(const Operator& a, const Operator& b) {
     return (a.creator == b.creator)
@@ -9,7 +11,7 @@ inline bool anticommutates(const Operator& a, const Operator& b) {
 
 template<typename Operator, typename Prefactor>
 inline Prefactor anticommutator(const Operator&, const Operator&) {
-    return -1;
+    return 1;
 }
 
 template<typename Term>
@@ -36,14 +38,15 @@ TermList<Term> commutate(const Term& a, const Term& b) {
 
             Term&& new_term = Term();
             new_term.prefactor = prefactor*coefficient;
+            new_term.prefactor *=
+                anticommutator<typename Term::OperatorType, typename Term::PrefactorType>(
+                    a_ops[k - 1], b_ops[l - 1]);
             auto& new_ops = new_term.operators;
 
-            if(k > 1)
-                std::copy(a_ops.begin(), a_ops.begin()+k-1, std::back_inserter(new_ops));
-            if(l > 1)
-                std::copy(b_ops.begin(), b_ops.begin()+l-1, std::back_inserter(new_ops));
-            std::copy(b_ops.begin()+l, b_ops.end(), std::back_inserter(new_ops));
-            std::copy(a_ops.begin()+k, a_ops.end(), std::back_inserter(new_ops));
+            if(k > 1) std::copy(a_ops.begin(), a_ops.begin() + k - 1, std::back_inserter(new_ops));
+            if(l > 1) std::copy(b_ops.begin(), b_ops.begin() + l - 1, std::back_inserter(new_ops));
+            std::copy(b_ops.begin() + l, b_ops.end(), std::back_inserter(new_ops));
+            std::copy(a_ops.begin() + k, a_ops.end(), std::back_inserter(new_ops));
 
             list.emplace_back(new_term);
         }

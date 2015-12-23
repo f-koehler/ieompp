@@ -38,3 +38,11 @@ std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& te
         strm << " " << op;
     return strm;
 }
+
+
+template <typename Prefactor, typename Operator>
+Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
+                                    const std::initializer_list<Operator>& operators)
+{
+    return Term<Operator, Prefactor>{ prefactor, operators };
+}
