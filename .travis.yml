@@ -1,17 +1,17 @@
 language: cpp
-sudo: required
+sudo: false
 compiler:
-    - gcc
+    # - gcc
     - clang
-before_install:
-    - sudo apt-get install software-properties-common
-    - sudo add-apt-repository ppa:george-edison55/cmake-3.x
-    - sudo apt-get update
 install:
-    - sudo apt-get upgrade
+    - tools/travis-cmake.sh
+    - export PATH=$PWD/cmake-3.4.1/dist/bin:$PATH
 script:
     - mkdir build
     - cd build
     - cmake ..
     - make -j$(nproc)
     - ctest
+cache:
+    directories:
+        - cmake-3.4.1
