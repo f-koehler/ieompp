@@ -70,5 +70,6 @@ TEST_CASE("simplify_terms", "[simplify]") {
     SECTION("simplify_filter") {
         auto term1 = algebra::make_term(AbstractPrefactor{Complex(0., 0.), {Kronecker{"k", "q"}}},
                                         {make_creator("k", "s")});
+        AbstractTermList lst;
     }
 }

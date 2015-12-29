@@ -8,8 +8,8 @@
 
 namespace hubbard
 {
-    namespace abstract {
-
+    namespace abstract
+    {
         using AbstractOperator = algebra::Operator<AbstractIndex, AbstractSpin>;
 
         struct AbstractTerm : public algebra::Term<AbstractOperator, AbstractPrefactor> {

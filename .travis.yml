@@ -4,11 +4,12 @@ sudo: false
 addons:
     apt:
         sources:
+            - llvm-toolchain-precise-3.7
             - ubuntu-toolchain-r-test
         packages:
-            - gcc
-            - g++
-            - clang
+            - gcc-5
+            - g++-5
+            - clang-3.7
 
 cache:
     directories:
@@ -19,10 +20,13 @@ compiler:
     - clang
 
 install:
+    - if [ "$CXX" == "g++" ]; then export CXX=g++-5; export CC=gcc-5; fi
+    - if [ "$CXX" == "clang++" ]; then export CXX=clang++-3.7; export CC=clang-3.7; fi
     - tools/travis-cmake.sh
     - export PATH=$PWD/cmake-3.4.1/dist/bin:$PATH
 
 script:
+    - cmake --version
     - mkdir build
     - cd build
     - cmake ..

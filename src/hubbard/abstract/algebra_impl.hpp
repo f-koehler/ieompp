@@ -30,14 +30,12 @@ namespace hubbard
 
     namespace abstract
     {
-
         inline void AbstractTerm::order_kroneckers()
         {
             for(auto& k : prefactor.kroneckers) k.order_indices();
             std::sort(prefactor.kroneckers.begin(), prefactor.kroneckers.end(),
                       [](const Kronecker& k1, const Kronecker& k2) { return k1.left < k2.left; });
         }
-
 
         inline AbstractOperator make_creator(const std::string& index, const std::string& spin)
         {
