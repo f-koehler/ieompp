@@ -46,3 +46,4 @@ if(${hubbard_ENABLE_BENCHMARKS})
 endif()
 
 add_executable(main main.cpp)
+add_executable(cas src/cas.cpp)

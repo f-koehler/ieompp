@@ -3,6 +3,7 @@
 
 #include "hubbard/abstract/algebra.hpp"
 #include "hubbard/abstract/index.hpp"
+#include "hubbard/abstract/parse.hpp"
 #include "hubbard/abstract/prefactor.hpp"
 #include "hubbard/abstract/spin.hpp"
 
