@@ -6,19 +6,32 @@
 #include "hubbard/abstract/prefactor.hpp"
 #include "hubbard/abstract/spin.hpp"
 
-using AbstractOperator = Operator<AbstractIndex, AbstractSpin>;
+namespace hubbard
+{
+    namespace abstract {
 
-struct AbstractTerm : public Term<AbstractOperator, AbstractPrefactor> {
-    inline void order_kroneckers();
-};
+        using AbstractOperator = algebra::Operator<AbstractIndex, AbstractSpin>;
 
-using AbstractTermList = TermList<AbstractTerm>;
+        struct AbstractTerm : public algebra::Term<AbstractOperator, AbstractPrefactor> {
+            inline void order_kroneckers();
+        };
 
-inline AbstractOperator make_abstract_creator(const std::string& index, const std::string& spin);
-inline AbstractOperator make_abstract_annihilator(const std::string& index,
-                                                  const std::string& spin);
+        using AbstractTermList = algebra::TermList<AbstractTerm>;
 
-AbstractTermList& simplify(AbstractTermList& terms);
+        inline AbstractOperator make_creator(const std::string& index, const std::string& spin);
+        inline AbstractOperator make_annihilator(const std::string& index, const std::string& spin);
+
+
+        namespace simplify
+        {
+            inline AbstractTermList& order(AbstractTermList& terms);
+            inline AbstractTermList& join(AbstractTermList& terms);
+            inline AbstractTermList& filter(AbstractTermList& terms);
+        }
+
+        inline AbstractTermList& simplify_terms(AbstractTermList& terms);
+    }
+}
 
 #include "hubbard/abstract/algebra_impl.hpp"
 

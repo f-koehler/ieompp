@@ -1,21 +1,23 @@
 #include "hubbard/abstract/spin.hpp"
 
-const std::string AbstractSpin::Up   = "\u2191";
-const std::string AbstractSpin::Down = "\u2193";
+namespace hubbard
+{
+    namespace abstract
+    {
 
-AbstractSpin::AbstractSpin(const std::string& s)
-    : spin(s)
-{}
+        const std::string AbstractSpin::Up   = "\u2191";
+        const std::string AbstractSpin::Down = "\u2193";
 
-inline bool AbstractSpin::operator==(const AbstractSpin& rhs) const {
-    return spin == rhs.spin;
-}
+        AbstractSpin::AbstractSpin(const std::string& s) : spin(s) {}
 
-inline bool AbstractSpin::operator!=(const AbstractSpin& rhs) const {
-    return spin != rhs.spin;
-}
+        inline bool AbstractSpin::operator==(const AbstractSpin& rhs) const { return spin == rhs.spin; }
 
-std::ostream& operator<<(std::ostream& strm, const AbstractSpin& spin) {
-    strm << spin.spin;
-    return strm;
+        inline bool AbstractSpin::operator!=(const AbstractSpin& rhs) const { return spin != rhs.spin; }
+
+        std::ostream& operator<<(std::ostream& strm, const AbstractSpin& spin)
+        {
+            strm << spin.spin;
+            return strm;
+        }
+    }
 }

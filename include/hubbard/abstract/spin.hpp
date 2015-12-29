@@ -3,17 +3,24 @@
 
 #include <string>
 
-struct AbstractSpin {
-    static const std::string Up, Down;
-    std::string spin;
+namespace hubbard
+{
+    namespace abstract
+    {
 
-    AbstractSpin(const std::string& spin);
+        struct AbstractSpin {
+            static const std::string Up, Down;
+            std::string spin;
 
-    inline bool operator==(const AbstractSpin& rhs) const;
-    inline bool operator!=(const AbstractSpin& rhs) const;
-};
+            AbstractSpin(const std::string& spin);
 
-std::ostream& operator<<(std::ostream& strm, const AbstractSpin& spin);
+            inline bool operator==(const AbstractSpin& rhs) const;
+            inline bool operator!=(const AbstractSpin& rhs) const;
+        };
+
+        std::ostream& operator<<(std::ostream& strm, const AbstractSpin& spin);
+    }
+}
 
 #include "hubbard/abstract/spin_impl.hpp"
 

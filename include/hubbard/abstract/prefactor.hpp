@@ -6,35 +6,45 @@
 #include <string>
 #include <vector>
 
-struct Kronecker {
-    std::string left, right;
+namespace hubbard
+{
+    namespace abstract
+    {
 
-    inline void order_indices();
+        struct Kronecker {
+            std::string left, right;
 
-    inline bool operator==(const Kronecker& rhs) const;
-    inline bool operator!=(const Kronecker& rhs) const;
-};
-std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs);
+            inline void order_indices();
 
-struct AbstractPrefactor {
-    Complex prefactor;
-    std::vector<Kronecker> kroneckers;
+            inline bool operator==(const Kronecker& rhs) const;
+            inline bool operator!=(const Kronecker& rhs) const;
+        };
+        std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs);
 
-    AbstractPrefactor& operator*=(const AbstractPrefactor& rhs);
-    AbstractPrefactor operator*(const AbstractPrefactor& rhs) const;
+        struct AbstractPrefactor {
+            Complex prefactor;
+            std::vector<Kronecker> kroneckers;
 
-    template<typename T>
-    AbstractPrefactor& operator*=(const T& rhs); 
-    template<typename T>
-    AbstractPrefactor operator*(const T& rhs) const;
+            inline bool same_kroneckers(const AbstractPrefactor& rhs) const;
 
-    AbstractPrefactor& operator+=(const AbstractPrefactor& rhs);
+            AbstractPrefactor& operator*=(const AbstractPrefactor& rhs);
+            AbstractPrefactor operator*(const AbstractPrefactor& rhs) const;
 
-    inline bool operator==(const AbstractPrefactor& rhs) const;
-    inline bool operator!=(const AbstractPrefactor& rhs) const;
-};
+            template <typename T>
+            AbstractPrefactor& operator*=(const T& rhs);
+            template <typename T>
+            AbstractPrefactor operator*(const T& rhs) const;
 
-std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs);
+            AbstractPrefactor& operator+=(const AbstractPrefactor& rhs);
+
+            inline bool operator==(const AbstractPrefactor& rhs) const;
+            inline bool operator!=(const AbstractPrefactor& rhs) const;
+        };
+
+        std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs);
+
+    }
+}
 
 #include "hubbard/abstract/prefactor_impl.hpp"
 

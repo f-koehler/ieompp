@@ -4,6 +4,9 @@
 #include "hubbard/algebra.hpp"
 #include <iostream>
 
+using namespace hubbard;
+using namespace algebra;
+
 TEST_CASE("anticommutates", "[operators]") {
     SECTION("creator & creator") {
         auto ret = anticommutates(

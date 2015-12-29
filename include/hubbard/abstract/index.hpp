@@ -3,16 +3,23 @@
 
 #include <string>
 
-struct AbstractIndex {
-    std::string index;
+namespace hubbard
+{
+    namespace abstract
+    {
 
-    AbstractIndex(const std::string& index);
+        struct AbstractIndex {
+            std::string index;
 
-    inline bool operator==(const AbstractIndex& rhs) const;
-    inline bool operator!=(const AbstractIndex& rhs) const;
-};
+            AbstractIndex(const std::string& index);
 
-std::ostream& operator<<(std::ostream& strm, const AbstractIndex& index);
+            inline bool operator==(const AbstractIndex& rhs) const;
+            inline bool operator!=(const AbstractIndex& rhs) const;
+        };
+
+        std::ostream& operator<<(std::ostream& strm, const AbstractIndex& index);
+    }
+}
 
 #include "hubbard/abstract/index_impl.hpp"
 
