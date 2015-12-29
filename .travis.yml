@@ -1,17 +1,30 @@
 language: cpp
 sudo: false
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc
+            - g++
+            - clang
+
+cache:
+    directories:
+        - cmake-3.4.1
+
 compiler:
-    # - gcc
+    - gcc
     - clang
+
 install:
     - tools/travis-cmake.sh
     - export PATH=$PWD/cmake-3.4.1/dist/bin:$PATH
+
 script:
     - mkdir build
     - cd build
     - cmake ..
     - make -j$(nproc)
     - ctest
-cache:
-    directories:
-        - cmake-3.4.1
