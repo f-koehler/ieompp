@@ -47,6 +47,15 @@ namespace hubbard
             return AbstractOperator{false, AbstractIndex{index}, AbstractSpin{spin}};
         }
 
+        inline AbstractTerm make_term(const AbstractPrefactor& prefactor,
+                                      const std::initializer_list<AbstractOperator>& operators)
+        {
+            AbstractTerm term;
+            term.prefactor = prefactor;
+            term.operators = operators;
+            return term;
+        }
+
 
         inline void sort_kronecker_indices(Kronecker& k)
         {
@@ -82,11 +91,23 @@ namespace hubbard
                 }
                 return terms;
             }
+            
+            inline AbstractTermList& eval_kroneckers(AbstractTermList& terms)
+            {
+                for(auto& term : terms) {
+                    auto& kroneckers = term.prefactor.kroneckers;
+                    kroneckers.erase(
+                        std::remove_if(kroneckers.begin(), kroneckers.end(),
+                                       [](const Kronecker& k) { return k.left == k.right; }),
+                        kroneckers.end());
+                }
+                return terms;
+            }
 
             inline AbstractTermList& filter(AbstractTermList& terms)
             {
                 terms.erase(std::remove_if(terms.begin(), terms.end(), [](const AbstractTerm& t) {
-                    return t.prefactor.prefactor == 0.;
+                    return is_zero(t.prefactor.prefactor);
                 }));
                 return terms;
             }
@@ -94,7 +115,8 @@ namespace hubbard
 
         inline AbstractTermList& simplify_terms(AbstractTermList& terms)
         {
-            return simplify::filter(simplify::join(simplify::order(terms)));
+            return simplify::filter(
+                simplify::eval_kroneckers(simplify::join(simplify::order(terms))));
         }
     }
 }

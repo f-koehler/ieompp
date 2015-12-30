@@ -2,7 +2,7 @@
 #include <regex>
 using namespace std;
 
-#include "hubbard/abstract.hpp"
+#include "hubbard/abstract/parse.hpp"
 
 int main() {
 }

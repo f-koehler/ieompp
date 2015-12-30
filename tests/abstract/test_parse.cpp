@@ -18,7 +18,7 @@ TEST_CASE("is_operator", "[abstract]")
 {
     SECTION("plain ASCII")
     {
-        auto result = parse::is_operator("c_{k_1,up}^\\dagger");
+        auto result = parse::is_operator(u8"c_{k_1,up}^\\dagger");
         REQUIRE(std::get<0>(result));
         REQUIRE(std::get<1>(result) == "k_1");
         REQUIRE(std::get<2>(result) == "up");
