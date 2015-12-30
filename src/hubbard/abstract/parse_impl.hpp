@@ -10,7 +10,7 @@ namespace hubbard
         {
             std::tuple<bool, std::string, std::string> is_commutator(const std::string& expression)
             {
-                static const std::regex re_commutator("^\\[\\s*(.+)\\s*\\,\\s*(.+)\\s*\\]$");
+                static const std::regex re_commutator("^\\[\\s*(.+)\\s*;\\s*(.+)\\s*\\]$");
 
                 std::smatch m;
                 if(!std::regex_match(expression, m, re_commutator))

@@ -2,7 +2,6 @@
 #include "catch.hpp"
 
 #include "hubbard/abstract.hpp"
-#include <iostream>
 
 using namespace hubbard;
 using namespace abstract;
