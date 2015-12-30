@@ -25,13 +25,15 @@ namespace hubbard
                 static const std::string spin =
                     letters + letters_capital + numbers + greek + greek_capital + "_'\\\\" + arrows;
 
-                static const std::string str_commutator = "^\\[\\s*(.+)\\s*;\\s*(.+)\\s*\\]$";
+                static const std::string str_commutator = u8"^\\[\\s*(.+)\\s*;\\s*(.+)\\s*\\]$";
                 static const std::string str_operator =
-                    "c_\\{\\s*([" + index + "]+)\\s*\\,\\s*([" + spin
+                    u8"c_\\{\\s*([" + index + u8"]+)\\s*\\,\\s*([" + spin
                     + u8"]+)\\s*\\}(?:\\^\\{?(\\\\dagger|†)\\}?)?";
-                static const std::string str_kronecker =
-                    u8"(?:δ|\\\\delta)_\\{\\s*([" + spin + "]+)\\s*\\,\\s*([" + spin + "]+)\\s*\\}";
-                static const std::string str_number = "\\(\\s*([\\deE\\.\\+-]+)\\s*\\,\\s*([\\deE\\.\\+-]+)\\s*\\)";
+                static const std::string str_kronecker = u8"(?:δ|\\\\delta)_\\{\\s*([" + spin
+                                                         + u8"]+)\\s*\\,\\s*([" + spin
+                                                         + u8"]+)\\s*\\}";
+                static const std::string str_number =
+                    u8"\\(\\s*([\\deE\\.\\+-]+)\\s*\\,\\s*([\\deE\\.\\+-]+)\\s*\\)";
             }
 
             static const std::regex re_commutator(components::str_commutator);

@@ -46,4 +46,4 @@ if(${hubbard_ENABLE_BENCHMARKS})
 endif()
 
 add_executable(main main.cpp)
-add_executable(cas src/cas.cpp)
+add_executable(fermion_cas src/fermion_cas.cpp)

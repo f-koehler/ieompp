@@ -30,6 +30,14 @@ namespace hubbard
 
     namespace abstract
     {
+        std::ostream& operator<<(std::ostream& strm, const AbstractOperator& rhs)
+        {
+            strm << "c";
+            if(rhs.creator) strm << u8"^†";
+            strm << "_{" << rhs.index << "," << rhs.spin << "}";
+            return strm;
+        }
+
         inline void AbstractTerm::order_kroneckers()
         {
             for(auto& k : prefactor.kroneckers) k.order_indices();

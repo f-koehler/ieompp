@@ -11,6 +11,7 @@ namespace hubbard
     namespace abstract
     {
         using AbstractOperator = algebra::Operator<AbstractIndex, AbstractSpin>;
+        std::ostream& operator<<(std::ostream& strm, const AbstractOperator& rhs);
 
         struct AbstractTerm : public algebra::Term<AbstractOperator, AbstractPrefactor> {
             inline void order_kroneckers();
