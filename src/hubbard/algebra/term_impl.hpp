@@ -42,9 +42,11 @@ namespace hubbard
         template <typename Operator, typename Prefactor>
         std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term)
         {
-            strm << term.prefactor << "\u22C5";
-            for(auto& op : term.operators)
-                strm << " " << op;
+            strm << term.prefactor;
+            if(!term.operators.empty()) {
+                strm << "\u22C5";
+                for(auto& op : term.operators) strm << " " << op;
+            }
             return strm;
         }
 
@@ -53,7 +55,7 @@ namespace hubbard
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators)
         {
-            return Term<Operator, Prefactor>{ prefactor, operators };
+            return Term<Operator, Prefactor>{prefactor, operators};
         }
 
     }

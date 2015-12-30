@@ -80,8 +80,11 @@ namespace hubbard
 
         std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs)
         {
-            strm << rhs.prefactor << "\u22C5";
-            for(auto& k : rhs.kroneckers) strm << k;
+            strm << rhs.prefactor;
+            if(!rhs.kroneckers.empty()) {
+                strm << "\u22C5";
+                for(auto& k : rhs.kroneckers) strm << k;
+            }
             return strm;
         }
     }
