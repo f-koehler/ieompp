@@ -7,8 +7,10 @@
 using namespace hubbard;
 using namespace algebra;
 
-TEST_CASE("anticommutates", "[operators]") {
-    SECTION("creator & creator") {
+TEST_CASE("anticommutates", "[operators]")
+{
+    SECTION("creator & creator")
+    {
         auto ret = anticommutates(
             make_creator(0, true),
             make_creator(0, true)
@@ -27,8 +29,9 @@ TEST_CASE("anticommutates", "[operators]") {
         );
         REQUIRE(ret == true);
     }
-    
-    SECTION("annihilator & creator") {
+
+    SECTION("annihilator & creator")
+    {
         auto ret = anticommutates(
             make_annihilator(0, true),
             make_creator(0, true)
@@ -47,8 +50,9 @@ TEST_CASE("anticommutates", "[operators]") {
         );
         REQUIRE(ret == true);
     }
-    
-    SECTION("annihilator & annihilator") {
+
+    SECTION("annihilator & annihilator")
+    {
         auto ret = anticommutates(
             make_annihilator(0, true),
             make_annihilator(0, true)
@@ -69,11 +73,13 @@ TEST_CASE("anticommutates", "[operators]") {
     }
 }
 
-TEST_CASE("commutator", "[operators]") {
+TEST_CASE("commutator", "[operators]")
+{
     using Operator = Operator<int, bool>;
     using Term = Term<Operator>;
 
-    SECTION("[cc,c]") {
+    SECTION("[cc,c]")
+    {
         Term term1 =
             make_term(Complex{1., 0.}, {make_creator(-1, true), make_annihilator(0, true)});
         Term term2  =
@@ -84,7 +90,8 @@ TEST_CASE("commutator", "[operators]") {
         REQUIRE(result.front() == make_term(Complex{1., 0.}, {make_creator(-1, true)}));
     }
 
-    SECTION("[c,cc]") {
+    SECTION("[c,cc]")
+    {
         Term term1 =
             make_term(Complex{1., 0.}, {make_creator(0, true)});
         Term term2 =
@@ -95,7 +102,8 @@ TEST_CASE("commutator", "[operators]") {
         REQUIRE(result.front() == make_term(Complex{-1., 0.}, {make_creator(-1, true)}));
     }
 
-    SECTION("[cc,cc]") {
+    SECTION("[cc,cc]")
+    {
         Term term1 =
             make_term(Complex{1., 0.}, {make_creator(0, true), make_annihilator(1, true)});
         Term term2 =

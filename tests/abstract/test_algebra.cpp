@@ -1,13 +1,15 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/abstract.hpp"
+#include "hubbard/abstract/algebra.hpp"
 
 using namespace hubbard;
 using namespace abstract;
 
-TEST_CASE("anticommutator", "[abstract]") {
-    SECTION("anticommutates() for abstract operators") {
+TEST_CASE("anticommutator", "[abstract]")
+{
+    SECTION("anticommutates() for abstract operators")
+    {
         REQUIRE(anticommutates(make_creator("k_1", "s_1"), make_creator("k_2", "s_2")));
 
         REQUIRE(anticommutates(make_annihilator("k_1", "s_1"), make_annihilator("k_2", "s_2")));
@@ -17,7 +19,8 @@ TEST_CASE("anticommutator", "[abstract]") {
         REQUIRE(!anticommutates(make_annihilator("k_1", "s_1"), make_creator("k_2", "s_2")));
     }
 
-    SECTION("anticommutator() for abstract operators") {
+    SECTION("anticommutator() for abstract operators")
+    {
         auto ac = algebra::anticommutator<AbstractOperator, AbstractPrefactor>(
             make_creator("k_1", "s_1"), make_creator("k_2", "s_2"));
         REQUIRE(ac.prefactor == Complex(1., 0.));
@@ -44,8 +47,10 @@ TEST_CASE("anticommutator", "[abstract]") {
     }
 }
 
-TEST_CASE("commutator", "[abstract]") {
-    SECTION("[cc,c]") {
+TEST_CASE("commutator", "[abstract]")
+{
+    SECTION("[cc,c]")
+    {
         AbstractTerm a, b;
         a.operators.push_back(make_creator("k_1", "s'"));
         a.operators.push_back(make_annihilator("k_1", "s'"));
@@ -65,8 +70,10 @@ TEST_CASE("commutator", "[abstract]") {
     }
 }
 
-TEST_CASE("simplify_terms", "[simplify]") {
-    SECTION("simplify_filter") {
+TEST_CASE("simplify_terms", "[simplify]")
+{
+    SECTION("simplify_filter")
+    {
         auto term1 = algebra::make_term(AbstractPrefactor{Complex(0., 0.), {Kronecker{"k", "q"}}},
                                         {make_creator("k", "s")});
         AbstractTermList lst;
