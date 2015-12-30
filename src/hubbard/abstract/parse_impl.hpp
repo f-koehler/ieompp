@@ -31,6 +31,14 @@ namespace hubbard
                     return std::make_tuple(false, "", "");
                 return std::make_tuple(true, m[1].str(), m[2].str());
             }
+            
+            std::tuple<bool, std::string, std::string> is_number(const std::string& expression)
+            {
+                std::smatch m;
+                if(!std::regex_match(expression, m, re_number))
+                    return std::make_tuple(false, "", "");
+                return std::make_tuple(true, m[1].str(), m[2].str());
+            }
 
             AbstractTerm parse_term(const std::string& expression)
             {
@@ -51,6 +59,12 @@ namespace hubbard
                 while(std::regex_search(tmp, m, re_kronecker)) {
                     term.prefactor.kroneckers.push_back(Kronecker{m[1].str(), m[2].str()});
                     tmp = m.suffix();
+                }
+
+                tmp = expression;
+                while(std::regex_match(tmp, m, re_number)) {
+                    term.prefactor.prefactor *=
+                        Complex(std::stod(m[1].str()), std::stod(m[2].str()));
                 }
 
                 return term;

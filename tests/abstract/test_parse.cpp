@@ -66,6 +66,14 @@ TEST_CASE("is_kronecker", "[abstract]")
     }
 }
 
+TEST_CASE("is_number", "[abstract]")
+{
+    auto result = parse::is_number("(12.123e-12,-4.0)");
+    REQUIRE(std::get<0>(result));
+    REQUIRE(std::get<1>(result) == "12.123e-12");
+    REQUIRE(std::get<2>(result) == "-4.0");
+}
+
 TEST_CASE("parse_term", "[abstract]")
 {
     auto expression = "c_{k_1,up}^\\dagger c_{k_2,up}^{\\dagger}";
