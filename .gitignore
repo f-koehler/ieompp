@@ -6,3 +6,4 @@ build
 
 # vim
 *.session
+*.swp
