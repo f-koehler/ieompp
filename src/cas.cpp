@@ -21,8 +21,8 @@ int main(int argc, char** argv) {
 
     auto left       = std::get<1>(ic);
     auto right      = std::get<2>(ic);
-    auto left_term  = hubbard::abstract::parse::get_operators(left);
-    auto right_term = hubbard::abstract::parse::get_operators(right);
+    auto left_term  = hubbard::abstract::parse::parse_term(left);
+    auto right_term = hubbard::abstract::parse::parse_term(right);
 
     cout << "left term: " << left_term << endl;
     cout << "right term: " << right_term << endl;
