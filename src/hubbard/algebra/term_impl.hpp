@@ -44,7 +44,7 @@ namespace hubbard
         {
             strm << term.prefactor;
             if(!term.operators.empty()) {
-                strm << "\u22C5";
+                strm << u8"⋅";
                 for(auto& op : term.operators) strm << " " << op;
             }
             return strm;

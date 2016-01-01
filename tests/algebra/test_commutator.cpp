@@ -1,13 +1,14 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra.hpp"
+#include "hubbard/algebra/commutator.hpp"
+#include "hubbard/algebra/operator.hpp"
 #include <iostream>
 
 using namespace hubbard;
 using namespace algebra;
 
-TEST_CASE("anticommutates", "[operators]")
+TEST_CASE("anticommutates", "[algebra]")
 {
     SECTION("creator & creator")
     {
@@ -73,7 +74,7 @@ TEST_CASE("anticommutates", "[operators]")
     }
 }
 
-TEST_CASE("commutator", "[operators]")
+TEST_CASE("commutator", "[algebra]")
 {
     using Operator = Operator<int, bool>;
     using Term = Term<Operator>;
