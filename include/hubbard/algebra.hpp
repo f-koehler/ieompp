@@ -1,5 +1,5 @@
-#ifndef ALGEBRA_HPP_
-#define ALGEBRA_HPP_
+#ifndef HUBBARD_ALGEBRA_HPP_
+#define HUBBARD_ALGEBRA_HPP_
 
 #include "hubbard/algebra/commutator.hpp"
 #include "hubbard/algebra/operator.hpp"

@@ -33,16 +33,16 @@ TEST_CASE("is_operator", "[abstract]")
 
     SECTION("unicode")
     {
-        auto result = parse::is_operator("c_{k,\u2191}^\u2020");
+        auto result = parse::is_operator(u8"c_{k,σ}^†");
         REQUIRE(std::get<0>(result));
         REQUIRE(std::get<1>(result) == "k");
-        REQUIRE(std::get<2>(result) == "\u2191");
+        REQUIRE(std::get<2>(result) == "σ");
         REQUIRE(std::get<3>(result));
 
-        result = parse::is_operator("c_{k,\u2193}");
+        result = parse::is_operator("c_{k,σ}");
         REQUIRE(std::get<0>(result));
         REQUIRE(std::get<1>(result) == "k");
-        REQUIRE(std::get<2>(result) == "\u2193");
+        REQUIRE(std::get<2>(result) == "σ");
         REQUIRE(!std::get<3>(result));
     }
 }

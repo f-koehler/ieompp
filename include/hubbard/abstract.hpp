@@ -1,5 +1,5 @@
-#ifndef ALGEBRAIC_HPP_
-#define ALGEBRAIC_HPP_
+#ifndef HUBBARD_ABSTRACT_HPP_
+#define HUBBARD_ABSTRACT_HPP_
 
 #include "hubbard/abstract/algebra.hpp"
 #include "hubbard/abstract/index.hpp"

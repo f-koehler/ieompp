@@ -16,9 +16,9 @@ namespace hubbard
                 static const std::string letters         = u8"a-z";
                 static const std::string letters_capital = u8"A-Z";
                 static const std::string numbers         = u8"0-9";
-                static const std::string greek           = u8"α-ω";
+                static const std::string greek           = u8"αβγδεζηθικλμνξοπρστφχψω";
                 static const std::string greek_capital   = u8"\u0391-\u03a9";
-                static const std::string arrows          = u8"←-↓";
+                static const std::string arrows          = u8"←↑↓→";
 
                 static const std::string index =
                     letters + letters_capital + numbers + greek + greek_capital + "_'\\\\";

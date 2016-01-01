@@ -16,7 +16,7 @@ tex = r"""
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("usage: fermion_cas.py [commutator]", sys.stderr)
+        print("usage: fermion_cas.py [commutator]", file=sys.stderr)
         exit(1)
 
     output = subprocess.check_output([executable, sys.argv[1]]).decode()

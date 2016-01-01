@@ -2,6 +2,7 @@
 #include <regex>
 
 #include "hubbard/abstract.hpp"
+using namespace hubbard;
 
 using namespace std;
 
@@ -21,14 +22,12 @@ int main(int argc, char** argv) {
 
     auto left       = std::get<1>(ic);
     auto right      = std::get<2>(ic);
-    auto left_term  = hubbard::abstract::parse::parse_term(left);
-    auto right_term = hubbard::abstract::parse::parse_term(right);
+    auto left_term  = abstract::parse::parse_term(left);
+    auto right_term = abstract::parse::parse_term(right);
 
-    /* cout << "left term:  " << left_term << endl; */
-    /* cout << "right term: " << right_term << endl; */
-
-    auto result = hubbard::algebra::commutate(left_term, right_term);
-    hubbard::abstract::simplify_terms(result);
+    auto result = algebra::commutate(left_term, right_term);
+    cout << "[" << left << ", " << right << "]=";
     for(auto& t : result)
-        cout << t << endl;
+        cout << "+" << t;
+    cout << endl;
 }

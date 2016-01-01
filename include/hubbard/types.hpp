@@ -1,5 +1,5 @@
-#ifndef TYPES_HPP_
-#define TYPES_HPP_
+#ifndef HUBBARD_TYPES_HPP_
+#define HUBBARD_TYPES_HPP_
 
 #include <complex>
 #include <limits>
@@ -20,6 +20,17 @@ namespace hubbard
     {
         static const auto min = std::numeric_limits<Real>::min();
         return (std::abs(z.real()) <= min) && (std::abs(z.imag()) <= min);
+    }
+
+    std::ostream& operator<<(std::ostream& strm, Complex rhs)
+    {
+        strm << "(" << rhs.real();
+        if(rhs.imag() < 0.)
+            strm << "-";
+        else
+            strm << "+";
+        strm << rhs.imag() << "i";
+        return strm;
     }
 }
 
