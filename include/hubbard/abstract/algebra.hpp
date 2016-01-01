@@ -24,16 +24,6 @@ namespace hubbard
         inline AbstractTerm make_term(const AbstractPrefactor& prefactor,
                                       const std::initializer_list<AbstractOperator>& operators);
 
-
-        namespace simplify
-        {
-            inline AbstractTermList& order(AbstractTermList& terms);
-            inline AbstractTermList& join(AbstractTermList& terms);
-            inline AbstractTermList& eval_kroneckers(AbstractTermList& terms);
-            inline AbstractTermList& filter(AbstractTermList& terms);
-        }
-
-        inline AbstractTermList& simplify_terms(AbstractTermList& terms);
     }
 }
 
