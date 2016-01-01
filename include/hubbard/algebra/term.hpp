@@ -36,6 +36,10 @@ namespace hubbard
         template <typename Prefactor, typename Operator>
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators);
+
+        template <typename Term>
+        auto find_unordered_operator(Term& term) ->
+            typename std::vector<typename Term::OperatorType>::iterator;
     }
 }
 

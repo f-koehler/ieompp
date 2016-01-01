@@ -57,6 +57,19 @@ namespace hubbard
         {
             return Term<Operator, Prefactor>{prefactor, operators};
         }
-
+        
+        template <typename Term>
+        auto find_unordered_operator(Term& term) ->
+            typename std::vector<typename Term::OperatorType>::iterator
+        {
+            bool annihilator = false;
+            for(auto iter = term.operators.begin(); iter != term.operators.end(); ++iter) {
+                if(!iter->creator)
+                    annihilator = true;
+                else if(annihilator)
+                    return iter - 1;
+            }
+            return term.operators.end();
+        }
     }
 }

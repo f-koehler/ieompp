@@ -30,3 +30,17 @@ TEST_CASE("Term<>::ordered()", "[algebra]")
         REQUIRE(!term.ordered());
     }
 }
+
+TEST_CASE("find_unordered_operator", "[algebra]")
+{
+    auto factor = Complex(1., 0.);
+    auto term   = make_term(factor, {make_creator(0, true), make_annihilator(0, true)});
+    REQUIRE(find_unordered_operator(term) == term.operators.end());
+
+    term = make_term(factor, {make_annihilator(0, true), make_creator(0, true)});
+    REQUIRE(find_unordered_operator(term) == term.operators.begin());
+
+    term = make_term(factor,
+                     {make_creator(0, true), make_annihilator(0, true), make_creator(0, true)});
+    REQUIRE(find_unordered_operator(term) == term.operators.begin() + 1);
+}
