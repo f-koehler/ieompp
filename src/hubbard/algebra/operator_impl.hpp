@@ -32,13 +32,13 @@ namespace hubbard
         {
             return Operator<Index, Spin>{ false, index, spin };
         }
-
+        
         template <typename Index, typename Spin>
-        std::ostream& operator<<(std::ostream& strm, const Operator<Index, Spin>& op)
+        std::ostream& operator<<(std::ostream& strm, const Operator<Index, Spin>& rhs)
         {
             strm << "c";
-            if(op.creator) strm << "\u2020";
-            strm << "(" << op.index << "," << op.spin << ")";
+            if(rhs.creator) strm << u8"^†";
+            strm << "_{" << rhs.index << "," << rhs.spin << "}";
             return strm;
         }
 
