@@ -27,6 +27,7 @@ namespace hubbard
         template <typename Term>
         class TermList : public std::vector<Term>
         {
+            using TermType = Term;
         };
 
         template <typename Operator, typename Prefactor>
@@ -40,6 +41,9 @@ namespace hubbard
         template <typename Term>
         auto find_unordered_operator(Term& term) ->
             typename std::vector<typename Term::OperatorType>::iterator;
+
+        template <typename Term>
+        void order_term(Term& term, TermList<Term>& list);
     }
 }
 

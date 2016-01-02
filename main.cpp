@@ -2,14 +2,21 @@
 #include <regex>
 using namespace std;
 
-#include "hubbard/abstract/parse.hpp"
+#include "hubbard/algebra.hpp"
+#include "hubbard/types.hpp"
+using namespace hubbard;
+using namespace hubbard::algebra;
 
 int main() {
-    /* cout << hubbard::abstract::parse::components::str_operator << endl; */
-    std::regex r(u8"α$");
-    if(!std::regex_match(u8"α", r)) {
-        cout << "No match!" << endl;
-    } else {
-        cout << "Match!" << endl;
+    using Operator = Operator<int, bool>;
+    using Term     = Term<Operator>;
+    using TermList = TermList<Term>;
+
+    TermList list;
+    list.push_back(make_term(Complex(1., 0.), {make_annihilator(0, false), make_creator(0, false),
+                                               make_annihilator(0, false)}));
+    order_term(list.front(), list);
+    for(auto& t : list) {
+        cout << t << endl;
     }
 }

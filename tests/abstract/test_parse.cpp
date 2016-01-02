@@ -59,10 +59,10 @@ TEST_CASE("is_kronecker", "[abstract]")
 
     SECTION("unicode")
     {
-        auto result = parse::is_kronecker("\u03b4_{\u2191,\u2193}");
+        auto result = parse::is_kronecker("δ_{←,→}");
         REQUIRE(std::get<0>(result));
-        REQUIRE(std::get<1>(result) == "\u2191");
-        REQUIRE(std::get<2>(result) == "\u2193");
+        REQUIRE(std::get<1>(result) == "←");
+        REQUIRE(std::get<2>(result) == "→");
     }
 }
 
