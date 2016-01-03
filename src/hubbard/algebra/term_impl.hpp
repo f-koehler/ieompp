@@ -1,5 +1,4 @@
 #include "hubbard/algebra/term.hpp"
-#include <iostream>
 
 namespace hubbard
 {
@@ -87,7 +86,9 @@ namespace hubbard
 
             Term new_term;
             new_term.prefactor = term.prefactor;
-            new_term.prefactor *= anticommutator(unordered, unordered+1);
+            // TODO: add anticommutator
+            /* new_term.prefactor *= */
+            /*     anticommutator<Term::OperatorType, Term::PrefactorType>(unordered, unordered + 1); */
             std::copy(term.operators.begin(), unordered, std::back_inserter(new_term.operators));
             std::copy(unordered + 2, term.operators.end(), std::back_inserter(new_term.operators));
             std::swap(*unordered, *(unordered + 1));
