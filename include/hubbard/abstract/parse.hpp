@@ -20,8 +20,8 @@ namespace hubbard
                 static const std::string greek_capital   = u8"\u0391-\u03a9";
                 static const std::string arrows          = u8"←↑↓→";
 
-                static const std::string index = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\";
-                static const std::string spin  = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\" + arrows;
+                static const std::string index = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\\\+\\-";
+                static const std::string spin  = letters + letters_capital + numbers + greek + greek_capital + arrows + "_'\\\\\\+\\-";
 
                 static const std::string commutator_term     = u8"\\s*(.+)\\s*";
                 static const std::string operator_exponent   = u8"(?:\\^\\{?(\\\\dagger|†)\\}?)?";
