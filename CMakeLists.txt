@@ -47,6 +47,7 @@ endif()
 
 add_executable(main main.cpp)
 add_executable(fermion_cas src/fermion_cas.cpp)
+add_executable(regexes src/regexes.cpp)
 
 install(TARGETS fermion_cas RUNTIME DESTINATION bin)
 file(GLOB python_scripts "${CMAKE_SOURCE_DIR}/scripts/*.py")

@@ -20,20 +20,18 @@ namespace hubbard
                 static const std::string greek_capital   = u8"\u0391-\u03a9";
                 static const std::string arrows          = u8"←↑↓→";
 
-                static const std::string index =
-                    letters + letters_capital + numbers + greek + greek_capital + "_'\\\\";
-                static const std::string spin =
-                    letters + letters_capital + numbers + greek + greek_capital + "_'\\\\" + arrows;
+                static const std::string index = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\";
+                static const std::string spin  = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\" + arrows;
 
-                static const std::string str_commutator = u8"^\\[\\s*(.+)\\s*;\\s*(.+)\\s*\\]$";
-                static const std::string str_operator =
-                    u8"c_\\{\\s*([" + index + u8"]+)\\s*\\,\\s*([" + spin
-                    + u8"]+)\\s*\\}(?:\\^\\{?(\\\\dagger|†)\\}?)?";
-                static const std::string str_kronecker = u8"(?:δ|\\\\delta)_\\{\\s*([" + spin
-                                                         + u8"]+)\\s*\\,\\s*([" + spin
-                                                         + u8"]+)\\s*\\}";
-                static const std::string str_number =
-                    u8"\\(\\s*([\\deE\\.\\+-]+)\\s*\\,\\s*([\\deE\\.\\+-]+)\\s*\\)";
+                static const std::string commutator_term     = u8"\\s*(.+)\\s*";
+                static const std::string operator_exponent   = u8"(?:\\^\\{?(\\\\dagger|†)\\}?)?";
+                static const std::string operator_subscript  = u8"_\\{\\s*([" + index + u8"]+)\\s*\\,\\s*([" + spin + u8"]+)\\s*\\}";
+                static const std::string kronecker_subscript = u8"_\\{\\s*([" + spin + u8"]+)\\s*\\,\\s*([" + spin + u8"]+)\\s*\\}";
+
+                static const std::string str_commutator = u8"^\\[" + commutator_term + ";" + commutator_term + "\\]$";
+                static const std::string str_operator   = u8"c" + operator_subscript + operator_exponent;
+                static const std::string str_kronecker  = u8"(?:δ|\\\\delta)" + kronecker_subscript;
+                static const std::string str_number     = u8"\\(\\s*([\\deE\\.\\+-]+)\\s*\\,\\s*([\\deE\\.\\+-]+)\\s*\\)";
             }
 
             static const std::regex re_commutator(components::str_commutator);
