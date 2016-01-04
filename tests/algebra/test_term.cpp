@@ -48,37 +48,33 @@ TEST_CASE("find_unordered_operator", "[algebra]")
 TEST_CASE("order_term", "[algebra]")
 {
     auto factor = Complex(1., 0.);
-    auto term   = make_term(factor, {make_creator(0, true), make_annihilator(0, true)});
 
-    TermList<Term<Operator<int, bool>, Complex>> list;
-    list.push_back(term);
+    auto term = make_term(factor, {make_creator(0, true), make_annihilator(0, true)});
+    TermList<Term<Operator<int, bool>, Complex>> list{term};
     order_term(list.front(), list);
     REQUIRE(list.size() == 1);
     REQUIRE(list.front() == term);
 
-    list.clear();
-    term = make_term(factor, {make_annihilator(0, true), make_creator(0, true)});
-    list.push_back(term);
+
+    list = {make_term(factor, {make_annihilator(0, true), make_creator(0, true)})};
     order_term(list.front(), list);
     REQUIRE(list.size() == 2);
     REQUIRE(list[0] == make_term(-factor, {make_creator(0, true), make_annihilator(0, true)}));
     REQUIRE(list[1] == make_term(factor, std::initializer_list<Operator<int, bool>>()));
 
-    list.clear();
-    term = make_term(factor,
-                     {make_creator(0, true), make_annihilator(0, true), make_creator(0, true)});
-    list.push_back(term);
+    
+    list = {make_term(factor,
+                      {make_creator(0, true), make_annihilator(0, true), make_creator(0, true)})};
     order_term(list.front(), list);
     REQUIRE(list.size() == 2);
     REQUIRE(list[0] == make_term(-factor, {make_creator(0, true), make_creator(0, true),
                                            make_annihilator(0, true)}));
     REQUIRE(list[1] == make_term(factor, {make_creator(0, true)}));
 
-    list.clear();
-    term =
+    
+    list = {
         make_term(factor, {make_creator(0, true), make_annihilator(0, true), make_creator(1, true),
-                           make_annihilator(1, true), make_creator(0, true)});
-    list.push_back(term);
+                           make_annihilator(1, true), make_creator(0, true)})};
     order_term(list.front(), list);
     REQUIRE(list.size() == 2);
     REQUIRE(list[0] == make_term(-factor, {make_creator(0, true), make_creator(1, true),
