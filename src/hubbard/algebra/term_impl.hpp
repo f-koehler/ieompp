@@ -1,4 +1,5 @@
 #include "hubbard/algebra/term.hpp"
+#include "hubbard/algebra/commutator.hpp"
 
 namespace hubbard
 {
