@@ -1,7 +1,10 @@
 #ifndef HUBBARD_ABSTRACT_ALGEBRA_HPP_
 #define HUBBARD_ABSTRACT_ALGEBRA_HPP_
 
-#include "hubbard/algebra.hpp"
+#include "hubbard/algebra/operator.hpp"
+#include "hubbard/algebra/term.hpp"
+#include "hubbard/algebra/commutator.hpp"
+
 #include "hubbard/abstract/index.hpp"
 #include "hubbard/abstract/prefactor.hpp"
 #include "hubbard/abstract/spin.hpp"
