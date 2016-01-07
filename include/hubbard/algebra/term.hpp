@@ -27,11 +27,7 @@ namespace hubbard
         template <typename Term>
         class TermList : public std::vector<Term>
         {
-            public:
-                using TermType = Term;
-
-                TermList() = default;
-                TermList(std::initializer_list<Term> il);
+            using std::vector<Term>::vector;
         };
 
         template <typename Operator, typename Prefactor>

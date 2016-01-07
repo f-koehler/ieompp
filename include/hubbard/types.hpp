@@ -22,20 +22,24 @@ namespace hubbard
         return (std::abs(z.real()) <= min) && (std::abs(z.imag()) <= min);
     }
 
-    std::ostream& format(std::ostream& strm, const Complex& z)
+    template <typename T>
+    std::ostream& format(std::ostream& strm, const T& t);
+
+    template <>
+    std::ostream& format<Complex>(std::ostream& strm, const Complex& t)
     {
-        auto r_zero = is_zero(z.real());
-        auto i_zero = is_zero(z.imag());
+        auto r_zero = is_zero(t.real());
+        auto i_zero = is_zero(t.imag());
         strm << '(';
         if(r_zero && i_zero) return strm << "0)";
-        if(r_zero) return strm << z.imag() << "i)";
-        if(i_zero) return strm << z.real() << ')';
-        strm << z.real();
-        if(z.imag() < 0)
+        if(r_zero) return strm << t.imag() << "i)";
+        if(i_zero) return strm << t.real() << ')';
+        strm << t.real();
+        if(t.imag() < 0)
             strm << '-';
         else
             strm << '+';
-        strm << std::abs(z.imag()) << "i)";
+        strm << std::abs(t.imag()) << "i)";
         return strm;
     }
 }

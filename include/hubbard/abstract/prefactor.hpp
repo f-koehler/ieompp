@@ -42,7 +42,13 @@ namespace hubbard
         };
 
         std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs);
+    }
 
+    template <>
+    std::ostream& format<abstract::AbstractPrefactor>(std::ostream& strm,
+                                                      const abstract::AbstractPrefactor& t)
+    {
+        return abstract::operator<<(strm, t);
     }
 }
 

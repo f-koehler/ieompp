@@ -39,11 +39,12 @@ namespace hubbard
                 for(UInt l = 1; l <= m; ++l) {
                     if(anticommutates(a_ops[k - 1], b_ops[l - 1])) continue;
 
-                    double coefficient = 1.;
+                    Real coefficient = 1.;
                     if((m * (n - k) + l - 1) % 2) coefficient = -1.;
 
                     Term&& new_term    = Term();
-                    new_term.prefactor = prefactor * coefficient;
+                    new_term.prefactor = prefactor;
+                    new_term.prefactor *= coefficient;
                     new_term.prefactor *= anticommutator<typename Term::OperatorType, typename Term::PrefactorType>(a_ops[k - 1], b_ops[l - 1]);
 
                     auto& new_ops = new_term.operators;

@@ -51,13 +51,6 @@ namespace hubbard
             return strm;
         }
 
-        template <typename Term>
-        TermList<Term>::TermList(std::initializer_list<Term> il)
-            : std::vector<Term>(il)
-        {
-        }
-
-
         template <typename Prefactor, typename Operator>
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators)

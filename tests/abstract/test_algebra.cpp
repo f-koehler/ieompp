@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include "hubbard/abstract/prefactor.hpp"
 #include "hubbard/abstract/algebra.hpp"
 
 using namespace hubbard;
