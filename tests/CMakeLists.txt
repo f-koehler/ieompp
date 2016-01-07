@@ -15,5 +15,7 @@ function(add_hubbard_test TEST_NAME TEST_SOURCE)
     add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 
+add_hubbard_test("types" test_types.cpp)
+
 add_subdirectory(abstract)
 add_subdirectory(algebra)
