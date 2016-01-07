@@ -45,6 +45,21 @@ TEST_CASE("is_operator", "[abstract]")
         REQUIRE(std::get<2>(result) == "σ");
         REQUIRE(!std::get<3>(result));
     }
+
+    SECTION("complex indices")
+    {
+        auto result = parse::is_operator("c_{k+q,σ-s}^†");
+        REQUIRE(std::get<0>(result));
+        REQUIRE(std::get<1>(result) == "k+q");
+        REQUIRE(std::get<2>(result) == "σ-s");
+        REQUIRE(std::get<3>(result));
+        
+        result = parse::is_operator("c_{k+q,σ-s}");
+        REQUIRE(std::get<0>(result));
+        REQUIRE(std::get<1>(result) == "k+q");
+        REQUIRE(std::get<2>(result) == "σ-s");
+        REQUIRE(!std::get<3>(result));
+    }
 }
 
 TEST_CASE("is_kronecker", "[abstract]")
@@ -63,6 +78,14 @@ TEST_CASE("is_kronecker", "[abstract]")
         REQUIRE(std::get<0>(result));
         REQUIRE(std::get<1>(result) == "←");
         REQUIRE(std::get<2>(result) == "→");
+    }
+
+    SECTION("complex indices")
+    {
+        auto result = parse::is_kronecker("δ_{k_1+q,σ-σ'}");
+        REQUIRE(std::get<0>(result));
+        REQUIRE(std::get<1>(result) == "k_1+q");
+        REQUIRE(std::get<2>(result) == "σ-σ'");
     }
 }
 
