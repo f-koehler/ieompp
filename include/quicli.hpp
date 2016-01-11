@@ -1,6 +1,7 @@
 #ifndef QUICLI_HPP_
 #define QUICLI_HPP_
 
+#include <cassert>
 #include <algorithm>
 #include <functional>
 #include <list>
@@ -51,7 +52,9 @@ namespace quicli
                 return *this;
             }
 
-            std::tuple<bool, std::size_t> match(const std::string& str) const
+            int priority() const { return _priority; }
+
+            std::tuple<bool, std::size_t> matches(const std::string& str) const
             {
                 auto iter = std::find(_names.begin(), _names.end(), str);
                 if(iter == _names.end()) return std::make_tuple(false, 0);
@@ -59,7 +62,7 @@ namespace quicli
             }
 
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap vm) const = 0;
+                                 std::vector<std::string>& args, ValueMap& vm) const = 0;
     };
 
     class Flag : public Argument
@@ -68,19 +71,16 @@ namespace quicli
             using Argument::Argument;
 
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap vm) const
+                                 std::vector<std::string>& args, ValueMap& vm) const override
             {
-                static auto count = 0;
+                static auto count = 0ul;
                 if(!std::get<0>(match)) return;
                 args.erase(args.begin());
                 ++count;
                 auto pos = vm.find(_names.front());
-                if(pos != vm.end()) {
-                    pos->second[0][0] = std::to_string(count);
-                    return;
-                }
-                vm.insert(std::make_pair(_names.front(),
-                                         std::vector<Occurance>{{std::to_string(count)}}));
+                if(pos == vm.end())
+                    vm.insert(std::make_pair(_names.front(), std::vector<Occurance>{{"init"}}));
+                vm[_names.front()][0][0] = std::to_string(count);
             }
     };
 
@@ -105,7 +105,7 @@ namespace quicli
             }
 
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap vm) const
+                                 std::vector<std::string>& args, ValueMap& vm) const override
             {
                 if(!std::get<0>(match)) return;
                 if(_num_vals > args.size())
@@ -113,7 +113,7 @@ namespace quicli
                 auto pos = vm.find(_names.front());
                 if(pos == vm.end())
                     vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
-                vm[_names.front()].emplace_back(Occurance(args.begin(), args.begin()+_num_vals));
+                vm[_names.front()].emplace_back(Occurance(args.begin(), args.begin() + _num_vals));
             }
     };
 
@@ -134,13 +134,35 @@ namespace quicli
     class CLI
     {
         private:
+            std::string _name;
             std::vector<std::unique_ptr<Argument>> _args;
 
         public:
+            CLI(const std::string& name) : _name(name) {}
+
             template<typename T>
             T& add(const T& arg) {
-                _args.push_back(std::unique_ptr<Argument>(new T(arg)));
-                return *dynamic_cast<T*>(_args.back().get());
+                auto pos =
+                    std::find_if(_args.begin(), _args.end(), [&arg](std::unique_ptr<Argument>& a) {
+                        return a->priority() <= arg.priority();
+                    });
+                T* tmp = new T(arg);
+                _args.insert(pos, std::unique_ptr<T>(tmp));
+                return *tmp;
+            }
+
+            void parse(std::vector<std::string>& args, ValueMap& vm) const {
+                while(!args.empty()) {
+                    bool matched = false;
+                    for(auto& arg : _args) {
+                        auto match = arg->matches(args.front());
+                        if(!std::get<0>(match)) continue;
+                        arg->extract(match, args, vm);
+                        matched = true;
+                        break;
+                    }
+                    if(!matched) throw std::runtime_error("TODO"); // TODO
+                }
             }
     };
 }
