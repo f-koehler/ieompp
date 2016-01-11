@@ -29,6 +29,23 @@ function(git_submodule DIR)
     endif()
 endfunction()
 
+if(NOT DEFINED GIT_FOUND)
+    find_package(Git)
+endif()
+if(${GIT_FOUND})
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --dirty
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        OUTPUT_VARIABLE hubbard_VERSION
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    MESSAGE(STATUS "Hubbard version: ${hubbard_VERSION}")
+else()
+    set(hubbard_VERSION "unknown")
+endif()
+configure_file("${CMAKE_SOURCE_DIR}/include/hubbard/config.hpp.in" "${CMAKE_SOURCE_DIR}/include/hubbard/config.hpp")
+
 option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
 option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
 option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
