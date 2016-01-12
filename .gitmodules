@@ -1,6 +1,3 @@
 [submodule "catch"]
 	path = external/catch
 	url = https://github.com/philsquared/Catch.git
-[submodule "external/benchmark"]
-	path = external/benchmark
-	url = https://github.com/google/benchmark.git
