@@ -1,17 +1,17 @@
 #include "quicli.hpp"
 #include <iostream>
+using namespace quicli;
 
 int main(int argc, char** argv)
 {
-    quicli::CLI cli("solve");
-    quicli::ValueMap vm;
-    cli.add(quicli::Flag({"--help", "-h"}));
+    CLI cli("solve");
+    ValueMap vm;
+
+    cli.add(Parameter("--nx")).mandatory(true);
+    cli.add(Parameter("--ny")).mandatory(true);
+    cli.add(Parameter("--commutations")).default_value("2");
 
     auto args = quicli::convert(argc, argv);
     cli.parse(args, vm);
     cli.validate(vm);
-
-    for(auto& item : vm) {
-        std::cout << item.first << "\t" << item.second.front().front() << std::endl;
-    }
 }

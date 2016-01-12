@@ -1,15 +1,16 @@
 #ifndef QUICLI_HPP_
 #define QUICLI_HPP_
 
-#include <cassert>
 #include <algorithm>
 #include <functional>
 #include <list>
 #include <map>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <tuple>
 #include <vector>
+#include <cassert>
 
 namespace quicli
 {
@@ -37,18 +38,19 @@ namespace quicli
             std::vector<std::string> _names;
             int _priority;
             std::tuple<bool, std::string> _default;
-            bool _required;
+            bool _mandatory;
 
         public:
             Argument(std::initializer_list<std::string> names);
+            Argument(const std::string& name);
 
             Argument& priority(int val);
             Argument& default_value(const std::string& val);
-            Argument& required(bool val);
+            Argument& mandatory(bool val);
 
             const std::string& first_name() const;
             int priority() const;
-            bool required() const;
+            bool mandatory() const;
 
             std::tuple<bool, std::size_t> matches(const std::string& str) const;
             virtual void extract(const std::tuple<bool, std::size_t>& match,
@@ -71,7 +73,8 @@ namespace quicli
             bool _multi;
 
         public:
-            using Argument::Argument;
+            Parameter(std::initializer_list<std::string> names);
+            Parameter(const std::string& name);
 
             Parameter& num_values(std::size_t val)
             {
@@ -104,7 +107,7 @@ namespace quicli
 
     class CLI
     {
-        private:
+        protected:
             std::string _name;
             std::vector<std::unique_ptr<Argument>> _args;
 
@@ -116,6 +119,7 @@ namespace quicli
 
             void parse(std::vector<std::string>& args, ValueMap& vm) const;
             void validate(const ValueMap& vm) const;
+            virtual std::string help() const;
     };
 
     
@@ -127,6 +131,7 @@ namespace quicli
     // class Argument
     /////////////////////////
     Argument::Argument(std::initializer_list<std::string> names) : _names(names) {}
+    Argument::Argument(const std::string& name) : _names{name} {}
 
     Argument& Argument::priority(int val)
     {
@@ -138,15 +143,15 @@ namespace quicli
         std::get<1>(_default) = val;
         return *this;
     }
-    Argument& Argument::required(bool val)
+    Argument& Argument::mandatory(bool val)
     {
-        _required = val;
+        _mandatory = val;
         return *this;
     }
 
     const std::string& Argument::first_name() const { return _names.front(); }
     int Argument::priority() const { return _priority; }
-    bool Argument::required() const { return _required; }
+    bool Argument::mandatory() const { return _mandatory; }
 
     std::tuple<bool, std::size_t> Argument::matches(const std::string& str) const
     {
@@ -178,15 +183,29 @@ namespace quicli
     /////////////////////////
     // class Parameter
     /////////////////////////
+    Parameter::Parameter(std::initializer_list<std::string> names)
+        : Argument(names), _num_vals(1), _multi(false)
+    {
+    }
+
+    Parameter::Parameter(const std::string& name)
+        : Argument(name), _num_vals(1), _multi(false)
+    {
+    }
+
     void Parameter::extract(const std::tuple<bool, std::size_t>& match, std::vector<std::string>& args,
                  ValueMap& vm) const
     {
         if(!std::get<0>(match)) return;
         args.erase(args.begin());
-        if(_num_vals > args.size()) throw std::runtime_error("TODO"); // TODO
+        if(_num_vals > args.size())
+            throw std::runtime_error("Argument \"" + first_name() + "\" requires "
+                                     + std::to_string(_num_vals) + " values, but only got "
+                                     + std::to_string(args.size()));
         auto pos = vm.find(_names.front());
         if(pos == vm.end()) vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
         vm[_names.front()].emplace_back(Occurance(args.begin(), args.begin() + _num_vals));
+        args.erase(args.begin(), args.begin() + _num_vals);
     }
     
    
@@ -239,7 +258,7 @@ namespace quicli
                 matched = true;
                 break;
             }
-            if(!matched) throw std::runtime_error("TODO"); // TODO
+            if(!matched) throw std::runtime_error("Argument \"" + args.front() + "\" is unmatched");
         }
     }
 
@@ -247,11 +266,18 @@ namespace quicli
     {
         std::string msg = "";
         for(auto& arg : _args) {
-            if(!arg->required()) continue;
+            if(!arg->mandatory()) continue;
             auto pos = vm.find(arg->first_name());
-            if(pos == vm.end()) msg += "TODO\n"; // TODO
+            if(pos == vm.end()) msg += "Mandatory argument \"" + arg->first_name() + "\" not found\n";
         }
-        if(!msg.empty()) throw std::runtime_error(msg);
+        if(!msg.empty()) throw std::runtime_error("Invalid set of arguments! Errors:\n"+msg);
+    }
+
+    std::string CLI::help() const
+    {
+        std::ostringstream strm;
+        strm << _name << std::endl;
+        return strm.str();
     }
 }
 
