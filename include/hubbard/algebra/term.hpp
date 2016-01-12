@@ -123,18 +123,6 @@ namespace hubbard
         template <typename Term>
         auto find_unordered_operator(Term& term) ->
             typename std::vector<typename Term::OperatorType>::iterator;
-
-        // TODO: move this to commutator.hpp
-        /*!
-         * @brief Order the term by applying anticommutators
-         *
-         * @tparam Term The type of the term
-         *
-         * @param term The term to order
-         * @param list List in which newly created terms (due to anticommutation) are stored
-         */
-        template <typename Term>
-        void order_term(Term& term, TermList<Term>& list);
     }
 }
 

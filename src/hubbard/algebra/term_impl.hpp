@@ -1,5 +1,4 @@
 #include "hubbard/algebra/term.hpp"
-#include "hubbard/algebra/commutator.hpp"
 
 namespace hubbard
 {
@@ -70,32 +69,6 @@ namespace hubbard
                     return iter-1;
             }
             return term.operators.end();
-        }
-
-        template <typename Term>
-        void order_term(Term& term, TermList<Term>& list)
-        {
-            auto unordered = find_unordered_operator(term);
-            if(unordered == term.operators.end()) return;
-            if(anticommutates(*unordered, *(unordered + 1))) {
-                std::swap(*unordered, *(unordered + 1));
-                term.prefactor *= -1.;
-                order_term(term, list);
-                return;
-            }
-
-            Term new_term;
-            new_term.prefactor = term.prefactor;
-            // TODO: add anticommutator
-            /* new_term.prefactor *= */
-            /*     anticommutator<Term::OperatorType, Term::PrefactorType>(unordered, unordered + 1); */
-            std::copy(term.operators.begin(), unordered, std::back_inserter(new_term.operators));
-            std::copy(unordered + 2, term.operators.end(), std::back_inserter(new_term.operators));
-            std::swap(*unordered, *(unordered + 1));
-            term.prefactor *= -1.;
-            list.push_back(new_term);
-            order_term(term, list);
-            order_term(new_term, list);
         }
     }
 }
