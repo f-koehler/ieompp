@@ -19,17 +19,18 @@ namespace quicli
 
     std::vector<std::string> convert(int argc, char** argv)
     {
-        auto list = std::vector<std::string>(argv + 1, argv + argc);
-        for(auto iter = list.begin(); iter != list.end(); ++iter) {
-            auto pos = std::find(iter->begin(), iter->end(), '=');
-            if(pos == iter->end()) continue;
-            auto index = pos - iter->begin();
-            auto left  = iter->substr(0, index);
-            auto right = iter->substr(index + 1);
-            list.insert(iter, left);
-            *iter = right;
+        std::vector<std::string> args;
+        for(int i = 1; i < argc; ++i) {
+            std::string curr(argv[i]);
+            auto pos = curr.find('=');
+            if(pos == std::string::npos) {
+                args.push_back(curr);
+                continue;
+            }
+            args.push_back(curr.substr(0, pos));
+            args.push_back(curr.substr(pos + 1));
         }
-        return list;
+        return args;
     }
 
     template <typename T>
@@ -37,7 +38,7 @@ namespace quicli
         std::is_same<T, std::vector<typename T::value_type, typename T::allocator_type>>;
 
     template <typename T>
-    using is_list = is_same<T, std::list<typename T::value_type, typename T::allocator_type>>;
+    using is_list = std::is_same<T, std::list<typename T::value_type, typename T::allocator_type>>;
 
     template <typename T>
     typename std::enable_if<std::is_same<T, double>::value, T>::type as(const std::string& str)
@@ -115,9 +116,9 @@ namespace quicli
             using map_type = std::map<std::string, std::vector<Occurance>>;
             using map_type::map;
 
-            const std::string& get_value(const std::string& name) const;
+            const std::string& get(const std::string& name) const;
             const Occurance& get_values(const std::string& name) const;
-            const std::vector<Occurance>& get_occurances(const std::string& name) const;
+            const std::vector<Occurance>& get_all(const std::string& name) const;
     };
 
     class Argument
@@ -222,7 +223,7 @@ namespace quicli
     /////////////////////////
     // class ValueMap
     /////////////////////////
-    const std::string& ValueMap::get_value(const std::string& name) const
+    const std::string& ValueMap::get(const std::string& name) const
     {
         auto& occs = at(name);
         if(occs.size() != 1)
@@ -239,7 +240,7 @@ namespace quicli
             throw std::runtime_error("Argument \"" + name + "\" was passed more than once");
         return occs.front();
     }
-    const std::vector<Occurance>& ValueMap::get_occurances(const std::string& name) const
+    const std::vector<Occurance>& ValueMap::get_all(const std::string& name) const
     {
         return at(name);
     }
@@ -249,8 +250,10 @@ namespace quicli
     /////////////////////////
     // class Argument
     /////////////////////////
-    Argument::Argument(std::initializer_list<std::string> names) : _names(names) {}
-    Argument::Argument(const std::string& name) : _names{name} {}
+    Argument::Argument(std::initializer_list<std::string> names) : _names(names), _mandatory(false)
+    {
+    }
+    Argument::Argument(const std::string& name) : _names{name}, _mandatory(false) {}
 
     Argument& Argument::priority(int val)
     {
