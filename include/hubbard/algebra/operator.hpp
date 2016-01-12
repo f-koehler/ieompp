@@ -31,7 +31,7 @@ namespace hubbard
              * @details Two operators are equal if they have the same spin, index and are of same
              * type (creator or annihilator)
              *
-             * @param rhs The operator to compare this one with.
+             * @param rhs The operator to compare this one with
              * @return true if the operators are equal, false otherwise
              */
             inline bool operator==(const Operator& rhs) const;
@@ -42,8 +42,8 @@ namespace hubbard
              * @details Two operators are not equal if they have the different spin, index or are of
              * different type (creator or annihilator)
              *
-             * @param rhs The operator to compare this one with.
-             * @return true if the operators are equal, false otherwise
+             * @param rhs The operator to compare this one with
+             * @return true if the operators are not equal, false otherwise
              */
             inline bool operator!=(const Operator& rhs) const;
         };
@@ -70,8 +70,8 @@ namespace hubbard
          * lattice position in real or k-space)
          * @tparam Spin The type that is used to store the spin of the operator
          *
-         * @param index Index of the new operator.
-         * @param spin Spin of the new operator.
+         * @param index Index of the new operator
+         * @param spin Spin of the new operator
          * @return The newly created creation operator
          */
         template <typename Index, typename Spin>
@@ -84,8 +84,8 @@ namespace hubbard
          * lattice position in real or k-space)
          * @tparam Spin The type that is used to store the spin of the operator
          *
-         * @param index Index of the new operator.
-         * @param spin Spin of the new operator.
+         * @param index Index of the new operator
+         * @param spin Spin of the new operator
          * @return The newly created annihilation operator
          */
         template <typename Index, typename Spin>
