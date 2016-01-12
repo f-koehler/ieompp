@@ -33,6 +33,13 @@ namespace quicli
     }
 
     template <typename T>
+    using is_vector =
+        std::is_same<T, std::vector<typename T::value_type, typename T::allocator_type>>;
+
+    template <typename T>
+    using is_list = is_same<T, std::list<typename T::value_type, typename T::allocator_type>>;
+
+    template <typename T>
     typename std::enable_if<std::is_same<T, double>::value, T>::type as(const std::string& str)
     {
         return std::stod(str);
@@ -78,6 +85,28 @@ namespace quicli
     typename std::enable_if<std::is_same<T, unsigned long long>::value, T>::type as(const std::string& str)
     {
         return std::stoull(str);
+    }
+
+    template <typename T>
+    typename std::enable_if<is_vector<T>::value, T>::type as(const std::string& str)
+    {
+        T vec;
+        std::istringstream strm(str);
+        std::string token;
+        while(std::getline(strm, token, ','))
+            vec.push_back(as<typename T::value_type>(token));
+        return vec;
+    }
+    
+    template <typename T>
+    typename std::enable_if<is_list<T>::value, T>::type as(const std::string& str)
+    {
+        T vec;
+        std::istringstream strm(str);
+        std::string token;
+        while(std::getline(strm, token, ','))
+            vec.push_back(as<typename T::value_type>(token));
+        return vec;
     }
 
     class ValueMap : public std::map<std::string, std::vector<Occurance>>
