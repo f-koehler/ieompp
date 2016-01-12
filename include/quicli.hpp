@@ -49,6 +49,7 @@ namespace quicli
             Argument& mandatory(bool val);
 
             const std::string& first_name() const;
+            bool has_name(const std::string& name) const;
             int priority() const;
             bool mandatory() const;
 
@@ -117,6 +118,12 @@ namespace quicli
             template<typename T>
             T& add(const T& arg);
 
+            template<typename T>
+            T& get(const std::string& name);
+
+            template<typename T>
+            const T& get(const std::string& name) const;
+
             void parse(std::vector<std::string>& args, ValueMap& vm) const;
             void validate(const ValueMap& vm) const;
             virtual std::string help() const;
@@ -150,6 +157,10 @@ namespace quicli
     }
 
     const std::string& Argument::first_name() const { return _names.front(); }
+    bool Argument::has_name(const std::string& name) const
+    {
+        return std::find(_names.begin(), _names.end(), name) != _names.end();
+    }
     int Argument::priority() const { return _priority; }
     bool Argument::mandatory() const { return _mandatory; }
 
@@ -245,6 +256,31 @@ namespace quicli
         T* tmp = new T(arg);
         _args.insert(pos, std::unique_ptr<T>(tmp));
         return *tmp;
+    }
+
+    template <typename T>
+    T& CLI::get(const std::string& name)
+    {
+        auto pos =
+            std::find_if(_args.begin(), _args.end(),
+                         [&name](std::unique_ptr<Argument>& arg) { return arg->has_name(name); });
+        if(pos == _args.end())
+            throw std::runtime_error("No argument with name \"" + name + "\" in CLI \"" + _name
+                                     + "\"");
+        return *dynamic_cast<T*>(pos->get());
+    }
+
+    template<typename T>
+    const T& CLI::get(const std::string& name) const
+    {
+        auto pos =
+            std::find_if(_args.begin(), _args.end(), [&name](const std::unique_ptr<Argument>& arg) {
+                return arg->has_name(name);
+            });
+        if(pos == _args.end())
+            throw std::runtime_error("No argument with name \"" + name + "\" in CLI \"" + _name
+                                     + "\"");
+        return *dynamic_cast<const T*>(pos->get());
     }
 
     void CLI::parse(std::vector<std::string>& args, ValueMap& vm) const
