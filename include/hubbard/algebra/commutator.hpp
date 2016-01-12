@@ -7,12 +7,41 @@ namespace hubbard
 {
     namespace algebra {
 
+        /*!
+         * @brief Check whether the anticommutator of two operators vanishes
+         *
+         * @tparam Operator Type of the operator
+         *
+         * @param a The left operator
+         * @param b The right operator
+         * @return true if the anticommutator vanishes, false otherwise
+         */
         template <typename Operator>
         inline bool anticommutates(const Operator& a, const Operator& b);
 
+        /*!
+         * @brief Calculates the anticommutator of two operators
+         *
+         * @tparam Operator Type of the operator
+         * @tparam Prefactor The prefactor type of the anticommutator
+         *
+         * @param a The left operator
+         * @param b The right operator
+         * @return The resulting prefactor
+         */
         template <typename Operator, typename Prefactor = Complex>
         inline Prefactor anticommutator(const Operator& a, const Operator& b);
 
+
+        /*!
+         * @brief Calculates the commutator between two terms
+         *
+         * @tparam Term The type of the terms to commutate
+         *
+         * @param a The left term
+         * @param b The right term
+         * @return A list of all terms created by the commutator
+         */
         template <typename Term>
         TermList<Term> commutate(const Term& a, const Term& b);
 
