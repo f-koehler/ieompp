@@ -40,35 +40,17 @@ namespace quicli
             bool _required;
 
         public:
-            Argument(std::initializer_list<std::string> names) : _names(names) {}
+            Argument(std::initializer_list<std::string> names);
 
-            Argument& priority(int val)
-            {
-                _priority = val;
-                return *this;
-            }
-            Argument& default_value(const std::string& val)
-            {
-                std::get<1>(_default) = val;
-                return *this;
-            }
-            Argument& required(bool val)
-            {
-                _required = val;
-                return *this;
-            }
+            Argument& priority(int val);
+            Argument& default_value(const std::string& val);
+            Argument& required(bool val);
 
-            const std::string first_name() const { return _names.front(); }
-            int priority() const { return _priority; }
-            bool required() const { return _required; }
+            const std::string& first_name() const;
+            int priority() const;
+            bool required() const;
 
-            std::tuple<bool, std::size_t> matches(const std::string& str) const
-            {
-                auto iter = std::find(_names.begin(), _names.end(), str);
-                if(iter == _names.end()) return std::make_tuple(false, 0);
-                return std::make_tuple(true, iter - _names.begin());
-            }
-
+            std::tuple<bool, std::size_t> matches(const std::string& str) const;
             virtual void extract(const std::tuple<bool, std::size_t>& match,
                                  std::vector<std::string>& args, ValueMap& vm) const = 0;
     };
@@ -79,17 +61,7 @@ namespace quicli
             using Argument::Argument;
 
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap& vm) const override
-            {
-                static auto count = 0ul;
-                if(!std::get<0>(match)) return;
-                args.erase(args.begin());
-                ++count;
-                auto pos = vm.find(_names.front());
-                if(pos == vm.end())
-                    vm.insert(std::make_pair(_names.front(), std::vector<Occurance>{{"init"}}));
-                vm[_names.front()][0][0] = std::to_string(count);
-            }
+                                 std::vector<std::string>& args, ValueMap& vm) const override;
     };
 
     class Parameter : public Argument
@@ -113,17 +85,7 @@ namespace quicli
             }
 
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap& vm) const override
-            {
-                if(!std::get<0>(match)) return;
-                args.erase(args.begin());
-                if(_num_vals > args.size())
-                    throw std::runtime_error("TODO"); // TODO
-                auto pos = vm.find(_names.front());
-                if(pos == vm.end())
-                    vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
-                vm[_names.front()].emplace_back(Occurance(args.begin(), args.begin() + _num_vals));
-            }
+                                 std::vector<std::string>& args, ValueMap& vm) const override;
     };
 
     class Prompt : public Parameter
@@ -134,22 +96,10 @@ namespace quicli
         public:
             using Parameter::Parameter;
 
-            Prompt(std::initializer_list<std::string> names, std::function<Occurance(void)> f)
-                : Parameter(names), _prompt(f)
-            {
-            }
+            Prompt(std::initializer_list<std::string> names, std::function<Occurance(void)> f);
             
             virtual void extract(const std::tuple<bool, std::size_t>& match,
-                                 std::vector<std::string>& args, ValueMap& vm) const override
-            {
-                if(!std::get<0>(match)) return;
-                args.erase(args.begin());
-                auto occ = _prompt();
-                auto pos = vm.find(_names.front());
-                if(pos == vm.end())
-                    vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
-                vm[_names.front()].push_back(occ);
-            }
+                                 std::vector<std::string>& args, ValueMap& vm) const override;
     };
 
     class CLI
@@ -159,43 +109,150 @@ namespace quicli
             std::vector<std::unique_ptr<Argument>> _args;
 
         public:
-            CLI(const std::string& name) : _name(name) {}
+            CLI(const std::string& name);
 
             template<typename T>
-            T& add(const T& arg) {
-                auto pos =
-                    std::find_if(_args.begin(), _args.end(), [&arg](std::unique_ptr<Argument>& a) {
-                        return a->priority() <= arg.priority();
-                    });
-                T* tmp = new T(arg);
-                _args.insert(pos, std::unique_ptr<T>(tmp));
-                return *tmp;
-            }
+            T& add(const T& arg);
 
-            void parse(std::vector<std::string>& args, ValueMap& vm) const {
-                while(!args.empty()) {
-                    bool matched = false;
-                    for(auto& arg : _args) {
-                        auto match = arg->matches(args.front());
-                        if(!std::get<0>(match)) continue;
-                        arg->extract(match, args, vm);
-                        matched = true;
-                        break;
-                    }
-                    if(!matched) throw std::runtime_error("TODO"); // TODO
-                }
-            }
-
-            void validate(const ValueMap& vm) const {
-                std::string msg = "";
-                for(auto& arg : _args) {
-                    if(!arg->required()) continue;
-                    auto pos = vm.find(arg->first_name());
-                    if(pos == vm.end()) msg += "TODO\n"; // TODO
-                }
-                if(!msg.empty()) throw std::runtime_error(msg);
-            }
+            void parse(std::vector<std::string>& args, ValueMap& vm) const;
+            void validate(const ValueMap& vm) const;
     };
+
+    
+    
+    
+    
+    
+    /////////////////////////
+    // class Argument
+    /////////////////////////
+    Argument::Argument(std::initializer_list<std::string> names) : _names(names) {}
+
+    Argument& Argument::priority(int val)
+    {
+        _priority = val;
+        return *this;
+    }
+    Argument& Argument::default_value(const std::string& val)
+    {
+        std::get<1>(_default) = val;
+        return *this;
+    }
+    Argument& Argument::required(bool val)
+    {
+        _required = val;
+        return *this;
+    }
+
+    const std::string& Argument::first_name() const { return _names.front(); }
+    int Argument::priority() const { return _priority; }
+    bool Argument::required() const { return _required; }
+
+    std::tuple<bool, std::size_t> Argument::matches(const std::string& str) const
+    {
+        auto iter = std::find(_names.begin(), _names.end(), str);
+        if(iter == _names.end()) return std::make_tuple(false, 0);
+        return std::make_tuple(true, iter - _names.begin());
+    }
+    
+    
+    
+    /////////////////////////
+    // class Flag
+    /////////////////////////
+    void Flag::extract(const std::tuple<bool, std::size_t>& match, std::vector<std::string>& args,
+                         ValueMap& vm) const
+    {
+        static auto count = 0ul;
+        if(!std::get<0>(match)) return;
+        args.erase(args.begin());
+        ++count;
+        auto pos = vm.find(_names.front());
+        if(pos == vm.end())
+            vm.insert(std::make_pair(_names.front(), std::vector<Occurance>{{"init"}}));
+        vm[_names.front()][0][0] = std::to_string(count);
+    }
+    
+    
+    
+    /////////////////////////
+    // class Parameter
+    /////////////////////////
+    void Parameter::extract(const std::tuple<bool, std::size_t>& match, std::vector<std::string>& args,
+                 ValueMap& vm) const
+    {
+        if(!std::get<0>(match)) return;
+        args.erase(args.begin());
+        if(_num_vals > args.size()) throw std::runtime_error("TODO"); // TODO
+        auto pos = vm.find(_names.front());
+        if(pos == vm.end()) vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
+        vm[_names.front()].emplace_back(Occurance(args.begin(), args.begin() + _num_vals));
+    }
+    
+   
+
+    /////////////////////////
+    // class Prompt
+    /////////////////////////
+    Prompt::Prompt(std::initializer_list<std::string> names, std::function<Occurance(void)> f)
+        : Parameter(names), _prompt(f)
+    {
+    }
+
+    void Prompt::extract(const std::tuple<bool, std::size_t>& match, std::vector<std::string>& args,
+                         ValueMap& vm) const
+    {
+        if(!std::get<0>(match)) return;
+        args.erase(args.begin());
+        auto occ = _prompt();
+        auto pos = vm.find(_names.front());
+        if(pos == vm.end()) vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
+        vm[_names.front()].push_back(occ);
+    }
+
+
+
+    /////////////////////////
+    // class CLI
+    /////////////////////////
+    CLI::CLI(const std::string& name) : _name(name) {}
+
+    template <typename T>
+    T& CLI::add(const T& arg)
+    {
+        auto pos = std::find_if(_args.begin(), _args.end(), [&arg](std::unique_ptr<Argument>& a) {
+            return a->priority() <= arg.priority();
+        });
+        T* tmp = new T(arg);
+        _args.insert(pos, std::unique_ptr<T>(tmp));
+        return *tmp;
+    }
+
+    void CLI::parse(std::vector<std::string>& args, ValueMap& vm) const
+    {
+        while(!args.empty()) {
+            bool matched = false;
+            for(auto& arg : _args) {
+                auto match = arg->matches(args.front());
+                if(!std::get<0>(match)) continue;
+                arg->extract(match, args, vm);
+                matched = true;
+                break;
+            }
+            if(!matched) throw std::runtime_error("TODO"); // TODO
+        }
+    }
+
+    void CLI::validate(const ValueMap& vm) const
+    {
+        std::string msg = "";
+        for(auto& arg : _args) {
+            if(!arg->required()) continue;
+            auto pos = vm.find(arg->first_name());
+            if(pos == vm.end()) msg += "TODO\n"; // TODO
+        }
+        if(!msg.empty()) throw std::runtime_error(msg);
+    }
 }
 
 #endif
