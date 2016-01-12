@@ -1,6 +1,7 @@
 # c++
 build
 include/hubbard/config.hpp
+doc
 
 # python
 *.pyc
