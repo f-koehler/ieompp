@@ -1,5 +1,9 @@
-#include "quicli.hpp"
 #include <iostream>
+using namespace std;
+
+#include "hubbard/discretization.hpp"
+
+#include "quicli.hpp"
 using namespace quicli;
 
 int main(int argc, char** argv)
@@ -14,4 +18,9 @@ int main(int argc, char** argv)
     auto args = quicli::convert(argc, argv);
     cli.parse(args, vm);
     cli.validate(vm);
+
+    auto disc =
+        hubbard::discretize(std::stoul(vm.get_value("--nx")), std::stoul(vm.get_value("--ny")));
+
+    cout << cli.get<Parameter>("--nx").mandatory() << endl;
 }

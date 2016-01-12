@@ -15,7 +15,6 @@
 namespace quicli
 {
     using Occurance = std::vector<std::string>;
-    using ValueMap = std::map<std::string, std::vector<Occurance>>;
 
     std::vector<std::string> convert(int argc, char** argv)
     {
@@ -31,6 +30,17 @@ namespace quicli
         }
         return list;
     }
+
+    class ValueMap : public std::map<std::string, std::vector<Occurance>>
+    {
+        public:
+            using map_type = std::map<std::string, std::vector<Occurance>>;
+            using map_type::map;
+
+            const std::string& get_value(const std::string& name) const;
+            const Occurance& get_values(const std::string& name) const;
+            const std::vector<Occurance>& get_occurances(const std::string& name) const;
+    };
 
     class Argument
     {
@@ -131,9 +141,33 @@ namespace quicli
 
     
     
-    
-    
-    
+    /////////////////////////
+    // class ValueMap
+    /////////////////////////
+    const std::string& ValueMap::get_value(const std::string& name) const
+    {
+        auto& occs = at(name);
+        if(occs.size() != 1)
+            throw std::runtime_error("Argument \"" + name + "\" was passed more than once");
+        auto& occ = occs.front();
+        if(occ.size() != 1)
+            throw std::runtime_error("Argument \"" + name + "\" was passed with more than one value");
+        return occ.front();
+    }
+    const Occurance& ValueMap::get_values(const std::string& name) const
+    {
+        auto& occs = at(name);
+        if(occs.size() != 1)
+            throw std::runtime_error("Argument \"" + name + "\" was passed more than once");
+        return occs.front();
+    }
+    const std::vector<Occurance>& ValueMap::get_occurances(const std::string& name) const
+    {
+        return at(name);
+    }
+
+
+
     /////////////////////////
     // class Argument
     /////////////////////////
