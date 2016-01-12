@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     cli.validate(vm);
 
     auto disc =
-        hubbard::discretize(std::stoul(vm.get_value("--nx")), std::stoul(vm.get_value("--ny")));
+        hubbard::discretize(as<size_t>(vm.get_value("--nx")), as<size_t>(vm.get_value("--ny")));
 
     cout << cli.get<Parameter>("--nx").mandatory() << endl;
 }

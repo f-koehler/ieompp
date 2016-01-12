@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <type_traits>
 #include <vector>
 #include <cassert>
 
@@ -29,6 +30,54 @@ namespace quicli
             *iter = right;
         }
         return list;
+    }
+
+    template <typename T>
+    typename std::enable_if<std::is_same<T, double>::value, T>::type as(const std::string& str)
+    {
+        return std::stod(str);
+    }
+    
+    template <typename T>
+    typename std::enable_if<std::is_same<T, float>::value, T>::type as(const std::string& str)
+    {
+        return std::stof(str);
+    }
+    
+    template <typename T>
+    typename std::enable_if<std::is_same<T, int>::value, T>::type as(const std::string& str)
+    {
+        return std::stoi(str);
+    }
+
+    template <typename T>
+    typename std::enable_if<std::is_same<T, long>::value, T>::type as(const std::string& str)
+    {
+        return std::stol(str);
+    }
+    
+    template <typename T>
+    typename std::enable_if<std::is_same<T, long double>::value, T>::type as(const std::string& str)
+    {
+        return std::stold(str);
+    }
+    
+    template <typename T>
+    typename std::enable_if<std::is_same<T, long long>::value, T>::type as(const std::string& str)
+    {
+        return std::stoll(str);
+    }
+
+    template <typename T>
+    typename std::enable_if<std::is_same<T, unsigned long>::value, T>::type as(const std::string& str)
+    {
+        return std::stoul(str);
+    }
+
+    template <typename T>
+    typename std::enable_if<std::is_same<T, unsigned long long>::value, T>::type as(const std::string& str)
+    {
+        return std::stoull(str);
     }
 
     class ValueMap : public std::map<std::string, std::vector<Occurance>>
