@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "hubbard/discretization.hpp"
+#include "hubbard/ieom/discretization.hpp"
 
 #include "quicli.hpp"
 using namespace quicli;
@@ -21,8 +21,7 @@ int main(int argc, char** argv)
     cli.parse(args, vm);
     cli.validate(vm);
 
-    auto disc =
-        hubbard::discretize(as<size_t>(vm.get("--nx")), as<size_t>(vm.get("--ny")));
+    auto disc = hubbard::ieom::discretize(as<size_t>(vm.get("--nx")), as<size_t>(vm.get("--ny")));
     auto kx = disc.kx_index(as<double>(vm.get("--kx")));
     auto ky = disc.ky_index(as<double>(vm.get("--ky")));
 
