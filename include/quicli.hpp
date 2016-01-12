@@ -14,7 +14,7 @@
 namespace quicli
 {
     using Occurance = std::vector<std::string>;
-    using ValueMap  = std::map<std::string, std::vector<Occurance>>;
+    using ValueMap = std::map<std::string, std::vector<Occurance>>;
 
     std::vector<std::string> convert(int argc, char** argv)
     {
@@ -37,6 +37,7 @@ namespace quicli
             std::vector<std::string> _names;
             int _priority;
             std::tuple<bool, std::string> _default;
+            bool _required;
 
         public:
             Argument(std::initializer_list<std::string> names) : _names(names) {}
@@ -51,8 +52,15 @@ namespace quicli
                 std::get<1>(_default) = val;
                 return *this;
             }
+            Argument& required(bool val)
+            {
+                _required = val;
+                return *this;
+            }
 
+            const std::string first_name() const { return _names.front(); }
             int priority() const { return _priority; }
+            bool required() const { return _required; }
 
             std::tuple<bool, std::size_t> matches(const std::string& str) const
             {
@@ -84,7 +92,7 @@ namespace quicli
             }
     };
 
-    class Value : public Argument
+    class Parameter : public Argument
     {
         private:
             std::size_t _num_vals;
@@ -93,12 +101,12 @@ namespace quicli
         public:
             using Argument::Argument;
 
-            Value& num_values(std::size_t val)
+            Parameter& num_values(std::size_t val)
             {
                 _num_vals = val;
                 return *this;
             }
-            Value& multi(bool val)
+            Parameter& multi(bool val)
             {
                 _multi = val;
                 return *this;
@@ -108,6 +116,7 @@ namespace quicli
                                  std::vector<std::string>& args, ValueMap& vm) const override
             {
                 if(!std::get<0>(match)) return;
+                args.erase(args.begin());
                 if(_num_vals > args.size())
                     throw std::runtime_error("TODO"); // TODO
                 auto pos = vm.find(_names.front());
@@ -117,17 +126,29 @@ namespace quicli
             }
     };
 
-    class Prompt : public Argument
+    class Prompt : public Parameter
     {
         protected:
-            std::function<std::string(void)> _prompt;
+            std::function<Occurance(void)> _prompt;
 
         public:
-            using Argument::Argument;
+            using Parameter::Parameter;
 
-            Prompt(std::initializer_list<std::string> names, std::function<std::string(void)> f)
-                : Argument(names), _prompt(f)
+            Prompt(std::initializer_list<std::string> names, std::function<Occurance(void)> f)
+                : Parameter(names), _prompt(f)
             {
+            }
+            
+            virtual void extract(const std::tuple<bool, std::size_t>& match,
+                                 std::vector<std::string>& args, ValueMap& vm) const override
+            {
+                if(!std::get<0>(match)) return;
+                args.erase(args.begin());
+                auto occ = _prompt();
+                auto pos = vm.find(_names.front());
+                if(pos == vm.end())
+                    vm.insert(std::make_pair(_names.front(), std::vector<Occurance>()));
+                vm[_names.front()].push_back(occ);
             }
     };
 
@@ -163,6 +184,16 @@ namespace quicli
                     }
                     if(!matched) throw std::runtime_error("TODO"); // TODO
                 }
+            }
+
+            void validate(const ValueMap& vm) const {
+                std::string msg = "";
+                for(auto& arg : _args) {
+                    if(!arg->required()) continue;
+                    auto pos = vm.find(arg->first_name());
+                    if(pos == vm.end()) msg += "TODO\n"; // TODO
+                }
+                if(!msg.empty()) throw std::runtime_error(msg);
             }
     };
 }

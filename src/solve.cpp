@@ -9,6 +9,7 @@ int main(int argc, char** argv)
 
     auto args = quicli::convert(argc, argv);
     cli.parse(args, vm);
+    cli.validate(vm);
 
     for(auto& item : vm) {
         std::cout << item.first << "\t" << item.second.front().front() << std::endl;
