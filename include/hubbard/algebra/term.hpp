@@ -90,7 +90,7 @@ namespace hubbard
          * @tparam Prefactor The type of the prefactor of the term
          *
          * @param strm The ostream that will be used for output
-         * @param op The operator that will be printed
+         * @param term The term that will be printed
          * @return reference to strm
          */
         template <typename Operator, typename Prefactor>
