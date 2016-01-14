@@ -22,8 +22,8 @@ namespace hubbard
             abstract::AbstractPrefactor result;
             result.prefactor.real(1.);
             result.prefactor.imag(0.);
-            if(a.index != b.index) result.kroneckers.push_back({a.index.index, b.index.index});
-            if(a.spin != b.spin) result.kroneckers.push_back({a.spin.spin, b.spin.spin});
+            if(a.index != b.index) result.kroneckers.push_back({a.index, b.index});
+            if(a.spin != b.spin) result.kroneckers.push_back({a.spin, b.spin});
             return result;
         }
     }

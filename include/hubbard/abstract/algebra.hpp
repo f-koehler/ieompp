@@ -5,14 +5,14 @@
 #include "hubbard/algebra/term.hpp"
 #include "hubbard/algebra/commutator.hpp"
 
-#include "hubbard/abstract/index.hpp"
 #include "hubbard/abstract/prefactor.hpp"
-#include "hubbard/abstract/spin.hpp"
 
 namespace hubbard
 {
     namespace abstract
     {
+        using AbstractIndex = std::string;
+        using AbstractSpin = std::string;
         using AbstractOperator = algebra::Operator<AbstractIndex, AbstractSpin>;
 
         struct AbstractTerm : public algebra::Term<AbstractOperator, AbstractPrefactor> {
