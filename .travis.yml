@@ -31,7 +31,7 @@ script:
     - cmake --version
     - mkdir build
     - cd build
-    - cmake ..
+    - cmake -Dhubbard_ENABLE_DOC=on ..
     - make -j$(nproc)
-    - ctest
-    - cd ../doc && doxygen
+    - make test
+    - make doc
