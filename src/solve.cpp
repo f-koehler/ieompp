@@ -18,8 +18,13 @@ int main(int argc, char** argv)
     cli.add(Parameter("--commutations")).default_value("2");
 
     auto args = quicli::convert(argc, argv);
-    cli.parse(args, vm);
-    cli.validate(vm);
+    try {
+        cli.parse(args, vm);
+        cli.validate(vm);
+    } catch(const std::exception& e) {
+        cerr << e.what() << endl;
+        std::exit(1);
+    }
 
     auto disc = hubbard::ieom::discretize(as<size_t>(vm.get("--nx")), as<size_t>(vm.get("--ny")));
     auto kx = disc.kx_index(as<double>(vm.get("--kx")));

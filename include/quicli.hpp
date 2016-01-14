@@ -41,6 +41,9 @@ namespace quicli
     using is_list = std::is_same<T, std::list<typename T::value_type, typename T::allocator_type>>;
 
     template <typename T>
+    using is_pair = std::is_same<T, std::pair<typename T::first_name, typename T::second_type>>;
+
+    template <typename T>
     typename std::enable_if<std::is_same<T, double>::value, T>::type as(const std::string& str)
     {
         return std::stod(str);
@@ -108,6 +111,16 @@ namespace quicli
         while(std::getline(strm, token, ','))
             vec.push_back(as<typename T::value_type>(token));
         return vec;
+    }
+
+    template <typename T>
+    typename std::enable_if<is_pair<T>::value, T> as(const std::string& str)
+    {
+        auto pos = str.find(',');
+        if(pos == std::string::npos)
+            throw std::runtime_error("Did not find comma while parsing pair");
+        return std::make_pair(as<typename T::first_type>(str.substr(0, pos)),
+                              as<typename T::second_type>(str.substr(pos + 1)));
     }
 
     class ValueMap : public std::map<std::string, std::vector<Occurance>>
