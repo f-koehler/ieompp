@@ -22,7 +22,7 @@ namespace hubbard
         }
 
         template <typename Term>
-        TermList<Term> commutate(const Term& a, const Term& b)
+        void commutate(const Term& a, const Term& b, TermList<Term>& terms)
         {
             const auto& a_ops = a.operators;
             const auto& b_ops = b.operators;
@@ -31,8 +31,6 @@ namespace hubbard
             using UInt        = decltype(a_ops.size());
 
             assert(m * n % 2 == 0);
-
-            TermList<Term> list;
 
             const auto prefactor = a.prefactor * b.prefactor;
             for(UInt k = 1; k <= n; ++k) {
@@ -56,10 +54,9 @@ namespace hubbard
                     std::copy(b_ops.begin() + l, b_ops.end(), std::back_inserter(new_ops));
                     std::copy(a_ops.begin() + k, a_ops.end(), std::back_inserter(new_ops));
 
-                    list.emplace_back(new_term);
+                    terms.emplace_back(new_term);
                 }
             }
-            return list;
         }
 
         template <typename Term>

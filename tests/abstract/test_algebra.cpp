@@ -60,9 +60,10 @@ TEST_CASE("commutator", "[abstract]")
         b.operators.push_back(make_creator("q", "s"));
         b.prefactor.prefactor = Complex(1., 0.);
 
-        auto c = algebra::commutate(a, b);
-        REQUIRE(c.size() == 1);
-        auto& result = c.front();
+        AbstractTermList list;
+        algebra::commutate(a, b, list);
+        REQUIRE(list.size() == 1);
+        auto& result = list.front();
 
         auto expect = algebra::make_term(
             AbstractPrefactor{Complex(1., 0.), {Kronecker{"k_1", "q"}, Kronecker{"s'", "s"}}},

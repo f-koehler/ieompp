@@ -53,6 +53,10 @@ int main(int argc, char** argv)
     /* auto k_max = hubbard::PI; */
     auto n     = 20ul;
 
+    using Operator = algebra::Operator<size_t, bool>;
+    using Term     = algebra::Term<Operator, Complex>;
+    using TermList = algebra::TermList<Term>;
+    TermList list;
     auto t1 = algebra::make_term(Complex(1., 0.), {algebra::make_creator(150ul, true)});
     for(auto x1 = 0ul; x1 < n; ++x1) {
         for(auto x2 = 0ul; x2 < n; ++x2) {
@@ -62,7 +66,7 @@ int main(int argc, char** argv)
                         Complex(1., 0.),
                         {algebra::make_creator(x1, true), algebra::make_annihilator(x2, true),
                          algebra::make_creator(x3, true), algebra::make_annihilator(x4, false)});
-                    auto res = algebra::commutate(t1, t2);
+                    algebra::commutate(t1, t2, list);
                 }
             }
         }

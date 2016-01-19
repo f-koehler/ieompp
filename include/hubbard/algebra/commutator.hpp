@@ -40,10 +40,10 @@ namespace hubbard
          *
          * @param a The left term
          * @param b The right term
-         * @return A list of all terms created by the commutator
+         * @param terms Termlist where all resulting terms will be stored
          */
         template <typename Term>
-        TermList<Term> commutate(const Term& a, const Term& b);
+        void commutate(const Term& a, const Term& b, TermList<Term>& terms);
 
         /*!
          * @brief Order the term by applying anticommutators
