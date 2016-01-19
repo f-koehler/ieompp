@@ -28,22 +28,17 @@ function(git_submodule DIR)
     endif()
 endfunction()
 
-if(NOT DEFINED GIT_FOUND)
-    find_package(Git)
-endif()
-if(${GIT_FOUND})
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --dirty
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        OUTPUT_VARIABLE hubbard_VERSION
-        ERROR_QUIET
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    MESSAGE(STATUS "Hubbard version: ${hubbard_VERSION}")
-else()
-    set(hubbard_VERSION "unknown")
-endif()
-configure_file("${CMAKE_SOURCE_DIR}/include/hubbard/config.hpp.in" "${CMAKE_SOURCE_DIR}/include/hubbard/config.hpp")
+# hack to keep include/hubbard/config.hpp up-to-date
+add_custom_target(
+    configure
+    ALL
+    COMMAND python ${CMAKE_SOURCE_DIR}/tools/configure.py
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+add_custom_command(
+    COMMAND ${CMAKE_COMMAND} -E echo
+    OUTPUT ${CMAKE_SOURCE_DIR}/hubbard/include/config.hpp
+)
 
 option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
 option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
