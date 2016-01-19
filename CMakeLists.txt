@@ -66,11 +66,7 @@ if(${hubbard_ENABLE_DOC})
     add_subdirectory(doc)
 endif()
 
-add_executable(main main.cpp)
-add_executable(fermion_cas src/fermion_cas.cpp)
-add_executable(regexes src/regexes.cpp)
-add_executable(solve src/solve.cpp)
+add_subdirectory(src)
 
-install(TARGETS fermion_cas RUNTIME DESTINATION bin)
 file(GLOB python_scripts "${CMAKE_SOURCE_DIR}/scripts/*.py")
 install(PROGRAMS ${python_scripts} DESTINATION bin)
