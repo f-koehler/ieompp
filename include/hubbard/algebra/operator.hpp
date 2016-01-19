@@ -93,6 +93,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/algebra/operator_impl.hpp"
+#include "detail/operator_impl.hpp"
 
 #endif

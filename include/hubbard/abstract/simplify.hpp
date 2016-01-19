@@ -21,6 +21,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/abstract/simplify_impl.hpp"
+#include "detail/simplify_impl.hpp"
 
 #endif

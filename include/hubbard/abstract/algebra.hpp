@@ -29,6 +29,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/abstract/algebra_impl.hpp"
+#include "detail/algebra_impl.hpp"
 
 #endif

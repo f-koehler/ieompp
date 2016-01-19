@@ -127,6 +127,6 @@ namespace hubbard
 }
 
 
-#include "hubbard/algebra/term_impl.hpp"
+#include "detail/term_impl.hpp"
 
 #endif

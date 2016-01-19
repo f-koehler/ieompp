@@ -132,6 +132,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/abstract/parse_impl.hpp"
+#include "detail/parse_impl.hpp"
 
 #endif

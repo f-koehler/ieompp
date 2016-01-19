@@ -58,6 +58,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/algebra/commutator_impl.hpp"
+#include "detail/commutator_impl.hpp"
 
 #endif

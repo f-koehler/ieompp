@@ -52,6 +52,6 @@ namespace hubbard
     }
 }
 
-#include "hubbard/abstract/prefactor_impl.hpp"
+#include "detail/prefactor_impl.hpp"
 
 #endif
