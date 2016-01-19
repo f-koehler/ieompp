@@ -31,6 +31,7 @@ namespace hubbard
 
         inline bool AbstractPrefactor::same_kroneckers(const AbstractPrefactor& rhs) const
         {
+            // TODO: make sure that the Kroneckers are ordered. Ctor?
             return (kroneckers.size() == rhs.kroneckers.size())
                 || std::equal(kroneckers.begin(), kroneckers.end(), rhs.kroneckers.begin());
         }

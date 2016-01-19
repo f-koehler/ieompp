@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     /* } */
     /* auto k_min = -hubbard::PI; */
     /* auto k_max = hubbard::PI; */
-    auto n     = 20ul;
+    auto n     = 20000ul;
 
     using Operator = algebra::Operator<size_t, bool>;
     using Term     = algebra::Term<Operator, Complex>;
