@@ -7,6 +7,11 @@ namespace hubbard
 {
     namespace algebra {
 
+        struct NoSpin {
+            inline bool operator==(const NoSpin& rhs) const;
+            inline bool operator!=(const NoSpin& rhs) const;
+        };
+
         /*!
          * @brief This struct resembles a fermionic creation/annihilation operator
          *
@@ -14,7 +19,7 @@ namespace hubbard
          * lattice position in real or k-space)
          * @tparam Spin The type that is used to store the spin of the operator
          */
-        template <typename Index, typename Spin>
+        template <typename Index, typename Spin = NoSpin>
         struct Operator {
             //! This bool denotes whether the operator is acreation operator
             bool creator;
@@ -78,7 +83,19 @@ namespace hubbard
         inline Operator<Index, Spin> make_creator(const Index& index, const Spin& spin);
 
         /*!
-         * @brief Create an creation annihilation with the given index and spin
+         * @brief Create an spinless creation operator with the given index
+         *
+         * @tparam Index The type that is used to store the spatial coordinate of the operator (e.g.
+         * lattice position in real or k-space)
+         *
+         * @param index Index of the new operator
+         * @return The newly created creation operator
+         */
+        template <typename Index>
+        inline Operator<Index, NoSpin> make_creator(const Index& index);
+
+        /*!
+         * @brief Create an annihilation operator with the given index and spin
          *
          * @tparam Index The type that is used to store the spatial coordinate of the operator (e.g.
          * lattice position in real or k-space)
@@ -90,6 +107,18 @@ namespace hubbard
          */
         template <typename Index, typename Spin>
         inline Operator<Index, Spin> make_annihilator(const Index& index, const Spin& spin);
+
+        /*!
+         * @brief Create a spinless annihilation operator with the given index
+         *
+         * @tparam Index The type that is used to store the spatial coordinate of the operator (e.g.
+         * lattice position in real or k-space)
+         *
+         * @param index Index of the new operator
+         * @return The newly created annihilation operator
+         */
+        template <typename Index>
+        inline Operator<Index, NoSpin> make_annihilator(const Index& index);
     }
 }
 
