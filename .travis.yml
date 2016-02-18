@@ -31,7 +31,7 @@ script:
     - cmake --version
     - mkdir build
     - cd build
-    - cmake -Dhubbard_ENABLE_DOC=on ..
+    - cmake -Dhubbard_ENABLE_DOC=on -Dhubbard_ENABLE_BENCHMARKS=on ..
     - make -j$(nproc)
     - make test
     - make doc
