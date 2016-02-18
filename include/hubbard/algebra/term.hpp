@@ -39,16 +39,6 @@ namespace hubbard
              */
             inline bool same_operators(const Term& rhs) const;
 
-            /*!
-             * @brief Check if the operators are ordered.
-             *
-             * @details The operators are ordered if all creators are in the beginning followed by
-             * the annihilators
-             *
-             * @return true if the term is ordered, false otherwise
-             */
-            inline bool ordered() const;
-
 
             /*!
              * @brief Check if two terms are equal
@@ -110,19 +100,6 @@ namespace hubbard
         template <typename Prefactor, typename Operator>
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators);
-
-        /*!
-         * @brief Find the first operator that destroy the order of operators within the term
-         *
-         * @tparam Term The type of the term
-         *
-         * @param term The term to scan
-         * @return Iterator to the first unordered operator or end to the operator list if the term
-         * is ordered
-         */
-        template <typename Term>
-        auto find_unordered_operator(Term& term) ->
-            typename std::vector<typename Term::OperatorType>::iterator;
     }
 }
 

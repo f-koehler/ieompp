@@ -44,17 +44,6 @@ namespace hubbard
          */
         template <typename Term>
         void commutate(const Term& a, const Term& b, TermList<Term>& terms);
-
-        /*!
-         * @brief Order the term by applying anticommutators
-         *
-         * @tparam Term The type of the term
-         *
-         * @param term The term to order
-         * @param list List in which newly created terms (due to anticommutation) are stored
-         */
-        template <typename Term>
-        void order_term(Term& term, TermList<Term>& list);
     }
 }
 

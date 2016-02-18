@@ -3,20 +3,6 @@
 namespace hubbard
 {
     namespace algebra {
-        
-        template <typename Operator, typename Prefactor>
-        inline bool Term<Operator, Prefactor>::ordered() const
-        {
-            bool annihilator = false;
-            for(auto& op : operators) {
-                if(op.creator) {
-                    if(annihilator) return false;
-                } else {
-                    annihilator = true;
-                }
-            }
-            return true;
-        }
 
         template <typename Operator, typename Prefactor>
         inline bool Term<Operator, Prefactor>::same_operators(const Term<Operator, Prefactor>& rhs) const
@@ -55,20 +41,6 @@ namespace hubbard
                                             const std::initializer_list<Operator>& operators)
         {
             return Term<Operator, Prefactor>{prefactor, operators};
-        }
-        
-        template <typename Term>
-        auto find_unordered_operator(Term& term) ->
-            typename std::vector<typename Term::OperatorType>::iterator
-        {
-            bool annihilator = false;
-            for(auto iter = term.operators.begin(); iter != term.operators.end(); ++iter) {
-                if(!iter->creator)
-                    annihilator = true;
-                else if(annihilator)
-                    return iter-1;
-            }
-            return term.operators.end();
         }
     }
 }
