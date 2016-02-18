@@ -23,11 +23,11 @@ namespace hubbard
                 static const std::string numbers         = u8"0-9";
 
                 //! range of the lowercase greek letters
-                static const std::string greek           = u8"αβγδεζηθικλμνξοπρστφχψω";
+                static const std::string greek           = u8"αβγδεζηθικλμνξοπρστνφχψω";
 
                 // TODO: explicitly write down the characters as in "greek", as unicode ranges don't always seem to work
                 //! range of the upeprcase greek letters
-                static const std::string greek_capital   = u8"\u0391-\u03a9";
+                static const std::string greek_capital   = u8"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
 
                 //! range of arrows
                 static const std::string arrows          = u8"←↑↓→";
