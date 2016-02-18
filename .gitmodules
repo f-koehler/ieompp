@@ -4,3 +4,6 @@
 [submodule "benchmark"]
 	path = external/benchmark
 	url = https://github.com/google/benchmark.git
+[submodule "quicli"]
+	path = external/quicli
+	url = https://github.com/f-koehler/quicli.git

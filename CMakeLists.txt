@@ -61,6 +61,7 @@ if(${hubbard_ENABLE_DOC})
     add_subdirectory(doc)
 endif()
 
+git_submodule(external/quicli)
 add_subdirectory(src)
 
 file(GLOB python_scripts "${CMAKE_SOURCE_DIR}/scripts/*.py")
