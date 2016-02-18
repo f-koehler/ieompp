@@ -7,8 +7,24 @@ namespace hubbard
 {
     namespace algebra {
 
+        /*!
+         * @brief This struct is a spin type for operators with no spin
+         */
         struct NoSpin {
+            /*!
+             * @brief Check if two NoSpin instances are equal (always true)
+             *
+             * @param rhs The NoSpin this one will be compared to.
+             * @return Always true.
+             */
             inline bool operator==(const NoSpin& rhs) const;
+
+            /*!
+             * @brief Check if two NoSpin instances are not equal (always false)
+             *
+             * @param rhs The NoSpin this one will be compared to.
+             * @return Always false.
+             */
             inline bool operator!=(const NoSpin& rhs) const;
         };
 
