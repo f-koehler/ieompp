@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <list>
 #include <map>
 #include <memory>
@@ -125,6 +126,9 @@ namespace quicli
 
     class ValueMap : public std::map<std::string, std::vector<Occurance>>
     {
+        private:
+            std::vector<std::string> _positionals;
+
         public:
             using map_type = std::map<std::string, std::vector<Occurance>>;
             using map_type::map;
@@ -132,6 +136,9 @@ namespace quicli
             const std::string& get(const std::string& name) const;
             const Occurance& get_values(const std::string& name) const;
             const std::vector<Occurance>& get_all(const std::string& name) const;
+
+            std::vector<std::string>& positionals();
+            const std::vector<std::string>& positionals() const;
     };
 
     class Argument
@@ -213,6 +220,7 @@ namespace quicli
         protected:
             std::string _name;
             std::vector<std::unique_ptr<Argument>> _args;
+            std::size_t _num_positionals;
 
         public:
             CLI(const std::string& name);
@@ -226,9 +234,12 @@ namespace quicli
             template<typename T>
             const T& get(const std::string& name) const;
 
+            void parse(int argc, char** argv, ValueMap& vm) const;
             void parse(std::vector<std::string>& args, ValueMap& vm) const;
             void validate(const ValueMap& vm) const;
             virtual std::string help() const;
+
+            CLI& num_positionals(std::size_t value = std::numeric_limits<std::size_t>::max());
     };
 
     
@@ -258,6 +269,8 @@ namespace quicli
         return at(name);
     }
 
+    std::vector<std::string>& ValueMap::positionals() { return _positionals; }
+    const std::vector<std::string>& ValueMap::positionals() const { return _positionals; }
 
 
     /////////////////////////
@@ -411,6 +424,12 @@ namespace quicli
         return *dynamic_cast<const T*>(pos->get());
     }
 
+    void CLI::parse(int argc, char** argv, ValueMap& vm) const
+    {
+        auto args = convert(argc, argv);
+        parse(args, vm);
+    }
+
     void CLI::parse(std::vector<std::string>& args, ValueMap& vm) const
     {
         while(!args.empty()) {
@@ -422,6 +441,14 @@ namespace quicli
                 matched = true;
                 break;
             }
+
+            if(_num_positionals) {
+                auto count = std::min(args.size(), _num_positionals);
+                std::copy(args.begin(), args.begin() + count, std::back_inserter(vm.positionals()));
+                args.erase(args.begin(), args.begin() + count);
+                matched = args.empty();
+            }
+
             if(!matched) throw std::runtime_error("Argument \"" + args.front() + "\" is unmatched");
         }
     }
@@ -442,6 +469,12 @@ namespace quicli
         std::ostringstream strm;
         strm << _name << std::endl;
         return strm.str();
+    }
+    
+    CLI& CLI::num_positionals(std::size_t value)
+    {
+        _num_positionals = value;
+        return *this;
     }
 }
 
