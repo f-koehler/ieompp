@@ -2,6 +2,7 @@
 #define HUBBARD_ALGEBRA_OPERATOR_HPP_
 
 #include <ostream>
+#include <tuple>
 
 namespace hubbard
 {
@@ -37,6 +38,9 @@ namespace hubbard
          */
         template <typename Index, typename Spin = NoSpin>
         struct Operator {
+            //! Type to hold the contration of two of these operators
+            using Contraction = std::tuple<Operator, Operator>;
+
             //! This bool denotes whether the operator is acreation operator
             bool creator;
 

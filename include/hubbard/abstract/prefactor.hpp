@@ -2,6 +2,7 @@
 #define HUBBARD_ABSTRACT_PREFACTOR_HPP_
 
 #include "hubbard/types.hpp"
+#include "hubbard/abstract/operator.hpp"
 
 #include <string>
 #include <vector>
@@ -10,7 +11,6 @@ namespace hubbard
 {
     namespace abstract
     {
-
         /*!
          * @brief This struct represents a Kronecker delta.
          */
@@ -67,6 +67,8 @@ namespace hubbard
             //! The Kronecker deltas in the prefactor
             std::vector<Kronecker> kroneckers;
 
+            //!
+            std::vector<AbstractOperator::Contraction> contractions;
 
             inline bool same_kroneckers(const AbstractPrefactor& rhs) const;
 

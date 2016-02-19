@@ -1,7 +1,7 @@
 #ifndef HUBBARD_SIMPLIFY_HPP_
 #define HUBBARD_SIMPLIFY_HPP_
 
-#include "hubbard/abstract/algebra.hpp"
+#include "hubbard/abstract/term.hpp"
 
 namespace hubbard
 {

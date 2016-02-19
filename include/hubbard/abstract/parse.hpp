@@ -4,7 +4,7 @@
 #include <regex>
 #include <tuple>
 
-#include "hubbard/abstract/algebra.hpp"
+#include "hubbard/abstract/term.hpp"
 
 namespace hubbard
 {
