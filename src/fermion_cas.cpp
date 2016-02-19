@@ -2,17 +2,26 @@
 #include <regex>
 
 #include "hubbard/abstract.hpp"
-using namespace hubbard;
+#include "quicli.hpp"
 
 using namespace std;
+using namespace hubbard;
+using namespace quicli;
 
-int main(int argc, char** argv) {
-    if(argc != 2) {
-        cerr << "usage: cas [term1, term2]" << endl;
+int main(int argc, char** argv)
+{
+    Interface cli("fermion_cas");
+    cli.positionals("COMMUTATOR", "A commutator of two terms \"[term1, term2]\"", 1);
+
+    ValueMap vm;
+    cli.parse(argc, argv, vm);
+
+    if(vm.positionals().size() != 1) {
+        cerr << cli.help() << endl;
         return 1;
     }
 
-    auto expression = std::string(argv[1]);
+    auto expression = std::string(vm.positionals()[0]);
     auto ic = hubbard::abstract::parse::is_commutator(expression);
 
     if(!std::get<0>(ic)) {

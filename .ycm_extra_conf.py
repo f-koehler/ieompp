@@ -46,11 +46,11 @@ flags = [
 '-I',
 './external/catch/include',
 '-I',
+'./external/quicli',
+'-I',
 './external/benchmark/include',
 '-I',
 './include',
-'-I',
-'./src',
 ]
 
 
