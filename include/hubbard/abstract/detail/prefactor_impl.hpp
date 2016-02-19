@@ -38,7 +38,7 @@ namespace hubbard
 
         AbstractPrefactor& AbstractPrefactor::operator*=(const AbstractPrefactor& rhs)
         {
-            prefactor *= rhs.prefactor;
+            number *= rhs.number;
             std::copy(rhs.kroneckers.begin(), rhs.kroneckers.end(), std::back_inserter(kroneckers));
             return *this;
         }
@@ -46,7 +46,7 @@ namespace hubbard
         AbstractPrefactor AbstractPrefactor::operator*(const AbstractPrefactor& rhs) const
         {
             AbstractPrefactor result(*this);
-            result.prefactor *= rhs.prefactor;
+            result.number *= rhs.number;
             std::copy(rhs.kroneckers.begin(), rhs.kroneckers.end(),
                       std::back_inserter(result.kroneckers));
             return result;
@@ -55,7 +55,7 @@ namespace hubbard
         template <typename T>
         AbstractPrefactor& AbstractPrefactor::operator*=(const T& rhs)
         {
-            prefactor *= rhs;
+            number *= rhs;
             return *this;
         }
 
@@ -63,25 +63,25 @@ namespace hubbard
         AbstractPrefactor AbstractPrefactor::operator*(const T& rhs) const
         {
             AbstractPrefactor result(*this);
-            result.prefactor *= rhs;
+            result.number *= rhs;
             return result;
         }
 
         inline bool AbstractPrefactor::operator==(const AbstractPrefactor& rhs) const
         {
-            return (prefactor == rhs.prefactor) && (kroneckers.size() == rhs.kroneckers.size())
+            return (number == rhs.number) && (kroneckers.size() == rhs.kroneckers.size())
                    && std::equal(kroneckers.begin(), kroneckers.end(), rhs.kroneckers.begin());
         }
 
         inline bool AbstractPrefactor::operator!=(const AbstractPrefactor& rhs) const
         {
-            return (prefactor != rhs.prefactor) || (kroneckers.size() != rhs.kroneckers.size())
+            return (number != rhs.number) || (kroneckers.size() != rhs.kroneckers.size())
                    || !std::equal(kroneckers.begin(), kroneckers.end(), rhs.kroneckers.begin());
         }
 
         std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs)
         {
-            strm << rhs.prefactor;
+            strm << rhs.number;
             if(!rhs.kroneckers.empty()) {
                 strm << "\u22C5";
                 for(auto& k : rhs.kroneckers) strm << k;

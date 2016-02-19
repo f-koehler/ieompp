@@ -62,7 +62,7 @@ namespace hubbard
 
         struct AbstractPrefactor {
             //! The complex prefactor component
-            Complex prefactor;
+            Complex number;
 
             //! The Kronecker deltas in the prefactor
             std::vector<Kronecker> kroneckers;

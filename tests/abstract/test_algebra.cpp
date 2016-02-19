@@ -24,26 +24,26 @@ TEST_CASE("anticommutator", "[abstract]")
     {
         auto ac = algebra::anticommutator<AbstractOperator, AbstractPrefactor>(
             make_creator("k_1", "s_1"), make_creator("k_2", "s_2"));
-        REQUIRE(ac.prefactor == Complex(1., 0.));
+        REQUIRE(ac.number == Complex(1., 0.));
         REQUIRE(ac.kroneckers.size() == 2);
         REQUIRE(ac.kroneckers.front() == (Kronecker{"k_2", "k_1"}));
         REQUIRE(ac.kroneckers.back() == (Kronecker{"s_2", "s_1"}));
 
         ac = algebra::anticommutator<AbstractOperator, AbstractPrefactor>(
             make_creator("k_1", "s_1"), make_creator("k_1", "s_2"));
-        REQUIRE(ac.prefactor == Complex(1., 0.));
+        REQUIRE(ac.number == Complex(1., 0.));
         REQUIRE(ac.kroneckers.size() == 1);
         REQUIRE(ac.kroneckers.back() == (Kronecker{"s_2", "s_1"}));
         
         ac = algebra::anticommutator<AbstractOperator, AbstractPrefactor>(
             make_creator("k_1", "s_1"), make_creator("k_2", "s_1"));
-        REQUIRE(ac.prefactor == Complex(1., 0.));
+        REQUIRE(ac.number == Complex(1., 0.));
         REQUIRE(ac.kroneckers.size() == 1);
         REQUIRE(ac.kroneckers.front() == (Kronecker{"k_2", "k_1"}));
         
         ac = algebra::anticommutator<AbstractOperator, AbstractPrefactor>(
             make_creator("k_1", "s_1"), make_creator("k_1", "s_1"));
-        REQUIRE(ac.prefactor == Complex(1., 0.));
+        REQUIRE(ac.number == Complex(1., 0.));
         REQUIRE(ac.kroneckers.empty());
     }
 }
@@ -55,10 +55,10 @@ TEST_CASE("commutator", "[abstract]")
         AbstractTerm a, b;
         a.operators.push_back(make_creator("k_1", "s'"));
         a.operators.push_back(make_annihilator("k_1", "s'"));
-        a.prefactor.prefactor = Complex(1., 0.);
+        a.prefactor.number = Complex(1., 0.);
         
         b.operators.push_back(make_creator("q", "s"));
-        b.prefactor.prefactor = Complex(1., 0.);
+        b.prefactor.number = Complex(1., 0.);
 
         AbstractTermList list;
         algebra::commutate(a, b, list);

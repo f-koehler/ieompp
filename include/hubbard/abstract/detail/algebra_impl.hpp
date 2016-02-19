@@ -20,8 +20,8 @@ namespace hubbard
             const abstract::AbstractOperator& a, const abstract::AbstractOperator& b)
         {
             abstract::AbstractPrefactor result;
-            result.prefactor.real(1.);
-            result.prefactor.imag(0.);
+            result.number.real(1.);
+            result.number.imag(0.);
             if(a.index != b.index) result.kroneckers.push_back({a.index, b.index});
             if(a.spin != b.spin) result.kroneckers.push_back({a.spin, b.spin});
             return result;

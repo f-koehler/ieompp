@@ -22,7 +22,7 @@ namespace hubbard
                         });
 
                     while(found != terms.end()) {
-                        iter->prefactor.prefactor += found->prefactor.prefactor;
+                        iter->prefactor.number += found->prefactor.number;
                         auto prev = found - 1;
                         terms.erase(found);
                         found = std::find_if(prev + 1, terms.end(), [&iter](const AbstractTerm& t) {
@@ -49,7 +49,7 @@ namespace hubbard
             inline AbstractTermList& filter(AbstractTermList& terms)
             {
                 terms.erase(std::remove_if(terms.begin(), terms.end(), [](const AbstractTerm& t) {
-                    return is_zero(t.prefactor.prefactor);
+                    return is_zero(t.prefactor.number);
                 }));
                 return terms;
             }
