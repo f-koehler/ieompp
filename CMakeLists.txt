@@ -6,6 +6,7 @@ include_directories(include)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 function(git_submodule DIR)
     if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${DIR}/.git" )
@@ -40,11 +41,16 @@ add_custom_command(
     OUTPUT ${CMAKE_SOURCE_DIR}/hubbard/include/config.hpp
 )
 
-option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
+option(hubbard_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
 option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
 option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
-option(hubbard_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
 option(hubbard_ENABLE_DOC        "Option to enable documentation" OFF)
+option(hubbard_ENABLE_IWYU       "Option to enable #include analysis with include-what-you-use" OFF)
+option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
+
+if(${hubbard_ENABLE_IWYU})
+    include(${CMAKE_SOURCE_DIR}/cmake/iwyu.cmake) 
+endif()
 
 if(${hubbard_ENABLE_TESTS})
     enable_testing()
