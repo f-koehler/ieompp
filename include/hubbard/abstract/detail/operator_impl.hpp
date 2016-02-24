@@ -13,5 +13,12 @@ namespace hubbard
         {
             return AbstractOperator{false, AbstractIndex{index}, AbstractSpin{spin}};
         }
+
+        std::ostream& operator<<(std::ostream& strm,
+                                 const hubbard::abstract::AbstractOperator::ContractionType& rhs)
+        {
+            strm << "\\left<" << std::get<0>(rhs) << " " << std::get<1>(rhs) << "\\right>";
+            return strm;
+        }
     }
 }

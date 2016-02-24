@@ -4,11 +4,6 @@
 #include <sstream>
 #include "hubbard/types.hpp"
 
-std::ostringstream os()
-{
-    return std::ostringstream();
-}
-
 TEST_CASE("format", "[types]")
 {
     using hubbard::Complex;

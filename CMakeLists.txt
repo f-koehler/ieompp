@@ -4,9 +4,15 @@ project(hubbard)
 include_directories(include)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+include(cmake/warnings.cmake)
 
 function(git_submodule DIR)
     if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${DIR}/.git" )
@@ -53,6 +59,9 @@ if(${hubbard_ENABLE_IWYU})
 endif()
 
 if(${hubbard_ENABLE_TESTS})
+    if(${hubbard_ENABLE_COVERAGE})
+        include(cmake/coverage.cmake)
+    endif()
     enable_testing()
     git_submodule(external/catch)
     add_subdirectory(tests)

@@ -38,8 +38,14 @@ namespace hubbard
          */
         template <typename Index, typename Spin = NoSpin>
         struct Operator {
+            //! Forward Index type
+            using IndexType = Index;
+
+            //! Forward Spin type
+            using SpinType = Spin;
+
             //! Type to hold the contration of two of these operators
-            using Contraction = std::tuple<Operator, Operator>;
+            using ContractionType = std::tuple<Operator, Operator>;
 
             //! This bool denotes whether the operator is acreation operator
             bool creator;

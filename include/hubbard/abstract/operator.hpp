@@ -33,6 +33,8 @@ namespace hubbard
          * @return The newly created annihilation operator
          */
         inline AbstractOperator make_annihilator(const std::string& index, const std::string& spin);
+
+        std::ostream& operator<<(std::ostream& strm, const hubbard::abstract::AbstractOperator::ContractionType& rhs);
     }
 }
 

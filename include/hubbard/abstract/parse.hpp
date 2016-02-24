@@ -13,6 +13,9 @@ namespace hubbard
         namespace parse
         {
             namespace components {
+                //! string to use for operators
+                static const std::string operator_       = u8"c";
+
                 //! range of the lowercase latin letters
                 static const std::string letters         = u8"a-z";
 
@@ -25,7 +28,6 @@ namespace hubbard
                 //! range of the lowercase greek letters
                 static const std::string greek           = u8"αβγδεζηθικλμνξοπρστνφχψω";
 
-                // TODO: explicitly write down the characters as in "greek", as unicode ranges don't always seem to work
                 //! range of the upeprcase greek letters
                 static const std::string greek_capital   = u8"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
 
@@ -57,7 +59,7 @@ namespace hubbard
                 static const std::string str_commutator = u8"^\\[" + commutator_term + ";" + commutator_term + "\\]$";
 
                 //! structure of an operator c_subscript(^exponent)
-                static const std::string str_operator   = u8"c" + operator_subscript + operator_exponent;
+                static const std::string str_operator   = operator_ + operator_subscript + operator_exponent;
 
                 //! structure of a Kronecker delta δ_{index1,index}
                 static const std::string str_kronecker  = u8"(?:δ|\\\\delta)" + kronecker_subscript;
