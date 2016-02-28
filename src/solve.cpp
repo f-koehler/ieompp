@@ -11,4 +11,8 @@ using namespace quicli;
 
 int main(int argc, char** argv)
 {
+    auto env = environment();
+    for(auto& entry : env) {
+        std::cout << entry.first << "\t" << entry.second << std::endl;
+    }
 }

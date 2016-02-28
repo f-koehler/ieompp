@@ -67,9 +67,6 @@ namespace hubbard
             //! The Kronecker deltas in the prefactor
             std::vector<Kronecker> kroneckers;
 
-            //! The contractions in the current term
-            std::vector<AbstractOperator::ContractionType> contractions;
-
             inline bool same_kroneckers(const AbstractPrefactor& rhs) const;
 
             AbstractPrefactor& operator*=(const AbstractPrefactor& rhs);
