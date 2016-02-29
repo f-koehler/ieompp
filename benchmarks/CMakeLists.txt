@@ -1,4 +1,3 @@
-include(ExternalProject)
 ExternalProject_Add(
     google_benchmark
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/benchmark

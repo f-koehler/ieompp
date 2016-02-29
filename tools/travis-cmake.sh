@@ -27,5 +27,5 @@ tar xf ${CMAKE_NAME}.tar.gz
 # create build dir
 mkdir -p build
 cd build
-../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist
+../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist --system-curl --no-qt-gui
 make -j$(nproc) && make -j$(nproc) install

@@ -2,6 +2,7 @@
 build
 include/hubbard/config.hpp
 *.kdev4
+external/eigen
 
 # python
 *.pyc

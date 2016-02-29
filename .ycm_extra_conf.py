@@ -44,6 +44,8 @@ flags = [
 '-x',
 'c++',
 '-I',
+'./external/eigen/',
+'-I',
 './external/catch/include',
 '-I',
 './external/quicli',
