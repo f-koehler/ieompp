@@ -6,8 +6,6 @@
 
 namespace hubbard
 {
-    const auto PI = 3.14159265358979323846;
-
     using Real    = double;
     using Complex = std::complex<Real>;
 

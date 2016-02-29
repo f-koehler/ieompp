@@ -47,6 +47,12 @@ add_custom_command(
     OUTPUT ${CMAKE_SOURCE_DIR}/hubbard/include/config.hpp
 )
 
+find_package(Boost)
+if(${Boost_FOUND})
+    include_directories(${Boost_INCLUDE_DIRS})
+    add_definitions(-DHUBBARD_HAS_BOOST)
+endif()
+
 option(hubbard_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
 option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
 option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
