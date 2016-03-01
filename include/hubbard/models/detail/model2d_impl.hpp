@@ -37,7 +37,7 @@ namespace hubbard
 
         template <typename Real>
         typename Discretization<Real>::IndexType
-        Discretization<Real>::closest(const typename Discretization<Real>::VectorType& v) const
+        Discretization<Real>::closest(const VectorType& v) const
         {
             IndexType current = std::make_tuple(0, 0);
             VectorType diff   = v - sites[0][0];
@@ -57,14 +57,14 @@ namespace hubbard
         }
 
         template <typename Real>
-        const typename Discretization<Real>::VectorType& Discretization<Real>::
-        operator()(const typename Discretization<Real>::IndexType& i) const
+        inline const typename Discretization<Real>::VectorType& Discretization<Real>::
+        operator()(const IndexType& i) const
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
         }
 
         template <typename Real>
-        typename Discretization<Real>::VectorType& Discretization<Real>::
+        inline typename Discretization<Real>::VectorType& Discretization<Real>::
         operator()(const IndexType& i)
         {
             return sites[std::get<0>(i)][std::get<1>(i)];

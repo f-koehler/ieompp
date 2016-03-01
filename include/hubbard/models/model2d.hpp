@@ -3,7 +3,6 @@
 
 #include <tuple>
 #include <vector>
-#include <ostream>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -37,8 +36,8 @@ namespace hubbard
 
             IndexType closest(const VectorType& v) const;
 
-            const VectorType& operator()(const IndexType& i) const;
-            VectorType& operator()(const IndexType& i);
+            inline const VectorType& operator()(const IndexType& i) const;
+            inline VectorType& operator()(const IndexType& i);
         };
     }
 }
