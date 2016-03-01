@@ -14,7 +14,7 @@ namespace hubbard
                 sites.push_back(std::vector<VectorType>());
                 for(std::size_t j = 0; j < ny; ++j) {
                     sites[i].push_back({x_min + i * dx, y_min + j * dy});
-                    indices.push_back({i, j});
+                    indices.push_back(std::make_tuple(i, j));
                 }
             }
         }
@@ -30,7 +30,7 @@ namespace hubbard
                 sites.push_back(std::vector<VectorType>());
                 for(std::size_t j = 0; j < ny; ++j) {
                     sites[i].push_back({x_min + i * dx, y_min + j * dy});
-                    indices.push_back({i, j});
+                    indices.push_back(std::make_tuple(i, j));
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace hubbard
         typename Discretization<Real>::IndexType
         Discretization<Real>::closest(const typename Discretization<Real>::VectorType& v) const
         {
-            IndexType current = {0, 0};
+            IndexType current = std::make_tuple(0, 0);
             VectorType diff   = v - sites[0][0];
             Real current_dist = diff * diff;
             Real dist;
@@ -49,8 +49,7 @@ namespace hubbard
                     dist = diff * diff;
                     if(dist < current_dist) {
                         current_dist = dist;
-                        current.ix   = i;
-                        current.iy   = j;
+                        current = std::make_tuple(i, j);
                     }
                 }
             }
@@ -69,18 +68,6 @@ namespace hubbard
         operator()(const IndexType& i)
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
-        }
-
-        template <typename Real>
-        inline bool Discretization<Real>::IndexType::operator==(const IndexType& rhs) const
-        {
-            return (ix == rhs.ix) && (iy == rhs.iy);
-        }
-
-        template <typename Real>
-        inline bool Discretization<Real>::IndexType::operator!=(const IndexType& rhs) const
-        {
-            return (ix != rhs.ix) || (iy != rhs.iy);
         }
     }
 }

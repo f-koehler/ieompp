@@ -19,13 +19,8 @@ namespace hubbard
         template <typename Real>
         struct Discretization {
             using RealType = Real;
+            using IndexType = std::tuple<std::size_t, std::size_t>;
             using VectorType = Eigen::Matrix<Real, 2, 1>;
-
-            struct IndexType {
-                std::size_t ix, iy;
-                inline bool operator==(const IndexType& rhs) const;
-                inline bool operator!=(const IndexType& rhs) const;
-            };
 
             std::vector<IndexType> indices;
             std::vector<std::vector<VectorType>> sites;
