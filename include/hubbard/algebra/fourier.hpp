@@ -32,7 +32,7 @@ namespace hubbard
                                                  : typename TermB::PrefactorType(0., 1.);
                 for(const auto& idx : disc_a.indices) {
                     auto factor =
-                        term.prefactor * std::exp(exponent * disc_a(op.index).dot(disc_b(idx)));
+                        term.prefactor * std::exp(exponent * disc_a(op.index) * disc_b(idx));
                     result.push_back(TermB{factor, {OperatorB{op.creator, idx, op.spin}}});
                 }
             }

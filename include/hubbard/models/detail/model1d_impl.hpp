@@ -45,13 +45,13 @@ namespace hubbard
         }
 
         template <typename Real>
-        inline const Real& Discretization<Real>::operator()(const IndexType& i) const
+        inline const typename Discretization<Real>::VectorType& Discretization<Real>::operator()(const IndexType& i) const
         {
             return sites[i];
         }
 
         template <typename Real>
-        inline Real& Discretization<Real>::operator()(const IndexType& i)
+        inline typename Discretization<Real>::VectorType& Discretization<Real>::operator()(const IndexType& i)
         {
             return sites[i];
         }

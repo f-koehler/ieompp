@@ -26,8 +26,8 @@ namespace hubbard
 
             IndexType closest(const VectorType& v) const;
 
-            inline const Real& operator()(const IndexType& i) const;
-            inline Real& operator()(const IndexType& i);
+            inline const VectorType& operator()(const IndexType& i) const;
+            inline VectorType& operator()(const IndexType& i);
         };
     }
 }
