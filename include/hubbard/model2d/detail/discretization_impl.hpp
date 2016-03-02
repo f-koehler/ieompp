@@ -57,6 +57,29 @@ namespace hubbard
         }
 
         template <typename Real>
+        typename std::array<typename Discretization<Real>::IndexType, 4>
+        Discretization<Real>::neighbours(const IndexType& idx) const
+        {
+            auto ix = std::get<0>(idx);
+            auto iy = std::get<1>(idx);
+            return std::array<IndexType, 4>{std::make_tuple((ix == 0) ? num_x - 1 : ix - 1, iy),
+                                            std::make_tuple(ix, (iy == 0) ? num_y - 1 : iy - 1),
+                                            std::make_tuple((ix == num_x - 1) ? 0 : ix + 1, iy),
+                                            std::make_tuple(ix, (iy == num_y - 1) ? 0 : iy + 1)};
+        }
+
+        template <typename Real>
+        typename std::array<typename Discretization<Real>::IndexType, 2>
+        Discretization<Real>::unique_neighbours(const IndexType& idx) const
+        {
+            auto ix = std::get<0>(idx);
+            auto iy = std::get<1>(idx);
+            return std::array<IndexType, 2>{
+                std::make_tuple((ix == 0) ? num_x - 1 : ix - 1, iy),
+                std::make_tuple(ix, (iy == 0) ? num_y - 1 : iy - 1)};
+        }
+
+        template <typename Real>
         inline const typename Discretization<Real>::VectorType& Discretization<Real>::
         operator()(const IndexType& i) const
         {

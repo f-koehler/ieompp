@@ -2,6 +2,7 @@
 #define HUBBARD_MODEL1D_DISCRETIZATION_HPP_
 
 #include <vector>
+#include <array>
 
 #include "hubbard/constants.hpp"
 
@@ -25,6 +26,8 @@ namespace hubbard
             Discretization(const std::size_t n);
 
             IndexType closest(const VectorType& v) const;
+            inline std::array<IndexType, 2> neighbours(const IndexType& idx) const;
+            inline std::array<IndexType, 1> unique_neighbours(const IndexType& idx) const;
 
             inline const VectorType& operator()(const IndexType& i) const;
             inline VectorType& operator()(const IndexType& i);
