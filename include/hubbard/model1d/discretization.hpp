@@ -1,5 +1,5 @@
-#ifndef HUBBARD_MODELS_MODEL1D_HPP_
-#define HUBBARD_MODELS_MODEL1D_HPP_
+#ifndef HUBBARD_MODEL1D_DISCRETIZATION_HPP_
+#define HUBBARD_MODEL1D_DISCRETIZATION_HPP_
 
 #include <vector>
 
@@ -32,6 +32,6 @@ namespace hubbard
     }
 }
 
-#include "detail/model1d_impl.hpp"
+#include "detail/discretization_impl.hpp"
 
 #endif

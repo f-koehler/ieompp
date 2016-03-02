@@ -1,4 +1,4 @@
-#include "hubbard/models/model2d.hpp"
+#include "hubbard/model2d/discretization.hpp"
 
 namespace hubbard
 {

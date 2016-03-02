@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "hubbard/models/model1d.hpp"
+#include "hubbard/model1d/discretization.hpp"
 #include "hubbard/algebra.hpp"
 using namespace hubbard;
 

@@ -1,5 +1,5 @@
-#ifndef HUBBARD_MODELS_MODEL2D_HPP_
-#define HUBBARD_MODELS_MODEL2D_HPP_
+#ifndef HUBBARD_MODEL2D_DISCRETIZATION_HPP_
+#define HUBBARD_MODEL2D_DISCRETIZATION_HPP_
 
 #include <tuple>
 #include <vector>
@@ -42,6 +42,6 @@ namespace hubbard
     }
 }
 
-#include "detail/model2d_impl.hpp"
+#include "detail/discretization_impl.hpp"
 
 #endif

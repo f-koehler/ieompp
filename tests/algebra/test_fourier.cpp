@@ -3,7 +3,7 @@
 
 #include "hubbard/algebra/fourier.hpp"
 #include "hubbard/algebra/operator.hpp"
-#include "hubbard/models/model1d.hpp"
+#include "hubbard/model1d/discretization.hpp"
 
 #include <iostream>
 

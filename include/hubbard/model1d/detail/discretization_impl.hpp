@@ -1,4 +1,4 @@
-#include "hubbard/models/model1d.hpp"
+#include "hubbard/model1d/discretization.hpp"
 
 namespace hubbard
 {
@@ -10,7 +10,7 @@ namespace hubbard
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
-                sites.push_back(x_min + delta_x * n);
+                sites.push_back(x_min + delta_x * i);
             }
         }
 
@@ -21,7 +21,7 @@ namespace hubbard
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
-                sites.push_back(x_min + dx * n);
+                sites.push_back(x_min + dx * i);
             }
         }
 
@@ -33,10 +33,10 @@ namespace hubbard
             VectorType diff   = v - sites[0];
             Real current_dist = diff * diff;
             Real dist;
-            for(std::size_t i = 0; i < num_x; ++i) {
-                diff = v - sites[0];
+            for(std::size_t i = 1; i < num_x; ++i) {
+                diff = v - sites[i];
                 dist = diff * diff;
-                if(diff < current_dist) {
+                if(dist < current_dist) {
                     current_dist = dist;
                     current      = i;
                 }
