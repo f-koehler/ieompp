@@ -43,7 +43,9 @@ namespace hubbard
                     Term&& new_term    = Term();
                     new_term.prefactor = prefactor;
                     new_term.prefactor *= coefficient;
-                    new_term.prefactor *= anticommutator<typename Term::OperatorType, typename Term::PrefactorType>(a_ops[k - 1], b_ops[l - 1]);
+                    new_term.prefactor *=
+                        anticommutator<typename Term::Operator, typename Term::Prefactor>(
+                            a_ops[k - 1], b_ops[l - 1]);
 
                     auto& new_ops = new_term.operators;
 

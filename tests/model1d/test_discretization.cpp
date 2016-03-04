@@ -6,7 +6,7 @@
 TEST_CASE("model1d (real space)", "")
 {
     using Discretization = hubbard::model1d::Discretization<double>;
-    const std::size_t n = 1000;
+    const std::size_t n = 10000;
     Discretization disc(n, 1.);
 
     SECTION("initialization")

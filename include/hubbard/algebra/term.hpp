@@ -16,13 +16,13 @@ namespace hubbard
          * @tparam Operator Type of the operators
          * @tparam Prefactor Type of the prefactor
          */
-        template <typename Operator, typename Prefactor = Complex>
+        template <typename OperatorT, typename PrefactorT = Complex>
         struct Term {
             //! The type of the operators
-            using OperatorType  = Operator;
+            using Operator = OperatorT;
 
             //! The type of the prefactor
-            using PrefactorType = Prefactor;
+            using Prefactor = PrefactorT;
 
 
             //! Prefactor of the term
@@ -67,9 +67,10 @@ namespace hubbard
          *
          * @tparam Term Type of the terms
          */
-        template <typename Term>
-        class TermList : public std::vector<Term>
+        template <typename TermT>
+        class TermList : public std::vector<TermT>
         {
+            using Term = TermT;
             using std::vector<Term>::vector;
         };
 

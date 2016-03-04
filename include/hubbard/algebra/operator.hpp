@@ -36,13 +36,13 @@ namespace hubbard
          * lattice position in real or k-space)
          * @tparam Spin The type that is used to store the spin of the operator
          */
-        template <typename Index, typename Spin = NoSpin>
+        template <typename IndexT, typename SpinT = NoSpin>
         struct Operator {
             //! Forward Index type
-            using IndexType = Index;
+            using Index = IndexT;
 
             //! Forward Spin type
-            using SpinType = Spin;
+            using Spin = SpinT;
 
             //! Type to hold the contration of two of these operators
             using ContractionType = std::tuple<Operator, Operator>;

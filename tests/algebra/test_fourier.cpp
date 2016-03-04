@@ -22,9 +22,10 @@ TEST_CASE("transform", "[algebra]")
 
     Transformation transform(real_space, momentum_space);
 
-    SECTION("creator") {
-        Transformation::TermAType term = {Complex{1., 0.}, {Operator{true, 1, true}}};
-        algebra::TermList<Transformation::TermBType> result;
+    SECTION("creator")
+    {
+        Transformation::Term term = {Complex{1., 0.}, {Operator{true, 1, true}}};
+        algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 
         REQUIRE(result.size() == 4);
@@ -35,10 +36,11 @@ TEST_CASE("transform", "[algebra]")
             REQUIRE(result[i].operators[0].spin);
         }
     }
-    
-    SECTION("annihilator") {
-        Transformation::TermAType term = {Complex{1., 0.}, {Operator{false, 1, true}}};
-        algebra::TermList<Transformation::TermBType> result;
+
+    SECTION("annihilator")
+    {
+        Transformation::Term term = {Complex{1., 0.}, {Operator{false, 1, true}}};
+        algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 
         REQUIRE(result.size() == 4);
