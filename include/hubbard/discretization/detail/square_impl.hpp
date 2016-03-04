@@ -91,5 +91,12 @@ namespace hubbard
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
         }
+
+        template <typename RealT>
+        inline typename SquareDiscretization<RealT>::Real
+        SquareDiscretization<RealT>::dot_product(const Vector& a, const Vector& b)
+        {
+            return a.dot(b);
+        }
     }
 }

@@ -17,8 +17,8 @@ TEST_CASE("transform", "[algebra]")
         algebra::Transformation<algebra::Term<Operator, Complex>, algebra::Term<Operator, Complex>,
                                 Discretization, Discretization>;
 
-    Discretization real_space(4, 1.);
-    Discretization momentum_space(4);
+    Discretization real_space(10, 1.);
+    Discretization momentum_space(10);
 
     Transformation transform(real_space, momentum_space);
 
@@ -28,8 +28,8 @@ TEST_CASE("transform", "[algebra]")
         algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 
-        REQUIRE(result.size() == 4);
-        for(std::size_t i = 0; i < 4; ++i) {
+        REQUIRE(result.size() == 10);
+        for(std::size_t i = 0; i < 10; ++i) {
             REQUIRE(result[i].operators.size() == 1);
             REQUIRE(result[i].operators[0].creator);
             REQUIRE(result[i].operators[0].index == i);
@@ -43,8 +43,8 @@ TEST_CASE("transform", "[algebra]")
         algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 
-        REQUIRE(result.size() == 4);
-        for(std::size_t i = 0; i < 4; ++i) {
+        REQUIRE(result.size() == 10);
+        for(std::size_t i = 0; i < 10; ++i) {
             REQUIRE(result[i].operators.size() == 1);
             REQUIRE(!result[i].operators[0].creator);
             REQUIRE(result[i].operators[0].index == i);

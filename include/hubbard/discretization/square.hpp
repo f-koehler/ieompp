@@ -41,6 +41,8 @@ namespace hubbard
 
             inline const Vector& operator[](const Index& i) const;
             inline Vector& operator[](const Index& i);
+
+            inline static Real dot_product(const Vector& a, const Vector& b);
         };
     }
 }

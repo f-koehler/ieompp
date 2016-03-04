@@ -72,5 +72,12 @@ namespace hubbard
         {
             return sites[i];
         }
+
+        template <typename RealT>
+        inline typename LinearDiscretization<RealT>::Real
+        LinearDiscretization<RealT>::dot_product(const Vector& a, const Vector& b)
+        {
+            return a * b;
+        }
     }
 }
