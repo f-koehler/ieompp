@@ -11,7 +11,7 @@ namespace hubbard
               x_max((nx - 1) * dx), y_max((ny - 1) * dy)
         {
             for(std::size_t i = 0; i < nx; ++i) {
-                sites.push_back(std::vector<VectorType>());
+                sites.push_back(std::vector<Vector>());
                 for(std::size_t j = 0; j < ny; ++j) {
                     sites[i].push_back({x_min + i * dx, y_min + j * dy});
                     indices.push_back(std::make_tuple(i, j));
@@ -27,7 +27,7 @@ namespace hubbard
               y_max(Pi<Real>::value)
         {
             for(std::size_t i = 0; i < nx; ++i) {
-                sites.push_back(std::vector<VectorType>());
+                sites.push_back(std::vector<Vector>());
                 for(std::size_t j = 0; j < ny; ++j) {
                     sites[i].push_back({x_min + i * dx, y_min + j * dy});
                     indices.push_back(std::make_tuple(i, j));
@@ -36,17 +36,17 @@ namespace hubbard
         }
 
         template <typename Real>
-        typename SquareDiscretization<Real>::IndexType
-        SquareDiscretization<Real>::closest(const VectorType& v) const
+        typename SquareDiscretization<Real>::Index
+        SquareDiscretization<Real>::closest(const Vector& v) const
         {
-            IndexType current = std::make_tuple(0, 0);
-            VectorType diff   = v - sites[0][0];
-            Real current_dist = diff * diff;
+            Index current = std::make_tuple(0, 0);
+            Vector diff   = v - sites[0][0];
+            Real current_dist = diff.dot(diff);
             Real dist;
             for(std::size_t i = 0; i < num_x; ++i) {
                 for(std::size_t j = 0; j < num_y; ++j) {
-                    diff = v - sites[0][0];
-                    dist = diff * diff;
+                    diff = v - sites[i][j];
+                    dist = diff.dot(diff);
                     if(dist < current_dist) {
                         current_dist = dist;
                         current      = std::make_tuple(i, j);
@@ -57,37 +57,37 @@ namespace hubbard
         }
 
         template <typename Real>
-        typename std::array<typename SquareDiscretization<Real>::IndexType, 4>
-        SquareDiscretization<Real>::neighbours(const IndexType& idx) const
+        typename std::array<typename SquareDiscretization<Real>::Index, 4>
+        SquareDiscretization<Real>::neighbours(const Index& idx) const
         {
             auto ix = std::get<0>(idx);
             auto iy = std::get<1>(idx);
-            return std::array<IndexType, 4>{std::make_tuple((ix == 0) ? num_x - 1 : ix - 1, iy),
-                                            std::make_tuple(ix, (iy == 0) ? num_y - 1 : iy - 1),
-                                            std::make_tuple((ix == num_x - 1) ? 0 : ix + 1, iy),
-                                            std::make_tuple(ix, (iy == num_y - 1) ? 0 : iy + 1)};
+            return std::array<Index, 4>{{std::make_tuple((ix == 0) ? num_x - 1 : ix - 1, iy),
+                                         std::make_tuple(ix, (iy == 0) ? num_y - 1 : iy - 1),
+                                         std::make_tuple((ix == num_x - 1) ? 0 : ix + 1, iy),
+                                         std::make_tuple(ix, (iy == num_y - 1) ? 0 : iy + 1)}};
         }
 
         template <typename Real>
-        typename std::array<typename SquareDiscretization<Real>::IndexType, 2>
-        SquareDiscretization<Real>::unique_neighbours(const IndexType& idx) const
+        typename std::array<typename SquareDiscretization<Real>::Index, 2>
+        SquareDiscretization<Real>::unique_neighbours(const Index& idx) const
         {
             auto ix = std::get<0>(idx);
             auto iy = std::get<1>(idx);
-            return std::array<IndexType, 2>{std::make_tuple((ix == 0) ? num_x - 1 : ix - 1, iy),
-                                            std::make_tuple(ix, (iy == 0) ? num_y - 1 : iy - 1)};
+            return std::array<Index, 2>{{std::make_tuple((ix == num_x - 1) ? 0 : ix + 1, iy),
+                                         std::make_tuple(ix, (iy == num_y - 1) ? 0 : iy + 1)}};
         }
 
         template <typename Real>
-        inline const typename SquareDiscretization<Real>::VectorType& SquareDiscretization<Real>::
-        operator()(const IndexType& i) const
+        inline const typename SquareDiscretization<Real>::Vector& SquareDiscretization<Real>::
+        operator[](const Index& i) const
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
         }
 
         template <typename Real>
-        inline typename SquareDiscretization<Real>::VectorType& SquareDiscretization<Real>::
-        operator()(const IndexType& i)
+        inline typename SquareDiscretization<Real>::Vector& SquareDiscretization<Real>::
+        operator[](const Index& i)
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
         }

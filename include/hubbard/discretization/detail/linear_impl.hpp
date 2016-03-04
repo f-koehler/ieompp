@@ -61,14 +61,14 @@ namespace hubbard
 
         template <typename Real>
         inline const typename LinearDiscretization<Real>::Vector& LinearDiscretization<Real>::
-        operator()(const Index& i) const
+        operator[](const Index& i) const
         {
             return sites[i];
         }
 
         template <typename Real>
         inline typename LinearDiscretization<Real>::Vector& LinearDiscretization<Real>::
-        operator()(const Index& i)
+        operator[](const Index& i)
         {
             return sites[i];
         }

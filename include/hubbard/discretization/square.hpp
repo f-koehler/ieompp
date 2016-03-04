@@ -16,14 +16,14 @@ namespace hubbard
 {
     namespace discretization
     {
-        template <typename Real>
+        template <typename RealT>
         struct SquareDiscretization {
-            using RealType   = Real;
-            using IndexType  = std::tuple<std::size_t, std::size_t>;
-            using VectorType = Eigen::Matrix<Real, 2, 1>;
+            using Real   = RealT;
+            using Index  = std::tuple<std::size_t, std::size_t>;
+            using Vector = Eigen::Matrix<Real, 2, 1>;
 
-            std::vector<IndexType> indices;
-            std::vector<std::vector<VectorType>> sites;
+            std::vector<Index> indices;
+            std::vector<std::vector<Vector>> sites;
             const std::size_t num_x, num_y;
             const Real dx, dy;
             const Real x_min, y_min, x_max, y_max;
@@ -35,12 +35,12 @@ namespace hubbard
             // init in momentum space
             SquareDiscretization(const std::size_t nx, const std::size_t ny);
 
-            IndexType closest(const VectorType& v) const;
-            std::array<IndexType, 4> neighbours(const IndexType& idx) const;
-            std::array<IndexType, 2> unique_neighbours(const IndexType& idx) const;
+            Index closest(const Vector& v) const;
+            std::array<Index, 4> neighbours(const Index& idx) const;
+            std::array<Index, 2> unique_neighbours(const Index& idx) const;
 
-            inline const VectorType& operator()(const IndexType& i) const;
-            inline VectorType& operator()(const IndexType& i);
+            inline const Vector& operator[](const Index& i) const;
+            inline Vector& operator[](const Index& i);
         };
     }
 }

@@ -29,8 +29,8 @@ namespace hubbard
             inline std::array<Index, 2> neighbours(const Index& idx) const;
             inline std::array<Index, 1> unique_neighbours(const Index& idx) const;
 
-            inline const Vector& operator()(const Index& i) const;
-            inline Vector& operator()(const Index& i);
+            inline const Vector& operator[](const Index& i) const;
+            inline Vector& operator[](const Index& i);
         };
     }
 }

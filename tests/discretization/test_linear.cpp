@@ -3,10 +3,10 @@
 
 #include "hubbard/discretization/linear.hpp"
 
-TEST_CASE("model1d (real space)", "")
+TEST_CASE("linear (real space)", "")
 {
     using Discretization = hubbard::discretization::LinearDiscretization<double>;
-    const std::size_t n = 10000;
+    const std::size_t n = 100;
     Discretization disc(n, 1.);
 
     SECTION("initialization")
@@ -20,7 +20,7 @@ TEST_CASE("model1d (real space)", "")
 
         for(std::size_t i = 0; i < n; ++i) {
             REQUIRE(disc.indices[i] == i);
-            REQUIRE(disc(disc.indices[i]) == double(i));
+            REQUIRE(disc[disc.indices[i]] == double(i));
         }
     }
 
@@ -59,6 +59,18 @@ TEST_CASE("model1d (real space)", "")
 
     SECTION("index operator")
     {
-        for(auto& idx : disc.indices) REQUIRE(disc(idx) == double(idx));
+        for(auto& idx : disc.indices) REQUIRE(disc[idx] == double(idx));
     }
+}
+
+TEST_CASE("linear discretization (Fourier space)", "")
+{
+    using Discretization = hubbard::discretization::LinearDiscretization<double>;
+    const std::size_t n = 10;
+    Discretization disc(n);
+
+    REQUIRE(disc.x_min == -hubbard::Pi<double>::value);
+    REQUIRE(disc.x_max == hubbard::Pi<double>::value);
+
+    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / n);
 }
