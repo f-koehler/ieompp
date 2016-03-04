@@ -3,7 +3,7 @@
 
 #include "hubbard/algebra/fourier.hpp"
 #include "hubbard/algebra/operator.hpp"
-#include "hubbard/model1d/discretization.hpp"
+#include "hubbard/discretization/linear.hpp"
 
 #include <iostream>
 
@@ -11,8 +11,8 @@ using namespace hubbard;
 
 TEST_CASE("transform", "[algebra]")
 {
-    using Discretization = model1d::Discretization<double>;
-    using Operator = algebra::Operator<Discretization::IndexType, bool>;
+    using Discretization = discretization::LinearDiscretization<double>;
+    using Operator = algebra::Operator<Discretization::Index, bool>;
     using Transformation =
         algebra::Transformation<algebra::Term<Operator, Complex>, algebra::Term<Operator, Complex>,
                                 Discretization, Discretization>;

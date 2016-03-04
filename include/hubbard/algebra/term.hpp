@@ -71,7 +71,7 @@ namespace hubbard
         class TermList : public std::vector<TermT>
         {
             using Term = TermT;
-            using std::vector<Term>::vector;
+            using std::vector<TermT>::vector;
         };
 
         /*!

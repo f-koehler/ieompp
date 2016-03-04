@@ -18,4 +18,4 @@ endfunction()
 
 add_subdirectory(abstract)
 add_subdirectory(algebra)
-add_subdirectory(model1d)
+add_subdirectory(discretization)

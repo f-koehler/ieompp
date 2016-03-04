@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "hubbard/model1d/discretization.hpp"
+#include "hubbard/discretization/linear.hpp"
 #include "hubbard/algebra.hpp"
 using namespace hubbard;
 
@@ -10,8 +10,8 @@ using namespace quicli;
 
 int main()
 {
-    using Discretization = model1d::Discretization<double>;
-    using Index          = Discretization::IndexType;
+    using Discretization = discretization::LinearDiscretization<double>;
+    using Index          = Discretization::Index;
     using Operator       = algebra::Operator<Index, bool>;
     using Term           = algebra::Term<Operator, std::complex<double>>;
     using TermList       = algebra::TermList<Term>;

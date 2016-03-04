@@ -1,11 +1,11 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/model1d/discretization.hpp"
+#include "hubbard/discretization/linear.hpp"
 
 TEST_CASE("model1d (real space)", "")
 {
-    using Discretization = hubbard::model1d::Discretization<double>;
+    using Discretization = hubbard::discretization::LinearDiscretization<double>;
     const std::size_t n = 10000;
     Discretization disc(n, 1.);
 
