@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <functional>
 #include "hubbard/algebra/hamiltonian.hpp"
 
 namespace hubbard
@@ -12,9 +14,39 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
+        TermList<Term> Hamiltonian<Term>::commutate(const Term& term,
+                                                    const Discretization& discretization) const
+        {
+            TermList<Term> list;
+            commutate(term, discretization, list);
+            return list;
+        }
+
+        template <typename Term>
+        template <typename Discretization>
+        void Hamiltonian<Term>::commutate(const Term& term, const Discretization& discretization,
+                                          TermList<Term>& result) const
+        {
+            commutate_hopping(term, discretization, result);
+            commutate_interaction(term, discretization, result);
+        }
+
+        template <typename Term>
+        template <typename Discretization>
+        void Hamiltonian<Term>::commutate(const TermList<Term>& terms,
+                                          const Discretization& discretization,
+                                          const TermList<Term>& result)
+        {
+            using namespace std::placeholders;
+            auto f = std::bind(&Hamiltonian<Term>::commutate, _1, discretization, result);
+            std::for_each(terms.begin(), terms.end(), f);
+        }
+
+        template <typename Term>
+        template <typename Discretization>
         void Hamiltonian<Term>::commutate_hopping(const Term& term,
                                                   const Discretization& discretization,
-                                                  algebra::TermList<Term>& result) const
+                                                  TermList<Term>& result) const
         {
             Term first = algebra::make_term(
                 -J, {algebra::make_creator(discretization.indices[0], true),
@@ -40,7 +72,7 @@ namespace hubbard
         template <typename Discretization>
         void Hamiltonian<Term>::commutate_interaction(const Term& term,
                                                       const Discretization& discretization,
-                                                      algebra::TermList<Term>& result) const
+                                                      TermList<Term>& result) const
         {
             // quadrilinear term
             Term curr = algebra::make_term(

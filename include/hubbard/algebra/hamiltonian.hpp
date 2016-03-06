@@ -18,12 +18,23 @@ namespace hubbard
             Hamiltonian();
 
             template <typename Discretization>
+            TermList<Term> commutate(const Term& term, const Discretization& discretization) const;
+
+            template <typename Discretization>
+            void commutate(const Term& term, const Discretization& discretization,
+                           TermList<Term>& result) const;
+
+            template <typename Discretization>
+            void commutate(const TermList<Term>& terms, const Discretization& discretization,
+                           const TermList<Term>& result);
+
+            template <typename Discretization>
             void commutate_hopping(const Term& term, const Discretization& discretization,
-                                   algebra::TermList<Term>& result) const;
+                                   TermList<Term>& result) const;
 
             template <typename Discretization>
             void commutate_interaction(const Term& term, const Discretization& discretization,
-                                       algebra::TermList<Term>& result) const;
+                                       TermList<Term>& result) const;
         };
     }
 }
