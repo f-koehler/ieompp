@@ -12,6 +12,9 @@ namespace hubbard
          * @brief This struct is a spin type for operators with no spin
          */
         struct NoSpin {
+            NoSpin() = default;
+            NoSpin(bool) {}
+
             /*!
              * @brief Check if two NoSpin instances are equal (always true)
              *
