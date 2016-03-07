@@ -13,7 +13,7 @@ namespace hubbard
         struct Hamiltonian {
             using Prefactor = typename Term::Prefactor;
 
-            Prefactor J, U;
+            typename Prefactor::value_type J, U;
 
             Hamiltonian();
 
@@ -39,6 +39,10 @@ namespace hubbard
             template <typename Discretization>
             void commutate_interaction(Term term, const Discretization& discretization,
                                        TermList<Term>& result) const;
+
+            template <typename RealSpace>
+            typename RealSpace::Real dispersion(const RealSpace& discretization,
+                                                const typename RealSpace::Vector& momentum);
         };
     }
 }

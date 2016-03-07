@@ -8,7 +8,8 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny,
                                                          const Real& delta_x, const Real& delta_y)
             : num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
-              x_max((nx - 1) * dx), y_max((ny - 1) * dy)
+              x_max((nx - 1) * dx), y_max((ny - 1) * dy),
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}
         {
             for(std::size_t i = 0; i < nx; ++i) {
                 sites.push_back(std::vector<Vector>());
@@ -24,7 +25,7 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny)
             : num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x), dy(TwoPi<Real>::value / num_y),
               x_min(-Pi<Real>::value), y_min(-Pi<Real>::value), x_max(Pi<Real>::value),
-              y_max(Pi<Real>::value)
+              y_max(Pi<Real>::value), lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}
         {
             for(std::size_t i = 0; i < nx; ++i) {
                 sites.push_back(std::vector<Vector>());

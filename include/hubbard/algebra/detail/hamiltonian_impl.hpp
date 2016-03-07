@@ -55,11 +55,11 @@ namespace hubbard
                                                   TermList<Term>& result) const
         {
             Term first = algebra::make_term(
-                -J, {algebra::make_creator(discretization.indices[0], true),
-                     algebra::make_annihilator(discretization.indices[0], true)});
+                Prefactor(-J), {algebra::make_creator(discretization.indices[0], true),
+                                algebra::make_annihilator(discretization.indices[0], true)});
             Term second = algebra::make_term(
-                -J, {algebra::make_creator(discretization.indices[0], true),
-                     algebra::make_annihilator(discretization.indices[0], true)});
+                Prefactor(-J), {algebra::make_creator(discretization.indices[0], true),
+                                algebra::make_annihilator(discretization.indices[0], true)});
 
             for(auto& index : discretization.indices) {
                 auto neighbours           = discretization.unique_neighbours(index);
@@ -82,12 +82,12 @@ namespace hubbard
         {
             // quadrilinear term
             Term curr = algebra::make_term(
-                U, {
-                       algebra::make_creator(discretization.indices[0], true),
-                       algebra::make_annihilator(discretization.indices[0], true),
-                       algebra::make_creator(discretization.indices[0], false),
-                       algebra::make_annihilator(discretization.indices[0], false),
-                   });
+                Prefactor(U), {
+                                  algebra::make_creator(discretization.indices[0], true),
+                                  algebra::make_annihilator(discretization.indices[0], true),
+                                  algebra::make_creator(discretization.indices[0], false),
+                                  algebra::make_annihilator(discretization.indices[0], false),
+                              });
             for(auto& index : discretization.indices) {
                 curr.operators[0].index = index;
                 curr.operators[1].index = index;
@@ -116,6 +116,18 @@ namespace hubbard
 
                 algebra::commutate(curr, term, result);
             }
+        }
+
+        template <typename Term>
+        template <typename RealSpace>
+        typename RealSpace::Real Hamiltonian<Term>::dispersion(const RealSpace& discretization,
+                                            const typename RealSpace::Vector& momentum)
+        {
+            typename RealSpace::Real energy;
+            for(auto& vector : discretization.lattice_vectors) {
+                energy += std::cos(RealSpace::dot_product(vector, momentum));
+            }
+            return -2. * J * energy;
         }
     }
 }

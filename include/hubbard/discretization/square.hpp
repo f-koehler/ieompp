@@ -27,6 +27,7 @@ namespace hubbard
             const std::size_t num_x, num_y;
             const Real dx, dy;
             const Real x_min, y_min, x_max, y_max;
+            const std::array<Vector, 2> lattice_vectors;
 
             // init in real space
             SquareDiscretization(const std::size_t nx, const std::size_t ny, const Real& delta_x,
