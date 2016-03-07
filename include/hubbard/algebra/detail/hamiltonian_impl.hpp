@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <functional>
 #include "hubbard/algebra/hamiltonian.hpp"
 
 namespace hubbard
@@ -33,13 +32,21 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
+        TermList<Term> Hamiltonian<Term>::commutate(const TermList<Term>& terms,
+                                                    const Discretization& discretization)
+        {
+            TermList<Term> list;
+            commutate(terms, discretization, list);
+        }
+
+        template <typename Term>
+        template <typename Discretization>
         void Hamiltonian<Term>::commutate(const TermList<Term>& terms,
                                           const Discretization& discretization,
-                                          const TermList<Term>& result)
+                                          TermList<Term>& result)
         {
-            using namespace std::placeholders;
-            auto f = std::bind(&Hamiltonian<Term>::commutate, _1, discretization, result);
-            std::for_each(terms.begin(), terms.end(), f);
+            auto num = terms.size();
+            for(auto i = 0ul; i < num; ++i) commutate(terms[i], discretization, result);
         }
 
         template <typename Term>

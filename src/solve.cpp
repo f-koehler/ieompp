@@ -16,11 +16,6 @@ int main()
                                            std::complex<double>>> hamiltonian;
     auto term = hubbard::algebra::make_term(std::complex<double>(1., 0.),
                                             {hubbard::algebra::make_annihilator(0ul, true)});
-    hubbard::algebra::TermList<decltype(term)> result;
-    /* hamiltonian.commutate_hopping(term, discretization, result); */
-    hamiltonian.commutate_interaction(term, discretization, result);
-
-    for(auto& term : result) {
-        cout << term << endl;
-    }
+    auto terms = hamiltonian.commutate(term, discretization);
+    hamiltonian.commutate(terms[0], discretization, terms);
 }

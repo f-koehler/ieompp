@@ -1,5 +1,7 @@
 #include "hubbard/algebra/term.hpp"
 
+#include <algorithm>
+
 namespace hubbard
 {
     namespace algebra {
@@ -41,6 +43,22 @@ namespace hubbard
                                             const std::initializer_list<Operator>& operators)
         {
             return Term<Operator, Prefactor>{prefactor, operators};
+        }
+
+        template <typename Term>
+        TermList<Term> sum_terms(const TermList<Term>& terms)
+        {
+            TermList<Term> reduced;
+            for(auto& term : terms) {
+                auto pos = std::find_if(reduced.begin(), reduced.end(),
+                                        [&term](const Term& t) { return term.same_operators(t); });
+                if(pos == reduced.end()) {
+                    reduced.push_back(term);
+                    continue;
+                }
+                pos->prefactor += term.prefactor;
+            }
+            return reduced;
         }
     }
 }
