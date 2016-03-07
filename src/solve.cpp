@@ -11,19 +11,29 @@ using namespace quicli;
 
 int main()
 {
-    auto term = algebra::make_term(
-        std::complex<double>(1., 0.),
-        {
-            algebra::make_creator(0ul, true), hubbard::algebra::make_creator(1ul, true),
-        });
+    auto term =
+        algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
     hubbard::discretization::LinearDiscretization<double> discretization(100, 1.);
     hubbard::algebra::Hamiltonian<decltype(term)> hamiltonian;
-    auto result = hamiltonian.commutate(term, discretization);
-    hamiltonian.commutate(result, discretization, result);
-    hubbard::algebra::sum_terms(result);
 
-    for(auto& term : result)
-    {
-        cout << term << endl;
-    }
+    auto result = hamiltonian.commutate(term, discretization);
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
+    hamiltonian.commutate(result, discretization, result);
+    result.sum();
+    cout << result.size() << endl;
 }

@@ -38,18 +38,11 @@ namespace hubbard
             return strm;
         }
 
-        template <typename Prefactor, typename Operator>
-        Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
-                                            const std::initializer_list<Operator>& operators)
-        {
-            return Term<Operator, Prefactor>{prefactor, operators};
-        }
-
         template <typename Term>
-        void sum_terms(TermList<Term>& terms)
+        void TermList<Term>::sum()
         {
             TermList<Term> reduced;
-            for(auto& term : terms) {
+            for(auto& term : *this) {
                 auto pos = std::find_if(reduced.begin(), reduced.end(),
                                         [&term](const Term& t) { return term.same_operators(t); });
                 if(pos == reduced.end()) {
@@ -58,7 +51,14 @@ namespace hubbard
                 }
                 pos->prefactor += term.prefactor;
             }
-            std::swap(reduced, terms);
+            std::swap(reduced, *this);
+        }
+
+        template <typename Prefactor, typename Operator>
+        Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
+                                            const std::initializer_list<Operator>& operators)
+        {
+            return Term<Operator, Prefactor>{prefactor, operators};
         }
     }
 }

@@ -68,10 +68,12 @@ namespace hubbard
          * @tparam Term Type of the terms
          */
         template <typename TermT>
-        class TermList : public std::vector<TermT>
+        struct TermList : public std::vector<TermT>
         {
             using Term = TermT;
             using std::vector<TermT>::vector;
+
+            void sum();
         };
 
         /*!
@@ -101,9 +103,6 @@ namespace hubbard
         template <typename Prefactor, typename Operator>
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators);
-
-        template <typename Term>
-        void sum_terms(TermList<Term>& terms);
     }
 }
 
