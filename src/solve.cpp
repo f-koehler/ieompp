@@ -19,10 +19,16 @@ int main()
 
     auto result = hamiltonian.commutate(term, discretization);
     hamiltonian.commutate(result, discretization, result);
+    hamiltonian.commutate(result, discretization, result);
+    hamiltonian.commutate(result, discretization, result);
+    hamiltonian.commutate(result, discretization, result);
+    hamiltonian.commutate(result, discretization, result);
+    hamiltonian.commutate(result, discretization, result);
     result.sort();
     result.sum();
+    cout << result.size() << endl;
 
-    io::write("test.bin", result);
+    /* io::write("test.bin", result); */
     /* decltype(result) readin; */
     /* io::read("test.bin", readin); */
     /* assert(std::equal(readin.begin(), readin.end(), result.begin())); */

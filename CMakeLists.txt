@@ -13,6 +13,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
 endif()
 
 include(git.cmake)
+include(cmake/speed.cmake)
 include(cmake/warnings.cmake)
 
 # hack to keep include/hubbard/config.hpp up-to-date
