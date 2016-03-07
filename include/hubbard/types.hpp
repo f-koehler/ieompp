@@ -6,16 +6,15 @@
 
 namespace hubbard
 {
-    using Real    = double;
-    using Complex = std::complex<Real>;
-
+    template <typename Real>
     inline bool is_zero(const Real& x)
     {
         static const auto min = std::numeric_limits<Real>::min();
         return std::abs(x) <= min;
     }
 
-    inline bool is_zero(const Complex& z)
+    template <typename Real>
+    inline bool is_zero(const std::complex<Real>& z)
     {
         static const auto min = std::numeric_limits<Real>::min();
         return (std::abs(z.real()) <= min) && (std::abs(z.imag()) <= min);

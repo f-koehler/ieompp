@@ -29,7 +29,7 @@ namespace hubbard
          * @param b The right operator
          * @return The resulting prefactor
          */
-        template <typename Operator, typename Prefactor = Complex>
+        template <typename Operator, typename Prefactor = std::complex<double>>
         inline Prefactor anticommutator(const Operator& a, const Operator& b);
 
 

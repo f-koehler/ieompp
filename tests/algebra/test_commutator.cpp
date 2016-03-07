@@ -12,64 +12,37 @@ TEST_CASE("anticommutates", "[algebra]")
 {
     SECTION("creator & creator")
     {
-        auto ret = anticommutates(
-            make_creator(0, true),
-            make_creator(0, true)
-        );
+        auto ret = anticommutates(make_creator(0, true), make_creator(0, true));
         REQUIRE(ret == true);
 
-        ret = anticommutates(
-            make_creator(0, false),
-            make_creator(0, true)
-        );
+        ret = anticommutates(make_creator(0, false), make_creator(0, true));
         REQUIRE(ret == true);
-        
-        ret = anticommutates(
-            make_creator(1, true),
-            make_creator(0, true)
-        );
+
+        ret = anticommutates(make_creator(1, true), make_creator(0, true));
         REQUIRE(ret == true);
     }
 
     SECTION("annihilator & creator")
     {
-        auto ret = anticommutates(
-            make_annihilator(0, true),
-            make_creator(0, true)
-        );
+        auto ret = anticommutates(make_annihilator(0, true), make_creator(0, true));
         REQUIRE(ret == false);
 
-        ret = anticommutates(
-            make_annihilator(0, false),
-            make_creator(0, true)
-        );
+        ret = anticommutates(make_annihilator(0, false), make_creator(0, true));
         REQUIRE(ret == true);
-        
-        ret = anticommutates(
-            make_annihilator(1, true),
-            make_creator(0, true)
-        );
+
+        ret = anticommutates(make_annihilator(1, true), make_creator(0, true));
         REQUIRE(ret == true);
     }
 
     SECTION("annihilator & annihilator")
     {
-        auto ret = anticommutates(
-            make_annihilator(0, true),
-            make_annihilator(0, true)
-        );
+        auto ret = anticommutates(make_annihilator(0, true), make_annihilator(0, true));
         REQUIRE(ret == true);
 
-        ret = anticommutates(
-            make_annihilator(0, false),
-            make_annihilator(0, true)
-        );
+        ret = anticommutates(make_annihilator(0, false), make_annihilator(0, true));
         REQUIRE(ret == true);
-        
-        ret = anticommutates(
-            make_annihilator(1, true),
-            make_annihilator(0, true)
-        );
+
+        ret = anticommutates(make_annihilator(1, true), make_annihilator(0, true));
         REQUIRE(ret == true);
     }
 }
@@ -77,47 +50,45 @@ TEST_CASE("anticommutates", "[algebra]")
 TEST_CASE("commutator", "[algebra]")
 {
     using Operator = Operator<int, bool>;
-    using Term = Term<Operator>;
+    using Term     = Term<Operator>;
     using TermList = TermList<Term>;
 
     SECTION("[cc,c]")
     {
         TermList list;
-        auto term1 =
-            make_term(Complex{1., 0.}, {make_creator(-1, true), make_annihilator(0, true)});
-        auto term2 =
-            make_term(Complex{1., 0.}, {make_creator(0, true)});
+        auto term1 = make_term(std::complex<double>{1., 0.},
+                               {make_creator(-1, true), make_annihilator(0, true)});
+        auto term2 = make_term(std::complex<double>{1., 0.}, {make_creator(0, true)});
 
         commutate(term1, term2, list);
         REQUIRE(list.size() == 1);
-        REQUIRE(list.front() == make_term(Complex{1., 0.}, {make_creator(-1, true)}));
+        REQUIRE(list.front() == make_term(std::complex<double>{1., 0.}, {make_creator(-1, true)}));
     }
 
     SECTION("[c,cc]")
     {
         TermList list;
-        auto term1 =
-            make_term(Complex{1., 0.}, {make_creator(0, true)});
-        auto term2 =
-            make_term(Complex{1., 0.}, {make_creator(-1, true), make_annihilator(0, true)});
+        auto term1 = make_term(std::complex<double>{1., 0.}, {make_creator(0, true)});
+        auto term2 = make_term(std::complex<double>{1., 0.},
+                               {make_creator(-1, true), make_annihilator(0, true)});
 
         commutate(term1, term2, list);
         REQUIRE(list.size() == 1);
-        REQUIRE(list.front() == make_term(Complex{-1., 0.}, {make_creator(-1, true)}));
+        REQUIRE(list.front() == make_term(std::complex<double>{-1., 0.}, {make_creator(-1, true)}));
     }
 
     SECTION("[cc,cc]")
     {
         TermList list;
-        auto term1 =
-            make_term(Complex{1., 0.}, {make_creator(0, true), make_annihilator(1, true)});
-        auto term2 =
-            make_term(Complex{1., 0.}, {make_creator(1, true), make_annihilator(0, true)});
+        auto term1 = make_term(std::complex<double>{1., 0.},
+                               {make_creator(0, true), make_annihilator(1, true)});
+        auto term2 = make_term(std::complex<double>{1., 0.},
+                               {make_creator(1, true), make_annihilator(0, true)});
 
         commutate(term1, term2, list);
-        REQUIRE(list[0]
-                == make_term(Complex{-1., 0.}, {make_creator(1, true), make_annihilator(1, true)}));
-        REQUIRE(list[1]
-                == make_term(Complex{1., 0.}, {make_creator(0, true), make_annihilator(0, true)}));
+        REQUIRE(list[0] == make_term(std::complex<double>{-1., 0.},
+                                     {make_creator(1, true), make_annihilator(1, true)}));
+        REQUIRE(list[1] == make_term(std::complex<double>{1., 0.},
+                                     {make_creator(0, true), make_annihilator(0, true)}));
     }
 }

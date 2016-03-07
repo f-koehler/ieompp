@@ -3,6 +3,7 @@
 
 #include "hubbard/types.hpp"
 
+#include <complex>
 #include <vector>
 
 namespace hubbard
@@ -16,13 +17,16 @@ namespace hubbard
          * @tparam Operator Type of the operators
          * @tparam Prefactor Type of the prefactor
          */
-        template <typename OperatorT, typename PrefactorT = Complex>
+        template <typename OperatorT, typename PrefactorT = std::complex<double>>
         struct Term {
             //! The type of the operators
             using Operator = OperatorT;
 
             //! The type of the prefactor
             using Prefactor = PrefactorT;
+
+            //! The type for real numbers
+            using Real = typename PrefactorT::value_type;
 
 
             //! Prefactor of the term

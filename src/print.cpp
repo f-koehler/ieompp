@@ -20,19 +20,19 @@ int main()
                                          hubbard::algebra::make_annihilator(1, false)})
          << endl;
     cout << endl;
-    
+
     cout << "abstract:" << endl;
     cout << "-------------------------------" << endl;
     cout << "creator:    \t" << hubbard::abstract::make_creator("k_1", "σ") << endl;
     cout << "annihilator:\t" << hubbard::abstract::make_annihilator("k_2", "σ'") << endl;
     cout << "kronecker:  \t" << hubbard::abstract::Kronecker{"a", "b"} << endl;
     cout << "prefactor:  \t"
-         << hubbard::abstract::AbstractPrefactor{hubbard::Complex{1., 2.},
+         << hubbard::abstract::AbstractPrefactor{std::complex<double>(1., 2.),
                                                  {hubbard::abstract::Kronecker{"a", "b"}}}
          << endl;
     cout << "term:       \t"
          << hubbard::abstract::make_term(
-                hubbard::abstract::AbstractPrefactor{hubbard::Complex{1., 2.},
+                hubbard::abstract::AbstractPrefactor{std::complex<double>(1., 2.),
                                                      {hubbard::abstract::Kronecker{"a", "b"}}},
                 {hubbard::abstract::make_creator("k_1", "σ"),
                  hubbard::abstract::make_annihilator("k_2", "σ'")})

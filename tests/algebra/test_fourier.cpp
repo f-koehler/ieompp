@@ -12,10 +12,10 @@ using namespace hubbard;
 TEST_CASE("transform", "[algebra]")
 {
     using Discretization = discretization::LinearDiscretization<double>;
-    using Operator = algebra::Operator<Discretization::Index, bool>;
-    using Transformation =
-        algebra::Transformation<algebra::Term<Operator, Complex>, algebra::Term<Operator, Complex>,
-                                Discretization, Discretization>;
+    using Operator       = algebra::Operator<Discretization::Index, bool>;
+    using Transformation = algebra::Transformation<algebra::Term<Operator, std::complex<double>>,
+                                                   algebra::Term<Operator, std::complex<double>>,
+                                                   Discretization, Discretization>;
 
     Discretization real_space(10, 1.);
     Discretization momentum_space(10);
@@ -24,7 +24,7 @@ TEST_CASE("transform", "[algebra]")
 
     SECTION("creator")
     {
-        Transformation::Term term = {Complex{1., 0.}, {Operator{true, 1, true}}};
+        Transformation::Term term = {std::complex<double>{1., 0.}, {Operator{true, 1, true}}};
         algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 
@@ -39,7 +39,7 @@ TEST_CASE("transform", "[algebra]")
 
     SECTION("annihilator")
     {
-        Transformation::Term term = {Complex{1., 0.}, {Operator{false, 1, true}}};
+        Transformation::Term term = {std::complex<double>{1., 0.}, {Operator{false, 1, true}}};
         algebra::TermList<Transformation::TermFourier> result;
         transform.transform(term, result);
 

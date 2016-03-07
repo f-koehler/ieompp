@@ -43,7 +43,7 @@ namespace hubbard
             AbstractTerm parse_term(const std::string& expression)
             {
                 AbstractTerm term;
-                term.prefactor.number = Complex(1., 0.);
+                term.prefactor.number = std::complex<double>(1., 0.);
 
                 std::string tmp = expression;
                 std::smatch m;
@@ -63,7 +63,8 @@ namespace hubbard
 
                 tmp = expression;
                 while(std::regex_match(tmp, m, re_number)) {
-                    term.prefactor.number *= Complex(std::stod(m[1].str()), std::stod(m[2].str()));
+                    term.prefactor.number *=
+                        std::complex<double>(std::stod(m[1].str()), std::stod(m[2].str()));
                 }
 
                 return term;

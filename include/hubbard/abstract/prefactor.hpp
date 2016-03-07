@@ -1,9 +1,9 @@
 #ifndef HUBBARD_ABSTRACT_PREFACTOR_HPP_
 #define HUBBARD_ABSTRACT_PREFACTOR_HPP_
 
-#include "hubbard/types.hpp"
 #include "hubbard/abstract/operator.hpp"
 
+#include <complex>
 #include <string>
 #include <vector>
 
@@ -61,8 +61,11 @@ namespace hubbard
         std::ostream& operator<<(std::ostream& strm, const Kronecker& rhs);
 
         struct AbstractPrefactor {
+            //! Typedef for the real part of the prefactor (for compability to std::complex<>)
+            using value_type = double;
+
             //! The complex prefactor component
-            Complex number;
+            std::complex<double> number;
 
             //! The Kronecker deltas in the prefactor
             std::vector<Kronecker> kroneckers;

@@ -37,7 +37,7 @@ namespace hubbard
                 for(UInt l = 1; l <= m; ++l) {
                     if(anticommutates(a_ops[k - 1], b_ops[l - 1])) continue;
 
-                    Real coefficient = 1.;
+                    typename Term::Real coefficient = 1.;
                     if((m * (n - k) + l - 1) % 2) coefficient = -1.;
 
                     Term&& new_term    = Term();
