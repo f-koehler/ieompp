@@ -17,5 +17,15 @@ int main()
     auto term = hubbard::algebra::make_term(std::complex<double>(1., 0.),
                                             {hubbard::algebra::make_annihilator(0ul, true)});
     auto terms = hamiltonian.commutate(term, discretization);
-    hamiltonian.commutate(terms[0], discretization, terms);
+    hamiltonian.commutate(terms, discretization, terms);
+    hubbard::algebra::sum_terms(terms);
+    hamiltonian.commutate(terms, discretization, terms);
+    hubbard::algebra::sum_terms(terms);
+    hamiltonian.commutate(terms, discretization, terms);
+    hubbard::algebra::sum_terms(terms);
+    hamiltonian.commutate(terms, discretization, terms);
+    hubbard::algebra::sum_terms(terms);
+    hamiltonian.commutate(terms, discretization, terms);
+    hubbard::algebra::sum_terms(terms);
+    cout << terms.size() << endl;
 }

@@ -13,7 +13,7 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        TermList<Term> Hamiltonian<Term>::commutate(const Term& term,
+        TermList<Term> Hamiltonian<Term>::commutate(Term term,
                                                     const Discretization& discretization) const
         {
             TermList<Term> list;
@@ -23,7 +23,7 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        void Hamiltonian<Term>::commutate(const Term& term, const Discretization& discretization,
+        void Hamiltonian<Term>::commutate(const Term term, const Discretization& discretization,
                                           TermList<Term>& result) const
         {
             commutate_hopping(term, discretization, result);
@@ -51,8 +51,7 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        void Hamiltonian<Term>::commutate_hopping(const Term& term,
-                                                  const Discretization& discretization,
+        void Hamiltonian<Term>::commutate_hopping(Term term, const Discretization& discretization,
                                                   TermList<Term>& result) const
         {
             Term first = algebra::make_term(
@@ -77,7 +76,7 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        void Hamiltonian<Term>::commutate_interaction(const Term& term,
+        void Hamiltonian<Term>::commutate_interaction(Term term,
                                                       const Discretization& discretization,
                                                       TermList<Term>& result) const
         {

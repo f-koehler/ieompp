@@ -103,7 +103,7 @@ namespace hubbard
                                             const std::initializer_list<Operator>& operators);
 
         template <typename Term>
-        TermList<Term> sum_terms(const TermList<Term>& terms);
+        void sum_terms(TermList<Term>& terms);
     }
 }
 

@@ -46,7 +46,7 @@ namespace hubbard
         }
 
         template <typename Term>
-        TermList<Term> sum_terms(const TermList<Term>& terms)
+        void sum_terms(TermList<Term>& terms)
         {
             TermList<Term> reduced;
             for(auto& term : terms) {
@@ -58,7 +58,7 @@ namespace hubbard
                 }
                 pos->prefactor += term.prefactor;
             }
-            return reduced;
+            std::swap(reduced, terms);
         }
     }
 }
