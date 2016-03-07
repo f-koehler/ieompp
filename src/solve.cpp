@@ -4,6 +4,7 @@ using namespace std;
 #include "hubbard/discretization/linear.hpp"
 #include "hubbard/algebra/hamiltonian.hpp"
 #include "hubbard/algebra/normal_ordering.hpp"
+#include "hubbard/io/termlist_file.hpp"
 using namespace hubbard;
 
 #include "quicli.hpp"
@@ -17,17 +18,12 @@ int main()
     hubbard::algebra::Hamiltonian<decltype(term)> hamiltonian;
 
     auto result = hamiltonian.commutate(term, discretization);
-    cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    cout << result.size() << endl;
-    hamiltonian.commutate(result, discretization, result);
-    cout << result.size() << endl;
-    hamiltonian.commutate(result, discretization, result);
-    cout << result.size() << endl;
-    hamiltonian.commutate(result, discretization, result);
-    cout << result.size() << endl;
-    hamiltonian.commutate(result, discretization, result);
-    cout << result.size() << endl;
     result.sort();
     result.sum();
+
+    io::write("test.bin", result);
+    /* decltype(result) readin; */
+    /* io::read("test.bin", readin); */
+    /* assert(std::equal(readin.begin(), readin.end(), result.begin())); */
 }
