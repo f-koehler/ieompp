@@ -74,6 +74,9 @@ namespace hubbard
             using std::vector<TermT>::vector;
 
             void sum();
+            void sort();
+        
+            static bool term_smaller(const Term& a, const Term& b);
         };
 
         /*!

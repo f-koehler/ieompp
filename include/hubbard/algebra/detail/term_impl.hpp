@@ -39,19 +39,43 @@ namespace hubbard
         }
 
         template <typename Term>
+        void TermList<Term>::sort()
+        {
+            std::sort(this->begin(), this->end(), TermList<Term>::term_smaller);
+        }
+
+        template <typename Term>
         void TermList<Term>::sum()
         {
             TermList<Term> reduced;
             for(auto& term : *this) {
-                auto pos = std::find_if(reduced.begin(), reduced.end(),
-                                        [&term](const Term& t) { return term.same_operators(t); });
-                if(pos == reduced.end()) {
+                if(reduced.empty()) {
                     reduced.push_back(term);
                     continue;
                 }
-                pos->prefactor += term.prefactor;
+                if(reduced.back().same_operators(term)) {
+                    reduced.back().prefactor += term.prefactor;
+                    continue;
+                }
+                reduced.push_back(term);
             }
-            std::swap(reduced, *this);
+        }
+
+        template <typename Term>
+        bool TermList<Term>::term_smaller(const Term& a, const Term& b)
+        {
+            if(a.operators.size() < b.operators.size()) return true;
+            if(a.operators.size() > b.operators.size()) return false;
+            for(auto i = a.operators.begin(), j = b.operators.begin(); i != a.operators.end();
+                ++i, ++j) {
+                if(i->creator < j->creator) return true;
+                if(i->creator > j->creator) return false;
+                if(i->spin < j->spin) return true;
+                if(i->spin > j->spin) return false;
+                if(i->index < j->index) return true;
+                if(i->index > j->index) return false;
+            }
+            return false;
         }
 
         template <typename Prefactor, typename Operator>

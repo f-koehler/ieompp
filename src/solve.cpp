@@ -19,21 +19,15 @@ int main()
     auto result = hamiltonian.commutate(term, discretization);
     cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    result.sum();
     cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    result.sum();
     cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    result.sum();
     cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    result.sum();
     cout << result.size() << endl;
     hamiltonian.commutate(result, discretization, result);
-    result.sum();
     cout << result.size() << endl;
-    hamiltonian.commutate(result, discretization, result);
+    result.sort();
     result.sum();
-    cout << result.size() << endl;
 }
