@@ -69,3 +69,38 @@ TEST_CASE("commutate_interaction", "")
                 == make_term(std::complex<double>(0.5, 0.), {make_annihilator(0ul, true)}));
     }
 }
+
+TEST_CASE("commutate", "")
+{
+    discretization::LinearDiscretization<double> discretization(1000, 1.);
+    Hamiltonian<hubbard::algebra::Term<Operator<std::size_t, bool>, std::complex<double>>>
+        hamiltonian;
+
+    SECTION("creator")
+    {
+        auto term =
+            hubbard::algebra::make_term(std::complex<double>(1., 0.), {make_creator(0ul, true)});
+        TermList<decltype(term)> result;
+        auto full = hamiltonian.commutate(term, discretization);
+        decltype(full) kinetic, interaction;
+        hamiltonian.commutate_hopping(term, discretization, kinetic);
+        hamiltonian.commutate_interaction(term, discretization, kinetic);
+
+        REQUIRE(std::equal(kinetic.begin(), kinetic.end(), full.begin()));
+        REQUIRE(std::equal(interaction.begin(), interaction.end(), full.begin() + kinetic.size()));
+    }
+
+    SECTION("annihilator")
+    {
+        auto term = hubbard::algebra::make_term(std::complex<double>(1., 0.),
+                                                {make_annihilator(0ul, true)});
+        TermList<decltype(term)> result;
+        auto full = hamiltonian.commutate(term, discretization);
+        decltype(full) kinetic, interaction;
+        hamiltonian.commutate_hopping(term, discretization, kinetic);
+        hamiltonian.commutate_interaction(term, discretization, kinetic);
+
+        REQUIRE(std::equal(kinetic.begin(), kinetic.end(), full.begin()));
+        REQUIRE(std::equal(interaction.begin(), interaction.end(), full.begin() + kinetic.size()));
+    }
+}
