@@ -36,7 +36,7 @@ TEST_CASE("read & write", "")
         }
     }
 
-    io::TermListFile<Term> file("plain_text.txt", false);
+    io::TermListFile<Term> file("plain_text.txt");
     file.write(out);
     auto in = file.read();
 

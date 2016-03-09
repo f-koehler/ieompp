@@ -4,7 +4,7 @@ using namespace std;
 #include "hubbard/discretization/linear.hpp"
 #include "hubbard/algebra/hamiltonian.hpp"
 #include "hubbard/algebra/normal_ordering.hpp"
-#include "hubbard/io/termlist_file.hpp"
+#include "hubbard/io/compressed_termlist_file.hpp"
 using namespace hubbard;
 
 #include "quicli.hpp"
@@ -26,14 +26,5 @@ int main()
     result.sum();
     cout << result.size() << endl;
 
-
-    io::TermListFile<decltype(term)> file_bin("results.bin", true), file_txt("results.txt", false);
-    file_bin.write(result);
-    file_txt.write(result);
-
-    auto read_txt = file_txt.read();
-    assert(read_txt.size() == result.size());
-    for(std::size_t i = 0; i < result.size(); ++i) {
-        assert(result[i].same_operators(read_txt[i]));
-    }
+    io::CompressedTermListFile<decltype(term)> file("test.dat");
 }

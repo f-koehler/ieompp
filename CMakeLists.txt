@@ -41,8 +41,9 @@ ExternalProject_Add(
 )
 include_directories(${CMAKE_SOURCE_DIR}/external/eigen)
 
-find_package(Boost)
+find_package(Boost COMPONENTS iostreams)
 if(${Boost_FOUND})
+    set(hubbard_HAS_BOOST True)
     include_directories(${Boost_INCLUDE_DIRS})
     add_definitions(-DHUBBARD_HAS_BOOST)
 endif()

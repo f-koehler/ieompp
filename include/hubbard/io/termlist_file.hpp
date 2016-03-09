@@ -21,22 +21,18 @@ namespace hubbard
             using Index     = typename Operator::Index;
             using Spin      = typename Operator::Spin;
 
-            private:
+            protected:
                 std::string _path;
-                bool _binary;
 
             public:
-                TermListFile(const std::string& path, bool binary);
+                TermListFile(const std::string& path);
 
-                void write(const TermList& terms) const;
-                void append(const TermList& terms) const;
-                TermList read() const;
+                virtual void write(const TermList& terms) const;
+                virtual TermList read() const;
 
             private:
-                static void write_term_binary(std::ofstream& strm, const Term& t);
-                static void write_term(std::ofstream& strm, const Term& t);
-                static void read_term_binary(std::ifstream& strm, Term& t);
-                static void read_term(std::ifstream& strm, Term& t);
+                static void write_term(std::ostream& strm, const Term& t);
+                static void read_term(std::istream& strm, Term& t);
         };
     }
 }
