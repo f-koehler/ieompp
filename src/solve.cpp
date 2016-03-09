@@ -22,14 +22,18 @@ int main()
     hamiltonian.commutate(result, discretization, result);
     hamiltonian.commutate(result, discretization, result);
     hamiltonian.commutate(result, discretization, result);
-    hamiltonian.commutate(result, discretization, result);
-    hamiltonian.commutate(result, discretization, result);
     result.sort();
     result.sum();
     cout << result.size() << endl;
 
-    /* io::write("test.bin", result); */
-    /* decltype(result) readin; */
-    /* io::read("test.bin", readin); */
-    /* assert(std::equal(readin.begin(), readin.end(), result.begin())); */
+
+    io::TermListFile<decltype(term)> file_bin("results.bin", true), file_txt("results.txt", false);
+    file_bin.write(result);
+    file_txt.write(result);
+
+    auto read_txt = file_txt.read();
+    assert(read_txt.size() == result.size());
+    for(std::size_t i = 0; i < result.size(); ++i) {
+        assert(result[i].same_operators(read_txt[i]));
+    }
 }
