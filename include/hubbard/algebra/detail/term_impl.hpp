@@ -28,6 +28,40 @@ namespace hubbard
         }
 
         template <typename Operator, typename Prefactor>
+        bool Term<Operator, Prefactor>::operator<(const Term<Operator, Prefactor>& rhs) const
+        {
+            if(operators.size() < rhs.operators.size()) return true;
+            if(operators.size() > rhs.operators.size()) return false;
+            for(auto i = operators.begin(), j = rhs.operators.begin(); i != rhs.operators.end();
+                ++i, ++j) {
+                if(i->creator < j->creator) return true;
+                if(i->creator > j->creator) return false;
+                if(i->spin < j->spin) return true;
+                if(i->spin > j->spin) return false;
+                if(i->index < j->index) return true;
+                if(i->index > j->index) return false;
+            }
+            return false;
+        }
+
+        template <typename Operator, typename Prefactor>
+        bool Term<Operator, Prefactor>::operator>(const Term<Operator, Prefactor>& rhs) const
+        {
+            if(operators.size() > rhs.operators.size()) return true;
+            if(operators.size() < rhs.operators.size()) return false;
+            for(auto i = operators.begin(), j = rhs.operators.begin(); i != rhs.operators.end();
+                ++i, ++j) {
+                if(i->creator > j->creator) return true;
+                if(i->creator < j->creator) return false;
+                if(i->spin > j->spin) return true;
+                if(i->spin < j->spin) return false;
+                if(i->index > j->index) return true;
+                if(i->index < j->index) return false;
+            }
+            return false;
+        }
+
+        template <typename Operator, typename Prefactor>
         std::ostream& operator<<(std::ostream& strm, const Term<Operator, Prefactor>& term)
         {
             strm << term.prefactor;
@@ -59,23 +93,6 @@ namespace hubbard
                 }
                 reduced.push_back(term);
             }
-        }
-
-        template <typename Term>
-        bool TermList<Term>::term_smaller(const Term& a, const Term& b)
-        {
-            if(a.operators.size() < b.operators.size()) return true;
-            if(a.operators.size() > b.operators.size()) return false;
-            for(auto i = a.operators.begin(), j = b.operators.begin(); i != a.operators.end();
-                ++i, ++j) {
-                if(i->creator < j->creator) return true;
-                if(i->creator > j->creator) return false;
-                if(i->spin < j->spin) return true;
-                if(i->spin > j->spin) return false;
-                if(i->index < j->index) return true;
-                if(i->index > j->index) return false;
-            }
-            return false;
         }
 
         template <typename Prefactor, typename Operator>

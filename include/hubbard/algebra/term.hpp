@@ -64,6 +64,9 @@ namespace hubbard
              * @return true if the terms are not equal, false otherwise
              */
             inline bool operator!=(const Term& rhs) const;
+
+            bool operator<(const Term& rhs) const;
+            bool operator>(const Term& rhs) const;
         };
 
         /*!
@@ -79,8 +82,6 @@ namespace hubbard
 
             void sum();
             void sort();
-        
-            static bool term_smaller(const Term& a, const Term& b);
         };
 
         /*!
