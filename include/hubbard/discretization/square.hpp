@@ -36,12 +36,15 @@ namespace hubbard
             // init in momentum space
             SquareDiscretization(const std::size_t nx, const std::size_t ny);
 
+            inline bool out_of_bounds(const Vector& v) const;
             Index closest(const Vector& v) const;
             std::array<Index, 4> neighbours(const Index& idx) const;
             std::array<Index, 2> unique_neighbours(const Index& idx) const;
 
             inline const Vector& operator[](const Index& i) const;
             inline Vector& operator[](const Index& i);
+            inline const Index& operator[](const Vector& v) const;
+            inline Index& operator[](const Vector& v);
 
             inline static Real dot_product(const Vector& a, const Vector& b);
         };

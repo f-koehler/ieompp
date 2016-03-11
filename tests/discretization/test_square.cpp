@@ -34,6 +34,13 @@ TEST_CASE("square discretization (real space)", "")
         }
     }
 
+    SECTION("out_of_bounds")
+    {
+        for(auto& line : disc.sites) {
+            for(auto& site : line) REQUIRE(!disc.out_of_bounds(site));
+        }
+    }
+
     SECTION("closest")
     {
         REQUIRE(disc.closest(Discretization::Vector(0.4, 3.6)) == std::make_tuple(0, 4));
@@ -161,6 +168,11 @@ TEST_CASE("square discretization (real space)", "")
             REQUIRE(disc[idx]
                     == Discretization::Vector(double(std::get<0>(idx)), double(std::get<1>(idx))));
         }
+    }
+    
+    SECTION("index operator for vector")
+    {
+        for(auto& idx : disc.indices) REQUIRE(idx == disc[disc[idx]]);
     }
 }
 

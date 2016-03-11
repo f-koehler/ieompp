@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "hubbard/discretization/linear.hpp"
 
 namespace hubbard
@@ -6,7 +8,7 @@ namespace hubbard
     {
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n, const Real& delta_x)
-            : num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx)
+            : num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx), x_diff(x_max - x_min)
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
@@ -17,28 +19,53 @@ namespace hubbard
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n)
             : num_x(n), dx(TwoPi<Real>::value / num_x), x_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value)
+              x_max(Pi<Real>::value), x_diff(x_max - x_min)
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
                 sites.push_back(x_min + dx * i);
             }
         }
+        
+        template<typename Real>
+        inline bool LinearDiscretization<Real>::out_of_bounds(const Vector& v) const
+        {
+            return (v < x_min) || (v > x_max);
+        }
 
         template <typename Real>
-        typename LinearDiscretization<Real>::Index
+        const typename LinearDiscretization<Real>::Index&
         LinearDiscretization<Real>::closest(const Vector& v) const
         {
-            Index current     = 0;
-            Vector diff       = v - sites[0];
-            Real current_dist = diff * diff;
+            const Index& current = indices.front();
+            Vector diff          = v - sites[0];
+            Real current_dist    = diff * diff;
             Real dist;
             for(std::size_t i = 1; i < num_x; ++i) {
                 diff = v - sites[i];
                 dist = diff * diff;
                 if(dist < current_dist) {
                     current_dist = dist;
-                    current      = i;
+                    current      = indices[i];
+                }
+            }
+            return current;
+        }
+
+        template <typename Real>
+        typename LinearDiscretization<Real>::Index&
+        LinearDiscretization<Real>::closest(const Vector& v)
+        {
+            Index& current = indices.front();
+            Vector diff          = v - sites[0];
+            Real current_dist    = diff * diff;
+            Real dist;
+            for(std::size_t i = 1; i < num_x; ++i) {
+                diff = v - sites[i];
+                dist = diff * diff;
+                if(dist < current_dist) {
+                    current_dist = dist;
+                    current      = indices[i];
                 }
             }
             return current;
@@ -71,6 +98,20 @@ namespace hubbard
         operator[](const Index& i)
         {
             return sites[i];
+        }
+
+        template <typename Real>
+        inline typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::
+        operator[](const Vector& v)
+        {
+            return indices[std::size_t(std::round((v - x_min) / dx))];
+        }
+
+        template <typename Real>
+        inline const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::
+        operator[](const Vector& v) const
+        {
+            return indices[std::size_t(std::round((v - x_min) / dx))];
         }
 
         template <typename RealT>

@@ -21,16 +21,21 @@ namespace hubbard
             const std::size_t num_x;
             const Real dx;
             const Real x_min, x_max;
+            const Real x_diff;
 
             LinearDiscretization(const std::size_t n, const Real& delta_x);
             LinearDiscretization(const std::size_t n);
 
-            Index closest(const Vector& v) const;
+            inline bool out_of_bounds(const Vector& v) const;
+            const Index& closest(const Vector& v) const;
+            Index& closest(const Vector& v);
             inline std::array<Index, 2> neighbours(const Index& idx) const;
             inline std::array<Index, 1> unique_neighbours(const Index& idx) const;
 
             inline const Vector& operator[](const Index& i) const;
             inline Vector& operator[](const Index& i);
+            inline const Index& operator[](const Vector& v) const;
+            inline Index& operator[](const Vector& v);
 
             inline static Real dot_product(const Vector& a, const Vector& b);
         };

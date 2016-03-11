@@ -24,6 +24,11 @@ TEST_CASE("linear (real space)", "")
         }
     }
 
+    SECTION("out_of_bounds")
+    {
+        for(auto& site : disc.sites) REQUIRE(!disc.out_of_bounds(site));
+    }
+
     SECTION("closest")
     {
         REQUIRE(disc.closest(0.4) == 0);
@@ -57,9 +62,14 @@ TEST_CASE("linear (real space)", "")
         REQUIRE(neigh[0] == 0);
     }
 
-    SECTION("index operator")
+    SECTION("index operator for Index")
     {
         for(auto& idx : disc.indices) REQUIRE(disc[idx] == double(idx));
+    }
+    
+    SECTION("index operator for vector")
+    {
+        for(auto& idx : disc.indices) REQUIRE(idx == disc[disc[idx]]);
     }
 }
 

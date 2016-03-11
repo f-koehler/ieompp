@@ -37,6 +37,12 @@ namespace hubbard
         }
 
         template <typename Real>
+        inline bool SquareDiscretization<Real>::out_of_bounds(const Vector& v) const
+        {
+            return (v[0] < x_min) || (v[0] > x_max) || (v[1] < y_min) || (v[1] > y_max);
+        }
+
+        template <typename Real>
         typename SquareDiscretization<Real>::Index
         SquareDiscretization<Real>::closest(const Vector& v) const
         {
@@ -91,6 +97,24 @@ namespace hubbard
         operator[](const Index& i)
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
+        }
+
+        template <typename Real>
+        inline typename SquareDiscretization<Real>::Index& SquareDiscretization<Real>::
+        operator[](const Vector& v)
+        {
+            auto ix = std::size_t(std::round(v[0] - x_min));
+            auto iy = std::size_t(std::round(v[1] - y_min));
+            return indices[ix * num_x + iy];
+        }
+
+        template <typename Real>
+        inline const typename SquareDiscretization<Real>::Index& SquareDiscretization<Real>::
+        operator[](const Vector& v) const
+        {
+            auto ix = std::size_t(std::round(v[0] - x_min));
+            auto iy = std::size_t(std::round(v[1] - y_min));
+            return indices[ix * num_x + iy];
         }
 
         template <typename RealT>
