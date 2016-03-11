@@ -19,13 +19,12 @@ namespace hubbard
             using Term           = TermT;
             using Complex        = typename Term::Prefactor;
             using Real           = typename Complex::value_type;
-            using TermList       = TermList<Term>;
             using Hamiltonian    = Hamiltonian<Term>;
 
             private:
                 std::list<Term> _known_terms;
                 std::vector<std::tuple<std::size_t, Term>> _todo;
-                std::vector<std::tuple<Term, TermList>> _results;
+                std::vector<std::tuple<Term, TermList<Term>>> _results;
 
             public:
                 inline void reset();

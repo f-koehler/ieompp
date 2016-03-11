@@ -15,7 +15,7 @@ addons:
 
 cache:
     directories:
-        - cmake-3.4.3
+        - cmake-3.5.0
 
 compiler:
     - gcc
@@ -25,7 +25,7 @@ install:
     - if [ "$CXX" == "g++" ]; then export CXX=g++-5; export CC=gcc-5; fi
     - if [ "$CXX" == "clang++" ]; then export CXX=clang++-3.7; export CC=clang-3.7; fi
     - tools/travis-cmake.sh
-    - export PATH=$PWD/cmake-3.4.3/dist/bin:$PATH
+    - export PATH=$PWD/cmake-3.5.0/dist/bin:$PATH
 
 script:
     - cmake --version

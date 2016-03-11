@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CMAKE_NAME="cmake-3.4.3"
-CMAKE_URL="https://cmake.org/files/v3.4/cmake-3.4.3.tar.gz"
-CMAKE_SHA512="a326c39cfe9f5408b4586ddd291cabfa400a2442947fb46d94dd6c44db3087c48c84a9a22ca5ed38707467448150383935ed59c669fbbfb20a968d4031eaaa11  cmake-3.4.3.tar.gz"
+CMAKE_NAME="cmake-3.5.0"
+CMAKE_URL="https://cmake.org/files/v3.5/cmake-3.5.0.tar.gz"
+CMAKE_SHA512="4fef712560f1975f8d19e897c7b1903811f7bad9314602961b5b32ac58f367bf1308f96cc5edaceb99ac9084b1e0517e4ecb4b5996d2ad53b6aec305ae879b09  cmake-3.5.0.tar.gz"
 
 # create a dir for cmake
 mkdir -p ${CMAKE_NAME}

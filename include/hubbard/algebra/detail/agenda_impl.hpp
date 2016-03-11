@@ -38,7 +38,7 @@ namespace hubbard
         {
             _known_terms.push_back(term);
             _todo.push_back(std::make_tuple(_results.size(), term));
-            _results.push_back(std::make_tuple(term, TermList()));
+            _results.push_back(std::make_tuple(term, TermList<Term>()));
         }
 
         template <typename Term>
