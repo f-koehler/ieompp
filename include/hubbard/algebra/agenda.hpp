@@ -19,7 +19,6 @@ namespace hubbard
             using Term           = TermT;
             using Complex        = typename Term::Prefactor;
             using Real           = typename Complex::value_type;
-            using Hamiltonian    = Hamiltonian<Term>;
 
             private:
                 std::list<Term> _known_terms;
@@ -37,11 +36,11 @@ namespace hubbard
 
                 template <typename Discretization>
                 void commutate(const Term& term, const std::size_t num,
-                               const Hamiltonian& hamiltonian,
+                               const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
 
                 template <typename Discretization>
-                void commutate(const std::size_t num, const Hamiltonian& hamiltonian,
+                void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
         };
     }

@@ -44,7 +44,7 @@ namespace hubbard
         template <typename Term>
         template <typename Discretization>
         void Agenda<Term>::commutate(const Term& term, const std::size_t num,
-                                     const Hamiltonian& hamiltonian,
+                                     const Hamiltonian<Term>& hamiltonian,
                                      const Discretization& discretization)
         {
             add_new_term(term);
@@ -53,7 +53,7 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        void Agenda<Term>::commutate(const std::size_t num, const Hamiltonian& hamiltonian,
+        void Agenda<Term>::commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                      const Discretization& discretization)
         {
             if(_todo.empty()) return;
