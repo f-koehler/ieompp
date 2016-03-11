@@ -53,7 +53,14 @@ option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OF
 option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
 option(hubbard_ENABLE_DOC        "Option to enable documentation" OFF)
 option(hubbard_ENABLE_IWYU       "Option to enable #include analysis with include-what-you-use" OFF)
+option(hubbard_ENABLE_OPENMP     "Option to enable OpenMP" OFF)
 option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
+
+if(${hubbard_ENABLE_OPENMP})
+    find_package(OpenMP REQUIRED)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
 if(${hubbard_ENABLE_IWYU})
     include(${CMAKE_SOURCE_DIR}/cmake/iwyu.cmake) 
