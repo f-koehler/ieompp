@@ -42,6 +42,8 @@ namespace hubbard
                 template <typename Discretization>
                 void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
+
+                inline auto results() const -> const decltype(_results)&;
         };
     }
 }

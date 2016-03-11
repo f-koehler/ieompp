@@ -17,5 +17,6 @@ int main()
     algebra::Hamiltonian<decltype(term)> hamiltonian;
     algebra::Agenda<decltype(term)> agenda;
 
-    agenda.commutate(term, 1, hamiltonian, discretization);
+    agenda.commutate(term, 4, hamiltonian, discretization);
+    cout << agenda.results().size() << endl;
 }

@@ -75,7 +75,7 @@ namespace hubbard
         template <typename Term>
         void TermList<Term>::sort()
         {
-            std::sort(this->begin(), this->end(), TermList<Term>::term_smaller);
+            std::sort(this->begin(), this->end());
         }
 
         template <typename Term>

@@ -79,7 +79,21 @@ namespace hubbard
 
             _todo.erase(_todo.begin(), _todo.begin() + size);
 
-            if(num != 0) commutate(num - 1, hamiltonian, discretization);
+            if(num != 0)
+                commutate(num - 1, hamiltonian, discretization);
+            else {
+                for(auto& entry : _results) {
+                    auto& list = std::get<1>(entry);
+                    list.sort();
+                    list.sum();
+                }
+            }
+        }
+
+        template <typename Term>
+        inline auto Agenda<Term>::results() const -> const decltype(_results) &
+        {
+            return _results;
         }
     }
 }
