@@ -6,7 +6,7 @@ ExternalProject_Add(
 
 include_directories(${CMAKE_SOURCE_DIR}/external/benchmark/include)
 
-set(benchmarks commutate fourier_trafo)
+set(benchmarks agenda)
 
 foreach(bm ${benchmarks})
     add_executable(${bm} "bm_${bm}.cpp")

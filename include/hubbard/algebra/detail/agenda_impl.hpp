@@ -34,11 +34,13 @@ namespace hubbard
         }
 
         template <typename Term>
-        void Agenda<Term>::add_new_term(const Term& term)
+        std::size_t Agenda<Term>::add_new_term(const Term& term)
         {
             _known_terms.push_back(term);
-            _todo.push_back(std::make_tuple(_results.size(), term));
+            auto size = _results.size();
+            _todo.push_back(std::make_tuple(size, term));
             _results.push_back(std::make_tuple(term, TermList<Term>()));
+            return size;
         }
 
         template <typename Term>

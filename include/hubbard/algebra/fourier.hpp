@@ -31,9 +31,8 @@ namespace hubbard
                 const auto exponent = op.creator ? typename TermFourier::Prefactor(0., -1.)
                                                  : typename TermFourier::Prefactor(0., 1.);
                 for(const auto& idx : disc_a.indices) {
-                    auto factor =
-                        term.prefactor * std::exp(exponent * Discretization::dot_product(
-                                                                 disc_a[op.index], disc_b[idx]));
+                    auto factor = term.prefactor
+                                  * std::exp(exponent * dot_product(disc_a[op.index], disc_b[idx]));
                     result.push_back(
                         TermFourier{factor, {OperatorFourier{op.creator, idx, op.spin}}});
                 }

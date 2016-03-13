@@ -25,14 +25,6 @@ namespace hubbard
                            TermList<Term>& result) const;
 
             template <typename Discretization>
-            TermList<Term> commutate(const TermList<Term>& terms,
-                                     const Discretization& discretization);
-
-            template <typename Discretization>
-            void commutate(const TermList<Term>& terms, const Discretization& discretization,
-                           TermList<Term>& result);
-
-            template <typename Discretization>
             void commutate_hopping(Term term, const Discretization& discretization,
                                    TermList<Term>& result) const;
 

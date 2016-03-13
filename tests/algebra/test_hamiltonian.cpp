@@ -10,8 +10,7 @@ using namespace algebra;
 TEST_CASE("commutate_hopping", "")
 {
     discretization::LinearDiscretization<double> discretization(1000, 1.);
-    Hamiltonian<hubbard::algebra::Term<Operator<std::size_t, bool>, std::complex<double>>>
-        hamiltonian;
+    Hamiltonian<Term<Operator<std::size_t, bool>, std::complex<double>>> hamiltonian;
 
     SECTION("creator")
     {

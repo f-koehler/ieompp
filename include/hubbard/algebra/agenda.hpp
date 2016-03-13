@@ -32,7 +32,7 @@ namespace hubbard
 
                 std::tuple<bool, typename std::list<Term>::const_iterator> is_known(const Term& term) const;
 
-                void add_new_term(const Term& term);
+                std::size_t add_new_term(const Term& term);
 
                 template <typename Discretization>
                 void commutate(const Term& term, const std::size_t num,

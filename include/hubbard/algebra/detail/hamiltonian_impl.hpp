@@ -32,34 +32,15 @@ namespace hubbard
 
         template <typename Term>
         template <typename Discretization>
-        TermList<Term> Hamiltonian<Term>::commutate(const TermList<Term>& terms,
-                                                    const Discretization& discretization)
-        {
-            TermList<Term> list;
-            commutate(terms, discretization, list);
-        }
-
-        template <typename Term>
-        template <typename Discretization>
-        void Hamiltonian<Term>::commutate(const TermList<Term>& terms,
-                                          const Discretization& discretization,
-                                          TermList<Term>& result)
-        {
-            auto num = terms.size();
-            for(auto i = 0ul; i < num; ++i) commutate(terms[i], discretization, result);
-        }
-
-        template <typename Term>
-        template <typename Discretization>
         void Hamiltonian<Term>::commutate_hopping(Term term, const Discretization& discretization,
                                                   TermList<Term>& result) const
         {
-            Term first = algebra::make_term(
-                Prefactor(-J), {algebra::make_creator(discretization.indices[0], true),
-                                algebra::make_annihilator(discretization.indices[0], true)});
-            Term second = algebra::make_term(
-                Prefactor(-J), {algebra::make_creator(discretization.indices[0], true),
-                                algebra::make_annihilator(discretization.indices[0], true)});
+            Term first =
+                make_term(Prefactor(-J), {make_creator(discretization.indices[0], true),
+                                          make_annihilator(discretization.indices[0], true)});
+            Term second =
+                make_term(Prefactor(-J), {make_creator(discretization.indices[0], true),
+                                          make_annihilator(discretization.indices[0], true)});
 
             for(auto& index : discretization.indices) {
                 auto neighbours           = discretization.unique_neighbours(index);
@@ -81,13 +62,13 @@ namespace hubbard
                                                       TermList<Term>& result) const
         {
             // quadrilinear term
-            Term curr = algebra::make_term(
-                Prefactor(U), {
-                                  algebra::make_creator(discretization.indices[0], true),
-                                  algebra::make_annihilator(discretization.indices[0], true),
-                                  algebra::make_creator(discretization.indices[0], false),
-                                  algebra::make_annihilator(discretization.indices[0], false),
-                              });
+            Term curr =
+                make_term(Prefactor(U), {
+                                            make_creator(discretization.indices[0], true),
+                                            make_annihilator(discretization.indices[0], true),
+                                            make_creator(discretization.indices[0], false),
+                                            make_annihilator(discretization.indices[0], false),
+                                        });
             for(auto& index : discretization.indices) {
                 curr.operators[0].index = index;
                 curr.operators[1].index = index;
