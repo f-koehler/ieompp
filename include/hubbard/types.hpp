@@ -3,9 +3,22 @@
 
 #include <complex>
 #include <limits>
+#include <type_traits>
 
 namespace hubbard
 {
+    template <typename T>
+    inline auto dot_product(const T& a, const T& b) -> decltype(a.dot(b))
+    {
+        return a.dot(b);
+    }
+
+    template <typename T>
+    inline auto dot_product(const T& a, const T& b) -> decltype(a* b)
+    {
+        return a * b;
+    }
+
     template <typename Real>
     inline bool is_zero(const Real& x)
     {

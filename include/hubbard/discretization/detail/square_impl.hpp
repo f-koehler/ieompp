@@ -116,12 +116,5 @@ namespace hubbard
             auto iy = std::size_t(std::round(v[1] - y_min));
             return indices[ix * num_x + iy];
         }
-
-        template <typename RealT>
-        inline typename SquareDiscretization<RealT>::Real
-        SquareDiscretization<RealT>::dot_product(const Vector& a, const Vector& b)
-        {
-            return a.dot(b);
-        }
     }
 }

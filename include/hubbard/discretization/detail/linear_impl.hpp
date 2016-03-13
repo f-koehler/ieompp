@@ -8,7 +8,8 @@ namespace hubbard
     {
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n, const Real& delta_x)
-            : num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx), x_diff(x_max - x_min)
+            : num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx), x_diff(x_max - x_min),
+              lattice_vectors{{Vector(delta_x)}}
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
@@ -19,7 +20,8 @@ namespace hubbard
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n)
             : num_x(n), dx(TwoPi<Real>::value / num_x), x_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value), x_diff(x_max - x_min)
+              x_max(Pi<Real>::value), x_diff(x_max - x_min),
+              lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}}
         {
             for(std::size_t i = 0; i < n; ++i) {
                 indices.push_back(i);
@@ -112,13 +114,6 @@ namespace hubbard
         operator[](const Vector& v) const
         {
             return indices[std::size_t(std::round((v - x_min) / dx))];
-        }
-
-        template <typename RealT>
-        inline typename LinearDiscretization<RealT>::Real
-        LinearDiscretization<RealT>::dot_product(const Vector& a, const Vector& b)
-        {
-            return a * b;
         }
     }
 }

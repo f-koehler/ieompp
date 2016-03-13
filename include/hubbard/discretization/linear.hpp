@@ -22,6 +22,7 @@ namespace hubbard
             const Real dx;
             const Real x_min, x_max;
             const Real x_diff;
+            const std::array<Vector, 1> lattice_vectors;
 
             LinearDiscretization(const std::size_t n, const Real& delta_x);
             LinearDiscretization(const std::size_t n);
@@ -36,8 +37,6 @@ namespace hubbard
             inline Vector& operator[](const Index& i);
             inline const Index& operator[](const Vector& v) const;
             inline Index& operator[](const Vector& v);
-
-            inline static Real dot_product(const Vector& a, const Vector& b);
         };
     }
 }
