@@ -33,7 +33,7 @@ namespace hubbard
 
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n)
-            : num(n), num_x(n), dx(TwoPi<Real>::value / (num_x-1)), x_min(-Pi<Real>::value),
+            : num(n), num_x(n), dx(TwoPi<Real>::value / num_x), x_min(-Pi<Real>::value),
               x_max(Pi<Real>::value), x_diff(x_max - x_min),
               lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}}, indices(init_indices()),
               sites(init_sites())

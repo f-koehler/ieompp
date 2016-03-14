@@ -34,6 +34,8 @@ int main(int argc, char** argv)
     auto left_term  = abstract::parse::parse_term(left);
     auto right_term = abstract::parse::parse_term(right);
 
+    for(auto& op : left_term.operators) cout << op << endl;
+
     abstract::AbstractTermList list;
     algebra::commutate(left_term, right_term, list);
     cout << "[" << left << ", " << right << "]=";

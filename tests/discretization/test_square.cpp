@@ -44,13 +44,13 @@ TEST_CASE("initialization (momentum space)", "")
     REQUIRE(disc.y_min == -pi);
     REQUIRE(disc.y_max == pi);
 
-    REQUIRE(disc.sites.front().front() == Discretization::Vector(-pi, -pi));
-    REQUIRE(disc.sites.front().back() == Discretization::Vector(-pi, pi));
-    REQUIRE(disc.sites.back().front() == Discretization::Vector(pi, -pi));
-    REQUIRE(disc.sites.back().back() == Discretization::Vector(pi, pi));
+    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / nx);
+    REQUIRE(disc.dy == hubbard::TwoPi<double>::value / ny);
 
-    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / (nx - 1));
-    REQUIRE(disc.dy == hubbard::TwoPi<double>::value / (ny - 1));
+    REQUIRE(disc.sites.front().front() == Discretization::Vector(-pi, -pi));
+    REQUIRE(disc.sites.front().back() == Discretization::Vector(-pi, pi - disc.dy));
+    REQUIRE(disc.sites.back().front() == Discretization::Vector(pi - disc.dx, -pi));
+    REQUIRE(disc.sites.back().back() == Discretization::Vector(pi - disc.dx, pi - disc.dy));
 }
 
 TEST_CASE("closest site", "")

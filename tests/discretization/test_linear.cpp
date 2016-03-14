@@ -33,10 +33,10 @@ TEST_CASE("initialization (momentum space)", "")
     REQUIRE(disc.x_min == -hubbard::Pi<double>::value);
     REQUIRE(disc.x_max == hubbard::Pi<double>::value);
 
-    REQUIRE(disc.sites.front() == -hubbard::Pi<double>::value);
-    REQUIRE(disc.sites.back() == hubbard::Pi<double>::value);
+    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / n);
 
-    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / (n - 1));
+    REQUIRE(disc.sites.front() == -hubbard::Pi<double>::value);
+    REQUIRE(disc.sites.back() == Approx(hubbard::Pi<double>::value - disc.dx));
 }
 
 TEST_CASE("closest site", "")

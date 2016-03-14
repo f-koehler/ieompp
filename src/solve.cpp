@@ -20,9 +20,8 @@ int main()
     hamiltonian.commutate_interaction(term, discretization, lattice, result);
 
     for(auto& t : result) {
-        cout << t << endl;
-    }
-    for(auto& site : discretization.sites) {
-        cout << site << endl;
+        auto k = discretization::LinearDiscretization<double>::Vector(0.);
+        for(auto& op : t.operators) k += discretization[op.index];
+        cout << t << "\t" << k << endl;
     }
 }
