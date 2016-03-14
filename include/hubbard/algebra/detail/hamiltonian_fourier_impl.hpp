@@ -93,7 +93,7 @@ namespace hubbard
                         t.operators[2].index = idx3;
 
                         auto k4 = k1 + k3 - k2;
-                        if(discretization.out_of_bounds(k4)) continue;
+
                         auto idx4 = discretization[k4];
                         t.operators[3].index = idx4;
 

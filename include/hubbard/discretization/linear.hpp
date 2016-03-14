@@ -26,7 +26,6 @@ namespace hubbard
                 const std::size_t num_x;
                 const Real dx;
                 const Real x_min, x_max, x_diff;
-                const Real x_min_soft, x_max_soft;
                 const std::array<Vector, 1> lattice_vectors;
                 const std::vector<Index> indices;
                 const std::vector<Real> sites;
@@ -34,7 +33,6 @@ namespace hubbard
                 LinearDiscretization(const std::size_t n, const Real& delta_x);
                 LinearDiscretization(const std::size_t n);
 
-                inline bool out_of_bounds(const Vector& v) const;
                 const Index& closest(const Vector& v) const;
                 inline std::array<Index, 2> neighbours(const Index& idx) const;
                 inline std::array<Index, 1> unique_neighbours(const Index& idx) const;

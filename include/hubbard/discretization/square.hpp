@@ -32,7 +32,6 @@ namespace hubbard
                 const std::size_t num_x, num_y;
                 const Real dx, dy;
                 const Real x_min, y_min, x_max, y_max;
-                const Real x_min_soft, x_max_soft, y_min_soft, y_max_soft;
                 const std::array<Vector, 2> lattice_vectors;
                 const std::vector<Index> indices;
                 const std::vector<std::vector<Vector>> sites;
@@ -44,7 +43,6 @@ namespace hubbard
                 // init in momentum space
                 SquareDiscretization(const std::size_t nx, const std::size_t ny);
 
-                inline bool out_of_bounds(const Vector& v) const;
                 const Index& closest(const Vector& v) const;
                 std::array<Index, 4> neighbours(const Index& idx) const;
                 std::array<Index, 2> unique_neighbours(const Index& idx) const;

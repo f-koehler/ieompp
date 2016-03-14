@@ -37,3 +37,14 @@ TEST_CASE("commutate_hopping", "")
                                         * std::cos(discretization[term.operators[0].index])));
     }
 }
+
+TEST_CASE("commutate_interaction", "")
+{
+    discretization::LinearDiscretization<double> discretization(100);
+    discretization::LinearDiscretization<double> lattice(1000, 1.);
+    HamiltonianFourier<Term<Operator<std::size_t, bool>, std::complex<double>>> hamiltonian;
+
+    SECTION("creator")
+    {
+    }
+}
