@@ -32,7 +32,8 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny,
                                                          const Real& delta_x, const Real& delta_y)
             : num(nx * ny), num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
-              x_max((nx - 1) * dx), y_max((ny - 1) * dy),
+              x_max((nx - 1) * dx), y_max((ny - 1) * dy), x_min_soft(x_min - dx / 2.),
+              x_max_soft(x_max + dx / 2.), y_min_soft(y_min - dx / 2.), y_max_soft(y_max + dx / 2.),
               lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
               sites(init_sites())
         {
@@ -43,7 +44,8 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny)
             : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x),
               dy(TwoPi<Real>::value / num_y), x_min(-Pi<Real>::value), y_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value), y_max(Pi<Real>::value),
+              x_max(Pi<Real>::value), y_max(Pi<Real>::value), x_min_soft(x_min - dx / 2.),
+              x_max_soft(x_max + dx / 2.), y_min_soft(y_min - dx / 2.), y_max_soft(y_max + dx / 2.),
               lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
               sites(init_sites())
         {
@@ -52,7 +54,8 @@ namespace hubbard
         template <typename Real>
         inline bool SquareDiscretization<Real>::out_of_bounds(const Vector& v) const
         {
-            return (v[0] < x_min) || (v[0] > x_max) || (v[1] < y_min) || (v[1] > y_max);
+            return (v[0] < x_min_soft) || (v[0] > x_max_soft) || (v[1] < y_min_soft)
+                   || (v[1] > y_max_soft);
         }
 
         template <typename Real>

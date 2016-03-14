@@ -25,8 +25,8 @@ namespace hubbard
                 const std::size_t num;
                 const std::size_t num_x;
                 const Real dx;
-                const Real x_min, x_max;
-                const Real x_diff;
+                const Real x_min, x_max, x_diff;
+                const Real x_min_soft, x_max_soft;
                 const std::array<Vector, 1> lattice_vectors;
                 const std::vector<Index> indices;
                 const std::vector<Real> sites;

@@ -27,24 +27,24 @@ namespace hubbard
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n, const Real& delta_x)
             : num(n), num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx), x_diff(x_max - x_min),
-              lattice_vectors{{Vector(delta_x)}}, indices(init_indices()),
-              sites(init_sites())
+              x_min_soft(x_min - x_diff / 2.), x_max_soft(x_max + x_diff / 2.),
+              lattice_vectors{{Vector(delta_x)}}, indices(init_indices()), sites(init_sites())
         {
         }
 
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n)
             : num(n), num_x(n), dx(TwoPi<Real>::value / num_x), x_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value), x_diff(x_max - x_min),
-              lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}}, indices(init_indices()),
-              sites(init_sites())
+              x_max(Pi<Real>::value), x_diff(x_max - x_min), x_min_soft(x_min - dx / 2.),
+              x_max_soft(x_max + dx / 2.), lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}},
+              indices(init_indices()), sites(init_sites())
         {
         }
         
         template<typename Real>
         inline bool LinearDiscretization<Real>::out_of_bounds(const Vector& v) const
         {
-            return (v < x_min) || (v > x_max);
+            return (v < x_min_soft) || (v > x_max_soft);
         }
 
         template <typename Real>
