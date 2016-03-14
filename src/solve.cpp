@@ -12,8 +12,8 @@ using namespace quicli;
 int main()
 {
     auto term =
-        algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
-    discretization::LinearDiscretization<double> discretization(10), lattice(1000, 1.);
+        algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
+    discretization::LinearDiscretization<double> discretization(10), lattice(100, 1.);
     algebra::HamiltonianFourier<decltype(term)> hamiltonian;
 
     algebra::TermList<decltype(term)> result;
