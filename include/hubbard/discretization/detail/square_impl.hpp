@@ -5,35 +5,51 @@ namespace hubbard
     namespace discretization
     {
         template <typename Real>
+        std::vector<typename SquareDiscretization<Real>::Index>
+        SquareDiscretization<Real>::init_indices(const std::size_t num_x, const std::size_t num_y)
+        {
+            std::vector<typename SquareDiscretization<Real>::Index> result;
+            for(std::size_t i = 0; i < num_x; ++i) {
+                for(std::size_t j = 0; j < num_y; ++j) result.push_back(std::make_tuple(i, j));
+            }
+            return result;
+        }
+
+        template <typename Real>
+        std::vector<std::vector<typename SquareDiscretization<Real>::Vector>>
+        SquareDiscretization<Real>::init_sites(const std::size_t num_x, const std::size_t num_y,
+                                               const Real x_min, const Real dx, const Real y_min,
+                                               const Real dy)
+        {
+            std::vector<std::vector<typename SquareDiscretization<Real>::Vector>> result;
+            for(std::size_t i = 0; i < num_x; ++i) {
+                result.push_back(std::vector<Vector>());
+                for(std::size_t j = 0; j < num_y; ++j)
+                    result[i].push_back({x_min + i * dx, y_min + j * dy});
+            }
+            return result;
+        }
+
+        template <typename Real>
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny,
                                                          const Real& delta_x, const Real& delta_y)
-            : num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
+            : num(nx * ny), num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
               x_max((nx - 1) * dx), y_max((ny - 1) * dy),
-              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices(nx, ny)),
+              sites(init_sites(nx, ny, 0., delta_x, 0., delta_y))
         {
-            for(std::size_t i = 0; i < nx; ++i) {
-                sites.push_back(std::vector<Vector>());
-                for(std::size_t j = 0; j < ny; ++j) {
-                    sites[i].push_back({x_min + i * dx, y_min + j * dy});
-                    indices.push_back(std::make_tuple(i, j));
-                }
-            }
         }
 
         // init in momentum space
         template <typename Real>
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny)
-            : num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x), dy(TwoPi<Real>::value / num_y),
-              x_min(-Pi<Real>::value), y_min(-Pi<Real>::value), x_max(Pi<Real>::value),
-              y_max(Pi<Real>::value), lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}
+            : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x),
+              dy(TwoPi<Real>::value / num_y), x_min(-Pi<Real>::value), y_min(-Pi<Real>::value),
+              x_max(Pi<Real>::value), y_max(Pi<Real>::value),
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices(nx, ny)),
+              sites(init_sites(nx, ny, -Pi<Real>::value, TwoPi<Real>::value / nx, -Pi<Real>::value,
+                               TwoPi<Real>::value / ny))
         {
-            for(std::size_t i = 0; i < nx; ++i) {
-                sites.push_back(std::vector<Vector>());
-                for(std::size_t j = 0; j < ny; ++j) {
-                    sites[i].push_back({x_min + i * dx, y_min + j * dy});
-                    indices.push_back(std::make_tuple(i, j));
-                }
-            }
         }
 
         template <typename Real>
@@ -43,10 +59,10 @@ namespace hubbard
         }
 
         template <typename Real>
-        typename SquareDiscretization<Real>::Index
+        const typename SquareDiscretization<Real>::Index&
         SquareDiscretization<Real>::closest(const Vector& v) const
         {
-            Index current = std::make_tuple(0, 0);
+            std::size_t current_pos = 0;
             Vector diff   = v - sites[0][0];
             Real current_dist = diff.dot(diff);
             Real dist;
@@ -56,11 +72,11 @@ namespace hubbard
                     dist = diff.dot(diff);
                     if(dist < current_dist) {
                         current_dist = dist;
-                        current      = std::make_tuple(i, j);
+                        current_pos  = i * num_x + j;
                     }
                 }
             }
-            return current;
+            return indices[current_pos];
         }
 
         template <typename Real>
@@ -86,26 +102,24 @@ namespace hubbard
         }
 
         template <typename Real>
+        inline typename std::vector<typename SquareDiscretization<Real>::Index>::const_iterator
+        SquareDiscretization<Real>::begin() const
+        {
+            return indices.cbegin();
+        }
+
+        template <typename Real>
+        inline typename std::vector<typename SquareDiscretization<Real>::Index>::const_iterator
+        SquareDiscretization<Real>::end() const
+        {
+            return indices.cend();
+        }
+
+        template <typename Real>
         inline const typename SquareDiscretization<Real>::Vector& SquareDiscretization<Real>::
         operator[](const Index& i) const
         {
             return sites[std::get<0>(i)][std::get<1>(i)];
-        }
-
-        template <typename Real>
-        inline typename SquareDiscretization<Real>::Vector& SquareDiscretization<Real>::
-        operator[](const Index& i)
-        {
-            return sites[std::get<0>(i)][std::get<1>(i)];
-        }
-
-        template <typename Real>
-        inline typename SquareDiscretization<Real>::Index& SquareDiscretization<Real>::
-        operator[](const Vector& v)
-        {
-            auto ix = std::size_t(std::round(v[0] - x_min));
-            auto iy = std::size_t(std::round(v[1] - y_min));
-            return indices[ix * num_x + iy];
         }
 
         template <typename Real>

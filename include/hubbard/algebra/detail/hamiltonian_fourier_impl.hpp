@@ -44,7 +44,7 @@ namespace hubbard
             t.operators[0].creator = true;
             t.operators[1].creator = false;
 
-            for(auto& idx : discretization.indices) {
+            for(auto& idx : discretization) {
                 auto& k = discretization[idx];
                 t.prefactor = 0.;
                 t.operators[0].index = idx;
@@ -70,7 +70,7 @@ namespace hubbard
                                                              TermList<Term>& result) const
         {
             Term t;
-            t.prefactor = U / lattice.indices.size();
+            t.prefactor = U / lattice.num;
             t.operators.resize(4);
             t.operators[0].creator = true;
             t.operators[1].creator = false;
@@ -82,13 +82,13 @@ namespace hubbard
             t.operators[3].spin = false;
 
             // quadrilinear term
-            for(auto& idx1 : discretization.indices) {
+            for(auto& idx1 : discretization) {
                 auto& k1 = discretization[idx1];
                 t.operators[0].index = idx1;
-                for(auto& idx2 : discretization.indices) {
+                for(auto& idx2 : discretization) {
                     auto& k2 = discretization[idx2];
                     t.operators[1].index = idx2;
-                    for(auto& idx3 : discretization.indices) {
+                    for(auto& idx3 : discretization) {
                         auto& k3 = discretization[idx3];
                         t.operators[2].index = idx3;
 
@@ -103,9 +103,9 @@ namespace hubbard
             }
 
             // bilinear terms
-            t.prefactor = -0.5 * U / lattice.indices.size();
+            t.prefactor = -0.5 * U / lattice.num;
             t.operators.resize(2);
-            for(auto& idx : discretization.indices) {
+            for(auto& idx : discretization) {
                 auto& k = discretization[idx];
                 t.operators[0].index = idx;
                 t.operators[1].index = idx;

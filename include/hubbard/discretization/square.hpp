@@ -17,34 +17,45 @@ namespace hubbard
     namespace discretization
     {
         template <typename RealT>
-        struct SquareDiscretization {
-            using Real   = RealT;
-            using Index  = std::tuple<std::size_t, std::size_t>;
-            using Vector = Eigen::Matrix<Real, 2, 1>;
+        class SquareDiscretization {
+            public:
+                using Real   = RealT;
+                using Index  = std::tuple<std::size_t, std::size_t>;
+                using Vector = Eigen::Matrix<Real, 2, 1>;
 
-            std::vector<Index> indices;
-            std::vector<std::vector<Vector>> sites;
-            const std::size_t num_x, num_y;
-            const Real dx, dy;
-            const Real x_min, y_min, x_max, y_max;
-            const std::array<Vector, 2> lattice_vectors;
+            private:
+                static std::vector<Index> init_indices(const std::size_t num_x, const std::size_t num_y);
+                static std::vector<std::vector<Vector>> init_sites(const std::size_t num_x,
+                                                                   const std::size_t num_y,
+                                                                   const Real x_min, const Real dx,
+                                                                   const Real y_min, const Real dy);
 
-            // init in real space
-            SquareDiscretization(const std::size_t nx, const std::size_t ny, const Real& delta_x,
-                                 const Real& delta_y);
+            public:
+                const std::size_t num;
+                const std::size_t num_x, num_y;
+                const Real dx, dy;
+                const Real x_min, y_min, x_max, y_max;
+                const std::array<Vector, 2> lattice_vectors;
+                const std::vector<Index> indices;
+                const std::vector<std::vector<Vector>> sites;
 
-            // init in momentum space
-            SquareDiscretization(const std::size_t nx, const std::size_t ny);
+                // init in real space
+                SquareDiscretization(const std::size_t nx, const std::size_t ny, const Real& delta_x,
+                                     const Real& delta_y);
 
-            inline bool out_of_bounds(const Vector& v) const;
-            Index closest(const Vector& v) const;
-            std::array<Index, 4> neighbours(const Index& idx) const;
-            std::array<Index, 2> unique_neighbours(const Index& idx) const;
+                // init in momentum space
+                SquareDiscretization(const std::size_t nx, const std::size_t ny);
 
-            inline const Vector& operator[](const Index& i) const;
-            inline Vector& operator[](const Index& i);
-            inline const Index& operator[](const Vector& v) const;
-            inline Index& operator[](const Vector& v);
+                inline bool out_of_bounds(const Vector& v) const;
+                const Index& closest(const Vector& v) const;
+                std::array<Index, 4> neighbours(const Index& idx) const;
+                std::array<Index, 2> unique_neighbours(const Index& idx) const;
+
+                inline std::vector<Index>::const_iterator begin() const;
+                inline std::vector<Index>::const_iterator end() const;
+
+                inline const Vector& operator[](const Index& i) const;
+                inline const Index& operator[](const Vector& v) const;
         };
     }
 }
