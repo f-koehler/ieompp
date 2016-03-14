@@ -18,8 +18,8 @@ namespace hubbard
                 using Vector = RealT;
 
             private:
-                static std::vector<Index> init_indices(const std::size_t num);
-                static std::vector<Vector> init_sites(const std::size_t num, const Real x_min, const Real dx);
+                std::vector<Index> init_indices();
+                std::vector<Vector> init_sites();
 
             public:
                 const std::size_t num;

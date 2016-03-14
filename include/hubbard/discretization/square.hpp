@@ -24,11 +24,8 @@ namespace hubbard
                 using Vector = Eigen::Matrix<Real, 2, 1>;
 
             private:
-                static std::vector<Index> init_indices(const std::size_t num_x, const std::size_t num_y);
-                static std::vector<std::vector<Vector>> init_sites(const std::size_t num_x,
-                                                                   const std::size_t num_y,
-                                                                   const Real x_min, const Real dx,
-                                                                   const Real y_min, const Real dy);
+                std::vector<Index> init_indices();
+                std::vector<std::vector<Vector>> init_sites();
 
             public:
                 const std::size_t num;

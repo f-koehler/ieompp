@@ -8,7 +8,7 @@ namespace hubbard
     {
         template <typename Real>
         std::vector<typename LinearDiscretization<Real>::Index>
-        LinearDiscretization<Real>::init_indices(const std::size_t num)
+        LinearDiscretization<Real>::init_indices()
         {
             std::vector<typename LinearDiscretization<Real>::Index> result;
             for(std::size_t i = 0; i < num; ++i) result.push_back(i);
@@ -17,7 +17,7 @@ namespace hubbard
 
         template <typename Real>
         std::vector<typename LinearDiscretization<Real>::Vector>
-        LinearDiscretization<Real>::init_sites(const std::size_t num, const Real x_min, const Real dx)
+        LinearDiscretization<Real>::init_sites()
         {
             std::vector<Real> result;
             for(std::size_t i = 0; i < num; ++i) result.push_back(x_min + dx * i);
@@ -27,8 +27,8 @@ namespace hubbard
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n, const Real& delta_x)
             : num(n), num_x(n), dx(delta_x), x_min(0.), x_max((n - 1) * dx), x_diff(x_max - x_min),
-              lattice_vectors{{Vector(delta_x)}}, indices(init_indices(num)),
-              sites(init_sites(num, 0., delta_x))
+              lattice_vectors{{Vector(delta_x)}}, indices(init_indices()),
+              sites(init_sites())
         {
         }
 
@@ -36,8 +36,8 @@ namespace hubbard
         LinearDiscretization<Real>::LinearDiscretization(const std::size_t n)
             : num(n), num_x(n), dx(TwoPi<Real>::value / num_x), x_min(-Pi<Real>::value),
               x_max(Pi<Real>::value), x_diff(x_max - x_min),
-              lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}}, indices(init_indices(num)),
-              sites(init_sites(num, -Pi<Real>::value, TwoPi<Real>::value / num_x))
+              lattice_vectors{{Vector(TwoPi<Real>::value / num_x)}}, indices(init_indices()),
+              sites(init_sites())
         {
         }
         

@@ -6,7 +6,7 @@ namespace hubbard
     {
         template <typename Real>
         std::vector<typename SquareDiscretization<Real>::Index>
-        SquareDiscretization<Real>::init_indices(const std::size_t num_x, const std::size_t num_y)
+        SquareDiscretization<Real>::init_indices()
         {
             std::vector<typename SquareDiscretization<Real>::Index> result;
             for(std::size_t i = 0; i < num_x; ++i) {
@@ -17,9 +17,7 @@ namespace hubbard
 
         template <typename Real>
         std::vector<std::vector<typename SquareDiscretization<Real>::Vector>>
-        SquareDiscretization<Real>::init_sites(const std::size_t num_x, const std::size_t num_y,
-                                               const Real x_min, const Real dx, const Real y_min,
-                                               const Real dy)
+        SquareDiscretization<Real>::init_sites()
         {
             std::vector<std::vector<typename SquareDiscretization<Real>::Vector>> result;
             for(std::size_t i = 0; i < num_x; ++i) {
@@ -35,8 +33,8 @@ namespace hubbard
                                                          const Real& delta_x, const Real& delta_y)
             : num(nx * ny), num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
               x_max((nx - 1) * dx), y_max((ny - 1) * dy),
-              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices(nx, ny)),
-              sites(init_sites(nx, ny, 0., delta_x, 0., delta_y))
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
+              sites(init_sites())
         {
         }
 
@@ -46,9 +44,8 @@ namespace hubbard
             : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x),
               dy(TwoPi<Real>::value / num_y), x_min(-Pi<Real>::value), y_min(-Pi<Real>::value),
               x_max(Pi<Real>::value), y_max(Pi<Real>::value),
-              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices(nx, ny)),
-              sites(init_sites(nx, ny, -Pi<Real>::value, TwoPi<Real>::value / nx, -Pi<Real>::value,
-                               TwoPi<Real>::value / ny))
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
+              sites(init_sites())
         {
         }
 
