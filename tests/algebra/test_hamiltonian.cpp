@@ -72,8 +72,7 @@ TEST_CASE("commutate_interaction", "")
 TEST_CASE("commutate", "")
 {
     discretization::LinearDiscretization<double> discretization(1000, 1.);
-    Hamiltonian<hubbard::algebra::Term<Operator<std::size_t, bool>, std::complex<double>>>
-        hamiltonian;
+    Hamiltonian<Term<Operator<std::size_t, bool>, std::complex<double>>> hamiltonian;
 
     SECTION("creator")
     {
@@ -97,7 +96,7 @@ TEST_CASE("commutate", "")
         auto full = hamiltonian.commutate(term, discretization);
         decltype(full) kinetic, interaction;
         hamiltonian.commutate_hopping(term, discretization, kinetic);
-        hamiltonian.commutate_interaction(term, discretization, kinetic);
+        hamiltonian.commutate_interaction(term, discretization, interaction);
 
         REQUIRE(std::equal(kinetic.begin(), kinetic.end(), full.begin()));
         REQUIRE(std::equal(interaction.begin(), interaction.end(), full.begin() + kinetic.size()));

@@ -100,6 +100,7 @@ namespace hubbard
             while(v[1] > x_max) v -= x_diff;
             while(v[2] < y_min) v += y_diff;
             while(v[3] > y_max) v -= y_diff;
+            return v;
         }
 
         template <typename Real>

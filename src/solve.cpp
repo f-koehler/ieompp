@@ -2,7 +2,7 @@
 using namespace std;
 
 #include "hubbard/discretization/linear.hpp"
-#include "hubbard/algebra/hamiltonian.hpp"
+#include "hubbard/algebra/hamiltonian_fourier.hpp"
 #include "hubbard/algebra/agenda.hpp"
 using namespace hubbard;
 
@@ -13,10 +13,13 @@ int main()
 {
     auto term =
         algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
-    discretization::LinearDiscretization<double> discretization(100, 1.);
-    algebra::Hamiltonian<decltype(term)> hamiltonian;
-    algebra::Agenda<decltype(term)> agenda;
+    discretization::LinearDiscretization<double> discretization(10), lattice(1000, 1.);
+    algebra::HamiltonianFourier<decltype(term)> hamiltonian;
 
-    agenda.commutate(term, 4, hamiltonian, discretization);
-    cout << agenda.results().size() << endl;
+    algebra::TermList<decltype(term)> result;
+    hamiltonian.commutate_interaction(term, discretization, lattice, result);
+
+    for(auto& t : result) {
+        cout << t << endl;
+    }
 }

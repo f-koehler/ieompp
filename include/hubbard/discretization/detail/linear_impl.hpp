@@ -80,6 +80,7 @@ namespace hubbard
         {
             while(v < x_min) v += x_diff;
             while(v > x_max) v -= x_diff;
+            return v;
         }
 
         template <typename Real>

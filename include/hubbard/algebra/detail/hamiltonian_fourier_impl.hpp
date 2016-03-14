@@ -103,10 +103,9 @@ namespace hubbard
             }
 
             // bilinear terms
-            t.prefactor = -0.5 * U / lattice.num;
+            t.prefactor = -U / (2 * lattice.num);
             t.operators.resize(2);
             for(auto& idx : discretization) {
-                auto& k = discretization[idx];
                 t.operators[0].index = idx;
                 t.operators[1].index = idx;
                 t.operators[0].spin  = true;
