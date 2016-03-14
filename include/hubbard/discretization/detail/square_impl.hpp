@@ -32,9 +32,9 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny,
                                                          const Real& delta_x, const Real& delta_y)
             : num(nx * ny), num_x(nx), num_y(ny), dx(delta_x), dy(delta_y), x_min(0.), y_min(0.),
-              x_max((nx - 1) * dx), y_max((ny - 1) * dy),
-              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
-              sites(init_sites())
+              x_max((nx - 1) * dx), y_max((ny - 1) * dy), x_diff(x_max - x_min),
+              y_diff(y_max - y_min), lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}},
+              indices(init_indices()), sites(init_sites())
         {
         }
 
@@ -43,9 +43,9 @@ namespace hubbard
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny)
             : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x),
               dy(TwoPi<Real>::value / num_y), x_min(-Pi<Real>::value), y_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value), y_max(Pi<Real>::value),
-              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
-              sites(init_sites())
+              x_max(Pi<Real>::value), y_max(Pi<Real>::value), x_diff(x_max - x_min),
+              y_diff(y_max - y_min), lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}},
+              indices(init_indices()), sites(init_sites())
         {
         }
 
@@ -90,6 +90,16 @@ namespace hubbard
             auto iy = std::get<1>(idx);
             return std::array<Index, 2>{{std::make_tuple((ix == num_x - 1) ? 0 : ix + 1, iy),
                                          std::make_tuple(ix, (iy == num_y - 1) ? 0 : iy + 1)}};
+        }
+
+        template <typename Real>
+        typename SquareDiscretization<Real>::Vector
+        SquareDiscretization<Real>::project(SquareDiscretization<Real>::Vector v) const
+        {
+            while(v[0] < x_min) v += x_diff;
+            while(v[1] > x_max) v -= x_diff;
+            while(v[2] < y_min) v += y_diff;
+            while(v[3] > y_max) v -= y_diff;
         }
 
         template <typename Real>

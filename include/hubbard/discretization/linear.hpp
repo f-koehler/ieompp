@@ -36,6 +36,7 @@ namespace hubbard
                 const Index& closest(const Vector& v) const;
                 inline std::array<Index, 2> neighbours(const Index& idx) const;
                 inline std::array<Index, 1> unique_neighbours(const Index& idx) const;
+                Vector project(Vector v) const;
 
                 inline std::vector<Index>::const_iterator begin() const;
                 inline std::vector<Index>::const_iterator end() const;

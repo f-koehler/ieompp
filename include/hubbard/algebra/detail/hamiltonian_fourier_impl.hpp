@@ -92,7 +92,7 @@ namespace hubbard
                         auto& k3 = discretization[idx3];
                         t.operators[2].index = idx3;
 
-                        auto k4 = k1 + k3 - k2;
+                        auto k4 = discretization.project(k1 + k3 - k2);
 
                         auto idx4 = discretization[k4];
                         t.operators[3].index = idx4;

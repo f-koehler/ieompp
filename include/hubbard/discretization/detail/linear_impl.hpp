@@ -75,6 +75,14 @@ namespace hubbard
         }
 
         template <typename Real>
+        typename LinearDiscretization<Real>::Vector
+        LinearDiscretization<Real>::project(LinearDiscretization<Real>::Vector v) const
+        {
+            while(v < x_min) v += x_diff;
+            while(v > x_max) v -= x_diff;
+        }
+
+        template <typename Real>
         inline typename std::vector<typename LinearDiscretization<Real>::Index>::const_iterator
         LinearDiscretization<Real>::begin() const
         {
