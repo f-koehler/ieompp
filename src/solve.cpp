@@ -13,7 +13,7 @@ int main()
 {
     auto term =
         algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
-    discretization::LinearDiscretization<double> discretization(10), lattice(100, 1.);
+    discretization::LinearDiscretization<double> discretization(3), lattice(100, 1.);
     algebra::HamiltonianFourier<decltype(term)> hamiltonian;
 
     algebra::TermList<decltype(term)> result;
@@ -21,5 +21,8 @@ int main()
 
     for(auto& t : result) {
         cout << t << endl;
+    }
+    for(auto& site : discretization.sites) {
+        cout << site << endl;
     }
 }

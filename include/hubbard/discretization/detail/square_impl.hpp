@@ -41,11 +41,12 @@ namespace hubbard
         // init in momentum space
         template <typename Real>
         SquareDiscretization<Real>::SquareDiscretization(const std::size_t nx, const std::size_t ny)
-            : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / num_x),
-              dy(TwoPi<Real>::value / num_y), x_min(-Pi<Real>::value), y_min(-Pi<Real>::value),
-              x_max(Pi<Real>::value), y_max(Pi<Real>::value), x_diff(x_max - x_min),
-              y_diff(y_max - y_min), lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}},
-              indices(init_indices()), sites(init_sites())
+            : num(nx * ny), num_x(nx), num_y(ny), dx(TwoPi<Real>::value / (num_x - 1)),
+              dy(TwoPi<Real>::value / (num_y - 1)), x_min(-Pi<Real>::value),
+              y_min(-Pi<Real>::value), x_max(Pi<Real>::value), y_max(Pi<Real>::value),
+              x_diff(x_max - x_min), y_diff(y_max - y_min),
+              lattice_vectors{{Vector(dx, 0.), Vector(0., dy)}}, indices(init_indices()),
+              sites(init_sites())
         {
         }
 
