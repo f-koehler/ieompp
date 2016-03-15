@@ -106,19 +106,15 @@ TEST_CASE("commutator", "")
 {
     test_commutator<Operator<long, bool>, float>();
     test_commutator<Operator<long, NoSpin>, float>();
-
     test_commutator<Operator<long, bool>, double>();
     test_commutator<Operator<long, NoSpin>, double>();
-
     test_commutator<Operator<long, bool>, long double>();
     test_commutator<Operator<long, NoSpin>, long double>();
 
     test_commutator<Operator<unsigned long, bool>, float>();
     test_commutator<Operator<unsigned long, NoSpin>, float>();
-
     test_commutator<Operator<unsigned long, bool>, double>();
     test_commutator<Operator<unsigned long, NoSpin>, double>();
-
     test_commutator<Operator<unsigned long, bool>, long double>();
     test_commutator<Operator<unsigned long, NoSpin>, long double>();
 }
