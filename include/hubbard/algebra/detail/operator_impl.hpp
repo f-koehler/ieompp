@@ -65,5 +65,14 @@ namespace hubbard
             return strm;
         }
 
+        template <typename Index>
+        std::ostream& operator<<(std::ostream& strm, const Operator<Index, NoSpin>& rhs)
+        {
+            strm << "c";
+            if(rhs.creator) strm << u8"^†";
+            strm << "_{" << rhs.index << "}";
+            return strm;
+        }
+
     }
 }
