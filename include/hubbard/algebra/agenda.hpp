@@ -16,23 +16,26 @@ namespace hubbard
         template <typename TermT>
         class Agenda
         {
-            using Term           = TermT;
-            using Complex        = typename Term::Prefactor;
-            using Real           = typename Complex::value_type;
+            using Term    = TermT;
+            using Complex = typename Term::Prefactor;
+            using Real    = typename Complex::value_type;
+
+            struct Entry {
+                std::size_t index;
+                Complex prefactor;
+            };
 
             private:
-                std::list<Term> _known_terms;
-                std::vector<std::tuple<std::size_t, Term>> _todo;
-                std::vector<std::tuple<Term, TermList<Term>>> _results;
+                std::vector<Term> _terms;
+                std::list<std::size_t> _known;
+                std::vector<std::size_t> _todo;
+                std::vector<std::vector<Entry>> _results;
 
             public:
-                inline void reset();
+                void reset();
 
-                std::tuple<bool, typename std::list<Term>::iterator> is_known(const Term& term);
-
-                std::tuple<bool, typename std::list<Term>::const_iterator> is_known(const Term& term) const;
-
-                std::size_t add_new_term(const Term& term);
+                std::tuple<bool, std::list<std::size_t>::const_iterator> is_known(const Term& term) const;
+                std::size_t add_new_term(const Term& term, std::list<std::size_t>::const_iterator pos);
 
                 template <typename Discretization>
                 void commutate(const Term& term, const std::size_t num,
@@ -43,7 +46,8 @@ namespace hubbard
                 void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
 
-                inline auto results() const -> const decltype(_results)&;
+                const std::vector<Term>& terms() const;
+                const std::vector<std::vector<Entry>>& results() const;
         };
     }
 }

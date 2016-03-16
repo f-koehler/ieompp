@@ -6,41 +6,36 @@ namespace hubbard
     namespace algebra
     {
         template <typename Term>
-        inline void Agenda<Term>::reset()
+        void Agenda<Term>::reset()
         {
-            _known_terms.clear();
+            _terms.clear();
+            _known.clear();
             _todo.clear();
             _results.clear();
         }
 
         template <typename Term>
-        std::tuple<bool, typename std::list<Term>::iterator>
-        Agenda<Term>::is_known(const Term& term)
-        {
-            const auto pos = std::upper_bound(_known_terms.begin(), _known_terms.end(), term);
-            if(pos == _known_terms.begin()) return std::make_tuple(false, pos);
-            auto prev = pos;
-            --prev;
-            return std::make_tuple(prev->same_operators(term), pos);
-        }
-
-        template <typename Term>
-        std::tuple<bool, typename std::list<Term>::const_iterator>
+        std::tuple<bool, std::list<std::size_t>::const_iterator>
         Agenda<Term>::is_known(const Term& term) const
         {
-            const auto pos = std::upper_bound(_known_terms.cbegin(), _known_terms.cend(), term);
-            if(pos == _known_terms.begin()) return std::make_tuple(false, pos);
-            return std::make_tuple((pos - 1)->same_operators(term), pos);
+            auto pos = std::upper_bound(
+                _known.begin(), _known.end(), term,
+                [this](const Term& t, const std::size_t& i) { return t < this->_terms[i]; });
+            if(pos == _known.begin()) return std::make_tuple(false, pos);
+            auto prev = pos;
+            --prev;
+            return std::make_tuple(_terms[*prev].same_operators(term), pos);
         }
 
         template <typename Term>
-        std::size_t Agenda<Term>::add_new_term(const Term& term)
+        std::size_t Agenda<Term>::add_new_term(const Term& term, std::list<std::size_t>::const_iterator pos)
         {
-            _known_terms.push_back(term);
-            auto size = _results.size();
-            _todo.push_back(std::make_tuple(size, term));
-            _results.push_back(std::make_tuple(term, TermList<Term>()));
-            return size;
+            auto new_pos = _terms.size();
+            _terms.push_back(term);
+            _known.insert(pos, new_pos);
+            _todo.push_back(new_pos);
+            _results.emplace_back(std::vector<Entry>());
+            return new_pos;
         }
 
         template <typename Term>
@@ -49,7 +44,8 @@ namespace hubbard
                                      const Hamiltonian<Term>& hamiltonian,
                                      const Discretization& discretization)
         {
-            add_new_term(term);
+            reset();
+            add_new_term(term, _known.cbegin());
             commutate(num, hamiltonian, discretization);
         }
 
@@ -62,38 +58,37 @@ namespace hubbard
 
             const auto size = _todo.size();
             for(std::size_t i = 0; i < size; ++i) {
-                auto& todo = _todo[i];
-                auto index = std::get<0>(todo);
-                auto& term = std::get<1>(todo);
+                const auto& term = _terms[_todo[i]];
+                const auto commutator = hamiltonian.commutate(term, discretization);
 
-                const auto comm = hamiltonian.commutate(term, discretization);
-                for(auto& new_term : comm) {
-                    const auto known = is_known(new_term);
-                    if(std::get<0>(known)) {
-                        std::get<1>(_results[index]).push_back(new_term);
+                for(auto& new_term : commutator) {
+                    auto ret   = is_known(new_term);
+                    auto known = std::get<0>(ret);
+                    auto pos   = std::get<1>(ret);
+
+                    if(!known) {
+                        if(num > 0) {
+                            auto index = add_new_term(new_term, pos);
+                            _results[i].push_back(Entry{index, new_term.prefactor});
+                        }
                         continue;
                     }
-                    if(num == 0) continue;
-                    std::get<1>(_results[index]).push_back(new_term);
-                    add_new_term(new_term);
+                    _results[i].push_back(Entry{*pos, new_term.prefactor});
                 }
             }
-
             _todo.erase(_todo.begin(), _todo.begin() + size);
 
-            if(num != 0)
-                commutate(num - 1, hamiltonian, discretization);
-            else {
-                for(auto& entry : _results) {
-                    auto& list = std::get<1>(entry);
-                    list.sort();
-                    list.sum();
-                }
-            }
+            if(num > 0) commutate(num - 1, hamiltonian, discretization);
         }
 
         template <typename Term>
-        inline auto Agenda<Term>::results() const -> const decltype(_results) &
+        const std::vector<Term>& Agenda<Term>::terms() const
+        {
+            return _terms;
+        }
+
+        template <typename Term>
+        const std::vector<std::vector<typename Agenda<Term>::Entry>>& Agenda<Term>::results() const
         {
             return _results;
         }

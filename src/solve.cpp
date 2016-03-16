@@ -11,17 +11,11 @@ using namespace quicli;
 
 int main()
 {
-    auto term =
-        algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
-    discretization::LinearDiscretization<double> discretization(3), lattice(100, 1.);
-    algebra::HamiltonianFourier<decltype(term)> hamiltonian;
+    auto term = algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
+    discretization::LinearDiscretization<double> discretization(100, 1.);
+    algebra::Hamiltonian<decltype(term)> hamiltonian;
 
-    algebra::TermList<decltype(term)> result;
-    hamiltonian.commutate_interaction(term, discretization, lattice, result);
-
-    for(auto& t : result) {
-        auto k = discretization::LinearDiscretization<double>::Vector(0.);
-        for(auto& op : t.operators) k += discretization[op.index];
-        cout << t << "\t" << k << endl;
-    }
+    algebra::Agenda<decltype(term)> agenda;
+    agenda.commutate(term, 4, hamiltonian, discretization);
+    cout << agenda.terms().size() << endl;
 }
