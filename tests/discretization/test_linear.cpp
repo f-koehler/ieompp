@@ -2,13 +2,14 @@
 #include "catch.hpp"
 
 #include "hubbard/discretization/linear.hpp"
+using namespace hubbard::discretization;
 
-using Discretization = hubbard::discretization::LinearDiscretization<double>;
 const std::size_t n  = 100;
 
-TEST_CASE("initialization (real space)", "")
+template <typename Real>
+void test_initialization_real_space()
 {
-    Discretization disc(n, 1.);
+    LinearDiscretization<Real> disc(n, 1.);
 
     SECTION("initialization")
     {
@@ -16,40 +17,43 @@ TEST_CASE("initialization (real space)", "")
         REQUIRE(disc.sites.size() == n);
         REQUIRE(disc.num_x == n);
         REQUIRE(disc.dx == 1.);
-        REQUIRE(disc.x_min == 0.);
-        REQUIRE(disc.x_max == double(n - 1));
+        REQUIRE(disc.x_min == Approx(0.));
+        REQUIRE(disc.x_max == Approx(Real(n - 1)));
 
         for(std::size_t i = 0; i < n; ++i) {
             REQUIRE(disc.indices[i] == i);
-            REQUIRE(disc[disc.indices[i]] == double(i));
+            REQUIRE(disc[disc.indices[i]] == Approx(Real(i)));
         }
     }
 }
 
-TEST_CASE("initialization (momentum space)", "")
+template <typename Real>
+void test_initialization_momentum_space()
 {
-    Discretization disc(n);
+    LinearDiscretization<Real> disc(n);
 
-    REQUIRE(disc.x_min == -hubbard::Pi<double>::value);
-    REQUIRE(disc.x_max == hubbard::Pi<double>::value);
+    REQUIRE(disc.x_min == Approx(-hubbard::Pi<Real>::value));
+    REQUIRE(disc.x_max == Approx(hubbard::Pi<Real>::value));
 
-    REQUIRE(disc.dx == hubbard::TwoPi<double>::value / n);
+    REQUIRE(disc.dx == Approx(hubbard::TwoPi<Real>::value / n));
 
-    REQUIRE(disc.sites.front() == -hubbard::Pi<double>::value);
-    REQUIRE(disc.sites.back() == Approx(hubbard::Pi<double>::value - disc.dx));
+    REQUIRE(disc.sites.front() == Approx(-hubbard::Pi<Real>::value));
+    REQUIRE(disc.sites.back() == Approx(hubbard::Pi<Real>::value - disc.dx));
 }
 
-TEST_CASE("closest site", "")
+template <typename Real>
+void test_closest_site()
 {
-    Discretization disc(n, 1.);
+    LinearDiscretization<Real> disc(n, 1.);
 
     REQUIRE(disc.closest(0.4) == 0);
     REQUIRE(disc.closest(3.9) == 4);
 }
 
-TEST_CASE("neighbours", "")
+template <typename Real>
+void test_neighbours()
 {
-    Discretization disc(n, 1.);
+    LinearDiscretization<Real> disc(n, 1.);
 
     auto neigh = disc.neighbours(0);
     REQUIRE(neigh[0] == n - 1);
@@ -64,9 +68,10 @@ TEST_CASE("neighbours", "")
     REQUIRE(neigh[1] == 0);
 }
 
-TEST_CASE("unique_neighbours")
+template <typename Real>
+void test_unique_neighbours()
 {
-    Discretization disc(n, 1.);
+    LinearDiscretization<Real> disc(n, 1.);
 
     auto neigh = disc.unique_neighbours(0);
     REQUIRE(neigh[0] == 1);
@@ -78,18 +83,61 @@ TEST_CASE("unique_neighbours")
     REQUIRE(neigh[0] == 0);
 }
 
-
-TEST_CASE("indexing", "")
+template <typename Real>
+void test_indexing()
 {
-    Discretization disc(n, 1.);
+    LinearDiscretization<Real> disc(n, 1.);
 
     SECTION("index operator for Index")
     {
-        for(auto& idx : disc.indices) REQUIRE(disc[idx] == double(idx));
+        for(auto& idx : disc.indices) REQUIRE(disc[idx] == Approx(Real(idx)));
     }
     
     SECTION("index operator for vector")
     {
         for(auto& idx : disc.indices) REQUIRE(idx == disc[disc[idx]]);
     }
+}
+
+TEST_CASE("initialization (real space)", "")
+{
+    test_initialization_real_space<float>();
+    test_initialization_real_space<double>();
+    test_initialization_real_space<long double>();
+}
+
+TEST_CASE("initialization (momentum space)", "")
+{
+    test_initialization_momentum_space<float>();
+    test_initialization_momentum_space<double>();
+    test_initialization_momentum_space<long double>();
+}
+
+TEST_CASE("closest site", "")
+{
+    test_closest_site<float>();
+    test_closest_site<double>();
+    test_closest_site<long double>();
+}
+
+TEST_CASE("neighbours", "")
+{
+    test_neighbours<float>();
+    test_neighbours<double>();
+    test_neighbours<long double>();
+}
+
+TEST_CASE("unique_neighbours")
+{
+    test_unique_neighbours<float>();
+    test_unique_neighbours<double>();
+    test_unique_neighbours<long double>();
+}
+
+
+TEST_CASE("indexing", "")
+{
+    test_indexing<float>();
+    test_indexing<double>();
+    test_indexing<long double>();
 }
