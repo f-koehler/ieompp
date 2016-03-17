@@ -1,5 +1,7 @@
 #include "hubbard/abstract/prefactor.hpp"
 
+#include <iterator>
+
 namespace hubbard
 {
     namespace abstract
@@ -82,8 +84,9 @@ namespace hubbard
         {
             strm << rhs.number;
             if(!rhs.kroneckers.empty()) {
-                strm << "\u22C5";
-                for(auto& k : rhs.kroneckers) strm << k;
+                strm << u8" ⋅ ";
+                std::copy(rhs.kroneckers.begin(), rhs.kroneckers.end(),
+                          std::ostream_iterator<Kronecker>(strm ));
             }
             return strm;
         }

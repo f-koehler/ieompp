@@ -1,6 +1,7 @@
 #include "hubbard/algebra/term.hpp"
 
 #include <algorithm>
+#include <iterator>
 
 namespace hubbard
 {
@@ -66,8 +67,9 @@ namespace hubbard
         {
             strm << term.prefactor;
             if(!term.operators.empty()) {
-                strm << u8"⋅";
-                for(auto& op : term.operators) strm << " " << op;
+                strm << u8" ⋅ ";
+                std::copy(term.operators.begin(), term.operators.end(),
+                          std::ostream_iterator<Operator>(strm, " "));
             }
             return strm;
         }
