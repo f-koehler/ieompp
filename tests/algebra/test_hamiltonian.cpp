@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra/hamiltonian.hpp"
-#include "hubbard/discretization/linear.hpp"
+#include "ieompp/algebra/hamiltonian.hpp"
+#include "ieompp/discretization/linear.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace algebra;
 
 template <typename Operator, typename Real>
@@ -21,7 +21,7 @@ void test_commutate_hopping()
 
     SECTION("creator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_hopping(term, discretization, result);
 
@@ -31,7 +31,7 @@ void test_commutate_hopping()
 
     SECTION("annihilator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_hopping(term, discretization, result);
 
@@ -54,7 +54,7 @@ void test_commutate_interaction()
 
     SECTION("creator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_interaction(term, discretization, result);
 
@@ -66,7 +66,7 @@ void test_commutate_interaction()
 
     SECTION("annihilator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_interaction(term, discretization, result);
 
@@ -91,7 +91,7 @@ void test_commutate()
 
     SECTION("creator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
         TermList result;
         auto full = hamiltonian.commutate(term, discretization);
         decltype(full) kinetic, interaction;
@@ -104,7 +104,7 @@ void test_commutate()
 
     SECTION("annihilator")
     {
-        auto term = hubbard::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
+        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
         TermList result;
         auto full = hamiltonian.commutate(term, discretization);
         decltype(full) kinetic, interaction;

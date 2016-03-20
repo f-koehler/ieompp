@@ -1,10 +1,10 @@
 #include <iostream>
 using namespace std;
 
-#include "hubbard/discretization/linear.hpp"
-#include "hubbard/algebra/hamiltonian_fourier.hpp"
-#include "hubbard/algebra/agenda.hpp"
-using namespace hubbard;
+#include "ieompp/discretization/linear.hpp"
+#include "ieompp/algebra/hamiltonian_fourier.hpp"
+#include "ieompp/algebra/agenda.hpp"
+using namespace ieompp;
 
 #include "Eigen/Dense"
 #include "quicli.hpp"

@@ -1,11 +1,11 @@
 #include <iostream>
 #include <regex>
 
-#include "hubbard/abstract.hpp"
+#include "ieompp/abstract.hpp"
 #include "quicli.hpp"
 
 using namespace std;
-using namespace hubbard;
+using namespace ieompp;
 using namespace quicli;
 
 int main(int argc, char** argv)
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     }
 
     auto expression = std::string(vm.positionals()[0]);
-    auto ic = hubbard::abstract::parse::is_commutator(expression);
+    auto ic = ieompp::abstract::parse::is_commutator(expression);
 
     if(!std::get<0>(ic)) {
         cerr << "Currently only commutators are implemented!" << endl;

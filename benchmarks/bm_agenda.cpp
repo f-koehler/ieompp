@@ -1,10 +1,10 @@
 #include "benchmark/benchmark.h"
 
-#include "hubbard/discretization/linear.hpp"
-#include "hubbard/algebra/hamiltonian.hpp"
-#include "hubbard/algebra/agenda.hpp"
+#include "ieompp/discretization/linear.hpp"
+#include "ieompp/algebra/hamiltonian.hpp"
+#include "ieompp/algebra/agenda.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 
 static void bm_agenda(benchmark::State& state)
 {

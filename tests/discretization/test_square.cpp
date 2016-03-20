@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/discretization/square.hpp"
-using namespace hubbard::discretization;
+#include "ieompp/discretization/square.hpp"
+using namespace ieompp::discretization;
 
 #define VEC_APPROX(a, b) ((Approx(a[0]) == b[0]) && (Approx(a[1]) == b[1]))
 
@@ -40,15 +40,15 @@ void test_initialization_momentum_space()
 {
     SquareDiscretization<Real> disc(nx, ny);
 
-    auto pi = hubbard::Pi<Real>::value;
+    auto pi = ieompp::Pi<Real>::value;
 
     REQUIRE(disc.x_min == Approx(-pi));
     REQUIRE(disc.x_max == Approx(pi));
     REQUIRE(disc.y_min == Approx(-pi));
     REQUIRE(disc.y_max == Approx(pi));
 
-    REQUIRE(disc.dx == Approx(hubbard::TwoPi<Real>::value / nx));
-    REQUIRE(disc.dy == Approx(hubbard::TwoPi<Real>::value / ny));
+    REQUIRE(disc.dx == Approx(ieompp::TwoPi<Real>::value / nx));
+    REQUIRE(disc.dy == Approx(ieompp::TwoPi<Real>::value / ny));
 
     REQUIRE(VEC_APPROX(disc.sites.front().front(), typename SquareDiscretization<Real>::Vector(-pi, -pi)));
     REQUIRE(VEC_APPROX(disc.sites.front().back(), typename SquareDiscretization<Real>::Vector(-pi, pi - disc.dy)));

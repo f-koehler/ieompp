@@ -1,6 +1,6 @@
 # c++
 build
-include/hubbard/config.hpp
+include/ieompp/config.hpp
 *.kdev4
 external/eigen
 

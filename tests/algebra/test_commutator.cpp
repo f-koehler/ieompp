@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra/commutator.hpp"
-#include "hubbard/algebra/operator.hpp"
+#include "ieompp/algebra/commutator.hpp"
+#include "ieompp/algebra/operator.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace algebra;
 
 template <typename Operator>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(hubbard)
+project(ieompp)
 
 include_directories(include)
 
@@ -16,7 +16,7 @@ include(git.cmake)
 include(cmake/speed.cmake)
 include(cmake/warnings.cmake)
 
-# hack to keep include/hubbard/config.hpp up-to-date
+# hack to keep include/ieompp/config.hpp up-to-date
 add_custom_target(
     configure
     ALL
@@ -25,7 +25,7 @@ add_custom_target(
 )
 add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E echo
-    OUTPUT ${CMAKE_SOURCE_DIR}/hubbard/include/config.hpp
+    OUTPUT ${CMAKE_SOURCE_DIR}/ieompp/include/config.hpp
 )
 
 include(ExternalProject)
@@ -43,31 +43,31 @@ include_directories(${CMAKE_SOURCE_DIR}/external/eigen)
 
 find_package(Boost COMPONENTS iostreams)
 if(${Boost_FOUND})
-    set(hubbard_HAS_BOOST True)
+    set(ieompp_HAS_BOOST True)
     include_directories(${Boost_INCLUDE_DIRS})
-    add_definitions(-DHUBBARD_HAS_BOOST)
+    add_definitions(-DIEOMPP_HAS_BOOST)
 endif()
 
-option(hubbard_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
-option(hubbard_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
-option(hubbard_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
-option(hubbard_ENABLE_DOC        "Option to enable documentation" OFF)
-option(hubbard_ENABLE_IWYU       "Option to enable #include analysis with include-what-you-use" OFF)
-option(hubbard_ENABLE_OPENMP     "Option to enable OpenMP" OFF)
-option(hubbard_ENABLE_TESTS      "Option to enable unittests" ON)
+option(ieompp_ENABLE_BENCHMARKS "Option to enable benchmarks" OFF)
+option(ieompp_ENABLE_COVERAGE   "Option to enable code coverage measurement" OFF)
+option(ieompp_ENABLE_COVERALLS  "Option to enable coverage report to coveralls.io" OFF)
+option(ieompp_ENABLE_DOC        "Option to enable documentation" OFF)
+option(ieompp_ENABLE_IWYU       "Option to enable #include analysis with include-what-you-use" OFF)
+option(ieompp_ENABLE_OPENMP     "Option to enable OpenMP" OFF)
+option(ieompp_ENABLE_TESTS      "Option to enable unittests" ON)
 
-if(${hubbard_ENABLE_OPENMP})
+if(${ieompp_ENABLE_OPENMP})
     find_package(OpenMP REQUIRED)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-if(${hubbard_ENABLE_IWYU})
+if(${ieompp_ENABLE_IWYU})
     include(${CMAKE_SOURCE_DIR}/cmake/iwyu.cmake) 
 endif()
 
-if(${hubbard_ENABLE_TESTS})
-    if(${hubbard_ENABLE_COVERAGE})
+if(${ieompp_ENABLE_TESTS})
+    if(${ieompp_ENABLE_COVERAGE})
         include(cmake/coverage.cmake)
     endif()
     enable_testing()
@@ -75,12 +75,12 @@ if(${hubbard_ENABLE_TESTS})
     add_subdirectory(tests)
 endif()
 
-if(${hubbard_ENABLE_BENCHMARKS})
+if(${ieompp_ENABLE_BENCHMARKS})
     git_submodule(external/benchmark)
     add_subdirectory(benchmarks)
 endif()
 
-if(${hubbard_ENABLE_DOC})
+if(${ieompp_ENABLE_DOC})
     add_subdirectory(doc)
 endif()
 

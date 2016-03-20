@@ -1,13 +1,13 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra/fourier.hpp"
-#include "hubbard/algebra/operator.hpp"
-#include "hubbard/discretization/linear.hpp"
+#include "ieompp/algebra/fourier.hpp"
+#include "ieompp/algebra/operator.hpp"
+#include "ieompp/discretization/linear.hpp"
 
 #include <iostream>
 
-using namespace hubbard;
+using namespace ieompp;
 
 TEST_CASE("transform", "[algebra]")
 {

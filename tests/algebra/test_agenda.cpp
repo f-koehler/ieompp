@@ -2,8 +2,8 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include "hubbard/algebra/agenda.hpp"
-using namespace hubbard::algebra;
+#include "ieompp/algebra/agenda.hpp"
+using namespace ieompp::algebra;
 
 template <typename Operator, typename Real>
 void test_add_term()

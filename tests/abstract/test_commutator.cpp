@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/abstract/term.hpp"
-#include "hubbard/abstract/commutator.hpp"
+#include "ieompp/abstract/term.hpp"
+#include "ieompp/abstract/commutator.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace abstract;
 TEST_CASE("commutator", "[abstract]")
 {

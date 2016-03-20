@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra/hamiltonian_fourier.hpp"
-#include "hubbard/discretization/linear.hpp"
+#include "ieompp/algebra/hamiltonian_fourier.hpp"
+#include "ieompp/discretization/linear.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace algebra;
 
 TEST_CASE("commutate_hopping", "")
@@ -16,7 +16,7 @@ TEST_CASE("commutate_hopping", "")
     SECTION("creator")
     {
         auto term =
-            hubbard::algebra::make_term(std::complex<double>(1.5, 0.), {make_creator(2ul, true)});
+            ieompp::algebra::make_term(std::complex<double>(1.5, 0.), {make_creator(2ul, true)});
         TermList<decltype(term)> result;
         hamiltonian.commutate_hopping(term, discretization, lattice, result);
 
@@ -27,7 +27,7 @@ TEST_CASE("commutate_hopping", "")
 
     SECTION("annihilator")
     {
-        auto term = hubbard::algebra::make_term(std::complex<double>(1.5, 0.),
+        auto term = ieompp::algebra::make_term(std::complex<double>(1.5, 0.),
                                                 {make_annihilator(2ul, true)});
         TermList<decltype(term)> result;
         hamiltonian.commutate_hopping(term, discretization, lattice, result);
@@ -47,7 +47,7 @@ TEST_CASE("commutate_interaction", "")
     SECTION("creator")
     {
         auto term =
-            hubbard::algebra::make_term(std::complex<double>(1., 0.), {make_creator(0ul, true)});
+            ieompp::algebra::make_term(std::complex<double>(1., 0.), {make_creator(0ul, true)});
         TermList<decltype(term)> result;
         hamiltonian.commutate_interaction(term, discretization, lattice, result);
 
@@ -80,7 +80,7 @@ TEST_CASE("commutate_interaction", "")
     SECTION("annihilator")
     {
         auto term =
-            hubbard::algebra::make_term(std::complex<double>(1., 0.), {make_annihilator(0ul, true)});
+            ieompp::algebra::make_term(std::complex<double>(1., 0.), {make_annihilator(0ul, true)});
         TermList<decltype(term)> result;
         hamiltonian.commutate_interaction(term, discretization, lattice, result);
 
@@ -119,7 +119,7 @@ TEST_CASE("commutate", "")
     SECTION("creator")
     {
         auto term =
-            hubbard::algebra::make_term(std::complex<double>(1., 0.), {make_creator(0ul, true)});
+            ieompp::algebra::make_term(std::complex<double>(1., 0.), {make_creator(0ul, true)});
         TermList<decltype(term)> full;
         hamiltonian.commutate(term, discretization, lattice, full);
         decltype(full) kinetic, interaction;
@@ -132,7 +132,7 @@ TEST_CASE("commutate", "")
 
     SECTION("annihilator")
     {
-        auto term = hubbard::algebra::make_term(std::complex<double>(1., 0.),
+        auto term = ieompp::algebra::make_term(std::complex<double>(1., 0.),
                                                 {make_annihilator(0ul, true)});
         TermList<decltype(term)> full;
         hamiltonian.commutate(term, discretization, lattice, full);

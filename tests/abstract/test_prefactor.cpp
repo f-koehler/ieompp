@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/abstract/prefactor.hpp"
+#include "ieompp/abstract/prefactor.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace abstract;
 
 TEST_CASE("same_kroneckers", "[abstract]")

@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/abstract/parse.hpp"
+#include "ieompp/abstract/parse.hpp"
 
-using namespace hubbard;
+using namespace ieompp;
 using namespace abstract;
 
 TEST_CASE("is_commutator", "[abstract]")

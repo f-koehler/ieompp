@@ -8,26 +8,26 @@ except:
     version = "0.0.0-unknown"
 
 config = (
-    "#ifndef HUBBARD_VERSION_HPP_\n"
-    "#define HUBBARD_VERSION_HPP_\n"
+    "#ifndef IEOMPP_VERSION_HPP_\n"
+    "#define IEOMPP_VERSION_HPP_\n"
     "\n"
     "#include <string>\n"
     "\n"
-    "namespace hubbard {\n"
+    "namespace ieompp {\n"
     "    constexpr auto version = \"%s\";\n"
     "}\n"
     "\n"
     "#endif"
 ) % (version)
 
-if not exists("include/hubbard/config.hpp"):
-    with open("include/hubbard/config.hpp", "w") as f:
+if not exists("include/ieompp/config.hpp"):
+    with open("include/ieompp/config.hpp", "w") as f:
         f.write(config)
     exit()
 
-with open("include/hubbard/config.hpp") as f:
+with open("include/ieompp/config.hpp") as f:
     current_config = f.read()
 
 if config != current_config:
-    with open("include/hubbard/config.hpp", "w") as f:
+    with open("include/ieompp/config.hpp", "w") as f:
         f.write(config)

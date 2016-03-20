@@ -1,12 +1,12 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/algebra/operator.hpp"
-#include "hubbard/io/termlist_file.hpp"
+#include "ieompp/algebra/operator.hpp"
+#include "ieompp/io/termlist_file.hpp"
 #include <random>
 #include <functional>
 
-using namespace hubbard;
+using namespace ieompp;
 
 TEST_CASE("read & write", "")
 {

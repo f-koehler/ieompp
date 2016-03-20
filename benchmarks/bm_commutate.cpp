@@ -1,6 +1,6 @@
 #include "benchmark/benchmark.h"
 #include <random>
-#include "hubbard/algebra.hpp"
+#include "ieompp/algebra.hpp"
 
 /* std::mt19937_64 prng; */
 /* std::uniform_int_distribution<int> index_dist(-5, 5); */

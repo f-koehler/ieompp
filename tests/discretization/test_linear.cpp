@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "hubbard/discretization/linear.hpp"
-using namespace hubbard::discretization;
+#include "ieompp/discretization/linear.hpp"
+using namespace ieompp::discretization;
 
 const std::size_t n  = 100;
 
@@ -32,13 +32,13 @@ void test_initialization_momentum_space()
 {
     LinearDiscretization<Real> disc(n);
 
-    REQUIRE(disc.x_min == Approx(-hubbard::Pi<Real>::value));
-    REQUIRE(disc.x_max == Approx(hubbard::Pi<Real>::value));
+    REQUIRE(disc.x_min == Approx(-ieompp::Pi<Real>::value));
+    REQUIRE(disc.x_max == Approx(ieompp::Pi<Real>::value));
 
-    REQUIRE(disc.dx == Approx(hubbard::TwoPi<Real>::value / n));
+    REQUIRE(disc.dx == Approx(ieompp::TwoPi<Real>::value / n));
 
-    REQUIRE(disc.sites.front() == Approx(-hubbard::Pi<Real>::value));
-    REQUIRE(disc.sites.back() == Approx(hubbard::Pi<Real>::value - disc.dx));
+    REQUIRE(disc.sites.front() == Approx(-ieompp::Pi<Real>::value));
+    REQUIRE(disc.sites.back() == Approx(ieompp::Pi<Real>::value - disc.dx));
 }
 
 template <typename Real>
