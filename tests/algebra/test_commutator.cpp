@@ -3,7 +3,6 @@
 
 #include "hubbard/algebra/commutator.hpp"
 #include "hubbard/algebra/operator.hpp"
-#include <iostream>
 
 using namespace hubbard;
 using namespace algebra;

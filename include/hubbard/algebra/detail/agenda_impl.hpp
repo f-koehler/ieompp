@@ -1,8 +1,5 @@
 #include "hubbard/algebra/agenda.hpp"
 
-
-#include <iostream>
-
 namespace hubbard
 {
     namespace algebra
@@ -21,23 +18,17 @@ namespace hubbard
         std::tuple<bool, std::list<std::size_t>::const_iterator>
         Agenda<Term>::is_known(const Term& term) const
         {
-            // find the position of the first term larger than the parameter
-            auto pos = std::upper_bound(
-                _known.begin(), _known.end(), term,
-                [this](const Term& t, const std::size_t& i) { return t < this->_terms[i]; });
+            auto pos   = _known.begin();
+            bool found = false;
+            for(; pos != _known.end(); ++pos) {
+                if(_terms[*pos].same_operators(term)) {
+                    found = true;
+                    break;
+                }
+                if(term < _terms[*pos]) break;
+            }
 
-            // if the position is the beginning, there is no term smaller or equal to the parameter
-            // then we have found an unknown term which will be inserted in the front
-            if(pos == _known.begin()) return std::make_tuple(false, pos);
-
-            // obtain an iterator for the previous element
-            auto prev = pos;
-            --prev;
-
-            // if the previous term has the same operators as the parameter we have found a known term
-            // the pos return value is of no use then
-            // otherwise it is a new term and pos is the position where it should be inserted in the list
-            return std::make_tuple(_terms[*prev].same_operators(term), pos);
+            return std::make_tuple(found, pos);
         }
 
         template <typename Term>
@@ -115,13 +106,21 @@ namespace hubbard
                         continue;
                     }
 
-                    if(*pos >= _terms.size()) {
-                        std::cerr << *pos << "/" << _terms.size() << std::endl;
-                        std::exit(1);
-                    }
+                    // get a reference to the target result entry
+                    auto& result = _results[current_todo[i]];
+                    auto index = *pos;
 
-                    // if the term is known add it to the result entries for the current todo term
-                    _results[current_todo[i]].push_back(Entry{*pos, new_term.prefactor});
+                    // find the current term in the result entry
+                    auto find = std::find_if(result.begin(), result.end(),
+                                             [&index](const Entry& e) { return e.index == index; });
+
+                    if(find != result.end()) {
+                        // if there is an entry for the new term, add the prefactor
+                        find->prefactor += new_term.prefactor;
+                    } else {
+                        // create a new entry for the new term
+                        result.push_back(Entry{index, new_term.prefactor});
+                    }
                 }
             }
 
@@ -133,6 +132,18 @@ namespace hubbard
         const std::vector<Term>& Agenda<Term>::terms() const
         {
             return _terms;
+        }
+
+        template <typename Term>
+        const std::list<std::size_t> Agenda<Term>::known() const
+        {
+            return _known;
+        }
+
+        template <typename Term>
+        const std::vector<std::size_t> Agenda<Term>::todo() const
+        {
+            return _todo;
         }
 
         template <typename Term>

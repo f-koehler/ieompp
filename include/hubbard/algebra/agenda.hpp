@@ -47,6 +47,8 @@ namespace hubbard
                                const Discretization& discretization);
 
                 const std::vector<Term>& terms() const;
+                const std::list<std::size_t> known() const;
+                const std::vector<std::size_t> todo() const;
                 const std::vector<std::vector<Entry>>& results() const;
         };
     }

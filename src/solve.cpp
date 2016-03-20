@@ -17,19 +17,14 @@ int main()
     algebra::Hamiltonian<decltype(term)> hamiltonian;
 
     algebra::Agenda<decltype(term)> agenda;
-    agenda.commutate(term, 2, hamiltonian, discretization);
+    agenda.commutate(term, 3, hamiltonian, discretization);
 
     Eigen::MatrixXcd mat = Eigen::MatrixXcd::Zero(agenda.terms().size(), agenda.terms().size());
     std::size_t i = 0;
     for(auto& line : agenda.results()) {
         for(auto& entry : line) {
-            /* if(entry.index >= agenda.terms().size()) { */
-            /*     cerr << entry.index << endl; */
-            /*     std::exit(1); */
-            /* } */
             mat(i, entry.index) = entry.prefactor;
         }
         ++i;
     }
-    cout << mat << endl;
 }
