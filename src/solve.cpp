@@ -13,18 +13,16 @@ using namespace quicli;
 int main()
 {
     auto term = algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
-    discretization::LinearDiscretization<double> discretization(100, 1.);
-    algebra::Hamiltonian<decltype(term)> hamiltonian;
+    discretization::LinearDiscretization<double> fourier_space(3), real_space(10, 1.);
+    algebra::HamiltonianFourier<decltype(term)> hamiltonian;
 
-    algebra::Agenda<decltype(term)> agenda;
-    agenda.commutate(term, 3, hamiltonian, discretization);
+    algebra::TermList<decltype(term)> result;
 
-    Eigen::MatrixXcd mat = Eigen::MatrixXcd::Zero(agenda.terms().size(), agenda.terms().size());
-    std::size_t i = 0;
-    for(auto& line : agenda.results()) {
-        for(auto& entry : line) {
-            mat(i, entry.index) = entry.prefactor;
-        }
-        ++i;
+    hamiltonian.commutate_interaction(term, fourier_space, real_space, result);
+
+    for(auto term : result) {
+        double k = 0.;
+        for(auto& op : term.operators) k += fourier_space[op.index] * (op.creator ? 1. : -1.);
+        cout << term << "\t" << k << endl;
     }
 }
