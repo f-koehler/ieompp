@@ -1,6 +1,6 @@
 #include "ieompp/algebra/agenda.hpp"
 
-#include <iostream>
+#include <map>
 
 namespace ieompp
 {
@@ -141,6 +141,50 @@ namespace ieompp
 
             // check if further commutations are requested
             if(num > 0) commutate(num - 1, hamiltonian, discretization);
+        }
+
+        template <typename Term>
+        void Agenda<Term>::join(const Agenda& agenda)
+        {
+            // add terms from other agenda
+            std::map<std::size_t, std::size_t> index_map;
+            std::size_t i = 0;
+            for(auto& term : agenda._terms) {
+                auto ret   = is_known(term);
+                auto known = std::get<0>(ret);
+                auto pos = std::get<1>(ret);
+                if(known) {
+                    index_map.insert(std::make_pair(i, *pos));
+                    continue;
+                }
+                auto index = add_new_term(term, pos);
+                index_map.insert(std::make_pair(i, index));
+                ++i;
+            }
+
+            // copy merge todo list
+            for(auto& todo : agenda._todo) {
+                const auto index = index_map[todo];
+                if(std::find(_todo.begin(), _todo.end(), index) == _todo.end())
+                    _todo.push_back(index);
+            }
+
+            // merge results
+            i = 0;
+            for(auto& row : agenda._results) {
+                auto& local_row = _results[index_map[i]];
+                for(auto& entry : row) {
+                    const auto local_index = index_map[entry.index];
+                    auto pos = std::find_if(
+                        local_row.begin(), local_row.end(),
+                        [&local_index](const Entry& e) { return e.index == local_index; });
+                    if(pos != local_row.end())
+                        pos->prefactor += entry.prefactor;
+                    else
+                        local_row.emplace_back(Entry{local_index, entry.prefactor});
+                }
+                ++i;
+            }
         }
 
         template <typename Term>

@@ -51,6 +51,8 @@ namespace ieompp
                 void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
 
+                void join(const Agenda& agenda);
+
                 inline const std::vector<Term>& terms() const;
                 inline const std::list<std::size_t> known() const;
                 inline const std::vector<std::size_t> todo() const;
