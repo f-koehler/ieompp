@@ -5,29 +5,30 @@ using namespace std;
 #include "ieompp/algebra/hamiltonian.hpp"
 #include "ieompp/algebra/agenda.hpp"
 #include "ieompp/ode/dense.hpp"
-#include "ieompp/io/algebra.hpp"
-#include "ieompp/io/eigen.hpp"
 #include <fstream>
 using namespace ieompp;
 
 int main()
 {
-    auto term = algebra::make_term(std::complex<double>(1., 0.), {algebra::make_annihilator(0ul, true)});
+    auto term =
+        algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
     discretization::LinearDiscretization<double> real_space(10, 1.);
     algebra::Hamiltonian<decltype(term)> hamiltonian;
     algebra::Agenda<decltype(term)> agenda;
 
+    hamiltonian.J = 0.3;
+
     agenda.commutate(term, 4, hamiltonian, real_space);
+    ode::DenseRK4<decltype(agenda)> rk4(agenda);
+    Eigen::Matrix<std::complex<double>, Eigen::Dynamic, 1> v = Eigen::Matrix<std::complex<double>, Eigen::Dynamic, 1>::Zero(agenda.terms().size());
+    v(0) = std::complex<double>(1.);
 
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> mat(1024, 1024);
-    ofstream file("test.bin", ios_base::binary);
-    io::write_binary(file, mat);
-    file.close();
 
-    ifstream file2("test.bin", ios_base::binary);
-    io::read_binary(file2, mat);
-    file2.close();
+    cout << agenda.terms().size() << endl;
+    for(auto i = 0; i < 1024; ++i) {
+        rk4.step(v, 0.01);
+        cout << "step " << i << " completed" << endl;
+    }
 
-    for(auto& term : agenda.terms()) cout << term << endl;
-    cout << endl;
+    /* for(auto& term : agenda.terms()) cout << term << endl; */
 }
