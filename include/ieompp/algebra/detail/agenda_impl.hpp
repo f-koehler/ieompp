@@ -5,6 +5,17 @@ namespace ieompp
     namespace algebra
     {
         template <typename Term>
+        Agenda<Term>::Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
+                             std::vector<std::size_t>& _todo,
+                             std::vector<std::vector<Entry>> _results)
+        {
+            this->_terms.swap(_terms);
+            this->_known.swap(_known);
+            this->_todo.swap(_todo);
+            this->_results.swap(_results);
+        }
+
+        template <typename Term>
         void Agenda<Term>::reset()
         {
             // clear all lists
@@ -129,25 +140,26 @@ namespace ieompp
         }
 
         template <typename Term>
-        const std::vector<Term>& Agenda<Term>::terms() const
+        inline const std::vector<Term>& Agenda<Term>::terms() const
         {
             return _terms;
         }
 
         template <typename Term>
-        const std::list<std::size_t> Agenda<Term>::known() const
+        inline const std::list<std::size_t> Agenda<Term>::known() const
         {
             return _known;
         }
 
         template <typename Term>
-        const std::vector<std::size_t> Agenda<Term>::todo() const
+        inline const std::vector<std::size_t> Agenda<Term>::todo() const
         {
             return _todo;
         }
 
         template <typename Term>
-        const std::vector<std::vector<typename Agenda<Term>::Entry>>& Agenda<Term>::results() const
+        inline const std::vector<std::vector<typename Agenda<Term>::Entry>>&
+        Agenda<Term>::results() const
         {
             return _results;
         }

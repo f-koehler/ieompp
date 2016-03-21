@@ -16,14 +16,15 @@ namespace ieompp
         template <typename TermT>
         class Agenda
         {
-            using Term    = TermT;
-            using Complex = typename Term::Prefactor;
-            using Real    = typename Complex::value_type;
+            public:
+                using Term    = TermT;
+                using Complex = typename Term::Prefactor;
+                using Real    = typename Complex::value_type;
 
-            struct Entry {
-                std::size_t index;
-                Complex prefactor;
-            };
+                struct Entry {
+                    std::size_t index;
+                    Complex prefactor;
+                };
 
             private:
                 std::vector<Term> _terms;
@@ -32,6 +33,10 @@ namespace ieompp
                 std::vector<std::vector<Entry>> _results;
 
             public:
+                Agenda() = default;
+                Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
+                       std::vector<std::size_t>& _todo, std::vector<std::vector<Entry>> _results);
+
                 void reset();
 
                 std::tuple<bool, std::list<std::size_t>::const_iterator> is_known(const Term& term) const;
@@ -46,10 +51,10 @@ namespace ieompp
                 void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                const Discretization& discretization);
 
-                const std::vector<Term>& terms() const;
-                const std::list<std::size_t> known() const;
-                const std::vector<std::size_t> todo() const;
-                const std::vector<std::vector<Entry>>& results() const;
+                inline const std::vector<Term>& terms() const;
+                inline const std::list<std::size_t> known() const;
+                inline const std::vector<std::size_t> todo() const;
+                inline const std::vector<std::vector<Entry>>& results() const;
         };
     }
 }
