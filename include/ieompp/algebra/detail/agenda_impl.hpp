@@ -85,8 +85,6 @@ namespace ieompp
         void Agenda<Term>::commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
                                      const Discretization& discretization)
         {
-            if(num == 0) return;
-
             // if the _todo list is empty there will be nothing left to do
             if(_todo.empty()) return;
 

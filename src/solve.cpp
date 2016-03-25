@@ -14,13 +14,27 @@ int main()
         algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
     discretization::LinearDiscretization<double> real_space(10, 1.);
     algebra::Hamiltonian<decltype(term)> hamiltonian;
-    algebra::Agenda<decltype(term)> a1, a2;
+    algebra::Agenda<decltype(term)> a;
 
-    hamiltonian.J = 0.3;
+    hamiltonian.J = 1.;
+    hamiltonian.U = 1.;
 
-    a1.commutate(term, 4, hamiltonian, real_space);
-    a2.commutate(term, 4, hamiltonian, real_space);
-    a2.join(a1);
+    a.commutate(term, 2, hamiltonian, real_space);
 
-    cout << a1.terms().size() << " " << a2.terms().size() << endl;
+    cout << "Terms:" << endl;
+    for(auto& term : a.terms()) cout << term << endl;
+    cout << endl << endl;
+
+    cout << "Results:" << endl;
+    std::size_t i = 0;
+    for(auto& line : a.results()) {
+        cout << a.terms()[i] << ':' << endl;
+        for(auto& entry : line) {
+            auto t = a.terms()[entry.index];
+            t.prefactor = entry.prefactor;
+            cout << t << endl;;
+        }
+        ++i;
+        cout << endl;
+    }
 }
