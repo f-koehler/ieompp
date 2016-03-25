@@ -14,6 +14,7 @@ namespace ieompp
             using Prefactor = typename Term::Prefactor;
 
             typename Prefactor::value_type J, U;
+            bool enable_hopping, enable_interaction;
 
             Hamiltonian();
 

@@ -8,7 +8,7 @@ namespace ieompp
     {
         template <typename Term>
         HamiltonianFourier<Term>::HamiltonianFourier()
-            : J(1.), U(1.)
+            : J(1.), U(1.), enable_hopping(true), enable_interaction(true)
         {
         }
 
@@ -28,8 +28,9 @@ namespace ieompp
                                                  const RealSpace& lattice,
                                                  TermList<Term>& result) const
         {
-            commutate_hopping(term, discretization, lattice, result);
-            commutate_interaction(term, discretization, lattice, result);
+            if(enable_hopping) commutate_hopping(term, discretization, lattice, result);
+
+            if(enable_interaction) commutate_interaction(term, discretization, lattice, result);
         }
 
         template <typename Term>

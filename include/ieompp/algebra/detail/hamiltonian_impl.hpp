@@ -7,7 +7,7 @@ namespace ieompp
     {
         template <typename Term>
         Hamiltonian<Term>::Hamiltonian()
-            : J(1.), U(1.)
+            : J(1.), U(1.), enable_hopping(true), enable_interaction(true)
         {
         }
 
@@ -26,8 +26,9 @@ namespace ieompp
         void Hamiltonian<Term>::commutate(const Term term, const Discretization& discretization,
                                           TermList<Term>& result) const
         {
-            commutate_hopping(term, discretization, result);
-            commutate_interaction(term, discretization, result);
+            if(enable_hopping) commutate_hopping(term, discretization, result);
+
+            if(enable_interaction) commutate_interaction(term, discretization, result);
         }
 
         template <typename Term>
