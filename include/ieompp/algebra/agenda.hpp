@@ -58,6 +58,9 @@ namespace ieompp
                 inline const std::vector<std::size_t> todo() const;
                 inline const std::vector<std::vector<Entry>>& results() const;
         };
+
+        template <typename Term>
+        std::ostream& operator<<(std::ostream& strm, const Agenda<Term>& agenda);
     }
 }
 

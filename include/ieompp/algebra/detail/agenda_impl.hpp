@@ -209,5 +209,27 @@ namespace ieompp
         {
             return _results;
         }
+
+        template <typename Term>
+        std::ostream& operator<<(std::ostream& strm, const Agenda<Term>& agenda)
+        {
+            strm << "terms:" << std::endl;
+            for(auto& term : agenda.terms()) strm << term << std::endl;
+            strm << std::endl << std::endl;
+
+            strm << "results:" << std::endl;
+            std::size_t i = 0;
+            for(auto& line : agenda.results()) {
+                strm << agenda.terms()[i] << ":" << std::endl;
+                for(auto& entry : line) {
+                    auto term      = agenda.terms()[entry.index];
+                    term.prefactor = entry.prefactor;
+                    strm << "\t" << term << std::endl;
+                }
+                ++i;
+                strm << std::endl;
+            }
+            return strm;
+        }
     }
 }

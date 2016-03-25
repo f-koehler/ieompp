@@ -19,22 +19,6 @@ int main()
     hamiltonian.J = 1.;
     hamiltonian.U = 1.;
 
-    a.commutate(term, 2, hamiltonian, real_space);
-
-    cout << "Terms:" << endl;
-    for(auto& term : a.terms()) cout << term << endl;
-    cout << endl << endl;
-
-    cout << "Results:" << endl;
-    std::size_t i = 0;
-    for(auto& line : a.results()) {
-        cout << a.terms()[i] << ':' << endl;
-        for(auto& entry : line) {
-            auto t = a.terms()[entry.index];
-            t.prefactor = entry.prefactor;
-            cout << t << endl;;
-        }
-        ++i;
-        cout << endl;
-    }
+    a.commutate(term, 1, hamiltonian, real_space);
+    cout << a << endl;
 }
