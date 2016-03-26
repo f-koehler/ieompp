@@ -1,3 +1,4 @@
+#include <cassert>
 #include <cmath>
 
 #include "ieompp/discretization/linear.hpp"
