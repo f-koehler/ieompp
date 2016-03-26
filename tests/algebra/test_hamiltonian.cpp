@@ -16,7 +16,7 @@ void test_commutate_hopping()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(0, 999, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")
@@ -49,7 +49,7 @@ void test_commutate_interaction()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<double> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(0, 999, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")
@@ -86,7 +86,7 @@ void test_commutate()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(0, 999, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")

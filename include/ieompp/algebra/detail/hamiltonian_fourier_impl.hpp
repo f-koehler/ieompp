@@ -46,11 +46,11 @@ namespace ieompp
             t.operators[1].creator = false;
 
             for(auto& idx : discretization) {
-                auto& k = discretization[idx];
+                auto k = discretization[idx];
                 t.prefactor = 0.;
                 t.operators[0].index = idx;
                 t.operators[1].index = idx;
-                for(auto& delta : lattice.lattice_vectors) {
+                for(auto& delta : lattice.lattice_vectors()) {
                     t.prefactor += std::cos(dot_product(k, delta));
                 }
                 t.prefactor *= -2. * J;
@@ -71,7 +71,7 @@ namespace ieompp
                                                              TermList<Term>& result) const
         {
             Term t;
-            t.prefactor = U / lattice.num;
+            t.prefactor = U / lattice.num();
             t.operators.resize(4);
             t.operators[0].creator = true;
             t.operators[1].creator = false;
@@ -84,16 +84,16 @@ namespace ieompp
 
             // quadrilinear term
             for(auto& idx1 : discretization) {
-                auto& k1 = discretization[idx1];
+                auto k1 = discretization[idx1];
                 t.operators[0].index = idx1;
                 for(auto& idx2 : discretization) {
-                    auto& k2 = discretization[idx2];
+                    auto k2 = discretization[idx2];
                     t.operators[1].index = idx2;
                     for(auto& idx3 : discretization) {
-                        auto& k3 = discretization[idx3];
+                        auto k3 = discretization[idx3];
                         t.operators[2].index = idx3;
 
-                        auto k4              = discretization.project(k1 + k3 - k2);
+                        auto k4              = k1 + k3 - k2;
                         auto idx4            = discretization[k4];
                         t.operators[3].index = idx4;
 
@@ -103,7 +103,7 @@ namespace ieompp
             }
 
             // bilinear terms
-            t.prefactor = -U / (2 * lattice.num);
+            t.prefactor = -U / (2 * lattice.num());
             t.operators.resize(2);
             for(auto& idx : discretization) {
                 t.operators[0].index = idx;

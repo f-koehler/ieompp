@@ -2,142 +2,167 @@
 
 namespace ieompp
 {
-    template <typename T>
-    IntegerIterator<T>::IntegerIterator(const typename IntegerIterator<T>::value_type& val)
-        : _val(val)
+    namespace iterators
     {
-    }
+        template <typename T, bool const_iterator>
+        IntegerIterator<T, const_iterator>::IntegerIterator(
+            const typename IntegerIterator<T, const_iterator>::value_type& val)
+            : _val(val)
+        {
+        }
 
 
-    template <typename T>
-    inline void IntegerIterator<T>::swap(IntegerIterator<T>& other)
-    {
-        std::swap(_val, other._val);
-    }
+        template <typename T, bool const_iterator>
+        inline void
+        IntegerIterator<T, const_iterator>::swap(IntegerIterator<T, const_iterator>& other)
+        {
+            std::swap(_val, other._val);
+        }
 
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::operator*()
-    {
-        return _val;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::reference
+            IntegerIterator<T, const_iterator>::
+            operator*()
+        {
+            return _val;
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::
-    operator[](const typename IntegerIterator<T>::difference_type& diff)
-    {
-        return _val + diff;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::value_type
+            IntegerIterator<T, const_iterator>::
+            operator[](const typename IntegerIterator<T, const_iterator>::difference_type& diff)
+        {
+            return _val + diff;
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::operator++()
-    {
-        return ++_val;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::reference
+            IntegerIterator<T, const_iterator>::
+            operator++()
+        {
+            return ++_val;
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::operator++(int)
-    {
-        return _val++;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::reference
+            IntegerIterator<T, const_iterator>::
+            operator++(int)
+        {
+            return _val++;
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::operator--()
-    {
-        return --_val;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::reference
+            IntegerIterator<T, const_iterator>::
+            operator--()
+        {
+            return --_val;
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::reference IntegerIterator<T>::operator--(int)
-    {
-        return _val--;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::reference
+            IntegerIterator<T, const_iterator>::
+            operator--(int)
+        {
+            return _val--;
+        }
 
-    template <typename T>
-    inline IntegerIterator<T>& IntegerIterator<T>::
-    operator+=(const typename IntegerIterator<T>::difference_type& diff)
-    {
-        _val += diff;
-        return *this;
-    }
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator>& IntegerIterator<T, const_iterator>::
+        operator+=(const typename IntegerIterator<T, const_iterator>::difference_type& diff)
+        {
+            _val += diff;
+            return *this;
+        }
 
-    template <typename T>
-    inline IntegerIterator<T>& IntegerIterator<T>::
-    operator-=(const typename IntegerIterator<T>::difference_type& diff)
-    {
-        _val += diff;
-        return *this;
-    }
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator>& IntegerIterator<T, const_iterator>::
+        operator-=(const typename IntegerIterator<T, const_iterator>::difference_type& diff)
+        {
+            _val += diff;
+            return *this;
+        }
 
-    template <typename T>
-    inline IntegerIterator<T> IntegerIterator<T>::
-    operator+(const typename IntegerIterator<T>::difference_type& diff) const
-    {
-        return IntegerIterator<T>(_val + diff);
-    }
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator> IntegerIterator<T, const_iterator>::
+        operator+(const typename IntegerIterator<T, const_iterator>::difference_type& diff) const
+        {
+            return IntegerIterator<T, const_iterator>(_val + diff);
+        }
 
-    template <typename T>
-    inline IntegerIterator<T> IntegerIterator<T>::
-    operator-(const typename IntegerIterator<T>::difference_type& diff) const
-    {
-        return IntegerIterator<T>(_val - diff);
-    }
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator> IntegerIterator<T, const_iterator>::
+        operator-(const typename IntegerIterator<T, const_iterator>::difference_type& diff) const
+        {
+            return IntegerIterator<T, const_iterator>(_val - diff);
+        }
 
-    template <typename T>
-    inline typename IntegerIterator<T>::difference_type IntegerIterator<T>::
-    operator-(const IntegerIterator<T>& rhs) const
-    {
-        return _val - rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline typename IntegerIterator<T, const_iterator>::difference_type
+            IntegerIterator<T, const_iterator>::
+            operator-(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val - rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator<(const IntegerIterator<T>& rhs) const
-    {
-        return _val < rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator<(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val < rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator>(const IntegerIterator<T>& rhs) const
-    {
-        return _val > rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator>(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val > rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator<=(const IntegerIterator<T>& rhs) const
-    {
-        return _val <= rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator<=(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val <= rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator>=(const IntegerIterator<T>& rhs) const
-    {
-        return _val >= rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator>=(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val >= rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator==(const IntegerIterator<T>& rhs) const
-    {
-        return _val == rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator==(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val == rhs._val;
+        }
 
-    template <typename T>
-    inline bool IntegerIterator<T>::operator!=(const IntegerIterator<T>& rhs) const
-    {
-        return _val != rhs._val;
-    }
+        template <typename T, bool const_iterator>
+        inline bool IntegerIterator<T, const_iterator>::
+        operator!=(const IntegerIterator<T, const_iterator>& rhs) const
+        {
+            return _val != rhs._val;
+        }
 
 
-    template <typename T>
-    inline IntegerIterator<T> operator+(const IntegerIterator<T>& it,
-                                        const typename IntegerIterator<T>::difference_type& diff)
-    {
-        return IntegerIterator<T>(diff + it._val);
-    }
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator>
+        operator+(const typename IntegerIterator<T, const_iterator>::difference_type& diff,
+                  const IntegerIterator<T, const_iterator>& it)
+        {
+            return IntegerIterator<T, const_iterator>(diff + it._val);
+        }
 
-    template <typename T>
-    inline IntegerIterator<T> operator-(const IntegerIterator<T>& it,
-                                        const typename IntegerIterator<T>::difference_type& diff)
-    {
-        return IntegerIterator<T>(diff - it._val);
+        template <typename T, bool const_iterator>
+        inline IntegerIterator<T, const_iterator>
+        operator-(const typename IntegerIterator<T, const_iterator>::difference_type& diff,
+                  const IntegerIterator<T, const_iterator>& it)
+        {
+            return IntegerIterator<T, const_iterator>(diff - it._val);
+        }
     }
 }
