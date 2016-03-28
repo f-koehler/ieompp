@@ -42,8 +42,19 @@ namespace ieompp
 
                 std::array<Index, 4> neighbours(const Index& idx) const;
                 std::array<Index, 2> unique_neighbours(const Index& idx) const;
+                Index closest(Vector v) const;
 
                 const Index& num() const;
+                const Index& first() const;
+                const Index& last() const;
+                const Real& x_min() const;
+                const Real& x_max() const;
+                const Real& x_length() const;
+                const Real& dx() const;
+                const Real& y_min() const;
+                const Real& y_max() const;
+                const Real& y_length() const;
+                const Real& dy() const;
                 const std::array<Vector, 2>& lattice_vectors() const;
 
                 ConstIndexIterator begin() const;

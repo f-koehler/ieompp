@@ -2,6 +2,7 @@
 #include "catch.hpp"
 
 #include "ieompp/discretization/square.hpp"
+using namespace ieompp;
 using namespace ieompp::discretization;
 
 #include <iostream>
@@ -18,12 +19,27 @@ void test_initialization_real_space()
 {
     SquareDiscretization<Real> disc(NX, NY, 1., 1.);
 
-    REQUIRE(disc.end()-disc.begin() == N);
-    REQUIRE(disc.cend()-disc.cbegin() == N);
+    REQUIRE(disc.end() - disc.begin() == N);
+    REQUIRE(disc.cend() - disc.cbegin() == N);
+
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(0.));
+    REQUIRE(disc.x_max() == Approx(Real(NX - 1)));
+    REQUIRE(disc.x_length() == Approx(Real(NX)));
+    REQUIRE(disc.dx() == Approx(1.));
+    REQUIRE(disc.y_min() == Approx(0.));
+    REQUIRE(disc.y_max() == Approx(Real(NY - 1)));
+    REQUIRE(disc.y_length() == Approx(Real(NY)));
+    REQUIRE(disc.dy() == Approx(1.));
+    REQUIRE(disc.lattice_vectors().size() == 2);
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[0], typename SquareDiscretization<Real>::Vector(1., 0.)));
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[1], typename SquareDiscretization<Real>::Vector(0., 1.)));
 
     for(std::size_t i = 0; i < NX; ++i) {
         for(std::size_t j = 0; j < NY; ++j) {
-            const auto idx = i*NX+j;
+            const auto idx = disc.index(i, j);
             REQUIRE(disc.begin()[idx] == idx);
             REQUIRE(VEC_APPROX(disc[idx], typename SquareDiscretization<Real>::Vector(Real(i), Real(j))));
             REQUIRE(disc[disc[idx]] == idx);
@@ -31,26 +47,28 @@ void test_initialization_real_space()
     }
 }
 
-/* template <typename Real> */
-/* void test_initialization_momentum_space() */
-/* { */
-/*     SquareDiscretization<Real> disc(nx, ny); */
+template <typename Real>
+void test_initialization_momentum_space()
+{
+    SquareDiscretization<Real> disc(NX, NY);
 
-/*     auto pi = ieompp::Pi<Real>::value; */
-
-/*     REQUIRE(disc.x_min == Approx(-pi)); */
-/*     REQUIRE(disc.x_max == Approx(pi)); */
-/*     REQUIRE(disc.y_min == Approx(-pi)); */
-/*     REQUIRE(disc.y_max == Approx(pi)); */
-
-/*     REQUIRE(disc.dx == Approx(ieompp::TwoPi<Real>::value / nx)); */
-/*     REQUIRE(disc.dy == Approx(ieompp::TwoPi<Real>::value / ny)); */
-
-/*     REQUIRE(VEC_APPROX(disc.sites.front().front(), typename SquareDiscretization<Real>::Vector(-pi, -pi))); */
-/*     REQUIRE(VEC_APPROX(disc.sites.front().back(), typename SquareDiscretization<Real>::Vector(-pi, pi - disc.dy))); */
-/*     REQUIRE(VEC_APPROX(disc.sites.back().front(), typename SquareDiscretization<Real>::Vector(pi - disc.dx, -pi))); */
-/*     REQUIRE(VEC_APPROX(disc.sites.back().back(), typename SquareDiscretization<Real>::Vector(pi - disc.dx, pi - disc.dy))); */
-/* } */
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(-Pi<Real>::value));
+    REQUIRE(disc.x_max() == Approx(Pi<Real>::value));
+    REQUIRE(disc.x_length() == Approx(TwoPi<Real>::value));
+    REQUIRE(disc.dx() == Approx(TwoPi<Real>::value / NX));
+    REQUIRE(disc.y_min() == Approx(-Pi<Real>::value));
+    REQUIRE(disc.y_max() == Approx(Pi<Real>::value));
+    REQUIRE(disc.y_length() == Approx(TwoPi<Real>::value));
+    REQUIRE(disc.dy() == Approx(TwoPi<Real>::value / NY));
+    REQUIRE(disc.lattice_vectors().size() == 2);
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[0],
+                       typename SquareDiscretization<Real>::Vector(disc.dx(), 0.)));
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[1],
+                       typename SquareDiscretization<Real>::Vector(0., disc.dy())));
+}
 
 template <typename Real>
 void test_neighbours()
@@ -172,35 +190,51 @@ void test_unique_neighbours()
     }
 }
 
-TEST_CASE("initialization (real space)", "")
+template <typename Real>
+void test_closest()
+{
+    using Vector = typename SquareDiscretization<Real>::Vector;
+
+    SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    REQUIRE(disc.closest(Vector(0.49, 0.49)) == disc.index(0, 0));
+    REQUIRE(disc.closest(Vector(0.51, 0.49)) == disc.index(1, 0));
+    REQUIRE(disc.closest(Vector(0.49, 0.51)) == disc.index(0, 1));
+    REQUIRE(disc.closest(Vector(0.51, 0.51)) == disc.index(1, 1));
+    REQUIRE(disc.closest(Vector(-0.49, -0.49)) == disc.index(0, 0));
+    REQUIRE(disc.closest(Vector(-0.51, -0.49)) == disc.index(NX - 1, 0));
+    REQUIRE(disc.closest(Vector(-0.49, -0.51)) == disc.index(0, NY - 1));
+    REQUIRE(disc.closest(Vector(-0.51, -0.51)) == disc.index(NX - 1, NY - 1));
+}
+
+TEST_CASE("initialization (real space)")
 {
     test_initialization_real_space<float>();
     test_initialization_real_space<double>();
     test_initialization_real_space<long double>();
 }
 
-/* TEST_CASE("initialization (momentum space)", "") */
-/* { */
-/*     test_initialization_momentum_space<float>(); */
-/*     test_initialization_momentum_space<double>(); */
-/*     test_initialization_momentum_space<long double>(); */
-/* } */
+TEST_CASE("initialization (momentum space)")
+{
+    test_initialization_momentum_space<float>();
+    test_initialization_momentum_space<double>();
+    test_initialization_momentum_space<long double>();
+}
 
-/* TEST_CASE("closest site", "") */
-/* { */
-/*     test_closest_site<float>(); */
-/*     test_closest_site<double>(); */
-/*     test_closest_site<long double>(); */
-/* } */
+TEST_CASE("closest site")
+{
+    test_closest<float>();
+    test_closest<double>();
+    test_closest<long double>();
+}
 
-TEST_CASE("neighbours", "")
+TEST_CASE("neighbours")
 {
     test_neighbours<float>();
     test_neighbours<double>();
     test_neighbours<long double>();
 }
 
-TEST_CASE("unique neighbours", "")
+TEST_CASE("unique neighbours")
 {
     test_unique_neighbours<float>();
     test_unique_neighbours<double>();

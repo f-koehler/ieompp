@@ -2,6 +2,7 @@
 #include "catch.hpp"
 
 #include "ieompp/discretization/linear.hpp"
+using namespace ieompp;
 using namespace ieompp::discretization;
 
 const std::size_t N = 100;
@@ -14,6 +15,16 @@ void test_initialization_real_space()
     REQUIRE(disc.end() - disc.begin() == N);
     REQUIRE(disc.cend() - disc.cbegin() == N);
 
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(0.));
+    REQUIRE(disc.x_max() == Approx(Real(N - 1)));
+    REQUIRE(disc.x_length() == Approx(Real(N)));
+    REQUIRE(disc.dx() == Approx(1.));
+    REQUIRE(disc.lattice_vectors().size() == 1);
+    REQUIRE(disc.lattice_vectors()[0] == Approx(1.));
+
     for(std::size_t i = 0; i < N; ++i) {
         REQUIRE(disc.begin()[i] == i);
         REQUIRE(disc[i] == Approx(Real(i)));
@@ -25,15 +36,22 @@ template <typename Real>
 void test_initialization_momentum_space()
 {
     LinearDiscretization<Real> disc(N);
-    // TODO: need more getter functions for these tests
 
-    /* REQUIRE(disc.x_min == Approx(-ieompp::Pi<Real>::value)); */
-    /* REQUIRE(disc.x_max == Approx(ieompp::Pi<Real>::value)); */
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(-Pi<Real>::value));
+    REQUIRE(disc.x_max() == Approx(Pi<Real>::value));
+    REQUIRE(disc.x_length() == Approx(TwoPi<Real>::value));
+    REQUIRE(disc.dx() == Approx(TwoPi<Real>::value / N));
+    REQUIRE(disc.lattice_vectors().size() == 1);
+    REQUIRE(disc.lattice_vectors()[0] == Approx(disc.dx()));
 
-    /* REQUIRE(disc.dx == Approx(ieompp::TwoPi<Real>::value / n)); */
-
-    /* REQUIRE(disc.sites.front() == Approx(-ieompp::Pi<Real>::value)); */
-    /* REQUIRE(disc.sites.back() == Approx(ieompp::Pi<Real>::value - disc.dx)); */
+    for(std::size_t i = 0; i < N; ++i) {
+        REQUIRE(disc.begin()[i] == i);
+        REQUIRE(disc[i] == Approx(-Pi<Real>::value + i * disc.dx()));
+        REQUIRE(disc[disc[i]] == i);
+    }
 }
 
 template <typename Real>
@@ -69,6 +87,18 @@ void test_unique_neighbours()
     REQUIRE(neigh[0] == 0);
 }
 
+template <typename Real>
+void test_closest()
+{
+    LinearDiscretization<Real> disc(N, 1.);
+    REQUIRE(disc.closest(0.49) == 0);
+    REQUIRE(disc.closest(0.51) == 1);
+    REQUIRE(disc.closest(-0.49) == 0);
+    REQUIRE(disc.closest(-0.51) == N - 1);
+    REQUIRE(disc.closest(Real(N - 1) + 0.49) == N - 1);
+    REQUIRE(disc.closest(Real(N - 1) + 0.51) == 0);
+}
+
 TEST_CASE("initialization (real space)", "")
 {
     test_initialization_real_space<float>();
@@ -81,6 +111,13 @@ TEST_CASE("initialization (momentum space)", "")
     test_initialization_momentum_space<float>();
     test_initialization_momentum_space<double>();
     test_initialization_momentum_space<long double>();
+}
+
+TEST_CASE("closest site", "")
+{
+    test_closest<float>();
+    test_closest<double>();
+    test_closest<long double>();
 }
 
 TEST_CASE("neighbours", "")

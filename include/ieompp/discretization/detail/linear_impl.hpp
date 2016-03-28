@@ -10,7 +10,7 @@ namespace ieompp
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const Index& num)
             : _num(num), _first(0), _last(num - 1), _x_min(-Pi<Real>::value),
-              _x_max(Pi<Real>::value), _x_length(_x_max - _x_min), _dx(_x_length / _num),
+              _x_max(Pi<Real>::value), _x_length(TwoPi<Real>::value), _dx(_x_length / _num),
               _lattice_vectors{{_dx}}
         {
             assert(num > 0);
@@ -19,7 +19,7 @@ namespace ieompp
         template <typename Real>
         LinearDiscretization<Real>::LinearDiscretization(const Index& num, const Real& dx)
             : _num(num), _first(0), _last(num - 1), _x_min(0.), _x_max(dx * (_num - 1)),
-              _x_length(_x_max - _x_min), _dx(dx), _lattice_vectors{{_dx}}
+              _x_length(num * dx), _dx(dx), _lattice_vectors{{_dx}}
         {
             assert(num > 0);
         }
@@ -41,12 +41,12 @@ namespace ieompp
 
         template <typename Real>
         typename LinearDiscretization<Real>::Index
-        LinearDiscretization<Real>::closest(const Vector& v) const
+        LinearDiscretization<Real>::closest(Vector v) const
         {
             const auto dx2 = _dx / 2;
             while(v < _x_min - dx2) v += _x_length;
-            while(v > _x_min - dx2) v -= _x_length;
-            Real min_dist = ((*this)[0] - v) * ((*this)[0] - v), dist;
+            while(v > _x_max + dx2) v -= _x_length;
+            Real min_dist = ((*this)[Index(0)] - v) * ((*this)[Index(0)] - v), dist;
             Index min = 0;
             for(auto idx : *this) {
                 dist = ((*this)[idx] - v) * ((*this)[idx] - v);
@@ -62,6 +62,42 @@ namespace ieompp
         const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::num() const
         {
             return _num;
+        }
+
+        template <typename Real>
+        const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::first() const
+        {
+            return _first;
+        }
+
+        template <typename Real>
+        const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::last() const
+        {
+            return _last;
+        }
+
+        template <typename Real>
+        const Real& LinearDiscretization<Real>::x_min() const
+        {
+            return _x_min;
+        }
+
+        template <typename Real>
+        const Real& LinearDiscretization<Real>::x_max() const
+        {
+            return _x_max;
+        }
+
+        template <typename Real>
+        const Real& LinearDiscretization<Real>::x_length() const
+        {
+            return _x_length;
+        }
+
+        template <typename Real>
+        const Real& LinearDiscretization<Real>::dx() const
+        {
+            return _dx;
         }
 
         template <typename Real>
