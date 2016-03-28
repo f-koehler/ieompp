@@ -2,15 +2,14 @@
 #define IEOMPP_DISCRETIZATION_SQUARE_HPP_
 
 #include <array>
-#include <tuple>
-#include <vector>
+#include <functional>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
 #pragma GCC diagnostic pop
 
-#include "ieompp/constants.hpp"
+#include "ieompp/iterators/integer_iterator.hpp"
 
 namespace ieompp
 {
@@ -19,41 +18,54 @@ namespace ieompp
         template <typename RealT>
         class SquareDiscretization {
             public:
-                using Real   = RealT;
-                using Index  = std::tuple<std::size_t, std::size_t>;
-                using Vector = Eigen::Matrix<Real, 2, 1>;
+                using Real               = RealT;
+                using Index              = std::size_t;
+                using IndexIterator      = iterators::IntegerIterator<Index, false>;
+                using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
+                using Vector             = Eigen::Matrix<Real, 2, 1>;
 
             private:
-                std::vector<Index> init_indices();
-                std::vector<std::vector<Vector>> init_sites();
+                const Index _num_x, _num_y, _num;
+                const Index _first, _last;
+                const Real _x_min, _x_max;
+                const Real _x_length, _dx;
+                const Real _y_min, _y_max;
+                const Real _y_length, _dy;
+                const std::array<Vector, 2> _lattice_vectors;
 
             public:
-                const std::size_t num;
-                const std::size_t num_x, num_y;
-                const Real dx, dy;
-                const Real x_min, y_min, x_max, y_max;
-                const Real x_diff, y_diff;
-                const std::array<Vector, 2> lattice_vectors;
-                const std::vector<Index> indices;
-                const std::vector<std::vector<Vector>> sites;
+                SquareDiscretization(const Index& num_x, const Index& num_y);
+                SquareDiscretization(const Index& num_x, const Index& num_y, const Real& dx,
+                                     const Real& dy);
 
-                // init in real space
-                SquareDiscretization(const std::size_t nx, const std::size_t ny, const Real& delta_x,
-                                     const Real& delta_y);
+                Index index(const Index& i, const Index& j) const;
 
-                // init in momentum space
-                SquareDiscretization(const std::size_t nx, const std::size_t ny);
-
-                const Index& closest(const Vector& v) const;
                 std::array<Index, 4> neighbours(const Index& idx) const;
                 std::array<Index, 2> unique_neighbours(const Index& idx) const;
-                Vector project(Vector v) const;
+                Index closest(Vector v) const;
 
-                inline std::vector<Index>::const_iterator begin() const;
-                inline std::vector<Index>::const_iterator end() const;
+                const Index& num() const;
+                const Index& first() const;
+                const Index& last() const;
+                const Real& x_min() const;
+                const Real& x_max() const;
+                const Real& x_length() const;
+                const Real& dx() const;
+                const Real& y_min() const;
+                const Real& y_max() const;
+                const Real& y_length() const;
+                const Real& dy() const;
+                const std::array<Vector, 2>& lattice_vectors() const;
 
-                inline const Vector& operator[](const Index& i) const;
-                inline const Index& operator[](const Vector& v) const;
+                ConstIndexIterator begin() const;
+                ConstIndexIterator end() const;
+                IndexIterator begin();
+                IndexIterator end();
+                ConstIndexIterator cbegin() const;
+                ConstIndexIterator cend() const;
+
+                Vector operator[](const Index& idx) const;
+                Index operator[](Vector v) const;
         };
     }
 }

@@ -2,35 +2,47 @@
 #include "catch.hpp"
 
 #include "ieompp/discretization/square.hpp"
+using namespace ieompp;
 using namespace ieompp::discretization;
 
-#define VEC_APPROX(a, b) ((Approx(a[0]) == b[0]) && (Approx(a[1]) == b[1]))
+#include <iostream>
+using namespace std;
 
-const std::size_t nx = 10;
-const std::size_t ny = 10;
+#define VEC_APPROX(a, b) ((Approx(a(0)) == b(0)) && (Approx(a(1)) == b(1)))
+
+const std::size_t NX = 10;
+const std::size_t NY = 10;
+const std::size_t N  = NX * NY;
 
 template <typename Real>
 void test_initialization_real_space()
 {
-    SquareDiscretization<Real> disc(nx, ny, 1., 1.);
+    SquareDiscretization<Real> disc(NX, NY, 1., 1.);
 
-    REQUIRE(disc.indices.size() == nx * ny);
-    REQUIRE(disc.sites.size() == nx);
+    REQUIRE(disc.end() - disc.begin() == N);
+    REQUIRE(disc.cend() - disc.cbegin() == N);
 
-    REQUIRE(disc.num_x == nx);
-    REQUIRE(disc.num_y == ny);
-    REQUIRE(disc.dx == 1.);
-    REQUIRE(disc.dy == 1.);
-    REQUIRE(disc.x_min == 0.);
-    REQUIRE(disc.x_max == Real(nx - 1));
-    REQUIRE(disc.y_min == 0.);
-    REQUIRE(disc.y_max == Real(ny - 1));
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(0.));
+    REQUIRE(disc.x_max() == Approx(Real(NX - 1)));
+    REQUIRE(disc.x_length() == Approx(Real(NX)));
+    REQUIRE(disc.dx() == Approx(1.));
+    REQUIRE(disc.y_min() == Approx(0.));
+    REQUIRE(disc.y_max() == Approx(Real(NY - 1)));
+    REQUIRE(disc.y_length() == Approx(Real(NY)));
+    REQUIRE(disc.dy() == Approx(1.));
+    REQUIRE(disc.lattice_vectors().size() == 2);
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[0], typename SquareDiscretization<Real>::Vector(1., 0.)));
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[1], typename SquareDiscretization<Real>::Vector(0., 1.)));
 
-    for(std::size_t i = 0; i < nx; ++i) {
-        REQUIRE(disc.sites[i].size() == ny);
-        for(std::size_t j = 0; j < ny; ++j) {
-            REQUIRE(disc.indices[i * nx + j] == std::make_tuple(i, j));
-            REQUIRE(VEC_APPROX(disc[disc.indices[i * nx + j]], typename SquareDiscretization<Real>::Vector(Real(i), Real(j))));
+    for(std::size_t i = 0; i < NX; ++i) {
+        for(std::size_t j = 0; j < NY; ++j) {
+            const auto idx = disc.index(i, j);
+            REQUIRE(disc.begin()[idx] == idx);
+            REQUIRE(VEC_APPROX(disc[idx], typename SquareDiscretization<Real>::Vector(Real(i), Real(j))));
+            REQUIRE(disc[disc[idx]] == idx);
         }
     }
 }
@@ -38,99 +50,92 @@ void test_initialization_real_space()
 template <typename Real>
 void test_initialization_momentum_space()
 {
-    SquareDiscretization<Real> disc(nx, ny);
+    SquareDiscretization<Real> disc(NX, NY);
 
-    auto pi = ieompp::Pi<Real>::value;
-
-    REQUIRE(disc.x_min == Approx(-pi));
-    REQUIRE(disc.x_max == Approx(pi));
-    REQUIRE(disc.y_min == Approx(-pi));
-    REQUIRE(disc.y_max == Approx(pi));
-
-    REQUIRE(disc.dx == Approx(ieompp::TwoPi<Real>::value / nx));
-    REQUIRE(disc.dy == Approx(ieompp::TwoPi<Real>::value / ny));
-
-    REQUIRE(VEC_APPROX(disc.sites.front().front(), typename SquareDiscretization<Real>::Vector(-pi, -pi)));
-    REQUIRE(VEC_APPROX(disc.sites.front().back(), typename SquareDiscretization<Real>::Vector(-pi, pi - disc.dy)));
-    REQUIRE(VEC_APPROX(disc.sites.back().front(), typename SquareDiscretization<Real>::Vector(pi - disc.dx, -pi)));
-    REQUIRE(VEC_APPROX(disc.sites.back().back(), typename SquareDiscretization<Real>::Vector(pi - disc.dx, pi - disc.dy)));
-}
-
-template <typename Real>
-void test_closest_site()
-{
-    SquareDiscretization<Real> disc(nx, ny, 1., 1.);
-
-    REQUIRE(disc.closest(typename SquareDiscretization<Real>::Vector(0.4, 3.6)) == std::make_tuple(0, 4));
-    REQUIRE(disc.closest(typename SquareDiscretization<Real>::Vector(0.2, 7.8)) == std::make_tuple(0, 8));
+    REQUIRE(disc.num() == N);
+    REQUIRE(disc.first() == 0);
+    REQUIRE(disc.last() == N - 1);
+    REQUIRE(disc.x_min() == Approx(-Pi<Real>::value));
+    REQUIRE(disc.x_max() == Approx(Pi<Real>::value));
+    REQUIRE(disc.x_length() == Approx(TwoPi<Real>::value));
+    REQUIRE(disc.dx() == Approx(TwoPi<Real>::value / NX));
+    REQUIRE(disc.y_min() == Approx(-Pi<Real>::value));
+    REQUIRE(disc.y_max() == Approx(Pi<Real>::value));
+    REQUIRE(disc.y_length() == Approx(TwoPi<Real>::value));
+    REQUIRE(disc.dy() == Approx(TwoPi<Real>::value / NY));
+    REQUIRE(disc.lattice_vectors().size() == 2);
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[0],
+                       typename SquareDiscretization<Real>::Vector(disc.dx(), 0.)));
+    REQUIRE(VEC_APPROX(disc.lattice_vectors()[1],
+                       typename SquareDiscretization<Real>::Vector(0., disc.dy())));
 }
 
 template <typename Real>
 void test_neighbours()
 {
-    SquareDiscretization<Real> disc(nx, ny, 1., 1.);
+    SquareDiscretization<Real> disc(NX, NY, 1., 1.);
 
     std::array<typename SquareDiscretization<Real>::Index, 4> neigh;
 
-    neigh = disc.neighbours(std::make_tuple(0, 0));
-    REQUIRE(neigh[0] == std::make_tuple(nx - 1, 0));
-    REQUIRE(neigh[1] == std::make_tuple(0, ny - 1));
-    REQUIRE(neigh[2] == std::make_tuple(1, 0));
-    REQUIRE(neigh[3] == std::make_tuple(0, 1));
+    neigh = disc.neighbours(disc.index(0, 0));
+    REQUIRE(neigh[0] == disc.index(NX - 1, 0));
+    REQUIRE(neigh[1] == disc.index(0, NY - 1));
+    REQUIRE(neigh[2] == disc.index(1, 0));
+    REQUIRE(neigh[3] == disc.index(0, 1));
 
-    neigh = disc.neighbours(std::make_tuple(0, ny - 1));
-    REQUIRE(neigh[0] == std::make_tuple(nx - 1, ny - 1));
-    REQUIRE(neigh[1] == std::make_tuple(0, ny - 2));
-    REQUIRE(neigh[2] == std::make_tuple(1, ny - 1));
-    REQUIRE(neigh[3] == std::make_tuple(0, 0));
+    neigh = disc.neighbours(disc.index(0, NY - 1));
+    REQUIRE(neigh[0] == disc.index(NX - 1, NY - 1));
+    REQUIRE(neigh[1] == disc.index(0, NY - 2));
+    REQUIRE(neigh[2] == disc.index(1, NY - 1));
+    REQUIRE(neigh[3] == disc.index(0, 0));
 
-    neigh = disc.neighbours(std::make_tuple(nx - 1, 0));
-    REQUIRE(neigh[0] == std::make_tuple(nx - 2, 0));
-    REQUIRE(neigh[1] == std::make_tuple(nx - 1, ny - 1));
-    REQUIRE(neigh[2] == std::make_tuple(0, 0));
-    REQUIRE(neigh[3] == std::make_tuple(nx - 1, 1));
+    neigh = disc.neighbours(disc.index(NX - 1, 0));
+    REQUIRE(neigh[0] == disc.index(NX - 2, 0));
+    REQUIRE(neigh[1] == disc.index(NX - 1, NY - 1));
+    REQUIRE(neigh[2] == disc.index(0, 0));
+    REQUIRE(neigh[3] == disc.index(NX - 1, 1));
 
-    neigh = disc.neighbours(std::make_tuple(nx - 1, ny - 1));
-    REQUIRE(neigh[0] == std::make_tuple(nx - 2, ny - 1));
-    REQUIRE(neigh[1] == std::make_tuple(nx - 1, ny - 2));
-    REQUIRE(neigh[2] == std::make_tuple(0, ny - 1));
-    REQUIRE(neigh[3] == std::make_tuple(nx - 1, 0));
+    neigh = disc.neighbours(disc.index(NX - 1, NY - 1));
+    REQUIRE(neigh[0] == disc.index(NX - 2, NY - 1));
+    REQUIRE(neigh[1] == disc.index(NX - 1, NY - 2));
+    REQUIRE(neigh[2] == disc.index(0, NY - 1));
+    REQUIRE(neigh[3] == disc.index(NX - 1, 0));
 
-    for(std::size_t j = 1; j < ny - 1; ++j) {
-        neigh = disc.neighbours(std::make_tuple(0, j));
-        REQUIRE(neigh[0] == std::make_tuple(nx - 1, j));
-        REQUIRE(neigh[1] == std::make_tuple(0, j - 1));
-        REQUIRE(neigh[2] == std::make_tuple(1, j));
-        REQUIRE(neigh[3] == std::make_tuple(0, j + 1));
+    for(std::size_t j = 1; j < NY - 1; ++j) {
+        neigh = disc.neighbours(disc.index(0, j));
+        REQUIRE(neigh[0] == disc.index(NX - 1, j));
+        REQUIRE(neigh[1] == disc.index(0, j - 1));
+        REQUIRE(neigh[2] == disc.index(1, j));
+        REQUIRE(neigh[3] == disc.index(0, j + 1));
 
-        neigh = disc.neighbours(std::make_tuple(nx - 1, j));
-        REQUIRE(neigh[0] == std::make_tuple(nx - 2, j));
-        REQUIRE(neigh[1] == std::make_tuple(nx - 1, j - 1));
-        REQUIRE(neigh[2] == std::make_tuple(0, j));
-        REQUIRE(neigh[3] == std::make_tuple(nx - 1, j + 1));
+        neigh = disc.neighbours(disc.index(NX - 1, j));
+        REQUIRE(neigh[0] == disc.index(NX - 2, j));
+        REQUIRE(neigh[1] == disc.index(NX - 1, j - 1));
+        REQUIRE(neigh[2] == disc.index(0, j));
+        REQUIRE(neigh[3] == disc.index(NX - 1, j + 1));
     }
 
-    for(std::size_t i = 1; i < nx - 1; ++i) {
-        neigh = disc.neighbours(std::make_tuple(i, 0));
-        REQUIRE(neigh[0] == std::make_tuple(i - 1, 0));
-        REQUIRE(neigh[1] == std::make_tuple(i, ny - 1));
-        REQUIRE(neigh[2] == std::make_tuple(i + 1, 0));
-        REQUIRE(neigh[3] == std::make_tuple(i, 1));
+    for(std::size_t i = 1; i < NX - 1; ++i) {
+        neigh = disc.neighbours(disc.index(i, 0));
+        REQUIRE(neigh[0] == disc.index(i - 1, 0));
+        REQUIRE(neigh[1] == disc.index(i, NY - 1));
+        REQUIRE(neigh[2] == disc.index(i + 1, 0));
+        REQUIRE(neigh[3] == disc.index(i, 1));
 
-        neigh = disc.neighbours(std::make_tuple(i, ny - 1));
-        REQUIRE(neigh[0] == std::make_tuple(i - 1, ny - 1));
-        REQUIRE(neigh[1] == std::make_tuple(i, ny - 2));
-        REQUIRE(neigh[2] == std::make_tuple(i + 1, ny - 1));
-        REQUIRE(neigh[3] == std::make_tuple(i, 0));
+        neigh = disc.neighbours(disc.index(i, NY - 1));
+        REQUIRE(neigh[0] == disc.index(i - 1, NY - 1));
+        REQUIRE(neigh[1] == disc.index(i, NY - 2));
+        REQUIRE(neigh[2] == disc.index(i + 1, NY - 1));
+        REQUIRE(neigh[3] == disc.index(i, 0));
     }
 
-    for(std::size_t i = 1; i < nx - 1; ++i) {
-        for(std::size_t j = 1; j < nx - 1; ++j) {
-            neigh = disc.neighbours(std::make_tuple(i, j));
-            REQUIRE(neigh[0] == std::make_tuple(i - 1, j));
-            REQUIRE(neigh[1] == std::make_tuple(i, j - 1));
-            REQUIRE(neigh[2] == std::make_tuple(i + 1, j));
-            REQUIRE(neigh[3] == std::make_tuple(i, j + 1));
+    for(std::size_t i = 1; i < NX - 1; ++i) {
+        for(std::size_t j = 1; j < NX - 1; ++j) {
+            neigh = disc.neighbours(disc.index(i, j));
+            REQUIRE(neigh[0] == disc.index(i - 1, j));
+            REQUIRE(neigh[1] == disc.index(i, j - 1));
+            REQUIRE(neigh[2] == disc.index(i + 1, j));
+            REQUIRE(neigh[3] == disc.index(i, j + 1));
         }
     }
 }
@@ -138,110 +143,100 @@ void test_neighbours()
 template <typename Real>
 void test_unique_neighbours()
 {
-    SquareDiscretization<Real> disc(nx, ny, 1., 1.);
+    SquareDiscretization<Real> disc(NX, NY, 1., 1.);
 
-    auto neigh = disc.unique_neighbours(std::make_tuple(0, 0));
-    REQUIRE(neigh[0] == std::make_tuple(1, 0));
-    REQUIRE(neigh[1] == std::make_tuple(0, 1));
+    auto neigh = disc.unique_neighbours(disc.index(0, 0));
+    REQUIRE(neigh[0] == disc.index(1, 0));
+    REQUIRE(neigh[1] == disc.index(0, 1));
 
-    neigh = disc.unique_neighbours(std::make_tuple(0, ny - 1));
-    REQUIRE(neigh[0] == std::make_tuple(1, ny - 1));
-    REQUIRE(neigh[1] == std::make_tuple(0, 0));
+    neigh = disc.unique_neighbours(disc.index(0, NY - 1));
+    REQUIRE(neigh[0] == disc.index(1, NY - 1));
+    REQUIRE(neigh[1] == disc.index(0, 0));
 
-    neigh = disc.unique_neighbours(std::make_tuple(nx - 1, 0));
-    REQUIRE(neigh[0] == std::make_tuple(0, 0));
-    REQUIRE(neigh[1] == std::make_tuple(nx - 1, 1));
+    neigh = disc.unique_neighbours(disc.index(NX - 1, 0));
+    REQUIRE(neigh[0] == disc.index(0, 0));
+    REQUIRE(neigh[1] == disc.index(NX - 1, 1));
 
-    neigh = disc.unique_neighbours(std::make_tuple(nx - 1, ny - 1));
-    REQUIRE(neigh[0] == std::make_tuple(0, ny - 1));
-    REQUIRE(neigh[1] == std::make_tuple(nx - 1, 0));
+    neigh = disc.unique_neighbours(disc.index(NX - 1, NY - 1));
+    REQUIRE(neigh[0] == disc.index(0, NY - 1));
+    REQUIRE(neigh[1] == disc.index(NX - 1, 0));
 
-    for(std::size_t j = 1; j < ny - 1; ++j) {
-        neigh = disc.unique_neighbours(std::make_tuple(0, j));
-        REQUIRE(neigh[0] == std::make_tuple(1, j));
-        REQUIRE(neigh[1] == std::make_tuple(0, j + 1));
+    for(std::size_t j = 1; j < NY - 1; ++j) {
+        neigh = disc.unique_neighbours(disc.index(0, j));
+        REQUIRE(neigh[0] == disc.index(1, j));
+        REQUIRE(neigh[1] == disc.index(0, j + 1));
 
-        neigh = disc.unique_neighbours(std::make_tuple(nx - 1, j));
-        REQUIRE(neigh[0] == std::make_tuple(0, j));
-        REQUIRE(neigh[1] == std::make_tuple(nx - 1, j + 1));
+        neigh = disc.unique_neighbours(disc.index(NX - 1, j));
+        REQUIRE(neigh[0] == disc.index(0, j));
+        REQUIRE(neigh[1] == disc.index(NX - 1, j + 1));
     }
 
-    for(std::size_t i = 1; i < nx - 1; ++i) {
-        neigh = disc.unique_neighbours(std::make_tuple(i, 0));
-        REQUIRE(neigh[0] == std::make_tuple(i + 1, 0));
-        REQUIRE(neigh[1] == std::make_tuple(i, 1));
+    for(std::size_t i = 1; i < NX - 1; ++i) {
+        neigh = disc.unique_neighbours(disc.index(i, 0));
+        REQUIRE(neigh[0] == disc.index(i + 1, 0));
+        REQUIRE(neigh[1] == disc.index(i, 1));
 
-        neigh = disc.unique_neighbours(std::make_tuple(i, ny - 1));
-        REQUIRE(neigh[0] == std::make_tuple(i + 1, ny - 1));
-        REQUIRE(neigh[1] == std::make_tuple(i, 0));
+        neigh = disc.unique_neighbours(disc.index(i, NY - 1));
+        REQUIRE(neigh[0] == disc.index(i + 1, NY - 1));
+        REQUIRE(neigh[1] == disc.index(i, 0));
     }
 
-    for(std::size_t i = 1; i < nx - 1; ++i) {
-        for(std::size_t j = 1; j < nx - 1; ++j) {
-            neigh = disc.unique_neighbours(std::make_tuple(i, j));
-            REQUIRE(neigh[0] == std::make_tuple(i + 1, j));
-            REQUIRE(neigh[1] == std::make_tuple(i, j + 1));
+    for(std::size_t i = 1; i < NX - 1; ++i) {
+        for(std::size_t j = 1; j < NX - 1; ++j) {
+            neigh = disc.unique_neighbours(disc.index(i, j));
+            REQUIRE(neigh[0] == disc.index(i + 1, j));
+            REQUIRE(neigh[1] == disc.index(i, j + 1));
         }
     }
 }
 
 template <typename Real>
-void test_indexing()
+void test_closest()
 {
-    SquareDiscretization<Real> disc(nx, ny, 1., 1.);
+    using Vector = typename SquareDiscretization<Real>::Vector;
 
-    SECTION("index operator")
-    {
-        for(auto& idx : disc.indices) {
-            REQUIRE(VEC_APPROX(disc[idx], typename SquareDiscretization<Real>::Vector(
-                                              Real(std::get<0>(idx)), Real(std::get<1>(idx)))));
-        }
-    }
-
-    SECTION("index operator for vector type")
-    {
-        for(auto& idx : disc.indices) REQUIRE(idx == disc[disc[idx]]);
-    }
+    SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    REQUIRE(disc.closest(Vector(0.49, 0.49)) == disc.index(0, 0));
+    REQUIRE(disc.closest(Vector(0.51, 0.49)) == disc.index(1, 0));
+    REQUIRE(disc.closest(Vector(0.49, 0.51)) == disc.index(0, 1));
+    REQUIRE(disc.closest(Vector(0.51, 0.51)) == disc.index(1, 1));
+    REQUIRE(disc.closest(Vector(-0.49, -0.49)) == disc.index(0, 0));
+    REQUIRE(disc.closest(Vector(-0.51, -0.49)) == disc.index(NX - 1, 0));
+    REQUIRE(disc.closest(Vector(-0.49, -0.51)) == disc.index(0, NY - 1));
+    REQUIRE(disc.closest(Vector(-0.51, -0.51)) == disc.index(NX - 1, NY - 1));
 }
 
-TEST_CASE("initialization (real space)", "")
+TEST_CASE("initialization (real space)")
 {
     test_initialization_real_space<float>();
     test_initialization_real_space<double>();
     test_initialization_real_space<long double>();
 }
 
-TEST_CASE("initialization (momentum space)", "")
+TEST_CASE("initialization (momentum space)")
 {
     test_initialization_momentum_space<float>();
     test_initialization_momentum_space<double>();
     test_initialization_momentum_space<long double>();
 }
 
-TEST_CASE("closest site", "")
+TEST_CASE("closest site")
 {
-    test_closest_site<float>();
-    test_closest_site<double>();
-    test_closest_site<long double>();
+    test_closest<float>();
+    test_closest<double>();
+    test_closest<long double>();
 }
 
-TEST_CASE("neighbours", "")
+TEST_CASE("neighbours")
 {
     test_neighbours<float>();
     test_neighbours<double>();
     test_neighbours<long double>();
 }
 
-TEST_CASE("unique neighbours", "")
+TEST_CASE("unique neighbours")
 {
     test_unique_neighbours<float>();
     test_unique_neighbours<double>();
     test_unique_neighbours<long double>();
-}
-
-TEST_CASE("indexing", "")
-{
-    test_indexing<float>();
-    test_indexing<double>();
-    test_indexing<long double>();
 }

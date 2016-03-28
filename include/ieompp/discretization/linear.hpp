@@ -1,10 +1,12 @@
 #ifndef IEOMPP_DISCRETIZATION_LINEAR_HPP_
 #define IEOMPP_DISCRETIZATION_LINEAR_HPP_
 
-#include <vector>
 #include <array>
+#include <tuple>
+#include <vector>
 
 #include "ieompp/constants.hpp"
+#include "ieompp/iterators/integer_iterator.hpp"
 
 namespace ieompp
 {
@@ -13,36 +15,45 @@ namespace ieompp
         template <typename RealT>
         class LinearDiscretization {
             public:
-                using Real   = RealT;
-                using Index  = std::size_t;
-                using Vector = RealT;
+                using Real               = RealT;
+                using Index              = std::size_t;
+                using IndexIterator      = iterators::IntegerIterator<Index, false>;
+                using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
+                using Vector             = Real;
 
             private:
-                std::vector<Index> init_indices();
-                std::vector<Vector> init_sites();
+                const Index _num;
+                const Index _first, _last;
+                const Real _x_min, _x_max;
+                const Real _x_length, _dx;
+                const std::array<Vector, 1> _lattice_vectors;
 
             public:
-                const std::size_t num;
-                const std::size_t num_x;
-                const Real dx;
-                const Real x_min, x_max, x_diff;
-                const std::array<Vector, 1> lattice_vectors;
-                const std::vector<Index> indices;
-                const std::vector<Real> sites;
+                LinearDiscretization(const Index& num);
+                LinearDiscretization(const Index& num, const Real& dx);
 
-                LinearDiscretization(const std::size_t n, const Real& delta_x);
-                LinearDiscretization(const std::size_t n);
+                std::array<Index, 2> neighbours(const Index& idx) const;
+                std::array<Index, 1> unique_neighbours(const Index& idx) const;
+                Index closest(Vector v) const;
 
-                const Index& closest(const Vector& v) const;
-                inline std::array<Index, 2> neighbours(const Index& idx) const;
-                inline std::array<Index, 1> unique_neighbours(const Index& idx) const;
-                Vector project(Vector v) const;
+                const Index& num() const;
+                const Index& first() const;
+                const Index& last() const;
+                const Real& x_min() const;
+                const Real& x_max() const;
+                const Real& x_length() const;
+                const Real& dx() const;
+                const std::array<Vector, 1>& lattice_vectors() const;
 
-                inline std::vector<Index>::const_iterator begin() const;
-                inline std::vector<Index>::const_iterator end() const;
+                ConstIndexIterator begin() const;
+                ConstIndexIterator end() const;
+                IndexIterator begin();
+                IndexIterator end();
+                ConstIndexIterator cbegin() const;
+                ConstIndexIterator cend() const;
 
-                inline const Vector& operator[](const Index& i) const;
-                inline const Index& operator[](const Vector& v) const;
+                Vector operator[](const Index& i) const;
+                Index operator[](Vector v) const;
         };
     }
 }
