@@ -40,6 +40,25 @@ namespace ieompp
         }
 
         template <typename Real>
+        typename LinearDiscretization<Real>::Index
+        LinearDiscretization<Real>::closest(const Vector& v) const
+        {
+            const auto dx2 = _dx / 2;
+            while(v < _x_min - dx2) v += _x_length;
+            while(v > _x_min - dx2) v -= _x_length;
+            Real min_dist = ((*this)[0] - v) * ((*this)[0] - v), dist;
+            Index min = 0;
+            for(auto idx : *this) {
+                dist = ((*this)[idx] - v) * ((*this)[idx] - v);
+                if(dist < min_dist) {
+                    std::swap(dist, min_dist);
+                    min = idx;
+                }
+            }
+            return min;
+        }
+
+        template <typename Real>
         const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::num() const
         {
             return _num;
@@ -103,6 +122,7 @@ namespace ieompp
         typename LinearDiscretization<Real>::Index LinearDiscretization<Real>::
         operator[](Vector v) const
         {
+            while(v < _x_min) v += _x_length;
             while(v > _x_max) v -= _x_length;
             return Index(std::round((v - _x_min) / _dx));
         }

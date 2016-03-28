@@ -126,7 +126,9 @@ namespace ieompp
 
         template <typename Real>
         typename SquareDiscretization<Real>::Index SquareDiscretization<Real>::operator[](Vector v) const {
+            while(v(0) < _x_min) v(0) += _x_length;
             while(v(0) > _x_max) v(0) -= _x_length;
+            while(v(1) < _y_min) v(1) += _y_length;
             while(v(1) > _y_max) v(1) -= _y_length;
             const auto i = v(0) / _dx;
             const auto j = v(1) / _dy;
