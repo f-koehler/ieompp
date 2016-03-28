@@ -7,116 +7,100 @@ namespace ieompp
 {
     namespace discretization
     {
-        template <typename Real, typename Index>
-        LinearDiscretization<Real, Index>::LinearDiscretization(const Index& first,
-                                                                const Index& last)
-            : _first(first), _last(last), _num(last - first + 1), _x_min(-Pi<Real>::value),
+        template <typename Real>
+        LinearDiscretization<Real>::LinearDiscretization(const Index& num)
+            : _num(num), _first(0), _last(num - 1), _x_min(-Pi<Real>::value),
               _x_max(Pi<Real>::value), _x_length(_x_max - _x_min), _dx(_x_length / _num),
               _lattice_vectors{{_dx}}
         {
-            assert(last >= first);
+            assert(num > 0);
         }
 
-        template <typename Real, typename Index>
-        LinearDiscretization<Real, Index>::LinearDiscretization(const Index& first,
-                                                                const Index& last, const Real& dx)
-            : _first(first), _last(last), _num(last - first + 1), _x_min(0.),
-              _x_max(dx * (_num - 1)), _x_length(_x_max - _x_min), _dx(dx), _lattice_vectors{{_dx}}
+        template <typename Real>
+        LinearDiscretization<Real>::LinearDiscretization(const Index& num, const Real& dx)
+            : _num(num), _first(0), _last(num - 1), _x_min(0.), _x_max(dx * (_num - 1)),
+              _x_length(_x_max - _x_min), _dx(dx), _lattice_vectors{{_dx}}
         {
-            assert(last >= first);
+            assert(num > 0);
         }
 
-        template <typename Real, typename Index>
-        LinearDiscretization<Real, Index>::LinearDiscretization(const Index& first,
-                                                                const Index& last,
-                                                                const Real& x_min,
-                                                                const Real& x_max)
-            : _first(first), _last(last), _num(last - first + 1), _x_min(x_min), _x_max(x_max),
-              _x_length(_x_max - _x_min), _dx(_x_length / _num), _lattice_vectors(_dx)
-        {
-            assert(last >= first);
-            assert(x_max > x_min);
-        }
-
-        template <typename Real, typename Index>
-        std::array<typename LinearDiscretization<Real, Index>::Index, 2>
-        LinearDiscretization<Real, Index>::neighbours(const Index& idx) const
+        template <typename Real>
+        std::array<typename LinearDiscretization<Real>::Index, 2>
+        LinearDiscretization<Real>::neighbours(const Index& idx) const
         {
             return std::array<Index, 2>{
                 {(idx > 0) ? idx - 1 : _last, (idx < _last) ? idx + 1 : _first}};
         }
 
-        template <typename Real, typename Index>
-        std::array<typename LinearDiscretization<Real, Index>::Index, 1>
-        LinearDiscretization<Real, Index>::unique_neighbours(const Index& idx) const
+        template <typename Real>
+        std::array<typename LinearDiscretization<Real>::Index, 1>
+        LinearDiscretization<Real>::unique_neighbours(const Index& idx) const
         {
             return std::array<Index, 1>{{(idx < _last) ? idx + 1 : _first}};
         }
 
-        template <typename Real, typename Index>
-        const Index& LinearDiscretization<Real, Index>::num() const
+        template <typename Real>
+        const typename LinearDiscretization<Real>::Index& LinearDiscretization<Real>::num() const
         {
             return _num;
         }
 
-        template <typename Real, typename Index>
-        const std::array<typename LinearDiscretization<Real, Index>::Vector, 2>&
-        LinearDiscretization<Real, Index>::lattice_vectors() const
+        template <typename Real>
+        const std::array<typename LinearDiscretization<Real>::Vector, 1>&
+        LinearDiscretization<Real>::lattice_vectors() const
         {
             return _lattice_vectors;
         }
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::ConstIndexIterator
-        LinearDiscretization<Real, Index>::begin() const
+        template <typename Real>
+        typename LinearDiscretization<Real>::ConstIndexIterator
+        LinearDiscretization<Real>::begin() const
         {
             return ConstIndexIterator(_first);
         };
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::ConstIndexIterator
-        LinearDiscretization<Real, Index>::end() const
+        template <typename Real>
+        typename LinearDiscretization<Real>::ConstIndexIterator
+        LinearDiscretization<Real>::end() const
         {
             return ConstIndexIterator(_last + 1);
         };
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::IndexIterator
-        LinearDiscretization<Real, Index>::begin()
+        template <typename Real>
+        typename LinearDiscretization<Real>::IndexIterator LinearDiscretization<Real>::begin()
         {
             return IndexIterator(_first);
         };
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::IndexIterator
-        LinearDiscretization<Real, Index>::end()
+        template <typename Real>
+        typename LinearDiscretization<Real>::IndexIterator LinearDiscretization<Real>::end()
         {
             return IndexIterator(_last + 1);
         };
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::ConstIndexIterator
-        LinearDiscretization<Real, Index>::cbegin() const
+        template <typename Real>
+        typename LinearDiscretization<Real>::ConstIndexIterator
+        LinearDiscretization<Real>::cbegin() const
         {
             return ConstIndexIterator(_first);
         };
 
-        template <typename Real, typename Index>
-        typename LinearDiscretization<Real, Index>::ConstIndexIterator
-        LinearDiscretization<Real, Index>::cend() const
+        template <typename Real>
+        typename LinearDiscretization<Real>::ConstIndexIterator
+        LinearDiscretization<Real>::cend() const
         {
             return ConstIndexIterator(_last + 1);
         };
 
-        template <typename Real, typename Index>
-        const typename LinearDiscretization<Real, Index>::Vector LinearDiscretization<Real, Index>::
+        template <typename Real>
+        typename LinearDiscretization<Real>::Vector LinearDiscretization<Real>::
         operator[](const Index& i) const
         {
             return _x_min + i * _dx;
         }
 
-        template <typename Real, typename Index>
-        const typename LinearDiscretization<Real, Index>::Index LinearDiscretization<Real, Index>::
+        template <typename Real>
+        typename LinearDiscretization<Real>::Index LinearDiscretization<Real>::
         operator[](Vector v) const
         {
             while(v > _x_max) v -= _x_length;

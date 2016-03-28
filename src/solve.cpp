@@ -12,7 +12,7 @@ int main()
 {
     auto term =
         algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
-    discretization::LinearDiscretization<double, std::size_t> real_space(0, 9, 1.);
+    discretization::LinearDiscretization<double> real_space(10, 1.);
     algebra::Hamiltonian<decltype(term)> hamiltonian;
     algebra::Agenda<decltype(term)> a;
 
