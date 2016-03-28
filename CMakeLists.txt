@@ -39,12 +39,12 @@ ExternalProject_Add(
     BUILD_COMMAND     ":"
     INSTALL_COMMAND   ":"
 )
-include_directories(${CMAKE_SOURCE_DIR}/external/eigen)
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
-find_package(Boost COMPONENTS iostreams)
+find_package(Boost)
 if(${Boost_FOUND})
     set(ieompp_HAS_BOOST True)
-    include_directories(${Boost_INCLUDE_DIRS})
+    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
     add_definitions(-DIEOMPP_HAS_BOOST)
 endif()
 

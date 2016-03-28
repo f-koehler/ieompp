@@ -4,7 +4,7 @@ ExternalProject_Add(
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/google_benchmark -DCMAKE_BUILD_TYPE=Release
 )
 
-include_directories(${CMAKE_SOURCE_DIR}/external/benchmark/include)
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/benchmark/include)
 
 set(benchmarks agenda)
 
