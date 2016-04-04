@@ -28,7 +28,7 @@ void test_initialization_real_space()
     for(std::size_t i = 0; i < N; ++i) {
         REQUIRE(disc.begin()[i] == i);
         REQUIRE(disc[i] == Approx(Real(i)));
-        REQUIRE(disc[disc[i]] == i);
+        REQUIRE(disc(disc[i]) == i);
     }
 }
 
@@ -50,7 +50,7 @@ void test_initialization_momentum_space()
     for(std::size_t i = 0; i < N; ++i) {
         REQUIRE(disc.begin()[i] == i);
         REQUIRE(disc[i] == Approx(-Pi<Real>::value + i * disc.dx()));
-        REQUIRE(disc[disc[i]] == i);
+        REQUIRE(disc(disc[i]) == i);
     }
 }
 

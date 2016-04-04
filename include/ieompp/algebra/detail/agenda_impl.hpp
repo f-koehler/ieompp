@@ -6,10 +6,10 @@ namespace ieompp
 {
     namespace algebra
     {
-        template <typename Term>
-        Agenda<Term>::Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
-                             std::vector<std::size_t>& _todo,
-                             std::vector<std::vector<Entry>> _results)
+        template <typename Hamiltonian>
+        Agenda<Hamiltonian>::Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
+                                    std::vector<std::size_t>& _todo,
+                                    std::vector<std::vector<Entry>> _results)
         {
             this->_terms.swap(_terms);
             this->_known.swap(_known);
@@ -17,8 +17,8 @@ namespace ieompp
             this->_results.swap(_results);
         }
 
-        template <typename Term>
-        void Agenda<Term>::reset()
+        template <typename Hamiltonian>
+        void Agenda<Hamiltonian>::reset()
         {
             // clear all lists
             _terms.clear();
@@ -27,9 +27,9 @@ namespace ieompp
             _results.clear();
         }
 
-        template <typename Term>
+        template <typename Hamiltonian>
         std::tuple<bool, std::list<std::size_t>::const_iterator>
-        Agenda<Term>::is_known(const Term& term) const
+        Agenda<Hamiltonian>::is_known(const Term& term) const
         {
             auto pos   = _known.begin();
             bool found = false;
@@ -44,8 +44,9 @@ namespace ieompp
             return std::make_tuple(found, pos);
         }
 
-        template <typename Term>
-        std::size_t Agenda<Term>::add_new_term(const Term& term, std::list<std::size_t>::const_iterator pos)
+        template <typename Hamiltonian>
+        std::size_t Agenda<Hamiltonian>::add_new_term(const Term& term,
+                                                      std::list<std::size_t>::const_iterator pos)
         {
             // the new term is inserted at the end of the _terms vector
             const auto new_pos = _terms.size();
@@ -64,11 +65,11 @@ namespace ieompp
             return new_pos;
         }
 
-        template <typename Term>
+        template <typename Hamiltonian>
         template <typename Discretization>
-        void Agenda<Term>::commutate(const Term& term, const std::size_t num,
-                                     const Hamiltonian<Term>& hamiltonian,
-                                     const Discretization& discretization)
+        void Agenda<Hamiltonian>::commutate(const Term& term, const std::size_t num,
+                                            const Hamiltonian& hamiltonian,
+                                            const Discretization& discretization)
         {
             // reset internal lists for a fresh start
             reset();
@@ -80,10 +81,10 @@ namespace ieompp
             commutate(num, hamiltonian, discretization);
         }
 
-        template <typename Term>
+        template <typename Hamiltonian>
         template <typename Discretization>
-        void Agenda<Term>::commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
-                                     const Discretization& discretization)
+        void Agenda<Hamiltonian>::commutate(const std::size_t num, const Hamiltonian& hamiltonian,
+                                            const Discretization& discretization)
         {
             // if the _todo list is empty there will be nothing left to do
             if(_todo.empty()) return;
@@ -99,7 +100,7 @@ namespace ieompp
             for(std::size_t i = 0; i < size; ++i) {
 
                 // calculate the corresponding commutator with the hamiltonian
-                const auto& term = _terms[current_todo[i]];
+                const auto& term      = _terms[current_todo[i]];
                 const auto commutator = hamiltonian.commutate(term, discretization);
 
                 // iterate over all terms in the commutator
@@ -121,7 +122,7 @@ namespace ieompp
 
                     // get a reference to the target result entry
                     auto& result = _results[current_todo[i]];
-                    auto index = *pos;
+                    auto index   = *pos;
 
                     // find the current term in the result entry
                     auto find = std::find_if(result.begin(), result.end(),
@@ -141,8 +142,8 @@ namespace ieompp
             if(num > 0) commutate(num - 1, hamiltonian, discretization);
         }
 
-        template <typename Term>
-        void Agenda<Term>::join(const Agenda& agenda)
+        template <typename Hamiltonian>
+        void Agenda<Hamiltonian>::join(const Agenda& agenda)
         {
             // add terms from other agenda
             std::map<std::size_t, std::size_t> index_map;
@@ -185,33 +186,34 @@ namespace ieompp
             }
         }
 
-        template <typename Term>
-        inline const std::vector<Term>& Agenda<Term>::terms() const
+        template <typename Hamiltonian>
+        inline const std::vector<typename Agenda<Hamiltonian>::Term>&
+        Agenda<Hamiltonian>::terms() const
         {
             return _terms;
         }
 
-        template <typename Term>
-        inline const std::list<std::size_t> Agenda<Term>::known() const
+        template <typename Hamiltonian>
+        inline const std::list<std::size_t> Agenda<Hamiltonian>::known() const
         {
             return _known;
         }
 
-        template <typename Term>
-        inline const std::vector<std::size_t> Agenda<Term>::todo() const
+        template <typename Hamiltonian>
+        inline const std::vector<std::size_t> Agenda<Hamiltonian>::todo() const
         {
             return _todo;
         }
 
-        template <typename Term>
-        inline const std::vector<std::vector<typename Agenda<Term>::Entry>>&
-        Agenda<Term>::results() const
+        template <typename Hamiltonian>
+        inline const std::vector<std::vector<typename Agenda<Hamiltonian>::Entry>>&
+        Agenda<Hamiltonian>::results() const
         {
             return _results;
         }
 
-        template <typename Term>
-        std::ostream& operator<<(std::ostream& strm, const Agenda<Term>& agenda)
+        template <typename Hamiltonian>
+        std::ostream& operator<<(std::ostream& strm, const Agenda<Hamiltonian>& agenda)
         {
             strm << "terms:" << std::endl;
             for(auto& term : agenda.terms()) strm << term << std::endl;

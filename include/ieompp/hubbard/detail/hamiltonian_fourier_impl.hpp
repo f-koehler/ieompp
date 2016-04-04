@@ -1,10 +1,10 @@
-#include "ieompp/algebra/hamiltonian_fourier.hpp"
+#include "ieompp/hubbard/hamiltonian_fourier.hpp"
 
 #include <cmath>
 
 namespace ieompp
 {
-    namespace algebra
+    namespace hubbard
     {
         template <typename Term>
         HamiltonianFourier<Term>::HamiltonianFourier()
@@ -14,10 +14,11 @@ namespace ieompp
 
         template <typename Term>
         template <typename FourierSpace, typename RealSpace>
-        TermList<Term> HamiltonianFourier<Term>::commutate(Term term, const RealSpace& lattice,
-                                                           const FourierSpace& discretization) const
+        algebra::TermList<Term>
+        HamiltonianFourier<Term>::commutate(Term term, const FourierSpace& discretization,
+                                            const RealSpace& lattice) const
         {
-            TermList<Term> list;
+            algebra::TermList<Term> list;
             commutate(term, discretization, lattice, list);
             return list;
         }
@@ -26,7 +27,7 @@ namespace ieompp
         template <typename FourierSpace, typename RealSpace>
         void HamiltonianFourier<Term>::commutate(Term term, const FourierSpace& discretization,
                                                  const RealSpace& lattice,
-                                                 TermList<Term>& result) const
+                                                 algebra::TermList<Term>& result) const
         {
             if(enable_hopping) commutate_hopping(term, discretization, lattice, result);
 
@@ -38,7 +39,7 @@ namespace ieompp
         void HamiltonianFourier<Term>::commutate_hopping(Term term,
                                                          const FourierSpace& discretization,
                                                          const RealSpace& lattice,
-                                                         TermList<Term>& result) const
+                                                         algebra::TermList<Term>& result) const
         {
             Term t;
             t.operators.resize(2);
@@ -68,7 +69,7 @@ namespace ieompp
         void HamiltonianFourier<Term>::commutate_interaction(Term term,
                                                              const FourierSpace& discretization,
                                                              const RealSpace& lattice,
-                                                             TermList<Term>& result) const
+                                                             algebra::TermList<Term>& result) const
         {
             Term t;
             t.prefactor = U / lattice.num();
@@ -94,7 +95,7 @@ namespace ieompp
                         t.operators[2].index = idx3;
 
                         auto k4              = k1 + k3 - k2;
-                        auto idx4            = discretization[k4];
+                        auto idx4            = discretization(k4);
                         t.operators[3].index = idx4;
 
                         algebra::commutate(t, term, result);

@@ -1,5 +1,5 @@
-#ifndef IEOMPP_ALGEBRA_HAMILTONIAN_HPP_
-#define IEOMPP_ALGEBRA_HAMILTONIAN_HPP_
+#ifndef IEOMPP_HUBBARD_HAMILTONIAN_HPP_
+#define IEOMPP_HUBBARD_HAMILTONIAN_HPP_
 
 #include "ieompp/algebra/commutator.hpp"
 #include "ieompp/algebra/operator.hpp"
@@ -7,10 +7,11 @@
 
 namespace ieompp
 {
-    namespace algebra
+    namespace hubbard
     {
-        template <typename Term>
+        template <typename TermT>
         struct Hamiltonian {
+            using Term      = TermT;
             using Prefactor = typename Term::Prefactor;
 
             typename Prefactor::value_type J, U;
@@ -19,19 +20,20 @@ namespace ieompp
             Hamiltonian();
 
             template <typename Discretization>
-            TermList<Term> commutate(Term term, const Discretization& discretization) const;
+            algebra::TermList<Term> commutate(Term term,
+                                              const Discretization& discretization) const;
 
             template <typename Discretization>
             void commutate(Term term, const Discretization& discretization,
-                           TermList<Term>& result) const;
+                           algebra::TermList<Term>& result) const;
 
             template <typename Discretization>
             void commutate_hopping(Term term, const Discretization& discretization,
-                                   TermList<Term>& result) const;
+                                   algebra::TermList<Term>& result) const;
 
             template <typename Discretization>
             void commutate_interaction(Term term, const Discretization& discretization,
-                                       TermList<Term>& result) const;
+                                       algebra::TermList<Term>& result) const;
 
             template <typename RealSpace>
             typename RealSpace::Real dispersion(const RealSpace& discretization,

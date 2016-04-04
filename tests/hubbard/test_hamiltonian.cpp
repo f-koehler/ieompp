@@ -1,11 +1,12 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "ieompp/algebra/hamiltonian.hpp"
+#include "ieompp/hubbard/hamiltonian.hpp"
 #include "ieompp/discretization/linear.hpp"
 
 using namespace ieompp;
 using namespace algebra;
+using namespace hubbard;
 
 template <typename Operator, typename Real>
 void test_commutate_hopping()
@@ -16,25 +17,27 @@ void test_commutate_hopping()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(1000, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")
     {
-        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
+        auto term = make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_hopping(term, discretization, result);
 
+        REQUIRE(result.size() == 2);
         REQUIRE(result[0] == make_term(Complex(-1., 0.), {make_creator(Index(1), Spin(true))}));
         REQUIRE(result[1] == make_term(Complex(-1., 0.), {make_creator(Index(999), Spin(true))}));
     }
 
     SECTION("annihilator")
     {
-        auto term = ieompp::algebra::make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
+        auto term = make_term(Complex(1., 0.), {make_annihilator(Index(0), Spin(true))});
         TermList result;
         hamiltonian.commutate_hopping(term, discretization, result);
 
+        REQUIRE(result.size() == 2);
         REQUIRE(result[0] == make_term(Complex(1., 0.), {make_annihilator(Index(1), Spin(true))}));
         REQUIRE(result[1] == make_term(Complex(1., 0.), {make_annihilator(Index(999), Spin(true))}));
     }
@@ -49,7 +52,7 @@ void test_commutate_interaction()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(1000, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")
@@ -58,6 +61,7 @@ void test_commutate_interaction()
         TermList result;
         hamiltonian.commutate_interaction(term, discretization, result);
 
+        REQUIRE(result.size() == 2);
         REQUIRE(result[0] == make_term(Complex(1., 0.), {make_creator(Index(0), Spin(true)),
                                                          make_creator(Index(0), Spin(false)),
                                                          make_annihilator(Index(0), Spin(false))}));
@@ -70,6 +74,7 @@ void test_commutate_interaction()
         TermList result;
         hamiltonian.commutate_interaction(term, discretization, result);
 
+        REQUIRE(result.size() == 2);
         REQUIRE(result[0] == make_term(Complex(-1., 0.), {make_annihilator(Index(0), Spin(true)),
                                                          make_creator(Index(0), Spin(false)),
                                                          make_annihilator(Index(0), Spin(false))}));
@@ -86,7 +91,7 @@ void test_commutate()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real> discretization(1000, 1.);
+    discretization::LinearDiscretization<Real, Index> discretization(1000, 1.);
     Hamiltonian<Term> hamiltonian;
 
     SECTION("creator")
@@ -96,8 +101,9 @@ void test_commutate()
         auto full = hamiltonian.commutate(term, discretization);
         decltype(full) kinetic, interaction;
         hamiltonian.commutate_hopping(term, discretization, kinetic);
-        hamiltonian.commutate_interaction(term, discretization, kinetic);
+        hamiltonian.commutate_interaction(term, discretization, interaction);
 
+        REQUIRE(kinetic.size() + interaction.size() == full.size());
         REQUIRE(std::equal(kinetic.begin(), kinetic.end(), full.begin()));
         REQUIRE(std::equal(interaction.begin(), interaction.end(), full.begin() + kinetic.size()));
     }
@@ -111,6 +117,7 @@ void test_commutate()
         hamiltonian.commutate_hopping(term, discretization, kinetic);
         hamiltonian.commutate_interaction(term, discretization, interaction);
 
+        REQUIRE(kinetic.size() + interaction.size() == full.size());
         REQUIRE(std::equal(kinetic.begin(), kinetic.end(), full.begin()));
         REQUIRE(std::equal(interaction.begin(), interaction.end(), full.begin() + kinetic.size()));
     }

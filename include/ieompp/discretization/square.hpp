@@ -15,11 +15,11 @@ namespace ieompp
 {
     namespace discretization
     {
-        template <typename RealT>
+        template <typename RealT, typename IndexT = std::size_t>
         class SquareDiscretization {
             public:
                 using Real               = RealT;
-                using Index              = std::size_t;
+                using Index              = IndexT;
                 using IndexIterator      = iterators::IntegerIterator<Index, false>;
                 using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
                 using Vector             = Eigen::Matrix<Real, 2, 1>;
@@ -64,8 +64,13 @@ namespace ieompp
                 ConstIndexIterator cbegin() const;
                 ConstIndexIterator cend() const;
 
-                Vector operator[](const Index& idx) const;
-                Index operator[](Vector v) const;
+                template <typename IndexT_>
+                typename std::enable_if<std::is_same<Index, IndexT_>::value, Vector>::type
+                operator[](const IndexT_& i) const;
+
+                template <typename VectorT>
+                typename std::enable_if<std::is_same<Vector, VectorT>::value, Index>::type
+                operator()(VectorT v) const;
         };
     }
 }

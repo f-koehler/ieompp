@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "ieompp/algebra/agenda.hpp"
+#include "ieompp/algebra/operator.hpp"
 using namespace ieompp::algebra;
 
 template <typename Operator, typename Real>

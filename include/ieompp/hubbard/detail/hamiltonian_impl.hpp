@@ -1,9 +1,9 @@
 #include <algorithm>
-#include "ieompp/algebra/hamiltonian.hpp"
+#include "ieompp/hubbard/hamiltonian.hpp"
 
 namespace ieompp
 {
-    namespace algebra
+    namespace hubbard
     {
         template <typename Term>
         Hamiltonian<Term>::Hamiltonian()
@@ -13,10 +13,10 @@ namespace ieompp
 
         template <typename Term>
         template <typename Discretization>
-        TermList<Term> Hamiltonian<Term>::commutate(Term term,
-                                                    const Discretization& discretization) const
+        algebra::TermList<Term>
+        Hamiltonian<Term>::commutate(Term term, const Discretization& discretization) const
         {
-            TermList<Term> list;
+            algebra::TermList<Term> list;
             commutate(term, discretization, list);
             return list;
         }
@@ -24,7 +24,7 @@ namespace ieompp
         template <typename Term>
         template <typename Discretization>
         void Hamiltonian<Term>::commutate(const Term term, const Discretization& discretization,
-                                          TermList<Term>& result) const
+                                          algebra::TermList<Term>& result) const
         {
             if(enable_hopping) commutate_hopping(term, discretization, result);
 
@@ -34,7 +34,7 @@ namespace ieompp
         template <typename Term>
         template <typename Discretization>
         void Hamiltonian<Term>::commutate_hopping(Term term, const Discretization& discretization,
-                                                  TermList<Term>& result) const
+                                                  algebra::TermList<Term>& result) const
         {
             Term first;
             first.prefactor = -J;
@@ -70,7 +70,7 @@ namespace ieompp
         template <typename Discretization>
         void Hamiltonian<Term>::commutate_interaction(Term term,
                                                       const Discretization& discretization,
-                                                      TermList<Term>& result) const
+                                                      algebra::TermList<Term>& result) const
         {
             Term curr;
             curr.prefactor = U;

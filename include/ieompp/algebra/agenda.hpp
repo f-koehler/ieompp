@@ -7,19 +7,19 @@
 #include <tuple>
 
 #include "ieompp/algebra/term.hpp"
-#include "ieompp/algebra/hamiltonian.hpp"
 
 namespace ieompp
 {
     namespace algebra
     {
-        template <typename TermT>
+        template <typename HamiltonianT>
         class Agenda
         {
             public:
-                using Term    = TermT;
-                using Complex = typename Term::Prefactor;
-                using Real    = typename Complex::value_type;
+                using Hamiltonian = HamiltonianT;
+                using Term        = typename Hamiltonian::Term;
+                using Complex     = typename Term::Prefactor;
+                using Real        = typename Complex::value_type;
 
                 struct Entry {
                     std::size_t index;
@@ -44,11 +44,11 @@ namespace ieompp
 
                 template <typename Discretization>
                 void commutate(const Term& term, const std::size_t num,
-                               const Hamiltonian<Term>& hamiltonian,
+                               const Hamiltonian& hamiltonian,
                                const Discretization& discretization);
 
                 template <typename Discretization>
-                void commutate(const std::size_t num, const Hamiltonian<Term>& hamiltonian,
+                void commutate(const std::size_t num, const Hamiltonian& hamiltonian,
                                const Discretization& discretization);
 
                 void join(const Agenda& agenda);

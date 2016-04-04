@@ -42,7 +42,7 @@ void test_initialization_real_space()
             const auto idx = disc.index(i, j);
             REQUIRE(disc.begin()[idx] == idx);
             REQUIRE(VEC_APPROX(disc[idx], typename SquareDiscretization<Real>::Vector(Real(i), Real(j))));
-            REQUIRE(disc[disc[idx]] == idx);
+            REQUIRE(disc(disc[idx]) == idx);
         }
     }
 }
@@ -68,6 +68,17 @@ void test_initialization_momentum_space()
                        typename SquareDiscretization<Real>::Vector(disc.dx(), 0.)));
     REQUIRE(VEC_APPROX(disc.lattice_vectors()[1],
                        typename SquareDiscretization<Real>::Vector(0., disc.dy())));
+
+    for(std::size_t i = 0; i < NX; ++i) {
+        for(std::size_t j = 0; j < NY; ++j) {
+            const auto idx = disc.index(i, j);
+            REQUIRE(disc.begin()[idx] == idx);
+            REQUIRE(VEC_APPROX(disc[idx], typename SquareDiscretization<Real>::Vector(
+                                              -Pi<Real>::value + i * disc.dx(),
+                                              -Pi<Real>::value + j * disc.dy())));
+            REQUIRE(disc(disc[idx]) == idx);
+        }
+    }
 }
 
 template <typename Real>
