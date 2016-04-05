@@ -61,7 +61,7 @@ void test_commutate_interaction()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real, Index> discretization(10);
+    discretization::LinearDiscretization<Real, Index> discretization(100);
     discretization::LinearDiscretization<Real, Index> lattice(100, 1.);
     HamiltonianFourier<Term> hamiltonian;
 
@@ -135,7 +135,7 @@ void test_commutate()
     using Term     = Term<Operator, Complex>;
     using TermList = TermList<Term>;
 
-    discretization::LinearDiscretization<Real, Index> discretization(10);
+    discretization::LinearDiscretization<Real, Index> discretization(100);
     discretization::LinearDiscretization<Real, Index> lattice(100, 1.);
     HamiltonianFourier<Term> hamiltonian;
 

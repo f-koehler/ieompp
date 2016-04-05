@@ -5,7 +5,7 @@
 using namespace ieompp;
 using namespace ieompp::discretization;
 
-const std::size_t N = 100;
+const std::size_t N = 10000;
 
 template <typename Real>
 void test_initialization_real_space()

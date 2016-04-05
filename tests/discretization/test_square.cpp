@@ -10,8 +10,8 @@ using namespace std;
 
 #define VEC_APPROX(a, b) ((Approx(a(0)) == b(0)) && (Approx(a(1)) == b(1)))
 
-const std::size_t NX = 10;
-const std::size_t NY = 10;
+const std::size_t NX = 100;
+const std::size_t NY = 100;
 const std::size_t N  = NX * NY;
 
 template <typename Real>
