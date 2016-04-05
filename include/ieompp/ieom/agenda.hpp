@@ -1,16 +1,17 @@
-#ifndef IEOMPP_ALGEBRA_AGENDA_HPP_
-#define IEOMPP_ALGEBRA_AGENDA_HPP_
+#ifndef IEOMPP_IEOM_AGENDA_HPP_
+#define IEOMPP_IEOM_AGENDA_HPP_
 
 #include <algorithm>
 #include <functional>
 #include <list>
+#include <ostream>
 #include <tuple>
 
-#include "ieompp/algebra/term.hpp"
+#include "ieompp/ieom/system.hpp"
 
 namespace ieompp
 {
-    namespace algebra
+    namespace ieom
     {
         template <typename HamiltonianT>
         class Agenda
@@ -20,22 +21,18 @@ namespace ieompp
                 using Term        = typename Hamiltonian::Term;
                 using Complex     = typename Term::Prefactor;
                 using Real        = typename Complex::value_type;
-
-                struct Entry {
-                    std::size_t index;
-                    Complex prefactor;
-                };
+                using System      = System<Term, Complex>;
+                using Coefficient = typename System::Coefficient;
 
             private:
-                std::vector<Term> _terms;
                 std::list<std::size_t> _known;
                 std::vector<std::size_t> _todo;
-                std::vector<std::vector<Entry>> _results;
+                System _sys;
 
             public:
                 Agenda() = default;
-                Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
-                       std::vector<std::size_t>& _todo, std::vector<std::vector<Entry>> _results);
+                /* Agenda(System& system, std::list<std::size_t>& _known, */
+                /*        std::vector<std::size_t>& _todo); */
 
                 void reset();
 
@@ -53,10 +50,9 @@ namespace ieompp
 
                 void join(const Agenda& agenda);
 
-                inline const std::vector<Term>& terms() const;
-                inline const std::list<std::size_t> known() const;
-                inline const std::vector<std::size_t> todo() const;
-                inline const std::vector<std::vector<Entry>>& results() const;
+                const System& system() const;
+                const std::list<std::size_t> known() const;
+                const std::vector<std::size_t> todo() const;
         };
 
         template <typename Term>

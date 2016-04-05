@@ -7,12 +7,12 @@ namespace ieompp
 {
     namespace ode
     {
-        template <typename Agenda>
+        template <typename System>
         class DenseRK4
         {
             public:
-                using Term    = typename Agenda::Term;
-                using Complex = typename Agenda::Complex;
+                using Term    = typename System::Term;
+                using Complex = typename System::Complex;
                 using Real    = typename Complex::value_type;
                 using Matrix  = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
                 using Vector  = Eigen::Matrix<Complex, Eigen::Dynamic, 1>;
@@ -22,12 +22,12 @@ namespace ieompp
                 Matrix _mat;
 
             public:
-                DenseRK4(const Agenda& agenda)
-                    : _dimension(agenda.terms().size()), _mat(Matrix::Zero(_dimension, _dimension))
+                DenseRK4(const System& system)
+                    : _dimension(system.terms.size()), _mat(Matrix::Zero(_dimension, _dimension))
                 {
                     // initialize coefficients
                     std::size_t i = 0;
-                    for(auto& row : agenda.results()) {
+                    for(auto& row : system.coefficients) {
                         for(auto& e : row) {
                             _mat(i, e.index) = e.prefactor * Complex(0., 1.);
                         }
@@ -41,7 +41,7 @@ namespace ieompp
                     auto _k1      = _mat * v;
                     auto _k2      = v + h2 * _mat * _k1;
                     auto _k3      = v + h2 * _mat * _k2;
-                    auto _k4      = v + h * _mat * _k3;
+                    auto _k4 = v + h * _mat * _k3;
                     v += (h / 6.) * (_k1 + 2 * _k2 + 2 * _k3 + _k4);
                 }
 

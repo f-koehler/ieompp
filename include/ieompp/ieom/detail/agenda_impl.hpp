@@ -1,30 +1,29 @@
-#include "ieompp/algebra/agenda.hpp"
+#include "ieompp/ieom/agenda.hpp"
 
 #include <map>
 
 namespace ieompp
 {
-    namespace algebra
+    namespace ieom
     {
-        template <typename Hamiltonian>
-        Agenda<Hamiltonian>::Agenda(std::vector<Term>& _terms, std::list<std::size_t>& _known,
-                                    std::vector<std::size_t>& _todo,
-                                    std::vector<std::vector<Entry>> _results)
-        {
-            this->_terms.swap(_terms);
-            this->_known.swap(_known);
-            this->_todo.swap(_todo);
-            this->_results.swap(_results);
-        }
+        /* template <typename Hamiltonian> */
+        /* Agenda<Hamiltonian>::Agenda(const System& system, std::list<std::size_t>& _known, */
+        /*                             std::vector<std::size_t>& _todo) */
+        /* { */
+        /*     this->_terms.swap(_terms); */
+        /*     this->_known.swap(_known); */
+        /*     this->_todo.swap(_todo); */
+        /*     this->_results.swap(_results); */
+        /* } */
 
         template <typename Hamiltonian>
         void Agenda<Hamiltonian>::reset()
         {
             // clear all lists
-            _terms.clear();
+            _sys.terms.clear();
+            _sys.coefficients.clear();
             _known.clear();
             _todo.clear();
-            _results.clear();
         }
 
         template <typename Hamiltonian>
@@ -34,11 +33,11 @@ namespace ieompp
             auto pos   = _known.begin();
             bool found = false;
             for(; pos != _known.end(); ++pos) {
-                if(_terms[*pos].same_operators(term)) {
+                if(_sys.terms[*pos].same_operators(term)) {
                     found = true;
                     break;
                 }
-                if(term < _terms[*pos]) break;
+                if(term < _sys.terms[*pos]) break;
             }
 
             return std::make_tuple(found, pos);
@@ -49,8 +48,8 @@ namespace ieompp
                                                       std::list<std::size_t>::const_iterator pos)
         {
             // the new term is inserted at the end of the _terms vector
-            const auto new_pos = _terms.size();
-            _terms.push_back(term);
+            const auto new_pos = _sys.terms.size();
+            _sys.terms.push_back(term);
 
             // the index is inserted at the given position in the _known list
             _known.insert(pos, new_pos);
@@ -59,7 +58,7 @@ namespace ieompp
             _todo.push_back(new_pos);
 
             // an empty result entry is created
-            _results.emplace_back(std::vector<Entry>());
+            _sys.coefficients.emplace_back(std::vector<Coefficient>());
 
             // the index of the new term is returned
             return new_pos;
@@ -100,7 +99,7 @@ namespace ieompp
             for(std::size_t i = 0; i < size; ++i) {
 
                 // calculate the corresponding commutator with the hamiltonian
-                const auto& term      = _terms[current_todo[i]];
+                const auto& term      = _sys.terms[current_todo[i]];
                 const auto commutator = hamiltonian.commutate(term, discretization);
 
                 // iterate over all terms in the commutator
@@ -113,7 +112,8 @@ namespace ieompp
                         // if the term is new and this is not the last commutation: add it
                         if(num > 0) {
                             auto index = add_new_term(new_term, pos);
-                            _results[current_todo[i]].push_back(Entry{index, new_term.prefactor});
+                            _sys.coefficients[current_todo[i]].push_back(
+                                Coefficient{index, new_term.prefactor});
                         }
 
                         // continue with the next term in the commutator
@@ -121,19 +121,20 @@ namespace ieompp
                     }
 
                     // get a reference to the target result entry
-                    auto& result = _results[current_todo[i]];
+                    auto& result = _sys.coefficients[current_todo[i]];
                     auto index   = *pos;
 
                     // find the current term in the result entry
-                    auto find = std::find_if(result.begin(), result.end(),
-                                             [&index](const Entry& e) { return e.index == index; });
+                    auto find =
+                        std::find_if(result.begin(), result.end(),
+                                     [&index](const Coefficient& e) { return e.index == index; });
 
                     if(find != result.end()) {
                         // if there is an entry for the new term, add the prefactor
                         find->prefactor += new_term.prefactor;
                     } else {
                         // create a new entry for the new term
-                        result.push_back(Entry{index, new_term.prefactor});
+                        result.push_back(Coefficient{index, new_term.prefactor});
                     }
                 }
             }
@@ -170,27 +171,27 @@ namespace ieompp
 
             // merge results
             i = 0;
-            for(auto& row : agenda._results) {
-                auto& local_row = _results[index_map[i]];
+            for(auto& row : agenda._sys.coefficients) {
+                auto& local_row = _sys.coefficients[index_map[i]];
                 for(auto& entry : row) {
                     const auto local_index = index_map[entry.index];
                     auto pos = std::find_if(
                         local_row.begin(), local_row.end(),
-                        [&local_index](const Entry& e) { return e.index == local_index; });
+                        [&local_index](const Coefficient& e) { return e.index == local_index; });
                     if(pos != local_row.end())
                         pos->prefactor += entry.prefactor;
                     else
-                        local_row.emplace_back(Entry{local_index, entry.prefactor});
+                        local_row.emplace_back(Coefficient{local_index, entry.prefactor});
                 }
                 ++i;
             }
         }
 
         template <typename Hamiltonian>
-        inline const std::vector<typename Agenda<Hamiltonian>::Term>&
-        Agenda<Hamiltonian>::terms() const
+        inline const typename Agenda<Hamiltonian>::System&
+        Agenda<Hamiltonian>::system() const
         {
-            return _terms;
+            return _sys;
         }
 
         template <typename Hamiltonian>
@@ -206,25 +207,18 @@ namespace ieompp
         }
 
         template <typename Hamiltonian>
-        inline const std::vector<std::vector<typename Agenda<Hamiltonian>::Entry>>&
-        Agenda<Hamiltonian>::results() const
-        {
-            return _results;
-        }
-
-        template <typename Hamiltonian>
         std::ostream& operator<<(std::ostream& strm, const Agenda<Hamiltonian>& agenda)
         {
             strm << "terms:" << std::endl;
-            for(auto& term : agenda.terms()) strm << term << std::endl;
+            for(auto& term : agenda.system().terms) strm << term << std::endl;
             strm << std::endl << std::endl;
 
             strm << "results:" << std::endl;
             std::size_t i = 0;
-            for(auto& line : agenda.results()) {
-                strm << agenda.terms()[i] << ":" << std::endl;
+            for(auto& line : agenda.system().coefficients) {
+                strm << agenda.system().terms[i] << ":" << std::endl;
                 for(auto& entry : line) {
-                    auto term      = agenda.terms()[entry.index];
+                    auto term      = agenda.system().terms[entry.index];
                     term.prefactor = entry.prefactor;
                     strm << "\t" << term << std::endl;
                 }
