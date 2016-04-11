@@ -13,7 +13,8 @@ int main(int argc, char** argv)
 {
     quicli::Interface cli("hamiltonian");
     cli.positionals("term", "the term to commutate with the hamiltonian", 1);
-    cli.flag
+    cli.add(quicli::Flag("--interaction-only"));
+    cli.add(quicli::Flag("--hopping-only"));
 
     if(argc == 1) {
         cerr << "Error" << endl;
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
     auto abstract_term = abstract::parse::parse_term(expression);
     vector<algebra::Operator<std::size_t, bool>> operators;
     for(auto& op : abstract_term.operators) {
-        bool spin         = (op.spin == "↑");
+        bool spin         = (op.spin == u8"↑") || (op.spin == "1");
         std::size_t index = std::stoul(op.index);
         operators.push_back(op.creator ? algebra::make_creator(index, spin)
                                        : algebra::make_annihilator(index, spin));
@@ -39,7 +40,14 @@ int main(int argc, char** argv)
     discretization::LinearDiscretization<double> lattice(10, 1.);
     hubbard::Hamiltonian<decltype(term)> hamiltonian;
 
-    auto result = hamiltonian.commutate(term, lattice);
+
+    algebra::TermList<decltype(term)> result;
+    if(vm.count("--interaction-only"))
+        hamiltonian.commutate_interaction(term, lattice, result);
+    else if(vm.count("--hopping-only"))
+        hamiltonian.commutate_hopping(term, lattice, result);
+    else
+        hamiltonian.commutate(term, lattice, result);
 
     for(auto& t : result)
         cout << t << endl;
