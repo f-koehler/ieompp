@@ -23,7 +23,7 @@ namespace ieompp
                 bool creator = !m[3].str().empty();
                 return std::make_tuple(true, m[1].str(), m[2].str(), creator);
             }
-            
+
             std::tuple<bool, std::string, std::string> is_kronecker(const std::string& expression)
             {
                 std::smatch m;
@@ -31,7 +31,7 @@ namespace ieompp
                     return std::make_tuple(false, "", "");
                 return std::make_tuple(true, m[1].str(), m[2].str());
             }
-            
+
             std::tuple<bool, std::string, std::string> is_number(const std::string& expression)
             {
                 std::smatch m;

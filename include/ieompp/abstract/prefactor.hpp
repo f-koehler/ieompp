@@ -17,7 +17,7 @@ namespace ieompp
         struct Kronecker {
             //! First index of the Kronecker
             std::string left;
-            
+
             //! Second index of the Kronecker
             std::string right;
 

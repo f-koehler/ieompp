@@ -81,7 +81,6 @@ namespace ieompp
             //! regex for a complex number
             static const std::regex re_number(components::str_number);
 
-
             /*!
              * @brief Determine whether a string resembles a commutator
              *
@@ -112,7 +111,7 @@ namespace ieompp
              * the Kronecker.
              */
             std::tuple<bool, std::string, std::string> is_kronecker(const std::string& expression);
-            
+
             /*!
              * @brief Determine whether a string resembles a complex number
              *
