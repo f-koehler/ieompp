@@ -6,16 +6,6 @@ namespace ieompp
 {
     namespace ieom
     {
-        /* template <typename Hamiltonian> */
-        /* Agenda<Hamiltonian>::Agenda(const System& system, std::list<std::size_t>& _known, */
-        /*                             std::vector<std::size_t>& _todo) */
-        /* { */
-        /*     this->_terms.swap(_terms); */
-        /*     this->_known.swap(_known); */
-        /*     this->_todo.swap(_todo); */
-        /*     this->_results.swap(_results); */
-        /* } */
-
         template <typename Hamiltonian>
         void Agenda<Hamiltonian>::reset()
         {

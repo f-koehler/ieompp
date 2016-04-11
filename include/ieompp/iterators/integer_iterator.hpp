@@ -30,11 +30,13 @@ namespace ieompp
                 using pointer           = typename use_first<const T*, T*, const_iterator>::type;
                 using reference         = typename use_first<const T&, T&, const_iterator>::type;
 
-                friend IntegerIterator<T, const_iterator>
-                operator+(const IntegerIterator<T, const_iterator>&, const difference_type&);
+                template <typename T_>
+                friend IntegerIterator<T_, const_iterator>
+                operator+(const IntegerIterator<T_, const_iterator>&, const difference_type&);
 
-                friend IntegerIterator<T, const_iterator>
-                operator-(const IntegerIterator<T, const_iterator>&, const difference_type&);
+                template <typename T_>
+                friend IntegerIterator<T_, const_iterator>
+                operator-(const IntegerIterator<T_, const_iterator>&, const difference_type&);
 
             private:
                 value_type _val;

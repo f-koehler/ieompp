@@ -21,7 +21,7 @@ namespace ieompp
                 using Term        = typename Hamiltonian::Term;
                 using Complex     = typename Term::Prefactor;
                 using Real        = typename Complex::value_type;
-                using System      = System<Term, Complex>;
+                using System      = DynamicalSystem<Term, Complex>;
                 using Coefficient = typename System::Coefficient;
 
             private:
@@ -31,8 +31,6 @@ namespace ieompp
 
             public:
                 Agenda() = default;
-                /* Agenda(System& system, std::list<std::size_t>& _known, */
-                /*        std::vector<std::size_t>& _todo); */
 
                 void reset();
 

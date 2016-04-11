@@ -8,7 +8,7 @@ namespace ieompp
     namespace ieom
     {
         template <typename TermT, typename ComplexT>
-        struct System
+        struct DynamicalSystem
         {
             using Term    = TermT;
             using Complex = ComplexT;
