@@ -17,7 +17,7 @@ namespace ieompp
          * @return true if the anticommutator vanishes, false otherwise
          */
         template <typename Operator>
-        inline bool anticommutates(const Operator& a, const Operator& b);
+        bool anticommutates(const Operator& a, const Operator& b);
 
         /*!
          * @brief Calculates the anticommutator of two operators
@@ -30,7 +30,7 @@ namespace ieompp
          * @return The resulting prefactor
          */
         template <typename Operator, typename Prefactor = std::complex<double>>
-        inline Prefactor anticommutator(const Operator& a, const Operator& b);
+        Prefactor anticommutator(const Operator& a, const Operator& b);
 
 
         /*!

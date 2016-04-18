@@ -10,13 +10,13 @@ namespace ieompp
 
         namespace simplify
         {
-            inline AbstractTermList& order(AbstractTermList& terms);
-            inline AbstractTermList& join(AbstractTermList& terms);
-            inline AbstractTermList& eval_kroneckers(AbstractTermList& terms);
-            inline AbstractTermList& filter(AbstractTermList& terms);
+            AbstractTermList& order(AbstractTermList& terms);
+            AbstractTermList& join(AbstractTermList& terms);
+            AbstractTermList& eval_kroneckers(AbstractTermList& terms);
+            AbstractTermList& filter(AbstractTermList& terms);
         }
 
-        inline AbstractTermList& simplify_terms(AbstractTermList& terms);
+        AbstractTermList& simplify_terms(AbstractTermList& terms);
 
     }
 }

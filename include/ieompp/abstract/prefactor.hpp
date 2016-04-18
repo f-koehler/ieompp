@@ -24,7 +24,7 @@ namespace ieompp
             /*!
              * @brief Order the two indices lexicographically
              */
-            inline void order_indices();
+            void order_indices();
 
 
             /*!
@@ -34,7 +34,7 @@ namespace ieompp
              * @param rhs The Kronecker this one will be compared to
              * @return true if the Kroneckers are the same, false otherwise
              */
-            inline bool operator==(const Kronecker& rhs) const;
+            bool operator==(const Kronecker& rhs) const;
 
             /*!
              * @brief Check if two Kroneckers are not equal. This is the case when the indices are
@@ -43,7 +43,7 @@ namespace ieompp
              * @param rhs The Kronecker this one will be compared to
              * @return true if the Kroneckers are the different, false otherwise
              */
-            inline bool operator!=(const Kronecker& rhs) const;
+            bool operator!=(const Kronecker& rhs) const;
         };
 
         /*!
@@ -70,7 +70,7 @@ namespace ieompp
             //! The Kronecker deltas in the prefactor
             std::vector<Kronecker> kroneckers;
 
-            inline bool same_kroneckers(const AbstractPrefactor& rhs) const;
+            bool same_kroneckers(const AbstractPrefactor& rhs) const;
 
             AbstractPrefactor& operator*=(const AbstractPrefactor& rhs);
             AbstractPrefactor operator*(const AbstractPrefactor& rhs) const;
@@ -82,8 +82,8 @@ namespace ieompp
 
             AbstractPrefactor& operator+=(const AbstractPrefactor& rhs);
 
-            inline bool operator==(const AbstractPrefactor& rhs) const;
-            inline bool operator!=(const AbstractPrefactor& rhs) const;
+            bool operator==(const AbstractPrefactor& rhs) const;
+            bool operator!=(const AbstractPrefactor& rhs) const;
         };
 
         std::ostream& operator<<(std::ostream& strm, const AbstractPrefactor& rhs);

@@ -41,7 +41,7 @@ namespace ieompp
              * @param rhs The term to compare to
              * @return true if the operators are the same, false otherwise
              */
-            inline bool same_operators(const Term& rhs) const;
+            bool same_operators(const Term& rhs) const;
 
 
             /*!
@@ -53,7 +53,7 @@ namespace ieompp
              * @param rhs The term to compare this one to
              * @return true if the terms are equal, false otherwise
              */
-            inline bool operator==(const Term& rhs) const;
+            bool operator==(const Term& rhs) const;
 
             /*!
              * @brief Check if two terms are not equal
@@ -63,7 +63,7 @@ namespace ieompp
              * @param rhs The term to compare this one to
              * @return true if the terms are not equal, false otherwise
              */
-            inline bool operator!=(const Term& rhs) const;
+            bool operator!=(const Term& rhs) const;
 
             bool operator<(const Term& rhs) const;
             bool operator>(const Term& rhs) const;

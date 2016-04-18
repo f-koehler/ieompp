@@ -21,7 +21,7 @@ namespace ieompp
              * @param rhs The NoSpin this one will be compared to.
              * @return Always true.
              */
-            inline bool operator==(const NoSpin& rhs) const;
+            bool operator==(const NoSpin& rhs) const;
 
             /*!
              * @brief Check if two NoSpin instances are not equal (always false)
@@ -29,7 +29,7 @@ namespace ieompp
              * @param rhs The NoSpin this one will be compared to.
              * @return Always false.
              */
-            inline bool operator!=(const NoSpin& rhs) const;
+            bool operator!=(const NoSpin& rhs) const;
         };
 
         /*!
@@ -68,7 +68,7 @@ namespace ieompp
              * @param rhs The operator to compare this one with
              * @return true if the operators are equal, false otherwise
              */
-            inline bool operator==(const Operator& rhs) const;
+            bool operator==(const Operator& rhs) const;
 
             /*!
              * @brief Check if two operators are not equal
@@ -79,7 +79,7 @@ namespace ieompp
              * @param rhs The operator to compare this one with
              * @return true if the operators are not equal, false otherwise
              */
-            inline bool operator!=(const Operator& rhs) const;
+            bool operator!=(const Operator& rhs) const;
         };
 
 
@@ -109,7 +109,7 @@ namespace ieompp
          * @return The newly created creation operator
          */
         template <typename Index, typename Spin>
-        inline Operator<Index, Spin> make_creator(const Index& index, const Spin& spin);
+        Operator<Index, Spin> make_creator(const Index& index, const Spin& spin);
 
         /*!
          * @brief Create an spinless creation operator with the given index
@@ -121,7 +121,7 @@ namespace ieompp
          * @return The newly created creation operator
          */
         template <typename Index>
-        inline Operator<Index, NoSpin> make_creator(const Index& index);
+        Operator<Index, NoSpin> make_creator(const Index& index);
 
         /*!
          * @brief Create an annihilation operator with the given index and spin
@@ -135,7 +135,7 @@ namespace ieompp
          * @return The newly created annihilation operator
          */
         template <typename Index, typename Spin>
-        inline Operator<Index, Spin> make_annihilator(const Index& index, const Spin& spin);
+        Operator<Index, Spin> make_annihilator(const Index& index, const Spin& spin);
 
         /*!
          * @brief Create a spinless annihilation operator with the given index
@@ -147,7 +147,7 @@ namespace ieompp
          * @return The newly created annihilation operator
          */
         template <typename Index>
-        inline Operator<Index, NoSpin> make_annihilator(const Index& index);
+        Operator<Index, NoSpin> make_annihilator(const Index& index);
     }
 }
 

@@ -15,7 +15,7 @@ namespace ieompp
 
         //! An AbstractOperator is an instantiation of Operator<> for AbstractIndex and AbstractSpin
         using AbstractOperator = algebra::Operator<AbstractIndex, AbstractSpin>;
-        
+
         /*!
          * @brief Create an abstract creation operator with the given index and spin
          *
@@ -23,8 +23,8 @@ namespace ieompp
          * @param spin Spin of the new operator
          * @return The newly created creation operator
          */
-        inline AbstractOperator make_creator(const std::string& index, const std::string& spin);
-        
+        AbstractOperator make_creator(const std::string& index, const std::string& spin);
+
         /*!
          * @brief Create an abstract creation annihilation with the given index and spin
          *
@@ -32,7 +32,7 @@ namespace ieompp
          * @param spin Spin of the new operator
          * @return The newly created annihilation operator
          */
-        inline AbstractOperator make_annihilator(const std::string& index, const std::string& spin);
+        AbstractOperator make_annihilator(const std::string& index, const std::string& spin);
 
         std::ostream& operator<<(std::ostream& strm, const ieompp::abstract::AbstractOperator::ContractionType& rhs);
     }

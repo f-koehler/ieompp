@@ -18,9 +18,11 @@ int main()
 
     hamiltonian.J = 1.;
     hamiltonian.U = 1.;
+    hamiltonian.enable_interaction = false;
 
-    a.commutate(term, 1, hamiltonian, real_space);
-    ode::DenseRK4<typename decltype(a)::System> de(a.system());
-    cout << a << endl;
-    cout << de.matrix() << endl;
+    a.commutate(term, 2, hamiltonian, real_space);
+
+    for(auto& term : a.system().terms) {
+        cout << term << endl;
+    }
 }
