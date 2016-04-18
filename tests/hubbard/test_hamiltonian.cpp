@@ -123,7 +123,7 @@ void test_commutate()
     }
 }
 
-TEST_CASE("commutate_hopping", "")
+TEST_CASE("commutate_hopping")
 {
     test_commutate_hopping<Operator<long, bool>, float>();
     test_commutate_hopping<Operator<long, bool>, double>();
@@ -134,7 +134,7 @@ TEST_CASE("commutate_hopping", "")
     test_commutate_hopping<Operator<unsigned long, bool>, long double>();
 }
 
-TEST_CASE("commutate_interaction", "")
+TEST_CASE("commutate_interaction")
 {
     test_commutate_interaction<Operator<long, bool>, float>();
     test_commutate_interaction<Operator<long, bool>, double>();
@@ -145,7 +145,7 @@ TEST_CASE("commutate_interaction", "")
     test_commutate_interaction<Operator<unsigned long, bool>, long double>();
 }
 
-TEST_CASE("commutate", "")
+TEST_CASE("commutate")
 {
     test_commutate<Operator<long, bool>, float>();
     test_commutate<Operator<long, bool>, double>();

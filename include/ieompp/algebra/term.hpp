@@ -43,6 +43,9 @@ namespace ieompp
              */
             bool same_operators(const Term& rhs) const;
 
+            typename std::vector<Operator>::const_iterator find_first_displaced_operator() const;
+            typename std::vector<Operator>::iterator find_first_displaced_operator();
+
 
             /*!
              * @brief Check if two terms are equal

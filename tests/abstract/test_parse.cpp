@@ -6,7 +6,7 @@
 using namespace ieompp;
 using namespace abstract;
 
-TEST_CASE("is_commutator", "[abstract]")
+TEST_CASE("is_commutator")
 {
     auto result = parse::is_commutator("[a;b]");
     REQUIRE(std::get<0>(result));
@@ -14,7 +14,7 @@ TEST_CASE("is_commutator", "[abstract]")
     REQUIRE(std::get<2>(result) == "b");
 }
 
-TEST_CASE("is_operator", "[abstract]")
+TEST_CASE("is_operator")
 {
     SECTION("plain ASCII")
     {
@@ -53,7 +53,7 @@ TEST_CASE("is_operator", "[abstract]")
         REQUIRE(std::get<1>(result) == "k+q");
         REQUIRE(std::get<2>(result) == "σ-s");
         REQUIRE(std::get<3>(result));
-        
+
         result = parse::is_operator("c_{k+q,σ-s}");
         REQUIRE(std::get<0>(result));
         REQUIRE(std::get<1>(result) == "k+q");
@@ -62,7 +62,7 @@ TEST_CASE("is_operator", "[abstract]")
     }
 }
 
-TEST_CASE("is_kronecker", "[abstract]")
+TEST_CASE("is_kronecker")
 {
     SECTION("plain ASCII")
     {
@@ -89,7 +89,7 @@ TEST_CASE("is_kronecker", "[abstract]")
     }
 }
 
-TEST_CASE("is_number", "[abstract]")
+TEST_CASE("is_number")
 {
     auto result = parse::is_number("(12.123e-12,-4.0)");
     REQUIRE(std::get<0>(result));
@@ -97,7 +97,7 @@ TEST_CASE("is_number", "[abstract]")
     REQUIRE(std::get<2>(result) == "-4.0");
 }
 
-TEST_CASE("parse_term", "[abstract]")
+TEST_CASE("parse_term")
 {
     auto expression = "c_{k_1,up}^\\dagger c_{k_2,up}^{\\dagger}";
     auto result = parse::parse_term(expression);

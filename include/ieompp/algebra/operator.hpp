@@ -80,6 +80,9 @@ namespace ieompp
              * @return true if the operators are not equal, false otherwise
              */
             bool operator!=(const Operator& rhs) const;
+
+            bool operator<(const Operator& rhs) const;
+            bool operator>(const Operator& rhs) const;
         };
 
 

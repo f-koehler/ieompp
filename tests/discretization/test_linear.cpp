@@ -99,28 +99,28 @@ void test_closest()
     REQUIRE(disc.closest(Real(N - 1) + 0.51) == 0);
 }
 
-TEST_CASE("initialization (real space)", "")
+TEST_CASE("initialization (real space)")
 {
     test_initialization_real_space<float>();
     test_initialization_real_space<double>();
     test_initialization_real_space<long double>();
 }
 
-TEST_CASE("initialization (momentum space)", "")
+TEST_CASE("initialization (momentum space)")
 {
     test_initialization_momentum_space<float>();
     test_initialization_momentum_space<double>();
     test_initialization_momentum_space<long double>();
 }
 
-TEST_CASE("closest site", "")
+TEST_CASE("closest site")
 {
     test_closest<float>();
     test_closest<double>();
     test_closest<long double>();
 }
 
-TEST_CASE("neighbours", "")
+TEST_CASE("neighbours")
 {
     test_neighbours<float>();
     test_neighbours<double>();

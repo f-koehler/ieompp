@@ -8,7 +8,7 @@
 
 using namespace ieompp;
 
-TEST_CASE("read & write", "")
+TEST_CASE("read & write")
 {
     const std::size_t num_terms = 2 << 15;
     std::mt19937_64 prng;

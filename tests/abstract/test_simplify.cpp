@@ -6,7 +6,7 @@
 using namespace ieompp;
 using namespace abstract;
 
-TEST_CASE("join", "[abstract] [simplify]")
+TEST_CASE("join")
 {
     auto list = AbstractTermList{
         abstract::make_term(AbstractPrefactor{std::complex<double>(1., 0.), {Kronecker{"k", "q"}}},
@@ -21,7 +21,7 @@ TEST_CASE("join", "[abstract] [simplify]")
                                                 {make_creator("k", "s")}));
 }
 
-TEST_CASE("eval_kroneckers", "[abstract] [simplify]")
+TEST_CASE("eval_kroneckers")
 {
     auto list = AbstractTermList{abstract::make_term(
         AbstractPrefactor{std::complex<double>(0., 0.), {Kronecker{"k_1", "k_1"}}},
@@ -32,7 +32,7 @@ TEST_CASE("eval_kroneckers", "[abstract] [simplify]")
                                                 {make_creator("k", "s")}));
 }
 
-TEST_CASE("filter", "[abstract] [simplify]")
+TEST_CASE("filter")
 {
     auto term1 =
         abstract::make_term(AbstractPrefactor{std::complex<double>(0., 0.), {Kronecker{"k", "q"}}},

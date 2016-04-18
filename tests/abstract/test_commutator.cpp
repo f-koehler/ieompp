@@ -6,7 +6,7 @@
 
 using namespace ieompp;
 using namespace abstract;
-TEST_CASE("commutator", "[abstract]")
+TEST_CASE("commutator")
 {
     SECTION("[cc,c]")
     {
@@ -14,7 +14,7 @@ TEST_CASE("commutator", "[abstract]")
         a.operators.push_back(make_creator("k_1", "s'"));
         a.operators.push_back(make_annihilator("k_1", "s'"));
         a.prefactor.number = Complex(1., 0.);
-        
+
         b.operators.push_back(make_creator("q", "s"));
         b.prefactor.number = Complex(1., 0.);
 

@@ -93,7 +93,7 @@ void test_commutator()
     }
 }
 
-TEST_CASE("anticommutates", "")
+TEST_CASE("anticommutates")
 {
     test_anticommutates<Operator<unsigned long, bool>>();
     test_anticommutates<Operator<unsigned long, NoSpin>>();
@@ -101,7 +101,7 @@ TEST_CASE("anticommutates", "")
     test_anticommutates<Operator<long, NoSpin>>();
 }
 
-TEST_CASE("commutator", "")
+TEST_CASE("commutator")
 {
     test_commutator<Operator<long, bool>, float>();
     test_commutator<Operator<long, NoSpin>, float>();

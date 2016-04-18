@@ -9,7 +9,7 @@
 
 using namespace ieompp;
 
-TEST_CASE("transform", "[algebra]")
+TEST_CASE("transform")
 {
     using Discretization = discretization::LinearDiscretization<double>;
     using Operator       = algebra::Operator<Discretization::Index, bool>;

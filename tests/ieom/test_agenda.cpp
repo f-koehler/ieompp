@@ -69,7 +69,7 @@ void test_add_term()
     REQUIRE(std::get<0>(find));
 }
 
-TEST_CASE("add_term", "")
+TEST_CASE("add_term")
 {
     test_add_term<Operator<long, bool>, double>();
 }

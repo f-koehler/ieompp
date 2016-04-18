@@ -6,7 +6,7 @@
 using namespace ieompp;
 using namespace abstract;
 
-TEST_CASE("same_kroneckers", "[abstract]")
+TEST_CASE("same_kroneckers")
 {
     SECTION("true case")
     {

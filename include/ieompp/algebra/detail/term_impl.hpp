@@ -15,6 +15,22 @@ namespace ieompp
             return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
         }
 
+        template <typename Operator, typename Prefactor>
+        inline typename std::vector<Operator>::const_iterator
+        Term<Operator, Prefactor>::find_first_displaced_operator() const
+        {
+            return std::find_if(operators.begin(), operators.end(),
+                                [](const Operator& a, const Operator& b) { return a < b; });
+        }
+
+        template <typename Operator, typename Prefactor>
+        inline typename std::vector<Operator>::iterator
+        Term<Operator, Prefactor>::find_first_displaced_operator()
+        {
+            return std::find_if(operators.begin(), operators.end(),
+                                [](const Operator& a, const Operator& b) { return a < b; });
+        }
+
 
         template <typename Operator, typename Prefactor>
         inline bool Term<Operator, Prefactor>::operator==(const Term<Operator, Prefactor>& rhs) const
