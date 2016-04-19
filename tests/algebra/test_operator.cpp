@@ -12,27 +12,43 @@ void test_comparison()
     using Index = typename Operator::Index;
     using Spin  = typename Operator::Spin;
 
-    Operator a = make_creator(Index(0), Spin(0));
-    REQUIRE(!(a < a));
-    REQUIRE(!(a > a));
+    SECTION("self comparison")
+    {
+        Operator a = make_creator(Index(0), Spin(0));
+        REQUIRE(!(a < a));
+        REQUIRE(!(a > a));
+    }
 
-    Operator b = make_annihilator(Index(0), Spin(0));
-    REQUIRE(a < b);
-    REQUIRE(!(a > b));
-    REQUIRE(!(b < a));
-    REQUIRE(b > a);
+    SECTION("creator and annihilator")
+    {
+        Operator a = make_creator(Index(0), Spin(0));
+        Operator b = make_annihilator(Index(0), Spin(0));
+        REQUIRE(a < b);
+        REQUIRE(!(a > b));
+        REQUIRE(!(b < a));
+        REQUIRE(b > a);
+    }
 
-    b = make_creator(Index(1), Spin(0));
-    REQUIRE(a < b);
-    REQUIRE(!(a > b));
-    REQUIRE(!(b < a));
-    REQUIRE(b > a);
+    SECTION("different index")
+    {
+        Operator a = make_creator(Index(0), Spin(0));
+        Operator b = make_creator(Index(1), Spin(0));
+        REQUIRE(a < b);
+        REQUIRE(!(a > b));
+        REQUIRE(!(b < a));
+        REQUIRE(b > a);
+    }
 
-    b = make_creator(Index(0), Spin(1));
-    REQUIRE(a < b);
-    REQUIRE(!(a > b));
-    REQUIRE(!(b < a));
-    REQUIRE(b > a);
+
+    SECTION("different spin")
+    {
+        Operator a = make_creator(Index(0), Spin(0));
+        Operator b = make_creator(Index(0), Spin(1));
+        REQUIRE(a < b);
+        REQUIRE(!(a > b));
+        REQUIRE(!(b < a));
+        REQUIRE(b > a);
+    }
 }
 
 TEST_CASE("comparison")

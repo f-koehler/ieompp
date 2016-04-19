@@ -14,15 +14,10 @@ int main()
         algebra::make_term(std::complex<double>(1., 0.), {algebra::make_creator(0ul, true)});
     discretization::LinearDiscretization<double> real_space(10, 1.);
     hubbard::Hamiltonian<decltype(term)> hamiltonian;
-    ieom::Agenda<decltype(hamiltonian)> a;
 
     hamiltonian.J = 1.;
     hamiltonian.U = 1.;
-    hamiltonian.enable_interaction = false;
 
-    a.commutate(term, 2, hamiltonian, real_space);
-
-    for(auto& term : a.system().terms) {
-        cout << term << endl;
-    }
+    auto result = hamiltonian.commutate(term, real_space);
+    auto ordered = order_operators(result);
 }

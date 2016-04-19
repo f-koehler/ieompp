@@ -19,16 +19,22 @@ namespace ieompp
         inline typename std::vector<Operator>::const_iterator
         Term<Operator, Prefactor>::find_first_displaced_operator() const
         {
-            return std::find_if(operators.begin(), operators.end(),
-                                [](const Operator& a, const Operator& b) { return a < b; });
+            for(auto it2 = operators.cbegin() + 1; it2 != operators.cend(); ++it2) {
+                auto it1 = it2 - 1;
+                if(*it1 > *it2) return it1;
+            }
+            return operators.cend();
         }
 
         template <typename Operator, typename Prefactor>
         inline typename std::vector<Operator>::iterator
         Term<Operator, Prefactor>::find_first_displaced_operator()
         {
-            return std::find_if(operators.begin(), operators.end(),
-                                [](const Operator& a, const Operator& b) { return a < b; });
+            for(auto it2 = operators.begin() + 1; it2 != operators.end(); ++it2) {
+                auto it1 = it2 - 1;
+                if(*it1 > *it2) return it1;
+            }
+            return operators.end();
         }
 
 
@@ -118,6 +124,44 @@ namespace ieompp
                                             const std::initializer_list<Operator>& operators)
         {
             return Term<Operator, Prefactor>{prefactor, operators};
+        }
+
+        template <typename Term>
+        TermList<Term> order_operators(TermList<Term>& terms)
+        {
+            TermList<Term> results;
+
+            std::size_t term_idx = 0;
+            while(term_idx < terms.size()) {
+                auto pos = terms[term_idx].find_first_displaced_operator();
+                while(pos != terms[term_idx].operators.end()) {
+                    auto& term = terms[term_idx];
+                    /* Term new_term; */
+                    /* new_term.prefactor = term.prefactor; */
+
+                    /* std::copy(term.operators.begin(), pos, std::back_inserter(new_term.operators)); */
+                    /* std::copy(pos + 2, term.operators.end(), */
+                    /*           std::back_inserter(new_term.operators)); */
+                    std::swap(*pos, *(pos + 1));
+                    /* term.prefactor = -term.prefactor; */
+
+                    /* terms.push_back(new_term); */
+
+                    pos = terms[term_idx].find_first_displaced_operator();
+                }
+
+                auto& term = terms[term_idx];
+                auto insert_pos =
+                    std::find_if(results.begin(), results.end(),
+                                 [&term](const Term& t) { return t.same_operators(term); });
+                if(insert_pos == results.end())
+                    results.push_back(term);
+                else
+                    insert_pos->prefactor += term.prefactor;
+                ++term_idx;
+            }
+
+            return results;
         }
     }
 }
