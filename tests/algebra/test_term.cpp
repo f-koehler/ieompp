@@ -31,10 +31,8 @@ void test_find_first_displaced_operator()
                       make_annihilator(Index(0), Spin(0))});
     REQUIRE(term.find_first_displaced_operator() == term.operators.begin());
 
-    std::cout << term << std::endl;
     std::swap(term.operators[0], term.operators[1]);
-    std::cout << term << std::endl;
-    REQUIRE(term.find_first_displaced_operator() == term.operators.begin());
+    REQUIRE(term.find_first_displaced_operator() == term.operators.end());
 }
 
 TEST_CASE("find_first_displaced_operator")

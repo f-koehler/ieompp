@@ -136,16 +136,16 @@ namespace ieompp
                 auto pos = terms[term_idx].find_first_displaced_operator();
                 while(pos != terms[term_idx].operators.end()) {
                     auto& term = terms[term_idx];
-                    /* Term new_term; */
-                    /* new_term.prefactor = term.prefactor; */
+                    Term new_term;
+                    new_term.prefactor = term.prefactor;
 
-                    /* std::copy(term.operators.begin(), pos, std::back_inserter(new_term.operators)); */
-                    /* std::copy(pos + 2, term.operators.end(), */
-                    /*           std::back_inserter(new_term.operators)); */
+                    std::copy(term.operators.begin(), pos, std::back_inserter(new_term.operators));
+                    std::copy(pos + 2, term.operators.end(),
+                              std::back_inserter(new_term.operators));
                     std::swap(*pos, *(pos + 1));
-                    /* term.prefactor = -term.prefactor; */
+                    term.prefactor = -term.prefactor;
 
-                    /* terms.push_back(new_term); */
+                    terms.push_back(new_term);
 
                     pos = terms[term_idx].find_first_displaced_operator();
                 }

@@ -49,6 +49,22 @@ void test_comparison()
         REQUIRE(!(b < a));
         REQUIRE(b > a);
     }
+
+    SECTION("annihilator & creator with different index")
+    {
+        Operator a = make_creator(Index(1), Spin(0));
+        Operator b = make_annihilator(Index(0), Spin(0));
+        REQUIRE(!(a > b));
+        REQUIRE(a < b);
+    }
+
+    SECTION("annihilator & creator with different spin")
+    {
+        Operator a = make_creator(Index(0), Spin(0));
+        Operator b = make_annihilator(Index(0), Spin(1));
+        REQUIRE(!(a > b));
+        REQUIRE(a < b);
+    }
 }
 
 TEST_CASE("comparison")

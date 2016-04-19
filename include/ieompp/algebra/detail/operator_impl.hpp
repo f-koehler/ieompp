@@ -35,20 +35,18 @@ namespace ieompp
         template <typename Index, typename Spin>
         inline bool Operator<Index, Spin>::operator<(const Operator& rhs) const
         {
-            if((*this) == rhs) return false;
-            if(creator > rhs.creator) return true;
-            if(index < rhs.index) return true;
-            if(spin < rhs.spin) return true;
+            if(creator != rhs.creator) return creator;
+            if(index != rhs.index) return index < rhs.index;
+            if(spin != rhs.spin) return spin < rhs.spin;
             return false;
         }
 
         template <typename Index, typename Spin>
         inline bool Operator<Index, Spin>::operator>(const Operator& rhs) const
         {
-            if((*this) == rhs) return false;
-            if(creator < rhs.creator) return true;
-            if(index > rhs.index) return true;
-            if(spin > rhs.spin) return true;
+            if(creator != rhs.creator) return rhs.creator;
+            if(index != rhs.index) return index > rhs.index;
+            if(spin != rhs.spin) return spin > rhs.spin;
             return false;
         }
 
