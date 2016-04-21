@@ -38,4 +38,5 @@ void test_find_first_displaced_operator()
 TEST_CASE("find_first_displaced_operator")
 {
     test_find_first_displaced_operator<Operator<unsigned long, bool>>();
+    test_find_first_displaced_operator<Operator<long, bool>>();
 }

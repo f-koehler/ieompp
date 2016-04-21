@@ -93,6 +93,49 @@ void test_commutator()
     }
 }
 
+template <typename Operator>
+void test_order_operators()
+{
+    using Index = typename Operator::Index;
+    using Spin  = typename Operator::Spin;
+    using Term  = Term<Operator, std::complex<double>>;
+
+    SECTION(u8"c^†c^†c")
+    {
+        TermList<Term> terms = {
+            {make_term(std::complex<double>(1.),
+                       {make_creator(Index(1), Spin(0)), make_creator(Index(0), Spin(0)),
+                        make_annihilator(Index(0), Spin(0))})}};
+        auto ordered               = order_operators(terms);
+        TermList<Term> expectation = {
+            {make_term(std::complex<double>(-1.),
+                       {make_creator(Index(0), Spin(0)), make_creator(Index(1), Spin(0)),
+                        make_annihilator(Index(0), Spin(0))})}};
+        REQUIRE(ordered.size() == expectation.size());
+        REQUIRE(std::equal(ordered.begin(), ordered.end(), expectation.begin()));
+    }
+
+    SECTION(u8"c^†c^†c^†cc")
+    {
+        TermList<Term> terms = {
+            {make_term(std::complex<double>(1.),
+                       {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(1)),
+                        make_annihilator(Index(0), Spin(0)), make_creator(Index(0), Spin(0)),
+                        make_annihilator(Index(0), Spin(0))})}};
+        auto ordered               = order_operators(terms);
+        /* TermList<Term> expectation = { */
+        /*     {make_term(std::complex<double>(1.), */
+        /*                {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(0)), */
+        /*                 make_creator(Index(0), Spin(1)), make_annihilator(Index(0), Spin(0)), */
+        /*                 make_annihilator(Index(0), Spin(0))}), */
+        /*      make_term(std::complex<double>(-1.), */
+        /*                {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(1)), */
+        /*                 make_annihilator(Index(0), Spin(0))})}}; */
+        /* REQUIRE(ordered.size() == expectation.size()); */
+        /* REQUIRE(std::equal(ordered.begin(), ordered.end(), expectation.begin())); */
+    }
+}
+
 TEST_CASE("anticommutates")
 {
     test_anticommutates<Operator<unsigned long, bool>>();
@@ -116,4 +159,10 @@ TEST_CASE("commutator")
     test_commutator<Operator<unsigned long, NoSpin>, double>();
     test_commutator<Operator<unsigned long, bool>, long double>();
     test_commutator<Operator<unsigned long, NoSpin>, long double>();
+}
+
+TEST_CASE("order_operators")
+{
+    test_order_operators<Operator<unsigned long, bool>>();
+    /* test_order_operators<Operator<long, bool>>(); */
 }

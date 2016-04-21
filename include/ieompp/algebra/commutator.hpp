@@ -44,6 +44,9 @@ namespace ieompp
          */
         template <typename Term>
         void commutate(const Term& a, const Term& b, TermList<Term>& terms);
+
+        template <typename Term>
+        TermList<Term> order_operators(TermList<Term>& terms);
     }
 }
 

@@ -114,9 +114,6 @@ namespace ieompp
         template <typename Prefactor, typename Operator>
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators);
-
-        template <typename Term>
-        TermList<Term> order_operators(TermList<Term>& terms);
     }
 }
 
