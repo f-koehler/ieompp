@@ -15,9 +15,21 @@ int main()
     discretization::LinearDiscretization<double> real_space(10, 1.);
     hubbard::Hamiltonian<decltype(term)> hamiltonian;
 
-    hamiltonian.J = 1.;
-    hamiltonian.U = 1.;
-
     auto result = hamiltonian.commutate(term, real_space);
-    auto ordered = order_operators(result);
+    /* std::size_t num = result.size(); */
+    /* for(std::size_t i = 0; i < num; ++i) { */
+    /*     hamiltonian.commutate(result[i], real_space, result); */
+    /* } */
+
+    auto ordered = algebra::order_operators(result);
+
+    cout << "original:" << endl;
+    for(auto& t : result) {
+        cout << t << endl;
+    }
+
+    cout << endl << endl << "ordered:" << endl;
+    for(auto& t : ordered) {
+        cout << t << endl;
+    }
 }
