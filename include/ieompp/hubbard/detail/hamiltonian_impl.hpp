@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "ieompp/hubbard/hamiltonian.hpp"
+#include <iostream>
 
 namespace ieompp
 {

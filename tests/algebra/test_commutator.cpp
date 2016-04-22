@@ -6,6 +6,7 @@
 
 using namespace ieompp;
 using namespace algebra;
+#include <iostream>
 
 template <typename Operator>
 void test_anticommutates()
@@ -123,16 +124,16 @@ void test_order_operators()
                         make_annihilator(Index(0), Spin(0)), make_creator(Index(0), Spin(0)),
                         make_annihilator(Index(0), Spin(0))})}};
         auto ordered               = order_operators(terms);
-        /* TermList<Term> expectation = { */
-        /*     {make_term(std::complex<double>(1.), */
-        /*                {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(0)), */
-        /*                 make_creator(Index(0), Spin(1)), make_annihilator(Index(0), Spin(0)), */
-        /*                 make_annihilator(Index(0), Spin(0))}), */
-        /*      make_term(std::complex<double>(-1.), */
-        /*                {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(1)), */
-        /*                 make_annihilator(Index(0), Spin(0))})}}; */
-        /* REQUIRE(ordered.size() == expectation.size()); */
-        /* REQUIRE(std::equal(ordered.begin(), ordered.end(), expectation.begin())); */
+        TermList<Term> expectation = {
+            {make_term(std::complex<double>(1.),
+                       {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(0)),
+                        make_creator(Index(0), Spin(1)), make_annihilator(Index(0), Spin(0)),
+                        make_annihilator(Index(0), Spin(0))}),
+             make_term(std::complex<double>(1.),
+                       {make_creator(Index(0), Spin(0)), make_creator(Index(0), Spin(1)),
+                        make_annihilator(Index(0), Spin(0))})}};
+        REQUIRE(ordered.size() == expectation.size());
+        REQUIRE(std::equal(ordered.begin(), ordered.end(), expectation.begin()));
     }
 }
 
@@ -164,5 +165,5 @@ TEST_CASE("commutator")
 TEST_CASE("order_operators")
 {
     test_order_operators<Operator<unsigned long, bool>>();
-    /* test_order_operators<Operator<long, bool>>(); */
+    test_order_operators<Operator<long, bool>>();
 }

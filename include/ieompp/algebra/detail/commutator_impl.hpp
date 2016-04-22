@@ -1,6 +1,7 @@
 #include "ieompp/algebra/commutator.hpp"
 
 #include <cassert>
+#include <iostream>
 
 namespace ieompp
 {
@@ -71,15 +72,18 @@ namespace ieompp
                 auto pos = terms[term_idx].find_first_displaced_operator();
                 while(pos != terms[term_idx].operators.end()) {
                     auto& term = terms[term_idx];
-                    Term new_term;
-                    new_term.prefactor = term.prefactor;
-
                     if(!anticommutates(*pos, *(pos + 1))) {
+                        Term new_term;
+                        new_term.prefactor = term.prefactor;
                         std::copy(term.operators.begin(), pos,
                                   std::back_inserter(new_term.operators));
                         std::copy(pos + 2, term.operators.end(),
                                   std::back_inserter(new_term.operators));
+                        std::swap(*pos, *(pos + 1));
+                        term.prefactor = -term.prefactor;
+                        pos = terms[term_idx].find_first_displaced_operator();
                         terms.push_back(new_term);
+                        continue;
                     }
 
                     std::swap(*pos, *(pos + 1));
