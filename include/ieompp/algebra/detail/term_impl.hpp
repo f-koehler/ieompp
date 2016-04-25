@@ -125,5 +125,22 @@ namespace ieompp
         {
             return Term<Operator, Prefactor>{prefactor, operators};
         }
+
+        template <typename Term, bool Erase>
+        void remove_vanishing_terms(TermList<Term>& terms)
+        {
+            if(Erase) {
+                for(std::size_t i = terms.size() - 1; i > 0; --i) {
+                    if(is_zero(terms[i].prefactor)) terms.erase(terms.begin() + i);
+                }
+                if(is_zero(terms[0].prefactor)) terms.erase(terms.begin());
+            } else {
+                // TODO: fix this
+                TermList<Term> buf(std::remove_if(terms.begin(), terms.end(), [](const Term& t) {
+                                       return is_zero(t.prefactor);
+                                   }), terms.end());
+                std::swap(buf, terms);
+            }
+        }
     }
 }

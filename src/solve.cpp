@@ -24,6 +24,7 @@ int main()
 
     auto copy    = decltype(result)(result);
     auto ordered = algebra::order_operators(copy);
+    algebra::remove_vanishing_terms<decltype(term), true>(ordered);
 
     cout << "original:" << endl;
     for(auto& t : result) {
