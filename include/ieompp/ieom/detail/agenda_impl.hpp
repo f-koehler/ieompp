@@ -1,4 +1,5 @@
 #include "ieompp/ieom/agenda.hpp"
+#include "ieompp/algebra/commutator.hpp"
 
 #include <map>
 
@@ -89,8 +90,11 @@ namespace ieompp
             for(std::size_t i = 0; i < size; ++i) {
 
                 // calculate the corresponding commutator with the hamiltonian
-                const auto& term      = _sys.terms[current_todo[i]];
-                const auto commutator = hamiltonian.commutate(term, discretization);
+                const auto& term    = _sys.terms[current_todo[i]];
+                auto commutator_tmp = hamiltonian.commutate(term, discretization);
+                auto commutator = algebra::order_operators(commutator_tmp);
+                commutator_tmp.clear();
+                algebra::remove_vanishing_terms(commutator);
 
                 // iterate over all terms in the commutator
                 for(auto& new_term : commutator) {

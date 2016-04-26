@@ -115,7 +115,7 @@ namespace ieompp
         Term<Operator, Prefactor> make_term(const Prefactor& prefactor,
                                             const std::initializer_list<Operator>& operators);
 
-        template <typename Term, bool Erase = false>
+        template <typename Term, bool Erase = true>
         void remove_vanishing_terms(TermList<Term>& terms);
     }
 }

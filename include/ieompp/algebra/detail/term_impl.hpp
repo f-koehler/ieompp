@@ -136,6 +136,7 @@ namespace ieompp
                 if(is_zero(terms[0].prefactor)) terms.erase(terms.begin());
             } else {
                 // TODO: fix this
+                throw std::runtime_error("TODO: fix this method first");
                 TermList<Term> buf(std::remove_if(terms.begin(), terms.end(), [](const Term& t) {
                                        return is_zero(t.prefactor);
                                    }), terms.end());
