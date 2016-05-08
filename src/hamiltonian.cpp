@@ -49,7 +49,11 @@ int main(int argc, char** argv)
     else
         hamiltonian.commutate(term, lattice, result);
 
-    for(auto& t : result)
+    decltype(result) result_ordered = algebra::order_operators(result);
+    algebra::remove_vanishing_terms(result_ordered);
+    algebra::remove_forbidden(result_ordered);
+
+    for(auto& t : result_ordered)
         cout << t << endl;
 
     return 0;

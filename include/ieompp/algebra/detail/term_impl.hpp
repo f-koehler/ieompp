@@ -37,6 +37,16 @@ namespace ieompp
             return operators.end();
         }
 
+        template <typename Operator, typename Prefactor>
+        std::tuple<bool, std::size_t> Term<Operator, Prefactor>::effect() const
+        {
+            const std::size_t num_created = std::count_if(
+                operators.begin(), operators.end(), [](const Operator& op) { return op.creator; });
+            const auto num_annihilated = operators.size() - num_created;
+            const bool effect = num_created > num_annihilated;
+            return std::make_tuple(effect, effect ? num_created : num_annihilated);
+        }
+
 
         template <typename Operator, typename Prefactor>
         inline bool Term<Operator, Prefactor>::operator==(const Term<Operator, Prefactor>& rhs) const
@@ -142,6 +152,31 @@ namespace ieompp
                                    }), terms.end());
                 std::swap(buf, terms);
             }
+        }
+
+        template <typename Term>
+        void remove_forbidden(TermList<Term>& terms)
+        {
+            for(std::size_t i = terms.size() - 1; i > 0; --i) {
+                auto& term     = terms[i];
+                bool forbidden = false;
+                for(auto it = term.operators.begin(); it != term.operators.end() - 1; ++it) {
+                    if(*it == *(it + 1)) {
+                        forbidden = true;
+                        break;
+                    }
+                }
+                if(forbidden) terms.erase(terms.begin() + i);
+            }
+            auto& term     = terms[0];
+            bool forbidden = false;
+            for(auto it = term.operators.begin(); it != term.operators.end() - 1; ++it) {
+                if(*it == *(it + 1)) {
+                    forbidden = true;
+                    break;
+                }
+            }
+            if(forbidden) terms.erase(terms.begin());
         }
     }
 }

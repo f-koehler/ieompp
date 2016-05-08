@@ -4,6 +4,7 @@
 #include "ieompp/types.hpp"
 
 #include <complex>
+#include <tuple>
 #include <vector>
 
 namespace ieompp
@@ -46,6 +47,7 @@ namespace ieompp
             typename std::vector<Operator>::const_iterator find_first_displaced_operator() const;
             typename std::vector<Operator>::iterator find_first_displaced_operator();
 
+            std::tuple<bool, std::size_t> effect() const;
 
             /*!
              * @brief Check if two terms are equal
@@ -117,6 +119,9 @@ namespace ieompp
 
         template <typename Term, bool Erase = true>
         void remove_vanishing_terms(TermList<Term>& terms);
+
+        template <typename Term>
+        void remove_forbidden(TermList<Term>& terms);
     }
 }
 
