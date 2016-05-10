@@ -95,6 +95,7 @@ namespace ieompp
                 auto commutator = algebra::order_operators(commutator_tmp);
                 commutator_tmp.clear();
                 algebra::remove_vanishing_terms(commutator);
+                algebra::remove_forbidden(commutator);
 
                 // iterate over all terms in the commutator
                 for(auto& new_term : commutator) {
@@ -203,22 +204,7 @@ namespace ieompp
         template <typename Hamiltonian>
         std::ostream& operator<<(std::ostream& strm, const Agenda<Hamiltonian>& agenda)
         {
-            strm << "terms:" << std::endl;
-            for(auto& term : agenda.system().terms) strm << term << std::endl;
-            strm << std::endl << std::endl;
-
-            strm << "results:" << std::endl;
-            std::size_t i = 0;
-            for(auto& line : agenda.system().coefficients) {
-                strm << agenda.system().terms[i] << ":" << std::endl;
-                for(auto& entry : line) {
-                    auto term      = agenda.system().terms[entry.index];
-                    term.prefactor = entry.prefactor;
-                    strm << "\t" << term << std::endl;
-                }
-                ++i;
-                strm << std::endl;
-            }
+            strm << agenda.system();
             return strm;
         }
     }

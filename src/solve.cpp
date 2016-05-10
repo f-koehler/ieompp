@@ -17,6 +17,7 @@ int main()
     hubbard::Hamiltonian<decltype(term)> hamiltonian;
     ieom::Agenda<decltype(hamiltonian)> agenda;
     agenda.commutate(term, 2, hamiltonian, real_space);
-
-    cout << agenda << endl;
+    ieom::DynamicalSystem<decltype(term), std::complex<double>> result(agenda.system());
+    agenda.reset();
+    cout << result << endl;
 }
