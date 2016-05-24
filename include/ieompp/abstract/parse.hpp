@@ -10,11 +10,11 @@ namespace ieompp
 {
     namespace abstract
     {
-        namespace parse
+        namespace parse_new
         {
-            namespace components {
-                //! string to use for operators
-                static const std::string operator_       = u8"c";
+            namespace components
+            {
+                static const std::string operator_symbol = u8"c";
 
                 //! range of the lowercase latin letters
                 static const std::string letters         = u8"a-z";
@@ -34,13 +34,77 @@ namespace ieompp
                 //! range of arrows
                 static const std::string arrows          = u8"←↑↓→";
 
+                //! special symbols
+                static const std::string symbols         = u8"\\-\\+_'";
+
+                //! allowed characters in a spatial index
+                static const std::string index =
+                    letters + letters_capital + numbers + greek + greek_capital + symbols;
+
+                //! allowed characters in a spin
+                static const std::string spin =
+                    letters + letters_capital + numbers + greek + greek_capital + arrows + symbols;
+            }
+
+            namespace regexes
+            {
+                static const std::string str_exponent  = u8"(†|\\\\dagger)";
+                static const std::string str_index     = "([" + components::index + "]+)";
+                static const std::string str_spin      = "([" + components::spin + "]+)";
+                // TODO: whitespaces?
+                static const std::string str_subscript = "(?:\\{" + str_index + "," + str_spin + "\\})";
+                static const std::string str_creator =
+                    "(" + components::operator_symbol + ")(?:" + "\\_" + str_subscript + "\\^"
+                    + str_exponent + "|" + "\\^" + str_exponent + "\\_" + str_subscript + ")";
+                static const std::string str_annihilator =
+                    "(" + components::operator_symbol + ")\\_" + str_subscript;
+                static const std::string str_commutator = "\\[(.*);(.*)\\]";
+
+                static const std::regex exponent(str_exponent);
+                static const std::regex index(str_index);
+                static const std::regex spin(str_spin);
+                static const std::regex subscript(str_subscript);
+                static const std::regex creator(str_creator);
+                static const std::regex annihilator(str_annihilator);
+                static const std::regex commutator(str_commutator);
+            }
+
+            std::tuple<bool, std::string, std::string> parse_commutator(const std::string& expr);
+            AbstractTerm parse_term(std::string expr);
+        }
+
+        namespace parse
+        {
+            namespace components {
+                //! string to use for operators
+                static const std::string operator_ = u8"c";
+
+                //! range of the lowercase latin letters
+                static const std::string letters = u8"a-z";
+
+                //! range of the uppercase latin letters
+                static const std::string letters_capital = u8"A-Z";
+
+                //! range of the arabic numbers
+                static const std::string numbers = u8"0-9";
+
+                //! range of the lowercase greek letters
+                static const std::string greek = u8"αβγδεζηθικλμνξοπρστνφχψω";
+
+                //! range of the upeprcase greek letters
+                static const std::string greek_capital = u8"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
+
+                //! range of arrows
+                static const std::string arrows = u8"←↑↓→";
+
 
                 //! allowed characters for an index
-                static const std::string index = letters + letters_capital + numbers + greek + greek_capital + "_'\\\\\\+\\-";
+                static const std::string index =
+                    letters + letters_capital + numbers + greek + greek_capital + "_'\\\\\\+\\-";
 
                 //! allowed charctaers for a spin index
-                static const std::string spin  = letters + letters_capital + numbers + greek + greek_capital + arrows + "_'\\\\\\+\\-";
-
+                static const std::string spin = letters + letters_capital + numbers + greek
+                                                + greek_capital + arrows + "_'\\\\\\+\\-";
 
                 //! structure of a term in the commutator
                 static const std::string commutator_term     = u8"\\s*(.+)\\s*";

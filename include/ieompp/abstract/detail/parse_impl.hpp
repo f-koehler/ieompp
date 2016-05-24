@@ -4,6 +4,29 @@ namespace ieompp
 {
     namespace abstract
     {
+        namespace parse_new
+        {
+            std::tuple<bool, std::string, std::string> parse_commutator(const std::string& expr)
+            {
+                std::smatch m;
+                bool result = std::regex_match(expr, m, regexes::commutator);
+                return std::make_tuple(result, m[1], m[2]);
+            }
+
+            AbstractTerm parse_term(std::string expr)
+            {
+                AbstractTerm t;
+                std::smatch m_c, m_a;
+
+                auto pos = expr.begin();
+                do {
+                    /* bool found_creator = std::regex_search(pos, expr.end(), m_c, regexes::creator); */
+                    /* bool found_annihilator = std::regex_search(pos, expr.end(), m_c, regexes::creator); */
+                } while(true);
+                return t;
+            }
+        }
+
         namespace parse
         {
             std::tuple<bool, std::string, std::string> is_commutator(const std::string& expression)
