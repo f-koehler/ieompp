@@ -11,12 +11,12 @@ namespace ieompp
     struct Pi {
         static const Real value;
     };
-    
+
     template <typename Real>
     struct HalfPi {
         static const Real value;
     };
-    
+
     template <typename Real>
     struct TwoPi {
         static const Real value;
@@ -29,7 +29,7 @@ namespace ieompp
 
     template <typename Real>
     const Real HalfPi<Real>::value = boost::math::constants::half_pi<Real>();
-    
+
     template <typename Real>
     const Real TwoPi<Real>::value = boost::math::constants::two_pi<Real>();
 #else
@@ -44,7 +44,7 @@ namespace ieompp
     const long double Pi<long double>::value =
         3.14159265358979323851280895940618620443274267017841339111328125l;
 
-    
+
     template <>
     const float HalfPi<float>::value = 1.57079637050628662109375f;
 

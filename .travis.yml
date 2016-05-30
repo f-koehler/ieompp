@@ -8,10 +8,8 @@ addons:
             - ubuntu-toolchain-r-test
         packages:
             - clang-3.7
-            - doxygen
             - g++-5
             - gcc-5
-            - graphviz
 
 cache:
     directories:
@@ -31,7 +29,5 @@ script:
     - cmake --version
     - mkdir build
     - cd build
-    - cmake -Dieompp_ENABLE_DOC=on ..
+    - cmake ..
     - make -j$(nproc)
-    - make test
-    - make doc

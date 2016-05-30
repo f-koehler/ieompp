@@ -1,12 +1,5 @@
-# c++
-build
-include/ieompp/config.hpp
-*.kdev4
-external/eigen
-
-# python
 *.pyc
-
-# vim
 *.session
-*.swp
+build/*
+external/eigen
+include/ieompp/version.hpp

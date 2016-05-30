@@ -1,9 +1,0 @@
-[submodule "catch"]
-	path = external/catch
-	url = https://github.com/philsquared/Catch.git
-[submodule "benchmark"]
-	path = external/benchmark
-	url = https://github.com/google/benchmark.git
-[submodule "quicli"]
-	path = external/quicli
-	url = https://github.com/f-koehler/quicli.git

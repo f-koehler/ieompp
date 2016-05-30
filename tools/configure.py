@@ -2,6 +2,8 @@
 from subprocess import check_output
 from os.path import exists
 
+path = "include/ieompp/version.hpp"
+
 try:
     version = check_output(["git", "describe", "--dirty"]).decode().strip()
 except:
@@ -20,14 +22,14 @@ config = (
     "#endif"
 ) % (version)
 
-if not exists("include/ieompp/config.hpp"):
-    with open("include/ieompp/config.hpp", "w") as f:
+if not exists(path):
+    with open(path, "w") as f:
         f.write(config)
     exit()
 
-with open("include/ieompp/config.hpp") as f:
+with open(path) as f:
     current_config = f.read()
 
 if config != current_config:
-    with open("include/ieompp/config.hpp", "w") as f:
+    with open(path, "w") as f:
         f.write(config)

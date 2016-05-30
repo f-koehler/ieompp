@@ -3,7 +3,7 @@ ColumnLimit: 100
 IndentWidth: 4
 
 Language: Cpp
-AccessModifierOffset: 0
+#AccessModifierOffset: 0
 # AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: true
 AlignOperands: true
