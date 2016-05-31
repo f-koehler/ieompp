@@ -16,8 +16,8 @@ include(cmake/warnings.cmake)
 include(cmake/native.cmake)
 
 # create version.hpp
-include(cmake/version-script.cmake)
-run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
+# include(cmake/version-script.cmake)
+# run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
 # fetch Eigen as a tarball
 include(cmake/get-eigen.cmake)
