@@ -4,25 +4,38 @@ sudo: false
 addons:
     apt:
         sources:
-            - llvm-toolchain-precise-3.7
+            # - llvm-toolchain-precise-3.5
+            # - llvm-toolchain-precise-3.6
+            # - llvm-toolchain-precise-3.7
+            # - llvm-toolchain-precise-3.8
             - ubuntu-toolchain-r-test
         packages:
-            - clang-3.7
+            # - clang-3.5
+            # - clang-3.6
+            # - clang-3.7
+            # - clang-3.8
+            - g++-4.9
             - g++-5
+            - g++-6
+            - gcc-4.9
             - gcc-5
+            - gcc-6
             - python3
 
 cache:
     directories:
         - cmake-3.5.2
 
-compiler:
-    - gcc
-    - clang
+matrix:
+  include:
+    - compiler: "gcc-4.9"
+      env: CC=gcc-4.9 CXX=g++-4.9
+    - compiler: "gcc-5"
+      env: CC=gcc-5 CXX=g++-5
+    - compiler: "gcc-6"
+      env: CC=gcc-6 CXX=g++-6
 
 install:
-    - if [ "$CXX" == "g++" ]; then export CXX=g++-5; export CC=gcc-5; fi
-    - if [ "$CXX" == "clang++" ]; then export CXX=clang++-3.7; export CC=clang-3.7; fi
     - tools/travis-cmake.sh
     - export PATH=$PWD/cmake-3.5.2/dist/bin:$PATH
 
