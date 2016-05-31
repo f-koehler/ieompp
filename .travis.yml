@@ -117,7 +117,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then tools/travis-cmake.sh; fi
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then export PATH="$PWD/cmake-3.5.2/dist/bin:$PATH"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --force cmake; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cmake || brew upgrade cmake; fi
 
 script:
   - mkdir build
