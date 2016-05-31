@@ -2,6 +2,7 @@
 #define COMMUTATOR_HPP_
 
 #include <algorithm>
+#include <cassert>
 
 #include "ieompp/anticommutator.hpp"
 #include "ieompp/operator.hpp"
@@ -11,6 +12,9 @@ namespace ieompp
     template <typename Term, typename Container>
     void commutate(const Term& a, const Term& b, Container& c)
     {
+        static_assert(std::is_same<typename Container::value_type, Term>::value,
+                      "Container type must hold values of the same type as Term");
+
         auto& a_ops = a.operators;
         auto& b_ops = b.operators;
         auto n      = a_ops.size();

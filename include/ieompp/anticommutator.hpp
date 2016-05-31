@@ -10,12 +10,6 @@
 
 namespace ieompp
 {
-    template <typename Operator>
-    bool anticommutates(const Operator& op1, const Operator& op2)
-    {
-        return (op1.creator == op2.creator) || !op1.same_indices(op2);
-    }
-
     namespace detail
     {
         template <typename Operator, std::size_t I, std::size_t N>
@@ -44,6 +38,20 @@ namespace ieompp
                 }
             }
         };
+    }
+
+    template <typename Operator>
+    typename std::enable_if<!has_symbolic_index<Operator>::value, bool>::type
+    anticommutates(const Operator& op1, const Operator& op2)
+    {
+        return (op1.creator == op2.creator) || !op1.same_indices(op2);
+    }
+
+    template <typename Operator>
+    typename std::enable_if<has_symbolic_index<Operator>::value, bool>::type
+    anticommutates(const Operator& op1, const Operator& op2)
+    {
+        return (op1.creator == op2.creator);
     }
 
     template <typename Operator>

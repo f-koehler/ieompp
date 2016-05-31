@@ -10,6 +10,7 @@ addons:
             - clang-3.7
             - g++-5
             - gcc-5
+            - python3
 
 cache:
     directories:

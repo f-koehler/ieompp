@@ -25,3 +25,4 @@ get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(${CMAKE_SOURCE_DIR}/external/eigen)
 
 add_executable(main main.cpp)
+add_executable(example example.cpp)

@@ -3,6 +3,8 @@
 
 #include <algorithm>
 #include <initializer_list>
+#include <iterator>
+#include <ostream>
 #include <vector>
 
 #include "ieompp/symbolic/kronecker.hpp"
@@ -13,26 +15,26 @@ namespace ieompp
     {
         template <typename ValueT, typename ContainerT = std::vector<Kronecker>>
         struct Prefactor {
-            typename Value     = ValueT;
-            typename Container = ContainerT;
+            using Value     = ValueT;
+            using Container = ContainerT;
 
             Value value;
             Container kroneckers;
 
-            const Prefactor& operator*=(const Kronecker& rhs)
+            Prefactor& operator*=(const Kronecker& rhs)
             {
                 kroneckers.push_back(rhs);
                 return *this;
             }
 
-            const Prefactor& operator*=(const std::vector<Kronecker>& rhs)
+            Prefactor& operator*=(const std::vector<Kronecker>& rhs)
             {
                 std::copy(rhs.begin(), rhs.end(), std::back_inserter(kroneckers));
                 return *this;
             }
 
             template <typename Value_, typename Container_>
-            const Prefactor& operator*=(const Prefactor<Value_, Container_>& rhs)
+            Prefactor& operator*=(const Prefactor<Value_, Container_>& rhs)
             {
                 std::copy(rhs.kroneckers.begin(), rhs.kroneckers.end(),
                           std::back_inserter(kroneckers));
@@ -40,13 +42,42 @@ namespace ieompp
 
                 return *this;
             }
+
+            template <typename Number>
+            Prefactor& operator*=(const Number& number)
+            {
+                value *= number;
+                return *this;
+            }
+
+            template <typename Value_, typename Container_>
+            Prefactor operator*(const Prefactor<Value_, Container_>& rhs) const
+            {
+                Prefactor copy(*this);
+                copy *= rhs;
+                return copy;
+            }
         };
 
         template <typename Value>
-        Prefactor<Value> make_prefactor(const Value& val,
-                                        std::initializer_list<Kronecker> kroneckers)
+        Prefactor<Value> make_prefactor(
+            const Value& val,
+            std::initializer_list<Kronecker> kroneckers = std::initializer_list<Kronecker>())
         {
             return Prefactor<Value>{val, kroneckers};
+        }
+
+        template <typename Value, typename Container>
+        std::ostream& operator<<(std::ostream& strm, const Prefactor<Value, Container>& rhs)
+        {
+            strm << rhs.value;
+            if(!rhs.kroneckers.empty()) {
+                strm << u8" ⋅ ";
+                std::copy(rhs.kroneckers.begin(), --rhs.kroneckers.end(),
+                          std::ostream_iterator<Kronecker>(strm, " "));
+                strm << rhs.kroneckers.back();
+            }
+            return strm;
         }
     }
 }
