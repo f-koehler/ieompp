@@ -2,40 +2,29 @@ language: cpp
 sudo: false
 
 addons:
-  apt:
-    packages:
-      - python3
+    apt:
+        sources:
+            - llvm-toolchain-precise-3.8
+            - ubuntu-toolchain-r-test
+        packages:
+            - clang-3.8
+            - g++-4.9
+            - g++-5
+            - g++-6
+            - gcc-4.9
+            - gcc-5
+            - gcc-6
+            - python3
 
 cache:
     directories:
         - cmake-3.5.2
 
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          souces:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env: COMPILER=g++-4.9
-    - compiler: gcc
-      addons:
-        apt:
-          souces:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
-    - compiler: gcc
-      addons:
-        apt:
-          souces:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=g++-6
+compiler:
+  - g++-4.9
+  - g++-5
+  - g++-6
+  - clang++-3.8
 
 install:
     - tools/travis-cmake.sh
