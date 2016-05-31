@@ -120,6 +120,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cmake || brew upgrade cmake; fi
 
 script:
+  - git submodule update --init --recursive
   - mkdir build
   - cd build
   - CXX=$COMPILER_CXX CC=$COMPILER_CC cmake ..

@@ -3,8 +3,6 @@
 
 #include <type_traits>
 
-#include <Eigen/Dense>
-
 namespace ieompp
 {
     template <typename Vector>

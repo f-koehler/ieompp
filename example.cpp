@@ -24,8 +24,8 @@ int main()
         {ieompp::make_creator(Index{1}, Spin{1}), ieompp::make_annihilator(Index{1}, Spin{1})});
     auto interaction = ieompp::make_term(
         ieompp::symbolic::make_prefactor(1.),
-        {ieompp::make_creator(Index{1}, Spin{1}), ieompp::make_annihilator(Index{1}, Spin{1}),
-         ieompp::make_creator(Index{2}, Spin{2}), ieompp::make_annihilator(Index{2}, Spin{2})});
+        {ieompp::make_creator(Index{1}, Spin{1}), ieompp::make_annihilator(Index{2}, Spin{1}),
+         ieompp::make_creator(Index{3}, Spin{2}), ieompp::make_annihilator(Index{4}, Spin{2})});
 
     using Term     = decltype(term1);
     using Operator = typename Term::Operator;

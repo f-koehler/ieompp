@@ -22,7 +22,14 @@ include(cmake/native.cmake)
 # fetch Eigen as a tarball
 include(cmake/get-eigen.cmake)
 get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
-include_directories(${CMAKE_SOURCE_DIR}/external/eigen)
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
 add_executable(main main.cpp)
 add_executable(example example.cpp)
+
+# option to enable unit testing
+option(ieompp_ENABLE_TESTS "Enable unit tests" ON)
+if(${ieompp_ENABLE_TESTS})
+    enable_testing()
+    add_subdirectory(tests)
+endif()
