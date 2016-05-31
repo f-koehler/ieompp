@@ -17,5 +17,5 @@ if not os.path.exists("/tmp/ieompp-render"):
     os.mkdir("/tmp/ieompp-render")
 name = time.strftime("%H-%M-%S")
 print(tex_code)
-p = subprocess.Popen(["lualatex", "--jobname=" + name, "--output-directory=/tmp/ieompp-render"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+p = subprocess.Popen(["xelatex", "--jobname=" + name, "--output-directory=/tmp/ieompp-render"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 stdout, stderr = p.communicate(tex_code.encode())

@@ -13,15 +13,51 @@ namespace ieompp
         static constexpr int IndexTypeMomentum = 1;
         static constexpr int IndexTypeSpin     = 2;
 
+        template <int IndexType>
+        struct default_symbol;
+
+        template <>
+        struct default_symbol<IndexTypeSpace> {
+            static const std::string symbol;
+        };
+
+        template <>
+        struct default_symbol<IndexTypeMomentum> {
+            static const std::string symbol;
+        };
+
+        template <>
+        struct default_symbol<IndexTypeSpin> {
+            static const std::string symbol;
+        };
+
+        const std::string default_symbol<IndexTypeSpace>::symbol("r");
+        const std::string default_symbol<IndexTypeMomentum>::symbol("k");
+        const std::string default_symbol<IndexTypeSpin>::symbol(u8"σ");
+
         template <typename ValueT, int IndexType>
         struct Index {
             using Value = ValueT;
 
             static constexpr int type = IndexType;
-            Value value;
 
-            bool operator==(const Index& rhs) const { return value == rhs.value; }
-            bool operator!=(const Index& rhs) const { return value != rhs.value; }
+            Value value;
+            std::string symbol;
+
+            Index() : value(0), symbol(default_symbol<IndexType>::symbol) {}
+            Index(const Value& val, const std::string& sym = default_symbol<IndexType>::symbol)
+                : value(val), symbol(sym)
+            {
+            }
+
+            bool operator==(const Index& rhs) const
+            {
+                return (value == rhs.value) && (symbol == rhs.symbol);
+            }
+            bool operator!=(const Index& rhs) const
+            {
+                return (value != rhs.value) || (symbol != rhs.symbol);
+            }
         };
 
         template <typename Value>
@@ -61,14 +97,14 @@ namespace ieompp
         template <typename Value>
         std::ostream& operator<<(std::ostream& strm, const MomentumIndex<Value>& index)
         {
-            strm << "k_" << index.value;
+            strm << index.symbol << "_" << index.value;
             return strm;
         }
 
         template <typename Value>
         std::ostream& operator<<(std::ostream& strm, const SpinIndex<Value>& index)
         {
-            strm << u8"σ_" << index.value;
+            strm << index.symbol << "_" << index.value;
             return strm;
         }
 
