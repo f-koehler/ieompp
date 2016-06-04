@@ -1,8 +1,9 @@
-#ifndef OPERATOR_HPP_
-#define OPERATOR_HPP_
+#ifndef IEOMPP_OPERATOR_HPP_
+#define IEOMPP_OPERATOR_HPP_
 
 #include <ostream>
 #include <tuple>
+#include <type_traits>
 
 #include "ieompp/tuple.hpp"
 
@@ -170,21 +171,21 @@ namespace ieompp
     }
 
     template <std::size_t I, typename Index>
-    constexpr const typename std::enable_if<I == 0, Index&>::type&
+    constexpr typename std::enable_if<I == 0, const Index&>::type&
     get_index(const Operator<Index>& op)
     {
         return op.index;
     }
 
     template <std::size_t I, typename Index1, typename Index2>
-    constexpr const typename std::enable_if<I == 0, Index1&>::type&
+    constexpr typename std::enable_if<I == 0, const Index1&>::type&
     get_index(const Operator<Index1, Index2>& op)
     {
         return op.index1;
     }
 
     template <std::size_t I, typename Index1, typename Index2>
-    constexpr const typename std::enable_if<I == 1, Index2&>::type&
+    constexpr typename std::enable_if<I == 1, const Index2&>::type&
     get_index(const Operator<Index1, Index2>& op)
     {
         return op.index2;
@@ -197,11 +198,11 @@ namespace ieompp
         return std::get<I>(op.indices);
     }
 
-    template <typename Operator>
-    bool anticommutates(const Operator& op1, const Operator& op2)
+    template <std::size_t I, typename OperatorT>
+    struct index_type
     {
-        return (op1.creator == op2.creator) || !op1.same_indices(op2);
-    }
+        using type = decltype(get_index<I>(OperatorT()));
+    };
 
     template <typename Index>
     std::ostream& operator<<(std::ostream& strm, const Operator<Index>& op)
@@ -227,6 +228,29 @@ namespace ieompp
         if(op.creator) strm << u8"^†";
         return strm;
     }
+
+    namespace detail
+    {
+        template <typename Operator, std::size_t I, std::size_t N>
+        struct has_symbolic_index_helper {
+            static constexpr bool value =
+                !std::is_fundamental<typename index_type<I, Operator>::type>::value
+                || has_symbolic_index_helper<Operator, I + 1, N>::value;
+        };
+
+        template <typename Operator, std::size_t N>
+        struct has_symbolic_index_helper<Operator, N, N> {
+            static constexpr bool value =
+                !std::is_fundamental<typename index_type<N, Operator>::type>::value;
+        };
+    }
+
+    template <typename Operator>
+    struct has_symbolic_index
+    {
+        static constexpr bool value =
+            detail::has_symbolic_index_helper<Operator, 0, Operator::number_of_indices - 1>::value;
+    };
 }
 
 #endif

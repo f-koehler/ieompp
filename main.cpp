@@ -1,10 +1,13 @@
+#include <complex>
 #include <iostream>
+#include <typeinfo>
 using namespace std;
 
-#include "ieompp/operator.hpp"
-#include "ieompp/tuple.hpp"
+#include "ieompp/anticommutator.hpp"
+#include "ieompp/symbolic/index.hpp"
+#include "ieompp/hubbard.hpp"
 
 int main()
 {
-    cout << ieompp::Operator<int, int>::number_of_indices << endl;
+    ieompp::momentum_space::Hamiltonian<double> H;
 }

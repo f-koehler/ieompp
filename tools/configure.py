@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/python3
 from subprocess import check_output
 from os.path import exists
 
