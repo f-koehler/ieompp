@@ -1,5 +1,0 @@
-add_ieompp_test("abstract.commutator" test_operator.cpp)
-add_ieompp_test("abstract.operator"   test_operator.cpp)
-add_ieompp_test("abstract.parse"      test_parse.cpp)
-add_ieompp_test("abstract.prefactor"  test_prefactor.cpp)
-add_ieompp_test("abstract.simplify"   test_simplify.cpp)
