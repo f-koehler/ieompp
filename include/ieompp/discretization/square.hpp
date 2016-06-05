@@ -68,9 +68,7 @@ namespace ieompp
                 typename std::enable_if<std::is_same<Index, IndexT_>::value, Vector>::type
                 operator[](const IndexT_& i) const;
 
-                template <typename VectorT>
-                typename std::enable_if<std::is_same<Vector, VectorT>::value, Index>::type
-                operator()(VectorT v) const;
+                Index operator()(Vector v) const;
         };
     }
 }

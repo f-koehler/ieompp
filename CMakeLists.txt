@@ -26,7 +26,8 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
 add_executable(main main.cpp)
 add_executable(example example.cpp)
-add_executable(commutators_real_space commutators_real_space.cpp)
+add_executable(commutators_real_space_1d commutators_real_space_1d.cpp)
+add_executable(commutators_real_space_2d commutators_real_space_2d.cpp)
 
 # option to enable unit testing
 option(ieompp_ENABLE_TESTS "Enable unit tests" ON)

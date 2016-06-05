@@ -217,11 +217,8 @@ namespace ieompp
         }
 
         template <typename Real, typename Index>
-        template <typename VectorT>
-        typename std::enable_if<std::is_same<typename SquareDiscretization<Real, Index>::Vector,
-                                             VectorT>::value,
-                                Index>::type SquareDiscretization<Real, Index>::
-        operator()(VectorT v) const
+        Index SquareDiscretization<Real, Index>::
+        operator()(typename SquareDiscretization<Real, Index>::Vector v) const
         {
             while(v(0) < _x_min) v(0) += _x_length;
             while(v(0) > _x_max) v(0) -= _x_length;
