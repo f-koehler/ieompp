@@ -9,5 +9,8 @@ using namespace std;
 
 int main()
 {
-    ieompp::momentum_space::Hamiltonian<double> H;
+    using Op = ieompp::Operator<int>;
+    Op op1{true, 0};
+    auto op2 = ieompp::make_creator(0);
+    cout << (op1 == op2) << endl;
 }

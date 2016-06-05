@@ -19,9 +19,13 @@ namespace ieompp
         Container operators;
     };
 
-    template <typename Prefactor, typename Operator>
-    Term<Prefactor, Operator> make_term(const Prefactor& prefactor, std::initializer_list<Operator> operators) {
-        return Term<Prefactor, Operator>{prefactor, operators};
+    template <typename Prefactor, typename Operator, typename Container = std::vector<Operator>>
+    Term<Prefactor, Operator> make_term(Prefactor&& prefactor,
+                                        std::initializer_list<Operator> operators)
+    {
+        return Term<Prefactor, Operator>{
+            typename std::decay<Prefactor>::type(std::forward<Prefactor>(prefactor)),
+            Container{operators}};
     }
 
     template <typename Prefactor, typename Operator, typename Container>

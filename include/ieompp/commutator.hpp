@@ -12,6 +12,10 @@ namespace ieompp
     template <typename Term, typename Container>
     void commutate(const Term& a, const Term& b, Container& c)
     {
+        /* static_assert(std::is_same<typename Term::Prefactor, typename Term2::Prefactor>::value, */
+        /*               "Both term types must have the same prefactor type"); */
+        /* static_assert(std::is_same<typename Term::Operator, typename Term2::Operator>::value, */
+        /*               "Both term types must have the same operator type"); */
         static_assert(std::is_same<typename Container::value_type, Term>::value,
                       "Container type must hold values of the same type as Term");
 

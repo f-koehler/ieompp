@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <iterator>
 #include <ostream>
+#include <type_traits>
 #include <vector>
 
 #include "ieompp/symbolic/kronecker.hpp"
@@ -70,13 +71,17 @@ namespace ieompp
         template <typename Value, typename Container>
         std::ostream& operator<<(std::ostream& strm, const Prefactor<Value, Container>& rhs)
         {
-            strm << rhs.value;
-            if(!rhs.kroneckers.empty()) {
-                strm << u8" ⋅ ";
-                std::copy(rhs.kroneckers.begin(), --rhs.kroneckers.end(),
-                          std::ostream_iterator<Kronecker>(strm, " "));
-                strm << rhs.kroneckers.back();
+            if(rhs.kroneckers.empty()) {
+                strm << rhs.value;
+                return strm;
             }
+            if(std::is_signed<Value>::value && (rhs.value == Value(-1)))
+                strm << "-";
+            else if(rhs.value != Value(1))
+                strm << rhs.value << u8" ⋅ ";
+            std::copy(rhs.kroneckers.begin(), --rhs.kroneckers.end(),
+                      std::ostream_iterator<Kronecker>(strm, " "));
+            strm << rhs.kroneckers.back();
             return strm;
         }
     }
