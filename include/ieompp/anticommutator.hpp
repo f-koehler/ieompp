@@ -1,5 +1,5 @@
-#ifndef ANTICOMMUTATOR_HPP_
-#define ANTICOMMUTATOR_HPP_
+#ifndef IEOMPP_ANTICOMMUTATOR_HPP_
+#define IEOMPP_ANTICOMMUTATOR_HPP_
 
 #include <tuple>
 #include <type_traits>

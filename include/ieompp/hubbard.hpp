@@ -1,5 +1,5 @@
-#ifndef HUBBARD_HPP_
-#define HUBBARD_HPP_
+#ifndef IEOMPP_HUBBARD_HPP_
+#define IEOMPP_HUBBARD_HPP_
 
 #include <cassert>
 #include <cmath>

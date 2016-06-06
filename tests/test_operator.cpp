@@ -1,6 +1,8 @@
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
 #include "ieompp/operator.hpp"
+#include "ieompp/symbolic/index.hpp"
 
 TEST_CASE("index type", "[operator]")
 {
@@ -35,9 +37,7 @@ TEST_CASE("index type", "[operator]")
     }
 }
 
-// TODO: test get_index
-
-TEST_CASE("make creator", "[operator]")
+TEST_CASE("make creator & get_index", "[operator]")
 {
     SECTION("one index")
     {
@@ -73,7 +73,7 @@ TEST_CASE("make creator", "[operator]")
     }
 }
 
-TEST_CASE("make annihilator", "[operator]")
+TEST_CASE("make annihilator & get_index", "[operator]")
 {
     SECTION("one index")
     {
@@ -107,4 +107,11 @@ TEST_CASE("make annihilator", "[operator]")
         REQUIRE(ieompp::get_index<1>(op) == true);
         REQUIRE(ieompp::get_index<2>(op) == 'c');
     }
+}
+
+TEST_CASE("has symbolic index", "[operator] [symbolic]")
+{
+    REQUIRE(!ieompp::has_symbolic_index<ieompp::Operator<int>>::value);
+    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<int, ieompp::symbolic::SpaceIndex<int>>>::value));
+    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<ieompp::symbolic::SpaceIndex<int>, int>>::value));
 }

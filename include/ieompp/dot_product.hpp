@@ -1,5 +1,5 @@
-#ifndef IEOMPP_DOTPRODUCT_HPP_
-#define IEOMPP_DOTPRODUCT_HPP_
+#ifndef IEOMPP_DOT_PRODUCT_HPP_
+#define IEOMPP_DOT_PRODUCT_HPP_
 
 #include <type_traits>
 

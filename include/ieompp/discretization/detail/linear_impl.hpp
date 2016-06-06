@@ -1,3 +1,6 @@
+#ifndef IEOMPP_DISCRETIZATION_DETAIL_LINEAR_IMPL_HPP_
+#define IEOMPP_DISCRETIZATION_DETAIL_LINEAR_IMPL_HPP_
+
 #include <cassert>
 #include <cmath>
 
@@ -175,3 +178,5 @@ namespace ieompp
         }
     }
 }
+
+#endif

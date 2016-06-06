@@ -73,8 +73,8 @@ int main()
 {
     const auto term1 = ieompp::make_term(1., {ieompp::make_creator(0, true)});
     const auto term2 =
-        ieompp::make_term(1., {ieompp::make_creator(0, true), ieompp::make_creator(0, false),
-                               ieompp::make_annihilator(0, false)});
+        ieompp::make_term(1., {ieompp::make_creator(0, true), ieompp::make_creator(3, false),
+                               ieompp::make_annihilator(6, false)});
 
     commutate_H_kin(term1);
     commutate_H_int(term1);

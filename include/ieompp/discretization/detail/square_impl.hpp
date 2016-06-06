@@ -1,3 +1,6 @@
+#ifndef IEOMPP_DISCRETIZATION_DETAIL_SQUARE_IMPL_HPP_
+#define IEOMPP_DISCRETIZATION_DETAIL_SQUARE_IMPL_HPP_
+
 #include "ieompp/discretization/square.hpp"
 
 #include <cassert>
@@ -230,3 +233,5 @@ namespace ieompp
         }
     }
 }
+
+#endif

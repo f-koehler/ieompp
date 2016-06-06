@@ -1,5 +1,5 @@
-#ifndef TERM_HPP_
-#define TERM_HPP_
+#ifndef IEOMPP_TERM_HPP_
+#define IEOMPP_TERM_HPP_
 
 #include <algorithm>
 #include <initializer_list>
