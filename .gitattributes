@@ -1,0 +1,8 @@
+*.cpp          text
+*.hpp          text
+*.md           text
+*.py           text
+*.yml          text
+
+CMakeLists.txt text
+.clang-format  text
