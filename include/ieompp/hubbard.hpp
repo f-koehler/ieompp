@@ -120,15 +120,11 @@ namespace ieompp
                             const auto k3_idx = space[k3];
 
                             container.push_back(
-                                make_term(t.prefactor * U / lattice.num(),
+                                make_term(t.prefactor * U / (2*lattice.num()),
                                           {make_creator(k1_idx, spin), make_creator(k2_idx, !spin),
                                            make_annihilator(k3_idx, !spin)}));
                         }
                     }
-                    // TODO: this term probably vanishes in normalized form
-                    Term&& new_term = t;
-                    new_term.prefactor *= -U / (2 * lattice.num());
-                    container.emplace_back(new_term);
                 } else
                     THROW(NotImplemented, "TODO");
             }
