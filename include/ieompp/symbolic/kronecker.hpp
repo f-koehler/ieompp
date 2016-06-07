@@ -2,6 +2,7 @@
 #define IEOMPP_SYMBOLIC_KRONECKER_HPP_
 
 #include <ostream>
+#include <string>
 
 #include "ieompp/symbolic/index.hpp"
 

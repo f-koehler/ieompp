@@ -2,10 +2,9 @@
 #define IEOMPP_DISCRETIZATION_LINEAR_HPP_
 
 #include <array>
-#include <tuple>
-#include <vector>
+#include <cstddef>
+#include <type_traits>
 
-#include "ieompp/constants.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
 
 namespace ieompp

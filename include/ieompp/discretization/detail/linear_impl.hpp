@@ -1,9 +1,12 @@
 #ifndef IEOMPP_DISCRETIZATION_DETAIL_LINEAR_IMPL_HPP_
 #define IEOMPP_DISCRETIZATION_DETAIL_LINEAR_IMPL_HPP_
 
+#include <array>
 #include <cassert>
 #include <cmath>
+#include <type_traits>
 
+#include "ieompp/constants.hpp"
 #include "ieompp/discretization/linear.hpp"
 
 namespace ieompp

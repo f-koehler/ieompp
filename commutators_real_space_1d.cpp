@@ -1,5 +1,8 @@
 #include <array>
 #include <iostream>
+#include <memory>
+#include <type_traits>
+#include <vector>
 using namespace std;
 
 #include "ieompp/commutator.hpp"

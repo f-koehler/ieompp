@@ -1,9 +1,13 @@
 #ifndef IEOMPP_DISCRETIZATION_DETAIL_SQUARE_IMPL_HPP_
 #define IEOMPP_DISCRETIZATION_DETAIL_SQUARE_IMPL_HPP_
 
-#include "ieompp/discretization/square.hpp"
-
+#include <algorithm>
+#include <array>
 #include <cassert>
+#include <cmath>
+#include <type_traits>
+
+#include "ieompp/discretization/square.hpp"
 
 #include "ieompp/constants.hpp"
 

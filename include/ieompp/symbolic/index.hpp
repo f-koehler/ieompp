@@ -1,7 +1,6 @@
 #ifndef IEOMPP_SYMBOLIC_INDEX_HPP_
 #define IEOMPP_SYMBOLIC_INDEX_HPP_
 
-#include <ostream>
 #include <sstream>
 #include <string>
 

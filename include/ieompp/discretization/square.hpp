@@ -2,7 +2,8 @@
 #define IEOMPP_DISCRETIZATION_SQUARE_HPP_
 
 #include <array>
-#include <functional>
+#include <cstddef>
+#include <type_traits>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"

@@ -1,6 +1,8 @@
 #ifndef IEOMPP_OPERATOR_HPP_
 #define IEOMPP_OPERATOR_HPP_
 
+#include <algorithm>
+#include <array>
 #include <ostream>
 #include <tuple>
 #include <type_traits>

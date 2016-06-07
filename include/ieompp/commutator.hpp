@@ -3,6 +3,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
+#include <iterator>
+#include <type_traits>
+#include <vector>
 
 #include "ieompp/anticommutator.hpp"
 #include "ieompp/operator.hpp"
