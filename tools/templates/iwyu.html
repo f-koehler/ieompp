@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>iwyu@ieompp</title>
+    <style>
+      // .log {
+      //   display:block;
+      //   white-space: pre;
+      //   border: 1px solid #333333;
+      // }
+    </style>
+  </head>
+  <body>
+    {% for result in results %}
+    <div>
+      <h3>{{ result[0] }}</h3>
+      <pre><code class="log">{{ result[1] }}</code></pre>
+    </div>
+    {% endfor %}
+  </body>
+</html>

@@ -1,6 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include <tuple>
+#include <type_traits>
+
 #include "ieompp/operator.hpp"
 #include "ieompp/symbolic/index.hpp"
 

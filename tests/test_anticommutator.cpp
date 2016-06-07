@@ -1,8 +1,11 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include <type_traits>
+
 #include "ieompp/anticommutator.hpp"
 #include "ieompp/operator.hpp"
+#include "ieompp/symbolic/index.hpp"
 
 TEST_CASE("anticommutates", "[anticommutator]")
 {

@@ -2,17 +2,21 @@
 
 import os
 import subprocess
+import jinja2
 
 source_files = [
     "commutators_real_space_1d.cpp",
     "commutators_real_space_2d.cpp",
-    "example.cpp"
+    "example.cpp",
+    "tests/test_anticommutator.cpp",
+    "tests/test_operator.cpp",
 ]
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 project_path = os.path.join(script_path, os.pardir)
 include_path = os.path.join(project_path, "include")
 external_path = os.path.join(project_path, "external")
+template_path = os.path.join(project_path, "tools", "templates")
 
 hpp_files = []
 for root, _, files in os.walk(include_path):
@@ -27,7 +31,7 @@ cxx_flags = [
     "-I", include_path
 ]
 
-iwyu_flags = []
+iwyu_flags = ["-Xiwyu", "--verbose=0"]
 for f in hpp_files:
     iwyu_flags.append("-Xiwyu")
     iwyu_flags.append("--check_also=" + f)
@@ -35,9 +39,25 @@ for f in hpp_files:
 source_files = [os.path.join(project_path, f) for f in source_files]
 basic_cmd = ["include-what-you-use"] + iwyu_flags + cxx_flags
 
+iwyu_output = []
 for f in source_files:
-    print("NEXT: " + f)
+    rel = os.path.relpath(f, project_path)
     cmd = basic_cmd + [f]
-    proc = subprocess.run(cmd)
-    print(proc.stderr)
-    print("\n\n")
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    stdout, stderr = proc.communicate()
+    stderr = stderr.decode()
+    stderr = stderr.replace("<", "&lt;")
+    stderr = stderr.replace(">", "&gt;")
+    print(stderr)
+    iwyu_output.append((rel, stderr))
+
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
+template = env.get_template("iwyu.html")
+html = template.render(results=iwyu_output)
+
+with open(os.path.join(project_path, "iwyu.html"), "w") as f:
+    f.write(html)
