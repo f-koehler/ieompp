@@ -5,6 +5,7 @@ import subprocess
 import jinja2
 
 source_files = [
+    "commutators.cpp",
     "commutators_real_space_1d.cpp",
     "commutators_real_space_2d.cpp",
     "example.cpp",
@@ -43,6 +44,7 @@ iwyu_output = []
 for f in source_files:
     rel = os.path.relpath(f, project_path)
     cmd = basic_cmd + [f]
+    print(rel)
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -52,7 +54,6 @@ for f in source_files:
     stderr = stderr.decode()
     stderr = stderr.replace("<", "&lt;")
     stderr = stderr.replace(">", "&gt;")
-    print(stderr)
     iwyu_output.append((rel, stderr))
 
 env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))

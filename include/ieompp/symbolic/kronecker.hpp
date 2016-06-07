@@ -18,6 +18,16 @@ namespace ieompp
             Kronecker(const Index& idx1, const Index& idx2) : a(str(idx1)), b(str(idx2))
             {
             }
+
+            bool operator==(const Kronecker& rhs) const
+            {
+                return ((a == rhs.a) && (b == rhs.b)) || ((a == rhs.b) && (b == rhs.a));
+            }
+            bool operator!=(const Kronecker& rhs) const
+            {
+                // TODO: write explicit form
+                return !(*this == rhs);
+            }
         };
 
         std::ostream& operator<<(std::ostream& strm, const Kronecker& kronecker)

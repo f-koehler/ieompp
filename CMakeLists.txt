@@ -26,6 +26,7 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
 add_executable(main main.cpp)
 add_executable(example example.cpp)
+add_executable(commutators commutators.cpp)
 add_executable(commutators_real_space_1d commutators_real_space_1d.cpp)
 add_executable(commutators_real_space_2d commutators_real_space_2d.cpp)
 

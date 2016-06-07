@@ -89,7 +89,7 @@ namespace ieompp
         template <typename Value>
         std::ostream& operator<<(std::ostream& strm, const SpaceIndex<Value>& index)
         {
-            strm << "r_" << index.value;
+            strm << index.symbol << "_" << index.value;
             return strm;
         }
 

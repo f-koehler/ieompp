@@ -63,7 +63,7 @@ void commutate_H_int(const ieompp::Term<double, ieompp::Operator<int, bool>>& te
         ieompp::commutate(interaction_term3, term, comm);
     }
 
-    cout << "(1/J)[H_int, " << term << "]:" << endl;
+    cout << "(1/U)[H_int, " << term << "]:" << endl;
     for(const auto& t : comm) cout << "\t" << t << endl;
     cout << endl;
 }
