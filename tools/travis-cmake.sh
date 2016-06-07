@@ -8,13 +8,18 @@ CMAKE_SHA512="7b08eb9f1b37993553f89c03eceedc465dc52b787dec99b78c74ebff2817d0aac9
 mkdir -p ${CMAKE_NAME}
 cd ${CMAKE_NAME}
 
+if [[ -e build.successful ]]; then
+    echo "cmake already built; skipping"
+    exit 0
+fi
+
 # download cmake tarball
-if [ ! -f ${CMAKE_NAME}.tar.gz ]; then
+if [[ ! -f ${CMAKE_NAME}.tar.gz ]]; then
     wget --no-check-certificate ${CMAKE_URL}
 fi
 
 # verify checksum
-if [ "${CMAKE_SHA512}" != "$(sha512sum ${CMAKE_NAME}.tar.gz)" ]; then
+if [[ "${CMAKE_SHA512}" != "$(sha512sum ${CMAKE_NAME}.tar.gz)" ]]; then
     echo "Bad checksum, aborting!"
     echo "$(sha512sum ${CMAKE_NAME}.tar.gz)"
     rm -f ${CMAKE_NAME}.tar.gz
@@ -29,3 +34,6 @@ mkdir -p build
 cd build
 CXX=g++ CC=gcc ../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist --system-curl --no-qt-gui
 CXX=g++ CC=gcc make -j$(nproc) && make -j$(nproc) install
+
+cd ..
+touch build.successful
