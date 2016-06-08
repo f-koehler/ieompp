@@ -13,6 +13,8 @@ if [[ -e build.successful ]]; then
     exit 0
 fi
 
+echo "cmake not present; building"
+
 # download cmake tarball
 if [[ ! -f ${CMAKE_NAME}.tar.gz ]]; then
     wget --no-check-certificate ${CMAKE_URL}
@@ -32,8 +34,8 @@ tar xf ${CMAKE_NAME}.tar.gz
 # create build dir
 mkdir -p build
 cd build
-CXX=g++ CC=gcc ../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist --system-curl --no-qt-gui
-CXX=g++ CC=gcc make -j$(nproc) && make -j$(nproc) install
+CC=gcc CXX=g++ ../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist --system-curl --no-qt-gui
+CC=gcc CXX=g++ make -j$(nproc) && make -j$(nproc) install
 
 cd ..
 touch build.successful
