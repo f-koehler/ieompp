@@ -1,7 +1,9 @@
 #ifndef IEOMPP_DISCRETIZATION_SQUARE_HPP_
 #define IEOMPP_DISCRETIZATION_SQUARE_HPP_
 
+#include <algorithm>
 #include <array>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <type_traits>

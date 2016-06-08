@@ -2,6 +2,7 @@
 #define IEOMPP_DISCRETIZATION_LINEAR_HPP_
 
 #include <array>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <type_traits>
