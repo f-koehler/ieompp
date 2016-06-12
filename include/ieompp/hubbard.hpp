@@ -80,7 +80,7 @@ namespace ieompp
                     p *= +2 * J;
 
                     Term&& new_term = t;
-                    new_term.prefactpr *= p;
+                    new_term.prefactor *= p;
                     container.emplace_back(new_term);
                 }
             }
@@ -93,6 +93,21 @@ namespace ieompp
                 const auto op2_creator = t.operators[1].creator;
                 const auto op3_creator = t.operators[2].creator;
                 if(op1_creator && op2_creator && !op3_creator) {
+                    const auto k1 = space[t.operators[0].index1];
+                    const auto k2 = space[t.operators[1].index1];
+                    const auto k3 = space[t.operators[2].index1];
+
+                    Prefactor p;
+                    for(auto& lattice_vector : lattice.lattice_vectors())
+                        p += std::cos(dot_product(k1, lattice_vector))
+                             + std::cos(dot_product(k2, lattice_vector))
+                             - std::cos(dot_product(k3, lattice_vector));
+                    p *= -2 * J;
+
+                    // TODO: calc prefactor direclty in new_term prefactor
+                    Term&& new_term    = t;
+                    new_term.prefactor = p;
+                    container.emplace_back(new_term);
                 } else
                     THROW(NotImplemented, u8"Currenlty only the c^† c^† c structure is supported!");
             }
