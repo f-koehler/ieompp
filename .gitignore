@@ -1,5 +1,6 @@
 *.pyc
 *.session
+*.swp
 build/*
 external/eigen
 include/ieompp/version.hpp
