@@ -8,111 +8,69 @@ namespace ieompp
 {
     namespace symbolic
     {
-        static constexpr int IndexTypeSpace    = 0;
-        static constexpr int IndexTypeMomentum = 1;
-        static constexpr int IndexTypeSpin     = 2;
-
-        template <int IndexType>
-        struct default_symbol;
-
-        template <>
-        struct default_symbol<IndexTypeSpace> {
-            static const std::string symbol;
+        enum IndexType : int {
+            IndexTypeUnspecified,
+            IndexTypeSpace,
+            IndexTypeMomentum,
+            IndexTypeSpin
         };
 
-        template <>
-        struct default_symbol<IndexTypeMomentum> {
-            static const std::string symbol;
-        };
-
-        template <>
-        struct default_symbol<IndexTypeSpin> {
-            static const std::string symbol;
-        };
-
-        const std::string default_symbol<IndexTypeSpace>::symbol("r");
-        const std::string default_symbol<IndexTypeMomentum>::symbol("k");
-        const std::string default_symbol<IndexTypeSpin>::symbol(u8"σ");
-
-        template <typename ValueT, int IndexType>
+        template <IndexType index_type>
         struct Index {
-            using Value = ValueT;
+            static constexpr IndexType type = index_type;
+            std::string index;
 
-            static constexpr int type = IndexType;
+            Index();
+            Index(const std::string& str);
+            Index(int i);
 
-            Value value;
-            std::string symbol;
-
-            Index() : value(0), symbol(default_symbol<IndexType>::symbol) {}
-            Index(const Value& val, const std::string& sym = default_symbol<IndexType>::symbol)
-                : value(val), symbol(sym)
-            {
-            }
-
-            bool operator==(const Index& rhs) const
-            {
-                return (value == rhs.value) && (symbol == rhs.symbol);
-            }
-            bool operator!=(const Index& rhs) const
-            {
-                return (value != rhs.value) || (symbol != rhs.symbol);
-            }
+            bool operator==(const Index& rhs) const { return index == rhs.index; }
+            bool operator!=(const Index& rhs) const { return index != rhs.index; }
         };
 
-        template <typename Value>
-        using SpaceIndex = Index<Value, IndexTypeSpace>;
-
-        template <typename Value>
-        using MomentumIndex = Index<Value, IndexTypeMomentum>;
-
-        template <typename Value>
-        using SpinIndex = Index<Value, IndexTypeSpin>;
-
-        template <typename IndexT>
-        struct is_space_index {
-            using Index                 = IndexT;
-            static constexpr bool value = (Index::type == IndexTypeSpace);
-        };
-
-        template <typename IndexT>
-        struct is_momentum_index {
-            using Index                 = IndexT;
-            static constexpr bool value = (Index::type == IndexTypeMomentum);
-        };
-
-        template <typename IndexT>
-        struct is_spin_index {
-            using Index                 = IndexT;
-            static constexpr bool value = (Index::type == IndexTypeSpin);
-        };
-
-        template <typename Value>
-        std::ostream& operator<<(std::ostream& strm, const SpaceIndex<Value>& index)
+        template <>
+        Index<IndexTypeSpace>::Index() : index("r")
         {
-            strm << index.symbol << "_" << index.value;
-            return strm;
         }
 
-        template <typename Value>
-        std::ostream& operator<<(std::ostream& strm, const MomentumIndex<Value>& index)
+        template <>
+        Index<IndexTypeMomentum>::Index() : index("k")
         {
-            strm << index.symbol << "_" << index.value;
-            return strm;
         }
 
-        template <typename Value>
-        std::ostream& operator<<(std::ostream& strm, const SpinIndex<Value>& index)
+        template <>
+        Index<IndexTypeSpin>::Index() : index(u8"σ")
         {
-            strm << index.symbol << "_" << index.value;
-            return strm;
         }
 
-        template <typename Value, int IndexType>
-        std::string str(const Index<Value, IndexType>& index)
+        template <IndexType index_type>
+        Index<index_type>::Index(const std::string& str) : index(str)
         {
-            std::ostringstream strm;
-            strm << index;
-            return strm.str();
+        }
+
+        template <>
+        Index<IndexTypeSpace>::Index(int i) : index("r_" + std::to_string(i))
+        {
+        }
+
+        template <>
+        Index<IndexTypeMomentum>::Index(int i) : index("k_" + std::to_string(i))
+        {
+        }
+
+        template <>
+        Index<IndexTypeSpin>::Index(int i) : index(u8"σ_" + std::to_string(i))
+        {
+        }
+
+        using SpaceIndex    = Index<IndexTypeSpace>;
+        using MomentumIndex = Index<IndexTypeMomentum>;
+        using SpinIndex     = Index<IndexTypeSpin>;
+
+        template <IndexType index_type>
+        std::ostream& operator<<(std::ostream& strm, const Index<index_type>& index)
+        {
+            return strm << index.index;
         }
     }
 }

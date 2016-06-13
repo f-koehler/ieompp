@@ -31,7 +31,7 @@ TEST_CASE("anticommutates", "[anticommutator]")
 
     SECTION("symbolic index")
     {
-        using Index      = ieompp::symbolic::SpaceIndex<int>;
+        using Index      = ieompp::symbolic::SpaceIndex;
         auto creator1    = ieompp::make_creator(Index(0));
         auto creator2    = ieompp::make_creator(Index(1));
         auto annihilator = ieompp::make_annihilator(Index(0));
@@ -63,8 +63,8 @@ TEST_CASE("anticommutator", "[anticommutator]")
 
     SECTION("two symbolic indices")
     {
-        using Index1 = ieompp::symbolic::SpaceIndex<int>;
-        using Index2 = ieompp::symbolic::SpinIndex<int>;
+        using Index1 = ieompp::symbolic::SpaceIndex;
+        using Index2 = ieompp::symbolic::SpinIndex;
 
         auto creator     = ieompp::make_creator(Index1(0), Index2(0));
         auto annihilator = ieompp::make_creator(Index1(0), Index2(0));

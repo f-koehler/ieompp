@@ -115,6 +115,6 @@ TEST_CASE("make annihilator & get_index", "[operator]")
 TEST_CASE("has symbolic index", "[operator] [symbolic]")
 {
     REQUIRE(!ieompp::has_symbolic_index<ieompp::Operator<int>>::value);
-    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<int, ieompp::symbolic::SpaceIndex<int>>>::value));
-    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<ieompp::symbolic::SpaceIndex<int>, int>>::value));
+    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<int, ieompp::symbolic::SpaceIndex>>::value));
+    REQUIRE((ieompp::has_symbolic_index<ieompp::Operator<ieompp::symbolic::SpaceIndex, int>>::value));
 }

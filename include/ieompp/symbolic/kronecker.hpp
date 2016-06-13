@@ -15,7 +15,7 @@ namespace ieompp
             std::string b;
 
             template <typename Index>
-            Kronecker(const Index& idx1, const Index& idx2) : a(str(idx1)), b(str(idx2))
+            Kronecker(const Index& idx1, const Index& idx2) : a(idx1.index), b(idx2.index)
             {
             }
 
