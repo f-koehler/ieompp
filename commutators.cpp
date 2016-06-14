@@ -64,7 +64,7 @@ int main()
     auto term2 = ieompp::make_term(ieompp::symbolic::make_prefactor(1.),
                                    {ieompp::make_creator(Index{"x_1"}, Spin{u8"↑"}),
                                     ieompp::make_creator(Index{"x_1"}, Spin{u8"↓"}),
-                                    ieompp::make_annihilator(Index{"x_1}"}, Spin{u8"↓"})});
+                                    ieompp::make_annihilator(Index{"x_1"}, Spin{u8"↓"})});
 
     commutate_H_kin(term1);
     commutate_H_int(term1);
