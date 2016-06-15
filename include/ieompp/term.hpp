@@ -18,6 +18,15 @@ namespace ieompp
 
         Prefactor prefactor;
         Container operators;
+
+        Term conjugate() const
+        {
+            Term conj{prefactor, {}};
+            std::reverse_copy(operators.begin(), operators.end(),
+                              std::back_inserter(conj.operators));
+            for(auto& op : conj.operators) op.creator = !op.creator;
+            return conj;
+        }
     };
 
     template <typename Prefactor, typename Operator, typename Container = std::vector<Operator>>
