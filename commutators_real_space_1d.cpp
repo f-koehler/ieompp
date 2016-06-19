@@ -9,12 +9,21 @@ using namespace std;
 #include "ieompp/discretization/linear.hpp"
 #include "ieompp/operator.hpp"
 #include "ieompp/term.hpp"
+#include "ieompp/term_checks.hpp"
 
-void commutate_H_kin(const ieompp::Term<double, ieompp::Operator<int, bool>>& term)
+using Operator = ieompp::Operator<int, bool>;
+using Term     = ieompp::Term<double, Operator>;
+
+bool check_term(const Term& t)
+{
+    return (ieompp::total_spin<1>(t) == 1) && (ieompp::total_creations(t) == 1);
+}
+
+void commutate_H_kin(const Term& term)
 {
     ieompp::discretization::LinearDiscretization<double, int> lattice(10, 1.);
     const std::array<bool, 2> spins{{false, true}};
-    std::vector<typename std::decay<decltype(term)>::type> comm;
+    std::vector<Term> comm;
 
     auto kinetic_term = ieompp::make_term(
         -1., {ieompp::make_creator(0, false), ieompp::make_annihilator(0, false)});
@@ -35,14 +44,17 @@ void commutate_H_kin(const ieompp::Term<double, ieompp::Operator<int, bool>>& te
     }
 
     cout << "(1/J)[H_kin, " << term << "]:" << endl;
-    for(const auto& t : comm) cout << "\t" << t << endl;
+    for(const auto& t : comm) {
+        cout << "\t" << t << endl;
+        assert(check_term(t));
+    }
     cout << endl;
 }
 
-void commutate_H_int(const ieompp::Term<double, ieompp::Operator<int, bool>>& term)
+void commutate_H_int(const Term& term)
 {
     ieompp::discretization::LinearDiscretization<double, int> lattice(10, 1.);
-    std::vector<typename std::decay<decltype(term)>::type> comm;
+    std::vector<Term> comm;
 
     auto interaction_term1 =
         ieompp::make_term(1., {ieompp::make_creator(0, true), ieompp::make_annihilator(0, true),
@@ -67,7 +79,10 @@ void commutate_H_int(const ieompp::Term<double, ieompp::Operator<int, bool>>& te
     }
 
     cout << "(1/U)[H_int, " << term << "]:" << endl;
-    for(const auto& t : comm) cout << "\t" << t << endl;
+    for(const auto& t : comm) {
+        cout << "\t" << t << endl;
+        assert(check_term(t));
+    }
     cout << endl;
 }
 
