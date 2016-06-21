@@ -148,7 +148,36 @@ namespace ieompp
             void generate_interaction_terms_3(const Term& t, const MomentumSpace& space,
                                               const Lattice& lattice, Container& container)
             {
-                THROW(NotImplemented, "TODO");
+                using Index  = typename Term::Operator::Index1;
+                using Spin   = typename Term::Operator::Index2;
+                static_assert(std::is_same<Spin, bool>::value,
+                              "Spin has to be bool at the moment!");
+
+                const auto& op1 = t.operators[0];
+                const auto& op2 = t.operators[1];
+                const auto& op3 = t.operators[2];
+                const auto op1_creator = op1.creator;
+                const auto op2_creator = op2.creator;
+                const auto op3_creator = op3.creator;
+                const auto N = lattice.num();
+                if(!(op1_creator && op2_creator && !op3_creator))
+                    THROW(NotImplemented, u8"Currenlty only the c^† c^† c structure is supported!");
+                if(!(op1.index2 && !op2.index2 && !op3.index2))
+                    THROW(NotImplemented, u8"only ↑↓↓ configurations is currently implemented!");
+
+                for(auto k1_idx : space) {
+                    const auto k3_idx = op3.index1;
+                    const auto k2     = space[op2.index1] + space[op1.index1] - space[k1_idx];
+                    const auto k2_idx = space[k2];
+                    auto prefactor    = t.prefactor * U;
+                    if(k1_idx != op1.index1)
+                        prefactor /= 2 * N;
+                    else
+                        prefactor /= N;
+                    container.push_back(make_term(prefactor, {make_creator(k1_idx, true),
+                                                              make_creator(k2_idx, false),
+                                                              make_annihilator(k3_idx, false)}));
+                }
             }
         };
     }

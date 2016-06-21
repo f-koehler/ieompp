@@ -5,40 +5,42 @@
 #include <vector>
 using namespace std;
 
-#include "ieompp/commutator.hpp"
+#include "ieompp/algebra/commutator.hpp"
+#include "ieompp/algebra/operator.hpp"
+#include "ieompp/algebra/term.hpp"
+#include "ieompp/algebra/term_checks.hpp"
 #include "ieompp/discretization/linear.hpp"
-#include "ieompp/operator.hpp"
-#include "ieompp/term.hpp"
-#include "ieompp/term_checks.hpp"
+namespace algebra        = ieompp::algebra;
+namespace discretization = ieompp::discretization;
 
-using Operator = ieompp::Operator<int, bool>;
-using Term     = ieompp::Term<double, Operator>;
+using Operator = algebra::Operator<int, bool>;
+using Term     = algebra::Term<double, Operator>;
 
 bool check_term(const Term& t)
 {
-    return (ieompp::total_spin<1>(t) == 1) && (ieompp::total_creations(t) == 1);
+    return (algebra::total_spin<1>(t) == 1) && (algebra::total_creations(t) == 1);
 }
 
 void commutate_H_kin(const Term& term)
 {
-    ieompp::discretization::LinearDiscretization<double, int> lattice(10, 1.);
+    discretization::LinearDiscretization<double, int> lattice(10, 1.);
     const std::array<bool, 2> spins{{false, true}};
     std::vector<Term> comm;
 
-    auto kinetic_term = ieompp::make_term(
-        -1., {ieompp::make_creator(0, false), ieompp::make_annihilator(0, false)});
+    auto kinetic_term = algebra::make_term(
+        -1., {algebra::make_creator(0, false), algebra::make_annihilator(0, false)});
     for(auto s : spins) {
         kinetic_term.operators[0].index2 = s;
         kinetic_term.operators[1].index2 = s;
         for(int i : lattice) {
             kinetic_term.operators[0].index1 = i;
             for(auto& vec : lattice.lattice_vectors()) {
-                auto j = lattice(lattice[i] - vec);
+                auto j                           = lattice(lattice[i] - vec);
                 kinetic_term.operators[1].index1 = j;
-                ieompp::commutate(kinetic_term, term, comm);
-                j = lattice(lattice[i] + vec);
+                algebra::commutate(kinetic_term, term, comm);
+                j                                = lattice(lattice[i] + vec);
                 kinetic_term.operators[1].index1 = j;
-                ieompp::commutate(kinetic_term, term, comm);
+                algebra::commutate(kinetic_term, term, comm);
             }
         }
     }
@@ -53,16 +55,16 @@ void commutate_H_kin(const Term& term)
 
 void commutate_H_int(const Term& term)
 {
-    ieompp::discretization::LinearDiscretization<double, int> lattice(10, 1.);
+    discretization::LinearDiscretization<double, int> lattice(10, 1.);
     std::vector<Term> comm;
 
-    auto interaction_term1 =
-        ieompp::make_term(1., {ieompp::make_creator(0, true), ieompp::make_annihilator(0, true),
-                               ieompp::make_creator(0, false), ieompp::make_annihilator(0, false)});
-    auto interaction_term2 =
-        ieompp::make_term(-.5, {ieompp::make_creator(0, true), ieompp::make_annihilator(0, true)});
-    auto interaction_term3 = ieompp::make_term(
-        -.5, {ieompp::make_creator(0, false), ieompp::make_annihilator(0, false)});
+    auto interaction_term1 = algebra::make_term(
+        1., {algebra::make_creator(0, true), algebra::make_annihilator(0, true),
+             algebra::make_creator(0, false), algebra::make_annihilator(0, false)});
+    auto interaction_term2 = algebra::make_term(
+        -.5, {algebra::make_creator(0, true), algebra::make_annihilator(0, true)});
+    auto interaction_term3 = algebra::make_term(
+        -.5, {algebra::make_creator(0, false), algebra::make_annihilator(0, false)});
     for(int i : lattice) {
         interaction_term1.operators[0].index1 = i;
         interaction_term1.operators[1].index1 = i;
@@ -73,9 +75,9 @@ void commutate_H_int(const Term& term)
         interaction_term3.operators[0].index1 = i;
         interaction_term3.operators[1].index1 = i;
 
-        ieompp::commutate(interaction_term1, term, comm);
-        ieompp::commutate(interaction_term2, term, comm);
-        ieompp::commutate(interaction_term3, term, comm);
+        algebra::commutate(interaction_term1, term, comm);
+        algebra::commutate(interaction_term2, term, comm);
+        algebra::commutate(interaction_term3, term, comm);
     }
 
     cout << "(1/U)[H_int, " << term << "]:" << endl;
@@ -89,10 +91,10 @@ void commutate_H_int(const Term& term)
 
 int main()
 {
-    const auto term1 = ieompp::make_term(1., {ieompp::make_creator(0, true)});
+    const auto term1 = algebra::make_term(1., {algebra::make_creator(0, true)});
     const auto term2 =
-        ieompp::make_term(1., {ieompp::make_creator(0, true), ieompp::make_creator(3, false),
-                               ieompp::make_annihilator(6, false)});
+        algebra::make_term(1., {algebra::make_creator(0, true), algebra::make_creator(3, false),
+                                algebra::make_annihilator(6, false)});
 
     commutate_H_kin(term1);
     commutate_H_int(term1);

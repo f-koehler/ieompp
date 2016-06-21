@@ -3,14 +3,14 @@
 #include <typeinfo>
 using namespace std;
 
-#include "ieompp/anticommutator.hpp"
-#include "ieompp/symbolic/index.hpp"
+#include "ieompp/algebra/anticommutator.hpp"
 #include "ieompp/hubbard.hpp"
+#include "ieompp/symbolic/index.hpp"
 
 int main()
 {
-    using Op = ieompp::Operator<int>;
+    using Op = ieompp::algebra::Operator<int>;
     Op op1{true, 0};
-    auto op2 = ieompp::make_creator(0);
+    auto op2 = ieompp::algebra::make_creator(0);
     cout << (op1 == op2) << endl;
 }

@@ -24,10 +24,14 @@ include(cmake/get-eigen.cmake)
 get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
-add_executable(main main.cpp)
-add_executable(commutators commutators.cpp)
-add_executable(commutators_real_space_1d commutators_real_space_1d.cpp)
-add_executable(commutators_real_space_2d commutators_real_space_2d.cpp)
+find_package(Boost REQUIRED)
+
+# enable OpenMP if possible
+find_package(OpenMP)
+if(${OPENMP_FOUND})
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
 # option to enable unit testing
 option(ieompp_ENABLE_TESTS "Enable unit tests" ON)
@@ -35,3 +39,8 @@ if(${ieompp_ENABLE_TESTS})
     enable_testing()
     add_subdirectory(tests)
 endif()
+
+add_executable(main main.cpp)
+add_executable(commutators commutators.cpp)
+add_executable(commutators_real_space_1d commutators_real_space_1d.cpp)
+add_executable(commutators_real_space_2d commutators_real_space_2d.cpp)
