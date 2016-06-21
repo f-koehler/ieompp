@@ -6,6 +6,7 @@ using namespace std;
 #include "ieompp/algebra/operator.hpp"
 #include "ieompp/algebra/term.hpp"
 #include "ieompp/symbolic/index.hpp"
+#include "ieompp/symbolic/kronecker.hpp"
 #include "ieompp/symbolic/prefactor.hpp"
 namespace algebra  = ieompp::algebra;
 namespace symbolic = ieompp::symbolic;

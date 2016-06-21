@@ -4,8 +4,6 @@
 #include <ostream>
 #include <string>
 
-#include "ieompp/symbolic/index.hpp"
-
 namespace ieompp
 {
     namespace symbolic

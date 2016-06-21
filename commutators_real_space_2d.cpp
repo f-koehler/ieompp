@@ -1,4 +1,5 @@
 #include <array>
+#include <cassert>
 #include <iostream>
 using namespace std;
 
@@ -22,7 +23,7 @@ void commutate_H_kin(const Term& term)
 {
     discretization::SquareDiscretization<double, int> lattice(10, 10, 1., 1.);
     const std::array<bool, 2> spins{{false, true}};
-    std::vector<typename std::decay<decltype(term)>::type> comm;
+    std::vector<Term> comm;
 
     auto kinetic_term = algebra::make_term(
         -1., {algebra::make_creator(0, false), algebra::make_annihilator(0, false)});

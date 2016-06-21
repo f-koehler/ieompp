@@ -8,9 +8,8 @@ source_files = [
     "commutators.cpp",
     "commutators_real_space_1d.cpp",
     "commutators_real_space_2d.cpp",
-    "example.cpp",
-    "tests/test_anticommutator.cpp",
-    "tests/test_operator.cpp",
+    "tests/algebra/test_anticommutator.cpp",
+    "tests/algebra/test_operator.cpp",
 ]
 
 script_path = os.path.dirname(os.path.realpath(__file__))
