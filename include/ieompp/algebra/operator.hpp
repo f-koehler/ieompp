@@ -255,6 +255,16 @@ namespace ieompp
             };
         }
 
+        template <typename T>
+        struct is_operator {
+            static constexpr bool value = false;
+        };
+
+        template <typename... Ts>
+        struct is_operator<Operator<Ts...>> {
+            static constexpr bool value = true;
+        };
+
         template <typename Operator>
         struct has_symbolic_index {
             static constexpr bool value =

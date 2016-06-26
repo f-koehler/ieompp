@@ -50,6 +50,16 @@ namespace ieompp
             strm << t.operators.back();
             return strm;
         }
+
+        template <typename T>
+        struct is_term {
+            static constexpr bool value = false;
+        };
+
+        template <typename Prefactor, typename Operator, typename Container>
+        struct is_term<Term<Prefactor, Operator, Container>> {
+            static constexpr bool value = true;
+        };
     }
 }
 
