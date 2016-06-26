@@ -33,14 +33,11 @@ if(${OPENMP_FOUND})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
+add_subdirectory(src)
+
 # option to enable unit testing
 option(ieompp_ENABLE_TESTS "Enable unit tests" ON)
 if(${ieompp_ENABLE_TESTS})
     enable_testing()
     add_subdirectory(tests)
 endif()
-
-add_executable(main main.cpp)
-add_executable(commutators commutators.cpp)
-add_executable(commutators_real_space_1d commutators_real_space_1d.cpp)
-add_executable(commutators_real_space_2d commutators_real_space_2d.cpp)
