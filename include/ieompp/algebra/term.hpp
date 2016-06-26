@@ -31,6 +31,11 @@ namespace ieompp
                 return conj;
             }
 
+            bool same_operators(const Term& rhs) const {
+                if(operators.size() != rhs.size()) return false;
+                return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
+            }
+
             Term& operator*=(const Term& rhs)
             {
                 prefactor *= rhs.prefactor;
