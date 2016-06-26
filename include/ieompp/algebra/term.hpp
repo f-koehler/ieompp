@@ -30,6 +30,23 @@ namespace ieompp
                 for(auto& op : conj.operators) op.creator = !op.creator;
                 return conj;
             }
+
+            Term& operator*=(const Term& rhs)
+            {
+                prefactor *= rhs.prefactor;
+                std::copy(rhs.operators.begin(), rhs.operators.end(),
+                          std::back_inserter(operators));
+                return *this;
+            }
+
+            Term operator*(const Term& rhs) const
+            {
+                Term t(*this);
+                std::copy(rhs.operators.begin(), rhs.operators.end(),
+                          std::back_inserter(t.operators));
+                t.prefactor *= rhs.prefactor;
+                return t;
+            }
         };
 
         template <typename Prefactor, typename Operator, typename Container = std::vector<Operator>>
