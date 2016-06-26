@@ -6,9 +6,9 @@
 #include <type_traits>
 #include <vector>
 
-#include "ieompp/constraints.hpp"
-#include "ieompp/dot_product.hpp"
-#include "ieompp/exception.hpp"
+#include <ieompp/constraints.hpp>
+#include <ieompp/dot_product.hpp>
+#include <ieompp/exception.hpp>
 
 namespace ieompp
 {

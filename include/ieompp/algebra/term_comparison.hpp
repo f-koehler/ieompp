@@ -1,7 +1,7 @@
 #ifndef IEOMPP_ALGEBRA_TERM_COMPARISON_HPP_
 #define IEOMPP_ALGEBRA_TERM_COMPARISON_HPP_
 
-#include "ieompp/algebra/operator_comparison.hpp"
+#include <ieompp/algebra/operator_comparison.hpp>
 
 namespace ieompp
 {

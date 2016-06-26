@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "ieompp/types/dot_product.hpp"
+#include <ieompp/types/dot_product.hpp>
 
 namespace ieompp
 {

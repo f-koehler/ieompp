@@ -5,8 +5,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "ieompp/algebra/operator.hpp"
-#include "ieompp/symbolic/kronecker.hpp"
+#include <ieompp/algebra/operator.hpp>
+#include <ieompp/symbolic/kronecker.hpp>
 
 namespace ieompp
 {

@@ -8,8 +8,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "ieompp/algebra/anticommutator.hpp"
-#include "ieompp/algebra/operator.hpp"
+#include <ieompp/algebra/anticommutator.hpp>
+#include <ieompp/algebra/operator.hpp>
 
 namespace ieompp
 {

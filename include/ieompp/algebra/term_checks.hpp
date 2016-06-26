@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "ieompp/algebra/operator.hpp"
+#include <ieompp/algebra/operator.hpp>
 
 namespace ieompp
 {
