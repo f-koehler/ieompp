@@ -32,7 +32,7 @@ namespace ieompp
             }
 
             bool same_operators(const Term& rhs) const {
-                if(operators.size() != rhs.size()) return false;
+                if(operators.size() != rhs.operators.size()) return false;
                 return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
             }
 

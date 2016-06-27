@@ -11,8 +11,8 @@ namespace ieompp
         struct TermSmaller {
             bool operator()(const Term& a, const Term& b) const
             {
-                static const OperatorSmaller<typename Term::Operator> op_smaller;
-                static const OperatorGreater<typename Term::Operator> op_greater;
+                static const OperatorSmaller<typename Term::Operator> op_smaller{};
+                static const OperatorGreater<typename Term::Operator> op_greater{};
 
                 auto size_a = a.operators.size();
                 auto size_b = b.operators.size();

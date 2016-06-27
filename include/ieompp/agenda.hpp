@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <functional>
 #include <list>
+#include <ostream>
 #include <tuple>
 #include <vector>
 
@@ -44,12 +45,12 @@ namespace ieompp
 
             std::tuple<bool, typename decltype(_known)::const_iterator> is_known(const Term& term)
             {
-                static const algebra::TermSmaller<Term> term_smaller;
+                static const algebra::TermSmaller<Term> term_smaller{};
 
                 auto pos   = _known.begin();
                 bool found = false;
                 for(; pos != _known.end(); ++pos) {
-                    const auto& other = *pos;
+                    const auto& other = _terms[*pos];
                     if(term.same_operators(other)) {
                         found = true;
                         break;
@@ -60,7 +61,7 @@ namespace ieompp
                 return std::make_tuple(found, pos);
             }
 
-            std::size_t add_term(const Term& term,
+            std::size_t add_new_term(const Term& term,
                                  typename decltype(_known)::const_iterator position_in_known_list)
             {
                 const auto new_pos = _terms.size();
@@ -68,14 +69,15 @@ namespace ieompp
                 _known.insert(position_in_known_list, new_pos);
                 _todo.push_back(new_pos);
                 _coefficients.push_back(std::vector<Coefficient>());
+                return new_pos;
             }
 
-            template <typename Container>
+            template <typename Container = std::vector<Term>>
             void commutate(const Term& term, const std::size_t num_commutations,
                            const Generator<Container>& gen)
             {
                 reset();
-                add_term(term);
+                add_new_term(term, _known.begin());
                 commutate(num_commutations, gen);
             }
 
@@ -126,7 +128,36 @@ namespace ieompp
 
                 commutate(num_commutations - 1, gen);
             }
+
+            const std::vector<Term>& terms() const { return _terms; }
+            const std::vector<std::size_t>& todo() const { return _todo; }
+            const std::vector<Coefficient>& operator[](std::size_t i) const
+            {
+                return _coefficients[i];
+            }
     };
+
+    template <typename Term>
+    std::ostream& operator<<(std::ostream& strm, const Agenda<Term>& agenda)
+    {
+        auto& terms = agenda.terms();
+        auto& todo  = agenda.todo();
+
+        strm << "terms:" << std::endl;
+        for(auto& t : terms) strm << "\t" << t << std::endl;
+
+        strm << std::endl << "terms todo:" << std::endl;
+        for(auto& t : todo) strm << "\t" << terms[t] << std::endl;
+
+        for(std::size_t i = 0; i < terms.size(); ++i) {
+            strm << std::endl << "coefficients for " << terms[i] << std::endl;
+            auto& coeffs = agenda[i];
+            for(auto& coeff : coeffs)
+                strm << "\t" << coeff.prefactor << "\t" << terms[coeff.index] << std::endl;
+        }
+
+        return strm;
+    }
 }
 
 #endif

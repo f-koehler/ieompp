@@ -23,6 +23,13 @@ namespace ieompp
                 Prefactor J, U;
 
                 template <typename Term, typename Lattice, typename Container>
+                void generate_terms(const Term& t, const Lattice& lattice, Container& container)
+                {
+                    generate_kinetic_terms(t, lattice, container);
+                    generate_interaction_terms(t, lattice, container);
+                }
+
+                template <typename Term, typename Lattice, typename Container>
                 void generate_kinetic_terms(const Term& t, const Lattice& lattice,
                                             Container& container)
                 {
@@ -61,6 +68,8 @@ namespace ieompp
                         auto new_term = t;
                         new_term.prefactor *= -J;
                         for(auto lattice_vector : lattice.lattice_vectors()) {
+                            new_term.operators.front().index1 = lattice(r - lattice_vector);
+                            container.push_back(new_term);
                             new_term.operators.front().index1 = lattice(r + lattice_vector);
                             container.push_back(new_term);
                         }
@@ -82,14 +91,17 @@ namespace ieompp
                 void generate_interaction_terms_1(const Term& t, const Lattice& lattice,
                                                   Container& container)
                 {
+                    (void)lattice;
                     if(t.operators.front().creator) {
                         auto new_term = t;
-                        t.prefactor *= U;
-                        t.operators.push_back(t.operators.front());
-                        t.operators.back().index2 = !t.operators.back().index2;
+                        new_term.prefactor *= U;
+                        new_term.operators.push_back(new_term.operators.front());
+                        new_term.operators.back().index2 = !new_term.operators.back().index2;
 
-                        t.operators.push_back(t.operators.back());
-                        t.operators.back().creator = false;
+                        new_term.operators.push_back(new_term.operators.back());
+                        new_term.operators.back().creator = false;
+
+                        container.push_back(new_term);
                     } else {
                         THROW(NotImplemented, "TODO");
                     }
@@ -99,6 +111,8 @@ namespace ieompp
                 void generate_interaction_terms_3(const Term& t, const Lattice& lattice,
                                                   Container& container)
                 {
+                    (void)lattice;
+
                     const auto op1_creator = t.operators[0].creator;
                     const auto op2_creator = t.operators[1].creator;
                     const auto op3_creator = t.operators[2].creator;
@@ -113,7 +127,7 @@ namespace ieompp
                         container.push_back(new_term);
                     } else
                         THROW(NotImplemented,
-                              u8"Currenlty only the c^† c^† c structure is supported!");
+                              u8"Currently only the c^† c^† c structure is supported!");
                 }
             };
         }
