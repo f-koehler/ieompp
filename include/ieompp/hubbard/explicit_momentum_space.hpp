@@ -1,5 +1,5 @@
-#ifndef IEOMPP_HUBBARD_EXPLICIT_HPP_
-#define IEOMPP_HUBBARD_EXPLICIT_HPP_
+#ifndef IEOMPP_HUBBARD_EXPLICIT_MOMENTUM_SPACE_HPP_
+#define IEOMPP_HUBBARD_EXPLICIT_MOMENTUM_SPACE_HPP_
 
 #include <cassert>
 #include <cmath>
@@ -14,92 +14,6 @@ namespace ieompp
 {
     namespace hubbard
     {
-        namespace real_space
-        {
-            template <typename PrefactorT>
-            struct Hamiltonian {
-                using Prefactor = PrefactorT;
-
-                Prefactor J, U;
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_kinetic_terms(const Term& t, const Lattice& lattice,
-                                            Container& container)
-                {
-                    static_assert(Term::Operator::number_of_indices == 2,
-                                  "Hubbard model operators have two indices!");
-                    if(t.operators.size() == 1)
-                        generate_kinetic_terms_1(t, lattice, container);
-                    else if(t.operators.size() == 3)
-                        generate_kinetic_terms_3(t, lattice, container);
-                    else
-                        THROW(NotImplemented,
-                              "Currently only implemented for 1- and 3-operator terms");
-                }
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_interaction_terms(const Term& t, const Lattice& lattice,
-                                                Container& container)
-                {
-                    static_assert(Term::Operator::number_of_indices == 2,
-                                  "Hubbard model operators have two indices!");
-                    if(t.operators.size() == 1)
-                        generate_interaction_terms_1(t, lattice, container);
-                    else if(t.operators.size() == 3)
-                        generate_interaction_terms_3(t, lattice, container);
-                    else
-                        THROW(NotImplemented,
-                              "Currently only implemented for 1- and 3-operator terms");
-                }
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_kinetic_terms_1(const Term& t, const Lattice& lattice,
-                                              Container& container)
-                {
-                    const auto r = lattice[t.operators.front().index1];
-                    if(t.operators.front().creator) {
-                        auto new_term = t;
-                        new_term.prefactor *= -J;
-                        for(auto lattice_vector : lattice.lattice_vectors()) {
-                            new_term.operators.front().index1 = lattice(r + lattice_vector);
-                            container.push_back(new_term);
-                        }
-                    } else {
-                        THROW(NotImplemented, "TODO");
-                    }
-                }
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_kinetic_terms_3(const Term& t, const Lattice& lattice,
-                                              Container& container)
-                {
-                }
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_interaction_terms_1(const Term& t, const Lattice& lattice,
-                                                  Container& container)
-                {
-                    if(t.operators.front().creator) {
-                        auto new_term = t;
-                        t.prefactor *= U;
-                        t.operators.push_back(t.operators.front());
-                        t.operators.back().index2 = !t.operators.back().index2;
-
-                        t.operators.push_back(t.operators.back());
-                        t.operators.back().creator = false;
-                    } else {
-                        THROW(NotImplemented, "TODO");
-                    }
-                }
-
-                template <typename Term, typename Lattice, typename Container>
-                void generate_interaction_terms_3(const Term& t, const Lattice& lattice,
-                                                  Container& container)
-                {
-                }
-            };
-        }
-
         namespace momentum_space
         {
             template <typename PrefactorT>
@@ -284,6 +198,5 @@ namespace ieompp
             };
         }
     }
-}
 
 #endif
