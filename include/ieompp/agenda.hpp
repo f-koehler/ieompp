@@ -3,10 +3,13 @@
 
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include <list>
 #include <ostream>
 #include <tuple>
 #include <vector>
+
+#include <iostream>
 
 #include <ieompp/algebra/term_comparison.hpp>
 
@@ -99,11 +102,12 @@ namespace ieompp
                     gen(current, generated);
 
                     for(const auto& new_term : generated) {
-                        const auto ret       = is_known(new_term);
-                        const auto known     = std::get<0>(ret);
-                        auto insert_position = std::get<1>(ret);
+                        const auto ret             = is_known(new_term);
+                        const auto known           = std::get<0>(ret);
+                        const auto insert_position = std::get<1>(ret);
 
                         if(!known) {
+                            std::cout << new_term << std::endl;
                             if(last_commutation) continue;
                             const auto new_index = add_new_term(new_term, insert_position);
                             _coefficients[current_index].emplace_back(
@@ -118,12 +122,15 @@ namespace ieompp
                             current_coefficients.begin(), current_coefficients.end(),
                             [&index](const Coefficient& c) { return c.index == index; });
 
-                        if(find != current_coefficients.end())
+                        if(find != current_coefficients.end()) {
                             find->prefactor += new_term.prefactor;
-                        else
+                        } else {
                             current_coefficients.emplace_back(
                                 Coefficient{index, new_term.prefactor});
+                        }
                     }
+
+                    std::cout << std::endl;
                 }
 
                 commutate(num_commutations - 1, gen);
@@ -152,8 +159,12 @@ namespace ieompp
         for(std::size_t i = 0; i < terms.size(); ++i) {
             strm << std::endl << "coefficients for " << terms[i] << std::endl;
             auto& coeffs = agenda[i];
-            for(auto& coeff : coeffs)
-                strm << "\t" << coeff.prefactor << "\t" << terms[coeff.index] << std::endl;
+            for(auto& coeff : coeffs) {
+                strm << "\t" << coeff.prefactor << "\t";// << terms[coeff.index] << std::endl;
+                std::copy(terms[coeff.index].operators.begin(), terms[coeff.index].operators.end(),
+                          std::ostream_iterator<typename Term::Operator>(strm, " "));
+                strm << endl;
+            }
         }
 
         return strm;
