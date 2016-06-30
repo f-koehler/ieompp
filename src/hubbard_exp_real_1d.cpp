@@ -9,6 +9,7 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/hubbard/explicit_real_space.hpp>
+#include <ieompp/ode.hpp>
 namespace algebra = ieompp::algebra;
 
 using Complex = complex<double>;
@@ -27,5 +28,10 @@ int main()
     };
 
     agenda.commutate<std::vector<Term>>(initial_term, 2, gen);
-    cout << agenda << endl;
+    cout << agenda << endl << endl << endl;
+
+    Eigen::VectorXcd initial = Eigen::VectorXcd::Zero(4);
+    initial(0) = Complex(1.);
+    ieompp::RungeKutta4<decltype(agenda)> ode(agenda, initial, Complex(0.0001));
+    cout << ode.matrix() << endl;
 }

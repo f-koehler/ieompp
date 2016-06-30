@@ -9,8 +9,6 @@
 #include <tuple>
 #include <vector>
 
-#include <iostream>
-
 #include <ieompp/algebra/term_comparison.hpp>
 
 namespace ieompp
@@ -19,17 +17,18 @@ namespace ieompp
     template <typename TermT>
     class Agenda
     {
-        using Term      = TermT;
-        using Prefactor = typename Term::Prefactor;
+        public:
+            using Term      = TermT;
+            using Prefactor = typename Term::Prefactor;
 
-        template <typename Container = std::vector<Term>>
-        using Generator              = std::function<void(const Term&, Container&)>;
+            template <typename Container = std::vector<Term>>
+            using Generator              = std::function<void(const Term&, Container&)>;
 
-        struct Coefficient
-        {
-            std::size_t index;
-            Prefactor prefactor;
-        };
+            struct Coefficient
+            {
+                std::size_t index;
+                Prefactor prefactor;
+            };
 
         private:
             std::vector<Term> _terms;
@@ -72,6 +71,7 @@ namespace ieompp
                 _known.insert(position_in_known_list, new_pos);
                 _todo.push_back(new_pos);
                 _coefficients.push_back(std::vector<Coefficient>());
+                _terms.back().prefactor = Prefactor(1.);
                 return new_pos;
             }
 
@@ -107,7 +107,6 @@ namespace ieompp
                         const auto insert_position = std::get<1>(ret);
 
                         if(!known) {
-                            std::cout << new_term << std::endl;
                             if(last_commutation) continue;
                             const auto new_index = add_new_term(new_term, insert_position);
                             _coefficients[current_index].emplace_back(
@@ -129,8 +128,6 @@ namespace ieompp
                                 Coefficient{index, new_term.prefactor});
                         }
                     }
-
-                    std::cout << std::endl;
                 }
 
                 commutate(num_commutations - 1, gen);
