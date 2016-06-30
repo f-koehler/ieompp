@@ -9,15 +9,23 @@ namespace ieompp
 {
     namespace hubbard
     {
-        template <typename Momentum, typename Lattice, typename Prefactor>
-        typename types::scalar_type<Momentum>::type
-        dispersion(const Momentum& momentum, const Lattice& lattice, const Prefactor& J = 1.)
+        template <typename MomentumT, typename LatticeT>
+        struct Dispersion
         {
-            typename types::scalar_type<Momentum>::type val = 0.;
-            for(auto& vec : lattice.lattice_vectors())
-                val += std::cos(types::dot_product(vec, momentum));
-            return -2 * J * val;
-        }
+            using Momentum   = MomentumT;
+            using Lattice    = LatticeT;
+            using Scalar     = typename types::scalar_type<Momentum>::type;
+
+            Scalar J;
+
+            Scalar operator()(const Momentum& momentum, const Lattice& lattice) const
+            {
+                Scalar val = 0.;
+                for(auto& vec : lattice.lattice_vectors())
+                    val += std::cos(types::dot_product(vec, momentum));
+                return -2 * J * val;
+            }
+        };
     }
 }
 
