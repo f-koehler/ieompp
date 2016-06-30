@@ -33,6 +33,7 @@ namespace ieompp
             }
 
             bool same_indices(const Operator& rhs) const { return indices == rhs.indices; }
+            Indices index_tuple() const { return indices; }
         };
 
         template <typename IndexT>
@@ -56,6 +57,7 @@ namespace ieompp
             }
 
             bool same_indices(const Operator& rhs) const { return index == rhs.index; }
+            Indices index_tuple() const { return std::make_tuple(index); }
         };
 
         template <typename Index1T, typename Index2T>
@@ -84,6 +86,7 @@ namespace ieompp
             {
                 return (index1 == rhs.index1) && (index2 == rhs.index2);
             }
+            Indices index_tuple() const { return std::make_tuple(index1, index2); }
         };
 
         template <std::size_t I, typename Operator>
