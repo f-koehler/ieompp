@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <ieompp/algebra/unique_term_list.hpp>
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
 #include <ieompp/types/dot_product.hpp>
@@ -173,26 +174,37 @@ namespace ieompp
                     const auto op1_creator = op1.creator;
                     const auto op2_creator = op2.creator;
                     const auto op3_creator = op3.creator;
-                    const auto N           = lattice.num();
-                    if(!(op1_creator && op2_creator && !op3_creator))
-                        THROW(NotImplemented,
-                              u8"Currenlty only the c^† c^† c structure is supported!");
-                    if(!(op1.index2 && !op2.index2 && !op3.index2))
-                        THROW(NotImplemented,
-                              u8"only ↑↓↓ configurations is currently implemented!");
 
-                    for(auto k1_idx : space) {
-                        const auto k3_idx = op3.index1;
-                        const auto k2     = space[op2.index1] + space[op1.index1] - space[k1_idx];
-                        const auto k2_idx = space[k2];
-                        auto prefactor    = t.prefactor * U;
-                        if(k1_idx != op1.index1)
-                            prefactor /= 2 * N;
-                        else
-                            prefactor /= N;
-                        container.push_back(make_term(
-                            prefactor, {make_creator(k1_idx, true), make_creator(k2_idx, false),
-                                        make_annihilator(k3_idx, false)}));
+                    algebra::UniqueTermList<Term> term_list;
+
+                    std::copy(term_list.begin(), term_list.end(), std::back_inserter(container));
+
+                    /* const auto& op1        = t.operators[0]; */
+                    /* const auto& op2        = t.operators[1]; */
+                    /* const auto& op3        = t.operators[2]; */
+                    /* const auto op1_creator = op1.creator; */
+                    /* const auto op2_creator = op2.creator; */
+                    /* const auto op3_creator = op3.creator; */
+                    /* const auto N           = lattice.num(); */
+                    /* if(!(op1_creator && op2_creator && !op3_creator)) */
+                    /*     THROW(NotImplemented, */
+                    /*           u8"Currenlty only the c^† c^† c structure is supported!"); */
+                    /* if(!(op1.index2 && !op2.index2 && !op3.index2)) */
+                    /*     THROW(NotImplemented, */
+                    /*           u8"only ↑↓↓ configurations is currently implemented!"); */
+
+                    /* for(auto k1_idx : space) { */
+                    /*     const auto k3_idx = op3.index1; */
+                    /*     const auto k2     = space[op2.index1] + space[op1.index1] - space[k1_idx]; */
+                    /*     const auto k2_idx = space[k2]; */
+                    /*     auto prefactor    = t.prefactor * U; */
+                    /*     if(k1_idx != op1.index1) */
+                    /*         prefactor /= 2 * N; */
+                    /*     else */
+                    /*         prefactor /= N; */
+                    /*     container.push_back(make_term( */
+                    /*         prefactor, {make_creator(k1_idx, true), make_creator(k2_idx, false), */
+                    /*                     make_annihilator(k3_idx, false)})); */
                     }
                 }
             };
