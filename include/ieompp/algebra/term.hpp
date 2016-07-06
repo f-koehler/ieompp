@@ -36,6 +36,18 @@ namespace ieompp
                 return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
             }
 
+            Term sub_term(std::size_t pos, std::size_t len) const {
+                // TODO: only works with random access iterators
+                return Term{Prefactor(1.),
+                            Container(operators.begin() + pos, operators.begin() + pos + len)};
+            }
+
+            template <typename Iterator>
+            Term sub_term(Iterator first, Iterator last)
+            {
+                return Term{Prefactor(1.), Container(first, last)};
+            }
+
             Term& operator*=(const Term& rhs)
             {
                 prefactor *= rhs.prefactor;
