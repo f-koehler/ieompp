@@ -16,26 +16,30 @@ namespace ieompp
         std::size_t num_operators;
         std::vector<bool> types;
 
-        bool operator<(const TermStructure& rhs) const {
+        bool operator<(const TermStructure& rhs) const
+        {
             if(num_operators != rhs.num_operators) return num_operators < rhs.num_operators;
             for(std::size_t i = 0; i < num_operators; ++i)
                 if(types[i] != rhs.types[i]) return types[i];
             return false;
         }
 
-        bool operator>(const TermStructure& rhs) const {
+        bool operator>(const TermStructure& rhs) const
+        {
             if(num_operators != rhs.num_operators) return num_operators > rhs.num_operators;
             for(std::size_t i = 0; i < num_operators; ++i)
                 if(types[i] != rhs.types[i]) return !types[i];
             return false;
         }
 
-        bool operator==(const TermStructure& rhs) const {
+        bool operator==(const TermStructure& rhs) const
+        {
             return (num_operators == rhs.num_operators)
                    && std::equal(types.begin(), types.end(), rhs.types.begin());
         }
 
-        bool operator!=(const TermStructure& rhs) const {
+        bool operator!=(const TermStructure& rhs) const
+        {
             return (num_operators != rhs.num_operators)
                    || std::equal(types.begin(), types.end(), rhs.types.begin());
         }
@@ -76,10 +80,11 @@ namespace ieompp
         {
         }
 
-        void calculate() {
+        void calculate()
+        {
             if(left_structure.num_operators == right_structure.num_operators == 0) {
                 if(left_structure.types[0] != right_structure.types[0])
-                    rhs.emplace_back(0.5, Kronecker{0, 0});
+                    rhs.emplace_back(Expression{0.5, Kronecker{0, 0}});
                 return;
             }
 
@@ -92,19 +97,24 @@ namespace ieompp
 
     std::ostream& operator<<(std::ostream& strm, const InnerProduct& product)
     {
-        auto idx = 0;
+        auto idx = 0ul;
         strm << "(";
-        for(auto t : product.left_structure.types) {
+        for(std::size_t i = 0; i < product.left_structure.num_operators; ++i) {
             strm << "c_{i" << idx << "}";
-            if(t) strm << u8"^†";
+            if(product.left_structure.types[i]) strm << u8"^†";
+            strm << " ";
             ++idx;
         }
-        strm << "|";
-        for(auto t : product.right_structure.types) {
+        strm << "| ";
+        for(std::size_t i = 0; i < product.right_structure.num_operators - 1; ++i) {
             strm << "c_{i" << idx << "}";
-            if(t) strm << u8"^†";
+            if(product.left_structure.types[i]) strm << u8"^†";
+            strm << " ";
             ++idx;
         }
+        strm << "c_{i" << idx << "}";
+        if(product.left_structure.types[product.right_structure.num_operators - 1]) strm << u8"^†";
+        ++idx;
         strm << ")";
         return strm;
     }
@@ -132,7 +142,8 @@ namespace ieompp
         }
 
         template <typename Term>
-        InnerProduct& operator()(const Term& t1, const Term& t2) {
+        InnerProduct& operator()(const Term& t1, const Term& t2)
+        {
             return (*this)(get_term_structure(t1), get_term_structure(t2));
         }
     };
