@@ -5,9 +5,12 @@ import subprocess
 import jinja2
 
 source_files = [
-    "commutators.cpp",
-    "commutators_real_space_1d.cpp",
-    "commutators_real_space_2d.cpp",
+    "src/commutators.cpp",
+    "src/commutators_real_space_1d.cpp",
+    "src/commutators_real_space_2d.cpp",
+    "src/hubbard_exp_momentum_1d.cpp",
+    "src/hubbard_exp_real_1d.cpp",
+    "src/inner_product.cpp",
     "tests/algebra/test_anticommutator.cpp",
     "tests/algebra/test_operator.cpp",
 ]
