@@ -22,8 +22,15 @@ namespace ieompp
             Prefactor prefactor;
             Container operators;
 
-            Term conjugate() const
+            void conjugate()
             {
+                // TODO: conjugate prefactor
+                std::reverse(operators.begin(), operators.end());
+            }
+
+            Term get_conjugate() const
+            {
+                // TODO: conjugate prefactor
                 Term conj{prefactor, {}};
                 std::reverse_copy(operators.begin(), operators.end(),
                                   std::back_inserter(conj.operators));

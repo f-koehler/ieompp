@@ -1,6 +1,9 @@
 #ifndef IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 #define IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 
+#include <unordered_set>
+#include <iostream>
+
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/inner_product/term_structure.hpp>
@@ -9,6 +12,8 @@ namespace ieompp
 {
     namespace inner_product
     {
+        struct InnerProductTable;
+
         struct InnerProduct {
             struct Kronecker {
                 const std::size_t a, b;
@@ -35,7 +40,7 @@ namespace ieompp
 
             void calculate()
             {
-                if(left_structure.num_operators == right_structure.num_operators == 0) {
+                if((left_structure.num_operators == 0) || (right_structure.num_operators == 0)) {
                     if(left_structure.types[0] != right_structure.types[0])
                         rhs.emplace_back(Expression{0.5, Kronecker{0, 0}});
                     return;
@@ -45,6 +50,28 @@ namespace ieompp
 
                 left_term.prefactor  = 1.;
                 right_term.prefactor = 1.;
+
+                std::size_t idx = 0;
+
+                for(auto t : left_structure.types)
+                    left_term.operators.emplace_back(Operator{t, idx++});
+                for(auto t : right_structure.types)
+                    right_term.operators.emplace_back(Operator{t, idx++});
+                left_term.conjugate();
+
+                std::cout << left_term << "\t\t" << right_term << std::endl;
+            }
+
+            bool operator==(const InnerProduct& rhs) const
+            {
+                return (left_structure == rhs.left_structure)
+                       && (right_structure == rhs.right_structure);
+            }
+
+            bool operator!=(const InnerProduct& rhs) const
+            {
+                return (left_structure != rhs.left_structure)
+                       || (right_structure != rhs.right_structure);
             }
         };
 
@@ -88,6 +115,15 @@ namespace std {
                                           hash_structure(val.right_structure));
         }
     };
+}
+
+namespace ieompp
+{
+    namespace inner_product
+    {
+        struct InnerProductTable : public std::unordered_set<InnerProduct> {
+        };
+    }
 }
 
 #endif
