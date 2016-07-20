@@ -1,66 +1,36 @@
 #ifndef IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 #define IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 
-#include <unordered_set>
+#include <unordered_map>
 #include <iostream>
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/inner_product/term_structure.hpp>
+#include <ieompp/symbolic/prefactor.hpp>
 
 namespace ieompp
 {
     namespace inner_product
     {
-        struct InnerProductTable;
+        struct Kronecker
+        {
+            std::size_t a, b;
+        };
 
-        struct InnerProduct {
-            struct Kronecker {
-                const std::size_t a, b;
+        struct InnerProduct
+        {
+            using Operator  = ieompp::algebra::Operator<std::size_t>;
+            using Prefactor = ieompp::symbolic::Prefactor<double, Kronecker>;
+            using Term      = ieompp::algebra::Term<Prefactor, Operator>;
+
+            struct Result : public std::vector<Prefactor>
+            {
+                bool calculated = false;
             };
-
-            struct Expression {
-                double real;
-                Kronecker kronecker;
-            };
-
-            using Operator = ieompp::algebra::Operator<std::size_t>;
-            using Term     = ieompp::algebra::Term<double, Operator>;
-            using Result   = std::vector<Expression>;
 
             TermStructure left_structure;
             TermStructure right_structure;
-            Result rhs;
-
-            InnerProduct() = default;
-            InnerProduct(const TermStructure& a, const TermStructure& b)
-                : left_structure(a), right_structure(b)
-            {
-            }
-
-            void calculate()
-            {
-                if((left_structure.num_operators == 0) || (right_structure.num_operators == 0)) {
-                    if(left_structure.types[0] != right_structure.types[0])
-                        rhs.emplace_back(Expression{0.5, Kronecker{0, 0}});
-                    return;
-                }
-
-                Term left_term, right_term;
-
-                left_term.prefactor  = 1.;
-                right_term.prefactor = 1.;
-
-                std::size_t idx = 0;
-
-                for(auto t : left_structure.types)
-                    left_term.operators.emplace_back(Operator{t, idx++});
-                for(auto t : right_structure.types)
-                    right_term.operators.emplace_back(Operator{t, idx++});
-                left_term.conjugate();
-
-                std::cout << left_term << "\t\t" << right_term << std::endl;
-            }
 
             bool operator==(const InnerProduct& rhs) const
             {
@@ -74,6 +44,13 @@ namespace ieompp
                        || (right_structure != rhs.right_structure);
             }
         };
+
+        std::ostream& operator<<(std::ostream& strm, const Kronecker& k)
+        {
+            strm << u8"δ_{i" << k.a << ","
+                 << "i" << k.b << "}";
+            return strm;
+        }
 
         std::ostream& operator<<(std::ostream& strm, const InnerProduct& product)
         {
@@ -121,7 +98,33 @@ namespace ieompp
 {
     namespace inner_product
     {
-        struct InnerProductTable : public std::unordered_set<InnerProduct> {
+        struct InnerProductTable {
+            std::unordered_map<InnerProduct, std::size_t> indices;
+            std::vector<typename InnerProduct::Result> results;
+
+            InnerProductTable()
+            {
+                auto idx = add({1, {true}}, {1, {true}});
+                results[idx].calculated = true;
+                results[idx].emplace_back(
+                    typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
+
+                idx = add({1, {false}}, {1, {false}});
+                results[idx].calculated = true;
+                results[idx].emplace_back(
+                    typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
+            }
+
+            std::size_t add(const TermStructure& left, const TermStructure& right)
+            {
+                InnerProduct prod{left, right};
+                auto inserted = indices.insert({prod, 0ul});
+                if(!inserted.second) return inserted.first->second;
+                auto idx = results.size();
+                results.emplace_back(typename InnerProduct::Result{});
+                inserted.first->second = idx;
+                return idx;
+            }
         };
     }
 }

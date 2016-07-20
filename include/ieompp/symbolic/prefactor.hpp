@@ -14,9 +14,11 @@ namespace ieompp
 {
     namespace symbolic
     {
-        template <typename ValueT, typename ContainerT = std::vector<Kronecker>>
+        template <typename ValueT, typename KroneckerT = Kronecker,
+                  typename ContainerT = std::vector<KroneckerT>>
         struct Prefactor {
             using Value     = ValueT;
+            using Kronecker = KroneckerT;
             using Container = ContainerT;
 
             Value value;
@@ -68,8 +70,9 @@ namespace ieompp
             return Prefactor<Value>{val, kroneckers};
         }
 
-        template <typename Value, typename Container>
-        std::ostream& operator<<(std::ostream& strm, const Prefactor<Value, Container>& rhs)
+        template <typename Value, typename Kronecker, typename Container>
+        std::ostream& operator<<(std::ostream& strm,
+                                 const Prefactor<Value, Kronecker, Container>& rhs)
         {
             if(rhs.kroneckers.empty()) {
                 strm << rhs.value;

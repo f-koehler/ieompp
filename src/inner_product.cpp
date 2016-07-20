@@ -13,8 +13,7 @@ int main()
                                 algebra::make_annihilator(0, false)});
     auto t2 = algebra::make_term(1., {algebra::make_creator(0, true)});
 
-    ieompp::inner_product::InnerProductTable container;
-    container.emplace(
-        ieompp::inner_product::InnerProduct(ieompp::inner_product::get_term_structure(t1),
-                                            ieompp::inner_product::get_term_structure(t2)));
+    ieompp::inner_product::InnerProductTable table;
+    cout << table.results[0][0] << endl;
+    cout << table.results[1][0] << endl;
 }
