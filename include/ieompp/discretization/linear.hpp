@@ -213,8 +213,7 @@ namespace ieompp
         template <typename IndexT>
         typename std::enable_if<std::is_same<Index, IndexT>::value,
                                 typename LinearDiscretization<Real, Index>::Vector>::type
-            LinearDiscretization<Real, Index>::
-            operator[](const IndexT& i) const
+            LinearDiscretization<Real, Index>::operator[](const IndexT& i) const
         {
             return _x_min + i * _dx;
         }
@@ -223,8 +222,8 @@ namespace ieompp
         template <typename VectorT>
         typename std::enable_if<std::is_same<typename LinearDiscretization<Real, Index>::Vector,
                                              VectorT>::value,
-                                Index>::type LinearDiscretization<Real, Index>::
-        operator()(VectorT v) const
+                                Index>::type
+        LinearDiscretization<Real, Index>::operator()(VectorT v) const
         {
             while(v < _x_min) v += _x_length;
             while(v > _x_max) v -= _x_length;

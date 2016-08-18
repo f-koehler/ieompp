@@ -106,9 +106,9 @@ namespace ieompp
                             auto k3_idx     = space(k3);
                             auto&& new_term = Term();
                             new_term.prefactor = (U / lattice.num()) * t.prefactor;
-                            new_term.operators.push_back(Operator{true, k1_idx, true});
-                            new_term.operators.push_back(Operator{true, k2_idx, false});
-                            new_term.operators.push_back(Operator{false, k3_idx, false});
+                            new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                            new_term.operators.emplace_back(Operator{true, k2_idx, false});
+                            new_term.operators.emplace_back(Operator{false, k3_idx, false});
                             container.emplace_back(new_term);
                         }
                     }
@@ -119,6 +119,172 @@ namespace ieompp
                 void generate_interaction_terms_3(const Term& t, const MomentumSpace& space,
                                                   const Lattice& lattice, Container& container)
                 {
+                    using Operator = typename Term::Operator;
+
+                    const auto prefactor = t.prefactor * U / lattice.num();
+
+                    const auto q1_idx = t.operators[0].index1;
+                    const auto q2_idx = t.operators[1].index1;
+                    const auto q3_idx = t.operators[2].index1;
+                    const auto q1     = space[q1_idx];
+                    const auto q2     = space[q2_idx];
+                    const auto q3     = space[q3_idx];
+
+                    // (B) terms
+                    /* for(const auto k1_idx : space) { */
+                    /*     const auto k1 = space[k1_idx]; */
+                    /*     for(const auto k2_idx : space) { */
+                    /*         const auto k2     = space[k2_idx]; */
+                    /*         const auto k4     = k1 - k2 + q3; */
+                    /*         const auto k4_idx = space(k4); */
+
+                    /*         if(k1_idx == q1_idx) { */
+                    /*             if(q1_idx != k2_idx) continue; */
+                    /*             auto&& new_term = Term(); */
+                    /*             new_term.prefactor = prefactor; */
+                    /*             new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*             new_term.operators.emplace_back(Operator{true, q2_idx, false}); */
+                    /*             new_term.operators.emplace_back(Operator{false, k4_idx, false}); */
+                    /*             container.emplace_back(new_term); */
+                    /*             if(q2_idx == k4_idx) { */
+                    /*                 auto&& new_term = Term(); */
+                    /*                 new_term.prefactor = prefactor / 2; */
+                    /*                 new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*                 container.emplace_back(new_term); */
+                    /*             } */
+                    /*             continue; */
+                    /*         } */
+
+                    /*         // k1 != q1 */
+                    /*         auto&& new_term = Term(); */
+                    /*         new_term.prefactor = prefactor; */
+                    /*         new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*         new_term.operators.emplace_back(Operator{false, k2_idx, true}); */
+                    /*         new_term.operators.emplace_back(Operator{true, q1_idx, true}); */
+                    /*         new_term.operators.emplace_back(Operator{true, q2_idx, false}); */
+                    /*         new_term.operators.emplace_back(Operator{false, k4_idx, false}); */
+                    /*         container.emplace_back(new_term); */
+
+                    /*         if(q2_idx == k4_idx) { */
+                    /*             auto&& new_term = Term(); */
+                    /*             new_term.prefactor = prefactor / 2; */
+                    /*             new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*             new_term.operators.emplace_back(Operator{false, k2_idx, true}); */
+                    /*             new_term.operators.emplace_back(Operator{true, q1_idx, true}); */
+                    /*             container.emplace_back(new_term); */
+                    /*         } */
+
+                    /*         if(q1_idx == k2_idx) { */
+                    /*             auto&& new_term = Term(); */
+                    /*             new_term.prefactor = -prefactor / 2; */
+                    /*             new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*             new_term.operators.emplace_back(Operator{true, q2_idx, false}); */
+                    /*             new_term.operators.emplace_back(Operator{false, k4_idx, false}); */
+                    /*             container.emplace_back(new_term); */
+
+                    /*             if(q2_idx == k4_idx) { */
+                    /*                 auto&& new_term = Term(); */
+                    /*                 new_term.prefactor = -prefactor / 4; */
+                    /*                 new_term.operators.emplace_back(Operator{true, k1_idx, true}); */
+                    /*                 container.emplace_back(new_term); */
+                    /*             } */
+                    /*         } */
+
+                    /*         if(k1_idx == k2_idx) { */
+                    /*             auto&& new_term = Term(); */
+                    /*             new_term.prefactor = prefactor / 2; */
+                    /*             new_term.operators.emplace_back(Operator{true, q1_idx, true}); */
+                    /*             new_term.operators.emplace_back(Operator{true, q2_idx, false}); */
+                    /*             new_term.operators.emplace_back(Operator{false, k4_idx, false}); */
+                    /*             container.emplace_back(new_term); */
+
+                    /*             if(q2_idx == k4_idx) { */
+                    /*                 auto&& new_term = Term(); */
+                    /*                 new_term.prefactor = prefactor / 4; */
+                    /*                 new_term.operators.emplace_back(Operator{true, q1_idx, true}); */
+                    /*                 container.emplace_back(new_term); */
+                    /*             } */
+                    /*         } */
+                    /*     } */
+                    /* } */
+
+                    // (C) terms
+                    for(const auto k1_idx : space) {
+                        const auto k1 = space[k1_idx];
+                        for(const auto k2_idx : space) {
+                            const auto k2     = space[k2_idx];
+                            const auto k3     = k2 - k1 + q2;
+                            const auto k3_idx = space(k3);
+
+                            if(k1_idx == q1_idx) {
+                                if(q1_idx != k2_idx) continue;
+                                auto&& new_term = Term();
+                                new_term.prefactor = prefactor;
+                                new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                                new_term.operators.emplace_back(Operator{true, k3_idx, false});
+                                new_term.operators.emplace_back(Operator{false, q3_idx, false});
+                                container.emplace_back(new_term);
+                                if(q3_idx == k3_idx) {
+                                    auto&& new_term = Term();
+                                    new_term.prefactor = prefactor / 2;
+                                    new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                                    container.emplace_back(new_term);
+                                }
+                                continue;
+                            }
+
+                            // k1 != q1
+                            auto&& new_term = Term();
+                            new_term.prefactor = prefactor;
+                            new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                            new_term.operators.emplace_back(Operator{false, k2_idx, true});
+                            new_term.operators.emplace_back(Operator{true, q1_idx, true});
+                            new_term.operators.emplace_back(Operator{true, k3_idx, false});
+                            new_term.operators.emplace_back(Operator{false, q3_idx, false});
+                            container.emplace_back(new_term);
+
+                            if(q3_idx == k3_idx) {
+                                auto&& new_term = Term();
+                                new_term.prefactor = prefactor / 2;
+                                new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                                new_term.operators.emplace_back(Operator{false, k2_idx, true});
+                                new_term.operators.emplace_back(Operator{true, q1_idx, true});
+                                container.emplace_back(new_term);
+                            }
+
+                            if(q1_idx == k2_idx) {
+                                auto&& new_term = Term();
+                                new_term.prefactor = -prefactor / 2;
+                                new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                                new_term.operators.emplace_back(Operator{true, k3_idx, false});
+                                new_term.operators.emplace_back(Operator{false, q3_idx, false});
+                                container.emplace_back(new_term);
+
+                                if(q3_idx == k3_idx) {
+                                    auto&& new_term = Term();
+                                    new_term.prefactor = -prefactor / 4;
+                                    new_term.operators.emplace_back(Operator{true, k1_idx, true});
+                                    container.emplace_back(new_term);
+                                }
+                            }
+
+                            if(k1_idx == k2_idx) {
+                                auto&& new_term = Term();
+                                new_term.prefactor = prefactor / 2;
+                                new_term.operators.emplace_back(Operator{true, q1_idx, true});
+                                new_term.operators.emplace_back(Operator{true, k3_idx, false});
+                                new_term.operators.emplace_back(Operator{false, q3_idx, false});
+                                container.emplace_back(new_term);
+
+                                if(q3_idx == k3_idx) {
+                                    auto&& new_term = Term();
+                                    new_term.prefactor = prefactor / 4;
+                                    new_term.operators.emplace_back(Operator{true, q1_idx, true});
+                                    container.emplace_back(new_term);
+                                }
+                            }
+                        }
+                    }
                 }
             };
         }
