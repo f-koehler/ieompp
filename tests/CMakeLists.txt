@@ -6,4 +6,4 @@ function(add_ieompp_test TEST_NAME TEST_SOURCE)
     add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 
-add_subdirectory(algebra)
+# add_subdirectory(algebra)

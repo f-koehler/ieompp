@@ -9,6 +9,7 @@
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
 #include <ieompp/types/dot_product.hpp>
+#include <ieompp/hubbard/dispersion.hpp>
 
 namespace ieompp
 {
