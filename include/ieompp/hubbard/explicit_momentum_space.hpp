@@ -1,11 +1,12 @@
 #ifndef IEOMPP_HUBBARD_EXPLICIT_MOMENTUM_SPACE_HPP_
 #define IEOMPP_HUBBARD_EXPLICIT_MOMENTUM_SPACE_HPP_
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <list>
 #include <set>
 #include <type_traits>
-#include <vector>
 
 #include <ieompp/algebra/term_comparison.hpp>
 #include <ieompp/constraints.hpp>
