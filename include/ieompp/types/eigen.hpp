@@ -74,7 +74,7 @@ namespace ieompp
 
             template <typename T>
             struct scalar_type_helper<T, true> {
-                using type = typename eigen_matrix_traits<T>::scalar;
+                using type = typename eigen_matrix_traits<T>::Scalar;
             };
         }
 

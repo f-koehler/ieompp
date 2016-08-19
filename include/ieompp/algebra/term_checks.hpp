@@ -4,22 +4,23 @@
 #include <cstddef>
 #include <type_traits>
 
+#include <ieompp/types/zero.hpp>
 #include <ieompp/algebra/operator.hpp>
 
 namespace ieompp
 {
     namespace algebra
     {
-        template <typename Term, std::size_t Index, typename Discretization>
+        template <std::size_t Index, typename Term, typename Discretization>
         typename Discretization::Vector total_momentum(const Term& t,
                                                        const Discretization& momentum_space)
         {
-            typename Discretization::Vector momentum = 0.;
+            auto momentum = types::zero(momentum_space.lattice_vectors()[0]);
             for(auto& op : t.operators) {
                 if(op.creator)
-                    momentum += total_momentum(momentum_space[get_index<Index>(op)]);
+                    momentum += momentum_space[get_index<Index>(op)];
                 else
-                    momentum -= total_momentum(momentum_space[get_index<Index>(op)]);
+                    momentum -= momentum_space[get_index<Index>(op)];
             }
             return momentum;
         }
