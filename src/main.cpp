@@ -13,8 +13,7 @@ int main()
 {
     std::vector<int> v{2,2};
     std::vector<int> res;
-    ieompp::globally_unique_with_merge(v.begin(), v.end(), std::back_inserter(res),
-                                       ieompp::on_merge::Ignore<int>(), std::equal_to<int>());
+    ieompp::globally_unique_with_merge(v.begin(), v.end(), std::back_inserter(res));
     for(auto& i : res) {
         cout << i << endl;
     }
