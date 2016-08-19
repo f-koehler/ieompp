@@ -370,6 +370,14 @@ namespace ieompp
                             }
                         } // k2 loop
                     } // k1 loop
+
+                    // add commutator from left hand side
+                    if(q2 == q3) {
+                        auto t2 = t;
+                        t2.prefactor = t.prefactor / 2;
+                        t2.operators.push_back(t.operators.front());
+                        generate_interaction_terms_1(t2, space, lattice, container);
+                    }
                 }
             };
 

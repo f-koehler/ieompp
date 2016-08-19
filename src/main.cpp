@@ -10,8 +10,8 @@ using namespace ieompp::algebra;
 
 int main()
 {
-    ieompp::discretization::LinearDiscretization<double, long> momentum_space(10);
-    ieompp::discretization::LinearDiscretization<double, long> lattice(10, 1.);
+    ieompp::discretization::LinearDiscretization<double, long> momentum_space(20);
+    ieompp::discretization::LinearDiscretization<double, long> lattice(20, 1.);
 
     /* auto initial = make_term(1., {make_creator(0l, true)}); */
     auto initial = make_term(1., {make_creator(0l, true), make_creator(0l, false), make_annihilator(0l, false)});
