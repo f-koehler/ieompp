@@ -24,7 +24,7 @@ include(cmake/get-eigen.cmake)
 get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED)
 
 # enable OpenMP if possible
 find_package(OpenMP)

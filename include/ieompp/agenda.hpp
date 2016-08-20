@@ -160,7 +160,7 @@ namespace ieompp
                 strm << "\t" << coeff.prefactor << "\t";// << terms[coeff.index] << std::endl;
                 std::copy(terms[coeff.index].operators.begin(), terms[coeff.index].operators.end(),
                           std::ostream_iterator<typename Term::Operator>(strm, " "));
-                strm << endl;
+                strm << std::endl;
             }
         }
 
