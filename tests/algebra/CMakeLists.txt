@@ -1,2 +1,0 @@
-add_ieompp_test(operator test_operator.cpp)
-add_ieompp_test(anticommutator test_anticommutator.cpp)
