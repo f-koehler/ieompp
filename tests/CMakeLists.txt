@@ -1,5 +1,10 @@
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+function(add_ieompp_test test_name)
+    target_link_libraries(${test_name} ${Boost_LIBRARIES})
+    add_test(${test_name} ${test_name})
+endfunction()
+
 add_executable(
     algebra test_algebra.cpp
     algebra/operator_creation.cpp
@@ -7,5 +12,4 @@ add_executable(
     algebra/operator_index_tuple.cpp
     algebra/operator_same_indices.cpp
 )
-target_link_libraries(algebra ${Boost_LIBRARIES})
-add_test(algebra algebra)
+add_ieompp_test(algebra)
