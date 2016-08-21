@@ -7,6 +7,7 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/hubbard/explicit_momentum_space.hpp>
 #include <ieompp/agenda.hpp>
+#include <ieompp/ieom/basis.hpp>
 using namespace ieompp::algebra;
 
 #include <boost/program_options.hpp>
@@ -60,11 +61,22 @@ int main(int argc, char** argv)
 
     using Term = decltype(term);
 
+    /* auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t, */
+    /*                                                            std::vector<Term>& container) { */
+    /*     /1* hamiltonian.generate_terms(t, momentum_space, lattice, container); *1/ */
+    /*     hamiltonian.generate_interaction_terms(t, momentum_space, lattice, container); */
+    /* }; */
+    /* ieompp::ieom::Basis<Term> basis; */
+    /* ieompp::ieom::create_basis(term, basis, generator, 1); */
+    /* cout << basis.size() << endl; */
+    /* for(auto& t : basis) cout << t << endl; */
+
     std::vector<Term> basis;
     basis.push_back(term);
-    hamiltonian.generate_terms(term, momentum_space, lattice, basis);
-
+    hamiltonian.generate_kinetic_terms_1(term, momentum_space, lattice, basis);
     cout << basis.size() << endl;
+    for(auto& t : basis) cout << t << endl;
+
 
     /* using Term     = decltype(term); */
     /* auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t, */
