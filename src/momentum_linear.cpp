@@ -67,5 +67,5 @@ int main(int argc, char** argv)
     };
 
     ieompp::ieom::DynamicalSystem<Term> dyn;
-    ieompp::ieom::create_basis(term, dyn.basis, generator, 2);
+    dyn.basis = ieompp::ieom::make_basis(term, generator, 2);
 }

@@ -64,8 +64,7 @@ int main(int argc, char** argv)
                                                                std::vector<Term>& container) {
         hamiltonian.generate_terms(t, momentum_space, lattice, container);
     };
-    ieompp::ieom::Basis<Term> basis;
-    ieompp::ieom::create_basis(term, basis, generator, 1);
+    auto basis = ieompp::ieom::make_basis(term, generator, 2);
 
     cout << "basis:" << endl;
     for(auto& t : basis) cout << t << endl;

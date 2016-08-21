@@ -12,28 +12,46 @@ namespace ieompp
 {
     namespace ieom
     {
-        template <typename Term>
-        using Basis = std::set<Term, algebra::TermSmaller<Term>>;
+        template <typename TermT>
+        struct Basis : public std::vector<TermT>
+        {
+            using Term = TermT;
+
+            typename std::vector<Term>::const_iterator find(const Term& t) const
+            {
+                return std::find(t.begin(), t.end(),
+                                 [](const Term& a, const Term& b) { return a.same_operators(b); });
+            }
+
+            typename std::vector<Term>::iterator find(const Term& t)
+            {
+                return std::find(t.begin(), t.end(),
+                                 [](const Term& a, const Term& b) { return a.same_operators(b); });
+            }
+        };
 
         template <typename Term, typename Generator>
-        void create_basis(const Term& initial_term, Basis<Term>& basis, const Generator& generator,
-                          std::size_t num_iterations)
+        Basis<Term> make_basis(const Term& initial_term, const Generator& generator,
+                               std::size_t num_iterations)
         {
-            basis.clear();
-            basis.insert(initial_term);
+            Basis<Term> basis;
+            std::set<Term, algebra::TermSmaller<Term>> term_set;
 
             std::vector<Term> todo;
             todo.push_back(initial_term);
 
-            for(std::size_t i = 1; i <= num_iterations; ++i) {
+            for(std::size_t i = 1; i <= num_iterations - 1; ++i) {
                 std::vector<Term> new_terms;
-                for(auto& t : todo) generator(t, new_terms);
+                for(const auto& t : todo) generator(t, new_terms);
                 todo.clear();
-                for(auto& t : new_terms) {
-                    auto ins = basis.insert(t);
+                for(const auto& t : new_terms) {
+                    auto ins = term_set.insert(t);
                     if(ins.second) todo.push_back(t);
                 }
             }
+
+            std::copy(term_set.begin(), term_set.end(), std::back_inserter(basis));
+            return basis;
         }
     }
 }
