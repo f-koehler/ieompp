@@ -8,6 +8,8 @@
 #include <set>
 #include <type_traits>
 
+#include <iostream>
+
 #include <ieompp/algebra/term_comparison.hpp>
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
@@ -100,21 +102,24 @@ namespace ieompp
                     using Operator = typename Term::Operator;
                     using Real     = typename types::real_type<typename Term::Prefactor>::type;
 
-                    auto q_idx = t.operators.front().index1;
-                    auto q     = space[q_idx];
-                    auto prefactor = U * t.prefactor / Real(lattice.num());
+                    const auto prefactor = U * t.prefactor / Real(lattice.num());
+
+                    auto q_idx   = t.operators.front().index1;
+                    const auto q = space[q_idx];
+
                     for(auto k1_idx : space) {
-                        auto k1 = space[k1_idx];
+                        const auto k1 = space[k1_idx];
                         for(auto k2_idx : space) {
-                            auto k2         = space[k2_idx];
-                            auto k3         = k1 + k2 - q;
-                            auto k3_idx     = space(k3);
-                            auto&& new_term = Term();
+                            auto k2            = space[k2_idx];
+                            const auto k3      = k1 + k2 - q;
+                            auto k3_idx        = space(k3);
+                            auto&& new_term    = Term();
                             new_term.prefactor = prefactor;
                             new_term.operators.emplace_back(Operator{true, k1_idx, true});
                             new_term.operators.emplace_back(Operator{true, k2_idx, false});
                             new_term.operators.emplace_back(Operator{false, k3_idx, false});
                             container.emplace_back(new_term);
+                            std::cout << container.back() << std::endl;
                         }
                     }
                 }
@@ -129,12 +134,12 @@ namespace ieompp
 
                     const auto prefactor = t.prefactor * U / Real(lattice.num());
 
-                    auto q1_idx = t.operators[0].index1;
-                    auto q2_idx = t.operators[1].index1;
-                    auto q3_idx = t.operators[2].index1;
-                    const auto q1     = space[q1_idx];
-                    const auto q2     = space[q2_idx];
-                    const auto q3     = space[q3_idx];
+                    auto q1_idx   = t.operators[0].index1;
+                    auto q2_idx   = t.operators[1].index1;
+                    auto q3_idx   = t.operators[2].index1;
+                    const auto q1 = space[q1_idx];
+                    const auto q2 = space[q2_idx];
+                    const auto q3 = space[q3_idx];
 
                     // (A) terms
                     for(auto k1_idx : space) {

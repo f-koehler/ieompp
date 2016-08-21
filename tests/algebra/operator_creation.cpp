@@ -1,5 +1,39 @@
 #include "operator.hpp"
 
+// TODO: the next three tests are very basic
+BOOST_AUTO_TEST_CASE(make_creator_types_1)
+{
+    auto op1 = make_creator(1ul);
+    std::size_t ul = 1ul;
+    auto op2 = make_creator(ul);
+
+    static_assert(std::is_same<decltype(op1), decltype(op2)>::value,
+                  "op1 and op2 should be of same type");
+}
+
+BOOST_AUTO_TEST_CASE(make_creator_types_2)
+{
+    auto op1 = make_creator(1ul, true);
+    std::size_t ul = 1ul;
+    bool b = false;
+    auto op2 = make_creator(ul, b);
+
+    static_assert(std::is_same<decltype(op1), decltype(op2)>::value,
+                  "op1 and op2 should be of same type");
+}
+
+BOOST_AUTO_TEST_CASE(make_creator_types_3)
+{
+    auto op1 = make_creator(1ul, true, 'c');
+    std::size_t ul = 1ul;
+    bool b = false;
+    const char c = 'a';
+    auto op2 = make_creator(ul, b, c);
+
+    static_assert(std::is_same<decltype(op1), decltype(op2)>::value,
+                  "op1 and op2 should be of same type");
+}
+
 BOOST_AUTO_TEST_CASE(make_creator_1)
 {
     Op1 op = make_creator(1ul);
