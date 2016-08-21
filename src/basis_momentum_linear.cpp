@@ -15,15 +15,14 @@ namespace po = boost::program_options;
 int main(int argc, char** argv)
 {
     auto program_desc = "This program computes the operator basis for the Hubbard "
-                        "model on the 1D square lattice in momentum space."
-                        "\n\nOptions";
+                        "model on the 1D square lattice in momentum space.\n\nOptions";
     po::options_description desc(program_desc);
     desc.add_options()
         ("help", "print this help message")
-        ("N", po::value<long>()->default_value(16), "set number of lattice sites")
-        ("q", po::value<double>()->default_value(ieompp::HalfPi<double>::value), "set momentum of operator")
-        ("J", po::value<double>()->default_value(1.), "set hopping prefactor")
-        ("U", po::value<double>()->default_value(1.), "set interaction prefactor");
+        ("N", po::value<long>()->default_value(16), "number of lattice sites")
+        ("q", po::value<double>()->default_value(ieompp::HalfPi<double>::value), "momentum of intial operator")
+        ("J", po::value<double>()->default_value(1.), "hopping prefactor")
+        ("U", po::value<double>()->default_value(1.), "interaction prefactor");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -54,12 +53,11 @@ int main(int argc, char** argv)
     cout << "q_idx = " << q_idx << endl;
     cout << endl;
 
-    auto term = make_term(std::complex<double>(1.), {make_creator(long(q_idx), true)});
+    auto term = make_term(std::complex<double>(1.), {make_creator(q_idx, true)});
     cout << "term  = " << term << endl;
     auto hamiltonian = ieompp::hubbard::momentum_space::Hamiltonian<double>{J, U};
 
     using Term = decltype(term);
-
     auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t,
                                                                std::vector<Term>& container) {
         hamiltonian.generate_terms(t, momentum_space, lattice, container);

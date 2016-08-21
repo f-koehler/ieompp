@@ -51,6 +51,7 @@ namespace ieompp
             }
 
             std::copy(term_set.begin(), term_set.end(), std::back_inserter(basis));
+            std::for_each(basis.begin(), basis.end(), [](Term& t) { t.prefactor = 1.; });
             return basis;
         }
     }

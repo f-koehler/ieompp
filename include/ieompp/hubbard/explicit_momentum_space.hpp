@@ -390,9 +390,7 @@ namespace ieompp
 
                     // add commutator from left hand side
                     if(q2 == q3) {
-                        auto t2      = t;
-                        t2.prefactor = t.prefactor / 2.;
-                        t2.operators.push_back(t.operators.front());
+                        Term t2{t.prefactor / 2., {Operator{t.operators.front()}}};
                         generate_interaction_terms_1(t2, momentum_space, lattice, container);
                     }
                 }

@@ -39,6 +39,7 @@ namespace ieompp
                         matrix(i, basis_pos - basis.begin()) = t.prefactor;
                     }
                 }
+                matrix *= std::complex<double>(0., 1.);
             }
         };
     }

@@ -34,13 +34,18 @@ namespace ieompp
                 void generate_kinetic_terms(const Term& t, const Lattice& lattice,
                                             Container& container)
                 {
-                    static_assert(Term::Operator::number_of_indices == 2,
-                                  "Hubbard model operators have two indices!");
-                    if(t.operators.size() == 1)
+                    auto num_operators = t.operators.size();
+                    if(num_operators == 1) {
+                        assert(t.operators.front().creator);
+                        assert(t.operators.front().index2);
                         generate_kinetic_terms_1(t, lattice, container);
-                    else if(t.operators.size() == 3)
+                    } else if(num_operators == 3) {
+                        assert(t.operators[0].creator && t.operators[1].creator
+                               && !t.operators[2].creator);
+                        assert(t.operators[0].index2 && !t.operators[1].index2
+                               && !t.operators[2].index2);
                         generate_kinetic_terms_3(t, lattice, container);
-                    else
+                    } else
                         THROW(NotImplemented,
                               "Currently only implemented for 1- and 3-operator terms");
                 }
@@ -49,13 +54,18 @@ namespace ieompp
                 void generate_interaction_terms(const Term& t, const Lattice& lattice,
                                                 Container& container)
                 {
-                    static_assert(Term::Operator::number_of_indices == 2,
-                                  "Hubbard model operators have two indices!");
-                    if(t.operators.size() == 1)
+                    auto num_operators = t.operators.size();
+                    if(num_operators == 1) {
+                        assert(t.operators.front().creator);
+                        assert(t.operators.front().index2);
                         generate_interaction_terms_1(t, lattice, container);
-                    else if(t.operators.size() == 3)
+                    } else if(num_operators == 3) {
+                        assert(t.operators[0].creator && t.operators[1].creator
+                               && !t.operators[2].creator);
+                        assert(t.operators[0].index2 && !t.operators[1].index2
+                               && !t.operators[2].index2);
                         generate_interaction_terms_3(t, lattice, container);
-                    else
+                    } else
                         THROW(NotImplemented,
                               "Currently only implemented for 1- and 3-operator terms");
                 }
@@ -64,18 +74,16 @@ namespace ieompp
                 void generate_kinetic_terms_1(const Term& t, const Lattice& lattice,
                                               Container& container)
                 {
-                    const auto r = lattice[t.operators.front().index1];
-                    if(t.operators.front().creator) {
-                        auto new_term = t;
-                        new_term.prefactor *= -J;
-                        for(auto lattice_vector : lattice.lattice_vectors()) {
-                            new_term.operators.front().index1 = lattice(r - lattice_vector);
-                            container.push_back(new_term);
-                            new_term.operators.front().index1 = lattice(r + lattice_vector);
-                            container.push_back(new_term);
-                        }
-                    } else {
-                        THROW(NotImplemented, "TODO");
+                    using Operator = typename Term::Operator;
+
+                    const auto r_idx     = t.operators.front().index1;
+                    const auto r         = lattice[r_idx];
+                    const auto prefactor = -J * t.prefactor;
+                    for(const auto& delta : lattice.lattice_vectors()) {
+                        container.emplace_back(
+                            Term{prefactor, {Operator{true, lattice(r + delta), true}}});
+                        container.emplace_back(
+                            Term{prefactor, {Operator{true, lattice(r - delta), true}}});
                     }
                 }
 
@@ -83,9 +91,37 @@ namespace ieompp
                 void generate_kinetic_terms_3(const Term& t, const Lattice& lattice,
                                               Container& container)
                 {
-                    (void)t;
-                    (void)lattice;
-                    (void)container;
+                    using Operator = typename Term::Operator;
+
+                    const auto r_idx     = t.operators.front().index1;
+                    const auto r         = lattice[r_idx];
+                    const auto prefactor = -J * t.prefactor;
+                    for(const auto& delta : lattice.lattice_vectors()) {
+                        container.emplace_back(
+                            Term{prefactor,
+                                 {Operator{true, lattice(r - delta), true},
+                                  Operator{true, r_idx, false}, Operator{false, r_idx, false}}});
+                        container.emplace_back(
+                            Term{prefactor,
+                                 {Operator{true, lattice(r + delta), true},
+                                  Operator{true, r_idx, false}, Operator{false, r_idx, false}}});
+                        container.emplace_back(Term{prefactor,
+                                                    {Operator{true, r_idx, true},
+                                                     Operator{true, lattice(r - delta), false},
+                                                     Operator{false, r_idx, false}}});
+                        container.emplace_back(Term{prefactor,
+                                                    {Operator{true, r_idx, true},
+                                                     Operator{true, lattice(r + delta), false},
+                                                     Operator{false, r_idx, false}}});
+                        container.emplace_back(
+                            Term{-prefactor,
+                                 {Operator{true, r_idx, true}, Operator{true, r_idx, false},
+                                  Operator{false, lattice(r - delta), false}}});
+                        container.emplace_back(
+                            Term{-prefactor,
+                                 {Operator{true, r_idx, true}, Operator{true, r_idx, false},
+                                  Operator{false, lattice(r + delta), false}}});
+                    }
                 }
 
                 template <typename Term, typename Lattice, typename Container>
@@ -93,19 +129,16 @@ namespace ieompp
                                                   Container& container)
                 {
                     (void)lattice;
-                    if(t.operators.front().creator) {
-                        auto new_term = t;
-                        new_term.prefactor *= U;
-                        new_term.operators.push_back(new_term.operators.front());
-                        new_term.operators.back().index2 = !new_term.operators.back().index2;
+                    using Operator = typename Term::Operator;
 
-                        new_term.operators.push_back(new_term.operators.back());
-                        new_term.operators.back().creator = false;
+                    const auto r_idx     = t.operators.front().index1;
+                    const auto prefactor = U * t.prefactor;
 
-                        container.push_back(new_term);
-                    } else {
-                        THROW(NotImplemented, "TODO");
-                    }
+                    container.emplace_back(
+                        Term{prefactor,
+                             {Operator{true, r_idx, true}, Operator{true, r_idx, false},
+                              Operator{false, r_idx, false}}});
+                    container.emplace_back(Term{prefactor / 2., {Operator{true, r_idx, true}}});
                 }
 
                 template <typename Term, typename Lattice, typename Container>
@@ -113,22 +146,16 @@ namespace ieompp
                                                   Container& container)
                 {
                     (void)lattice;
+                    using Operator = typename Term::Operator;
 
-                    const auto op1_creator = t.operators[0].creator;
-                    const auto op2_creator = t.operators[1].creator;
-                    const auto op3_creator = t.operators[2].creator;
+                    const auto r_idx     = t.operators.front().index1;
+                    const auto prefactor = U * t.prefactor;
 
-                    if(op1_creator && op2_creator && !op3_creator) {
-                        auto new_term = t;
-                        new_term.prefactor *= U / 2;
-                        container.push_back(new_term);
-                        new_term.prefactor = t.prefactor * U;
-                        new_term.operators.erase(new_term.operators.begin() + 1,
-                                                 new_term.operators.end());
-                        container.push_back(new_term);
-                    } else
-                        THROW(NotImplemented,
-                              u8"Currently only the c^† c^† c structure is supported!");
+                    container.emplace_back(
+                        Term{prefactor,
+                             {Operator{true, r_idx, true}, Operator{true, r_idx, false},
+                              Operator{false, r_idx, false}}});
+                    container.emplace_back(Term{prefactor, {Operator{true, r_idx, true}}});
                 }
             };
         }
