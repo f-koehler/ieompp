@@ -1,6 +1,8 @@
 #ifndef TEST_OPERATOR_HPP_
 #define TEST_OPERATOR_HPP_
 
+#include <type_traits>
+
 #include <boost/test/unit_test.hpp>
 
 #include <ieompp/algebra/operator.hpp>

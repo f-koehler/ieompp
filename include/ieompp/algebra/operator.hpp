@@ -92,46 +92,47 @@ namespace ieompp
         template <std::size_t I, typename Operator>
         using index_type = typename std::tuple_element<I, typename Operator::Indices>;
 
+        // TODO: decay reference wrappers
         template <typename Index>
-        constexpr Operator<Index> make_creator(Index&& index)
+        constexpr Operator<typename std::decay<Index>::type> make_creator(Index&& index)
         {
-            return Operator<Index>{true,
-                                   typename std::decay<Index>::type(std::forward<Index>(index))};
+            return Operator<typename std::decay<Index>::type>{true, std::forward<Index>(index)};
         }
 
         template <typename Index1, typename Index2>
-        constexpr Operator<Index1, Index2> make_creator(Index1&& index1, Index2&& index2)
+        constexpr Operator<typename std::decay<Index1>::type, typename std::decay<Index2>::type>
+        make_creator(Index1&& index1, Index2&& index2)
         {
-            return Operator<Index1, Index2>{
-                true, typename std::decay<Index1>::type(std::forward<Index1>(index1)),
-                typename std::decay<Index2>::type(std::forward<Index2>(index2))};
+            return Operator<typename std::decay<Index1>::type, typename std::decay<Index2>::type>{
+                true, std::forward<Index1>(index1), std::forward<Index2>(index2)};
         }
 
         template <typename... Indices>
-        constexpr Operator<Indices...> make_creator(Indices&&... indices)
+        constexpr Operator<typename std::decay<Indices>::type...> make_creator(Indices&&... indices)
         {
-            return Operator<Indices...>{true, std::make_tuple(std::forward<Indices>(indices)...)};
+            return Operator<typename std::decay<Indices>::type...>{
+                true, std::make_tuple(std::forward<Indices>(indices)...)};
         }
 
         template <typename Index>
-        constexpr Operator<Index> make_annihilator(Index&& index)
+        constexpr Operator<typename std::decay<Index>::type> make_annihilator(Index&& index)
         {
-            return Operator<Index>{false,
-                                   typename std::decay<Index>::type(std::forward<Index>(index))};
+            return Operator<typename std::decay<Index>::type>{false, std::forward<Index>(index)};
         }
 
         template <typename Index1, typename Index2>
-        constexpr Operator<Index1, Index2> make_annihilator(Index1&& index1, Index2&& index2)
+        constexpr Operator<typename std::decay<Index1>::type, typename std::decay<Index2>::type>
+        make_annihilator(Index1&& index1, Index2&& index2)
         {
-            return Operator<Index1, Index2>{
-                false, typename std::decay<Index1>::type(std::forward<Index1>(index1)),
-                typename std::decay<Index2>::type(std::forward<Index2>(index2))};
+            return Operator<typename std::decay<Index1>::type, typename std::decay<Index2>::type>{
+                false, std::forward<Index1>(index1), std::forward<Index2>(index2)};
         }
 
         template <typename... Indices>
-        constexpr Operator<Indices...> make_annihilator(Indices&&... indices)
+        constexpr Operator<typename std::decay<Indices>::type...> make_annihilator(Indices&&... indices)
         {
-            return Operator<Indices...>{false, std::make_tuple(std::forward<Indices>(indices)...)};
+            return Operator<typename std::decay<Indices>::type...>{
+                false, std::make_tuple(std::forward<Indices>(indices)...)};
         }
 
         template <std::size_t I, typename Index>

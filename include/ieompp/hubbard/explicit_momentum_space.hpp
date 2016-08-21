@@ -108,13 +108,15 @@ namespace ieompp
                     using Operator = typename Term::Operator;
                     using Real     = typename types::real_type<typename Term::Prefactor>::type;
 
-                    auto q_idx     = t.operators.front().index1;
-                    const auto q   = momentum_space[q_idx];
-                    auto prefactor = U * t.prefactor / Real(lattice.num());
+                    const auto prefactor = U * t.prefactor / Real(lattice.num());
+
+                    auto q_idx   = t.operators.front().index1;
+                    const auto q = momentum_space[q_idx];
+
                     for(auto k1_idx : momentum_space) {
                         const auto k1 = momentum_space[k1_idx];
                         for(auto k2_idx : momentum_space) {
-                            const auto k2      = momentum_space[k2_idx];
+                            auto k2            = momentum_space[k2_idx];
                             const auto k3      = k1 + k2 - q;
                             auto k3_idx        = momentum_space(k3);
                             auto&& new_term    = Term();

@@ -55,35 +55,25 @@ int main(int argc, char** argv)
     cout << "q_idx = " << q_idx << endl;
     cout << endl;
 
-    auto term = make_term(std::complex<double>(1.), {make_creator(q_idx, true)});
+    auto term = make_term(std::complex<double>(1.), {make_creator(long(q_idx), true)});
     cout << "term  = " << term << endl;
     auto hamiltonian = ieompp::hubbard::momentum_space::Hamiltonian<double>{J, U};
 
     using Term = decltype(term);
 
-    /* auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t, */
-    /*                                                            std::vector<Term>& container) { */
-    /*     /1* hamiltonian.generate_terms(t, momentum_space, lattice, container); *1/ */
-    /*     hamiltonian.generate_interaction_terms(t, momentum_space, lattice, container); */
-    /* }; */
-    /* ieompp::ieom::Basis<Term> basis; */
-    /* ieompp::ieom::create_basis(term, basis, generator, 1); */
-    /* cout << basis.size() << endl; */
-    /* for(auto& t : basis) cout << t << endl; */
-
-    std::vector<Term> basis;
-    basis.push_back(term);
-    hamiltonian.generate_kinetic_terms_1(term, momentum_space, lattice, basis);
+    auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t,
+                                                               std::vector<Term>& container) {
+        /* hamiltonian.generate_terms(t, momentum_space, lattice, container); */
+        hamiltonian.generate_interaction_terms(t, momentum_space, lattice, container);
+    };
+    ieompp::ieom::Basis<Term> basis;
+    ieompp::ieom::create_basis(term, basis, generator, 1);
     cout << basis.size() << endl;
     for(auto& t : basis) cout << t << endl;
 
-
-    /* using Term     = decltype(term); */
-    /* auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t, */
-    /*                                                            std::vector<Term>& container) { */
-    /*     hamiltonian.generate_terms(t, momentum_space, lattice, container); */
-    /* }; */
-
-    /* auto agenda = ieompp::Agenda<decltype(term)>(); */
-    /* agenda.commutate<std::vector<Term>>(term, 2, generator); */
+    /* std::vector<Term> basis; */
+    /* basis.push_back(term); */
+    /* hamiltonian.generate_kinetic_terms_1(term, momentum_space, lattice, basis); */
+    /* cout << basis.size() << endl; */
+    /* for(auto& t : basis) cout << t << endl; */
 }
