@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     po::options_description desc(program_desc);
     desc.add_options()
         ("help", "print this help message")
-        ("N", po::value<long>()->default_value(10), "set number of lattice sites")
+        ("N", po::value<long>()->default_value(16), "set number of lattice sites")
         ("q", po::value<double>()->default_value(ieompp::HalfPi<double>::value), "set momentum of operator")
         ("J", po::value<double>()->default_value(1.), "set hopping prefactor")
         ("U", po::value<double>()->default_value(1.), "set interaction prefactor");
@@ -63,17 +63,12 @@ int main(int argc, char** argv)
 
     auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t,
                                                                std::vector<Term>& container) {
-        /* hamiltonian.generate_terms(t, momentum_space, lattice, container); */
-        hamiltonian.generate_interaction_terms(t, momentum_space, lattice, container);
+        hamiltonian.generate_terms(t, momentum_space, lattice, container);
     };
     ieompp::ieom::Basis<Term> basis;
     ieompp::ieom::create_basis(term, basis, generator, 1);
-    cout << basis.size() << endl;
-    for(auto& t : basis) cout << t << endl;
 
-    /* std::vector<Term> basis; */
-    /* basis.push_back(term); */
-    /* hamiltonian.generate_kinetic_terms_1(term, momentum_space, lattice, basis); */
-    /* cout << basis.size() << endl; */
-    /* for(auto& t : basis) cout << t << endl; */
+    cout << "basis:" << endl;
+    for(auto& t : basis) cout << t << endl;
+    cout << "size = " << basis.size() << endl;
 }
