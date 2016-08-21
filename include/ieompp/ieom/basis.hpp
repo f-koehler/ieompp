@@ -19,14 +19,14 @@ namespace ieompp
 
             typename std::vector<Term>::const_iterator find(const Term& t) const
             {
-                return std::find(t.begin(), t.end(),
-                                 [](const Term& a, const Term& b) { return a.same_operators(b); });
+                return std::find_if(this->cbegin(), this->cend(),
+                                    [&t](const Term& a) { return a.same_operators(t); });
             }
 
             typename std::vector<Term>::iterator find(const Term& t)
             {
-                return std::find(t.begin(), t.end(),
-                                 [](const Term& a, const Term& b) { return a.same_operators(b); });
+                return std::find_if(this->begin(), this->end(),
+                                    [&t](const Term& a) { return a.same_operators(t); });
             }
         };
 

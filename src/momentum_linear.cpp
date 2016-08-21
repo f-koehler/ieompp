@@ -68,4 +68,6 @@ int main(int argc, char** argv)
 
     ieompp::ieom::DynamicalSystem<Term> dyn;
     dyn.basis = ieompp::ieom::make_basis(term, generator, 2);
+    cout << "basis size = " << dyn.basis.size() << endl;
+    dyn.create_matrix(generator);
 }
