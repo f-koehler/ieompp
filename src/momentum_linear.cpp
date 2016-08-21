@@ -7,6 +7,7 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/hubbard/explicit_momentum_space.hpp>
 #include <ieompp/ieom/basis.hpp>
+#include <ieompp/ieom/dynamical_system.hpp>
 using namespace ieompp::algebra;
 
 #include <boost/program_options.hpp>
@@ -64,10 +65,7 @@ int main(int argc, char** argv)
                                                                std::vector<Term>& container) {
         hamiltonian.generate_terms(t, momentum_space, lattice, container);
     };
-    ieompp::ieom::Basis<Term> basis;
-    ieompp::ieom::create_basis(term, basis, generator, 1);
 
-    cout << "basis:" << endl;
-    for(auto& t : basis) cout << t << endl;
-    cout << "size = " << basis.size() << endl;
+    ieompp::ieom::DynamicalSystem<Term> dyn;
+    ieompp::ieom::create_basis(term, dyn.basis, generator, 2);
 }
