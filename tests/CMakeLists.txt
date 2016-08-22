@@ -7,6 +7,8 @@ endfunction()
 
 add_executable(
     algebra test_algebra.cpp
+    algebra/operator.cpp
+    algebra/operator_comparison.cpp
     algebra/operator_creation.cpp
     algebra/operator_get_index.cpp
     algebra/operator_index_tuple.cpp
