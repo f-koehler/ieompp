@@ -5,7 +5,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <ieompp/algebra/operator.hpp>
+#include <ieompp/algebra/operator/io.hpp>
+#include <ieompp/algebra/operator/operator.hpp>
 using namespace ieompp::algebra;
 
 using Op1 = Operator<std::size_t>;

@@ -12,35 +12,27 @@ namespace ieompp
     {
         namespace detail
         {
-            template <typename Operator, std::size_t I, std::size_t N>
-            struct has_symbolic_index_helper {
+            template <typename Op, typename T, std::size_t I, std::size_t N>
+            struct has_index_of_type_helper {
                 static constexpr bool value =
-                    !std::is_fundamental<typename index_type<I, Operator>::type>::value
-                    || has_symbolic_index_helper<Operator, I + 1, N>::value;
+                    std::is_same<typename index_type<I, Op>::type, T>::value
+                    || has_index_of_type_helper<Op, T, I + 1, N>::value;
             };
 
-            template <typename Operator, std::size_t N>
-            struct has_symbolic_index_helper<Operator, N, N> {
+            template <typename Op, typename T, std::size_t N>
+            struct has_index_of_type_helper<Op, T, N, N> {
                 static constexpr bool value =
-                    !std::is_fundamental<typename index_type<N, Operator>::type>::value;
+                    std::is_same<typename index_type<N, Op>::type, T>::value;
             };
         }
 
-        template <typename T>
-        struct is_operator {
-            static constexpr bool value = false;
-        };
+        template <typename Op, typename T>
+        struct has_index_of_type
+        {
+            static_assert(is_operator<Op>::value, "Operator must be an operator");
 
-        template <typename... Ts>
-        struct is_operator<Operator<Ts...>> {
-            static constexpr bool value = true;
-        };
-
-        template <typename Operator>
-        struct has_symbolic_index {
             static constexpr bool value =
-                detail::has_symbolic_index_helper<Operator, 0,
-                                                  Operator::number_of_indices - 1>::value;
+                detail::has_index_of_type_helper<Op, T, 0, Op::number_of_indices>::value;
         };
     }
 }

@@ -82,6 +82,16 @@ namespace ieompp
             }
             Indices index_tuple() const { return std::make_tuple(index1, index2); }
         };
+
+        template <typename T>
+        struct is_operator {
+            static constexpr bool value = false;
+        };
+
+        template <typename... Ts>
+        struct is_operator<Operator<Ts...>> {
+            static constexpr bool value = true;
+        };
     }
 }
 
