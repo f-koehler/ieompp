@@ -7,7 +7,7 @@ using namespace std;
 #include "ieompp/discretization/square.hpp"
 #include "ieompp/discretization/linear.hpp"
 #include "ieompp/hubbard/explicit_momentum_space.hpp"
-#include "ieompp/algebra/term_checks.hpp"
+#include "ieompp/algebra/term/checks.hpp"
 using namespace ieompp::algebra;
 
 int main()

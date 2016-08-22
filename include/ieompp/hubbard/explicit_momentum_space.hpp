@@ -8,7 +8,7 @@
 #include <set>
 #include <type_traits>
 
-#include <ieompp/algebra/term_comparison.hpp>
+#include <ieompp/algebra/term/order.hpp>
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
 #include <ieompp/hubbard/dispersion.hpp>

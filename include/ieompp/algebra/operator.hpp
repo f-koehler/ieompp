@@ -5,6 +5,7 @@
 #include <ieompp/algebra/operator/io.hpp>
 #include <ieompp/algebra/operator/make.hpp>
 #include <ieompp/algebra/operator/operator.hpp>
+#include <ieompp/algebra/operator/order.hpp>
 
 namespace ieompp
 {

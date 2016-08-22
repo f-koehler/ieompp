@@ -6,7 +6,7 @@
 #include <set>
 #include <vector>
 
-#include <ieompp/algebra/term_comparison.hpp>
+#include <ieompp/algebra/term/order.hpp>
 
 namespace ieompp
 {

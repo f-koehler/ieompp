@@ -4,8 +4,9 @@
 #include <cstddef>
 #include <type_traits>
 
+#include <ieompp/algebra/operator/operator.hpp>
+#include <ieompp/algebra/operator/get_index.hpp>
 #include <ieompp/types/zero.hpp>
-#include <ieompp/algebra/operator.hpp>
 
 namespace ieompp
 {
