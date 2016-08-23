@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     po::notify(vm);
 
     if(vm.count("help")) {
-        cout << desc << endl;
+        cout << desc << '\n';
         return 1;
     }
 
@@ -37,16 +37,16 @@ int main(int argc, char* argv[])
     const auto r_idx = vm["r_idx"].as<long>();
     const auto J     = vm["J"].as<double>();
     const auto U     = vm["U"].as<double>();
-    cout << "N     = " << N << endl;
-    cout << "r_idx = " << r_idx << endl;
-    cout << "J     = " << J << endl;
-    cout << "U     = " << U << endl;
-    cout << endl;
+    cout << "N     = " << N << '\n';
+    cout << "r_idx = " << r_idx << '\n';
+    cout << "J     = " << J << '\n';
+    cout << "U     = " << U << '\n';
+    cout << '\n';
 
     ieompp::discretization::LinearDiscretization<double, long> lattice(N, 1.);
 
     auto term = make_term(std::complex<double>(1.), {make_creator(r_idx, true)});
-    cout << "term = " << term << endl;
+    cout << "term = " << term << '\n';
     auto hamiltonian = ieompp::hubbard::real_space::Hamiltonian<double>{J, U};
 
     using Term = decltype(term);
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     };
     auto basis = ieompp::ieom::make_basis(term, generator, 2);
 
-    cout << "basis:" << endl;
-    for(auto& t : basis) cout << t << endl;
-    cout << "size = " << basis.size() << endl;
+    cout << "basis:\n";
+    for(auto& t : basis) cout << t << '\n';
+    cout << "size = " << basis.size() << '\n';
 }

@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     po::notify(vm);
 
     if(vm.count("help")) {
-        cout << desc << endl;
+        cout << desc << '\n';
         return 1;
     }
 
@@ -42,17 +42,17 @@ int main(int argc, char* argv[])
     const auto J     = vm["J"].as<double>();
     const auto U     = vm["U"].as<double>();
     const auto dt    = vm["dt"].as<double>();
-    cout << "N     = " << N << endl;
-    cout << "r_idx = " << r_idx << endl;
-    cout << "J     = " << J << endl;
-    cout << "U     = " << U << endl;
-    cout << "dt    = " << dt << endl;
-    cout << endl;
+    cout << "N     = " << N << '\n';
+    cout << "r_idx = " << r_idx << '\n';
+    cout << "J     = " << J << '\n';
+    cout << "U     = " << U << '\n';
+    cout << "dt    = " << dt << '\n';
+    cout << '\n';
 
     ieompp::discretization::LinearDiscretization<double, long> lattice(N, 1.);
 
     auto term = make_term(std::complex<double>(1.), {make_creator(r_idx, true)});
-    cout << "term = " << term << endl;
+    cout << "term = " << term << '\n';
     auto hamiltonian = ieompp::hubbard::real_space::Hamiltonian<double>{J, U};
 
     using Term = decltype(term);
@@ -62,9 +62,9 @@ int main(int argc, char* argv[])
 
     ieompp::ieom::DynamicalSystem<Term> dyn;
     dyn.basis = ieompp::ieom::make_basis(term, generator, 2);
-    cout << "basis size = " << dyn.basis.size() << endl;
+    cout << "basis size = " << dyn.basis.size() << '\n';
     dyn.create_matrix(generator);
-    cout << endl << dyn.matrix << endl << endl;
+    cout << '\n' << dyn.matrix << '\n' << '\n';
 
     using Solver = ieompp::ieom::RK4<Term>;
     Solver solver;
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     for(std::size_t i = 0; i < 10000; ++i) {
         solver.step(dyn.matrix, v);
         strm << i * dt << "\t" << std::abs(v(0)) << "\t" << std::abs(v(1)) << "\t" << std::abs(v(2))
-             << "\t" << std::abs(v(3)) << endl;
+             << "\t" << std::abs(v(3)) << '\n';
     }
     strm.close();
 }
