@@ -113,6 +113,8 @@ namespace ieompp
                     auto q_idx   = t.operators.front().index1;
                     const auto q = momentum_space[q_idx];
 
+                    container.emplace_back(
+                        Term{t.prefactor * U / 2., {Operator{true, q_idx, true}}});
                     for(auto k1_idx : momentum_space) {
                         const auto k1 = momentum_space[k1_idx];
                         for(auto k2_idx : momentum_space) {
@@ -390,8 +392,12 @@ namespace ieompp
 
                     // add commutator from left hand side
                     if(q2 == q3) {
+                        std::vector<Term> comm;
                         Term t2{t.prefactor / 2., {Operator{t.operators.front()}}};
-                        generate_interaction_terms_1(t2, momentum_space, lattice, container);
+                        generate_interaction_terms_1(t2, momentum_space, lattice, comm);
+                        std::for_each(comm.begin(), comm.end(),
+                                      [](Term& a) { a.prefactor = -a.prefactor; });
+                        std::copy(comm.begin(), comm.end(), std::back_inserter(container));
                     }
                 }
             };
