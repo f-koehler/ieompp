@@ -20,6 +20,7 @@ namespace ieompp
         typename std::enable_if<!ieompp::types::is_eigen_matrix<T>::value, T>::type
         zero(const T& templ)
         {
+            (void)templ;
             return T(0.);
         }
     }
