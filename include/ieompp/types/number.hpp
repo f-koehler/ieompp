@@ -1,7 +1,10 @@
-#ifndef IEOMPP_TYPES_COMPLEX_HPP_
-#define IEOMPP_TYPES_COMPLEX_HPP_
+#ifndef IEOMPP_TYPES_NUMBER_HPP_
+#define IEOMPP_TYPES_NUMBER_HPP_
 
+#include <cmath>
 #include <complex>
+#include <limits>
+#include <type_traits>
 
 namespace ieompp
 {
@@ -37,6 +40,21 @@ namespace ieompp
         struct real_type {
             using type = typename detail::real_type_helper<T, is_complex<T>::value>::type;
         };
+
+        template <typename T>
+        typename std::enable_if<std::is_floating_point<T>::value, bool>::type is_zero(const T& c)
+        {
+            static const auto epsilon  = std::nextafter(std::numeric_limits<T>::min(), 1.);
+            static const auto epsilon2 = -epsilon;
+            return (c < epsilon) && (c > epsilon2);
+        }
+
+        template <typename T>
+        typename std::enable_if<is_complex<T>::value, bool>::type is_zero(const T& c)
+        {
+            using Real = typename real_type<T>::type;
+            return is_zero<Real>(c.real()) && is_zero<Real>(c.imag());
+        }
     }
 }
 

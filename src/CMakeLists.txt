@@ -5,3 +5,5 @@
 # add_executable(hubbard_exp_momentum_1d hubbard_exp_momentum_1d.cpp)
 # add_executable(inner_product inner_product.cpp)
 add_subdirectory(hubbard_explicit)
+
+add_executable(main main.cpp)

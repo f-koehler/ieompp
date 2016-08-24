@@ -12,7 +12,7 @@
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
 #include <ieompp/hubbard/dispersion.hpp>
-#include <ieompp/types/complex.hpp>
+#include <ieompp/types/number.hpp>
 #include <ieompp/types/dot_product.hpp>
 
 namespace ieompp
