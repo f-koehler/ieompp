@@ -5,7 +5,8 @@
 #include <type_traits>
 #include <vector>
 
-#include <ieompp/algebra/operator.hpp>
+#include <ieompp/algebra/operator/operator.hpp>
+#include <ieompp/algebra/operator/get_index.hpp>
 #include <ieompp/symbolic/kronecker.hpp>
 
 namespace ieompp
@@ -43,21 +44,21 @@ namespace ieompp
         }
 
         template <typename Operator>
-        typename std::enable_if<!has_symbolic_index<Operator>::value, bool>::type
+        typename std::enable_if<!is_symbolic_operator<Operator>::value, bool>::type
         anticommutates(const Operator& op1, const Operator& op2)
         {
             return (op1.creator == op2.creator) || !op1.same_indices(op2);
         }
 
         template <typename Operator>
-        typename std::enable_if<has_symbolic_index<Operator>::value, bool>::type
+        typename std::enable_if<is_symbolic_operator<Operator>::value, bool>::type
         anticommutates(const Operator& op1, const Operator& op2)
         {
             return (op1.creator == op2.creator);
         }
 
         template <typename Operator>
-        typename std::enable_if<has_symbolic_index<Operator>::value,
+        typename std::enable_if<is_symbolic_operator<Operator>::value,
                                 std::vector<symbolic::Kronecker>>::type
         anticommutator(const Operator& op1, const Operator& op2)
         {
@@ -68,7 +69,7 @@ namespace ieompp
         }
 
         template <typename Operator>
-        typename std::enable_if<!has_symbolic_index<Operator>::value, int>::type
+        typename std::enable_if<!is_symbolic_operator<Operator>::value, int>::type
         anticommutator(const Operator& op1, const Operator& op2)
         {
             (void)op1;

@@ -44,8 +44,8 @@ namespace ieompp
                     Term&& new_term    = Term();
                     new_term.prefactor = prefactor;
                     new_term.prefactor *= sign;
-                    if(has_symbolic_index<typename Term::Operator>::value)
-                        new_term.prefactor *= anticommutator(a_ops[k - 1], b_ops[l - 1]);
+                    /* if(is_symbolic_operator<typename Term::Operator>::value) */
+                    /*     new_term.prefactor *= anticommutator(a_ops[k - 1], b_ops[l - 1]); */
 
                     auto& new_ops = new_term.operators;
                     if(k > 1)

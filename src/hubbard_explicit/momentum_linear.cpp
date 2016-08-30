@@ -71,4 +71,10 @@ int main(int argc, char** argv)
     cout << "basis size = " << dyn.basis.size() << '\n';
     dyn.create_matrix(generator);
     cout << dyn.matrix << '\n';
+    /* cout << '\n' << dyn.matrix.transpose() << '\n'; */
+
+    cout << '\n';
+    for(const auto& t : dyn.basis) {
+        cout << t << '\t' << total_momentum<0>(t, momentum_space) << '\n';
+    }
 }

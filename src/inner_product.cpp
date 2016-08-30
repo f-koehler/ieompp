@@ -1,19 +1,32 @@
 #include <iostream>
 using namespace std;
 
-#include <ieompp/inner_product/inner_product.hpp>
+#include <ieompp/algebra/commutator.hpp>
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
-namespace algebra = ieompp::algebra;
+#include <ieompp/types/number.hpp>
+using namespace ieompp::algebra;
+
+template <typename Term>
+typename ieompp::types::real_type<typename Term::Prefactor>::type inner_product_1_1(const Term& a,
+                                                                                    const Term& b)
+{
+    auto& op_a = a.operators.front();
+    auto& op_b = b.operators.front();
+    if((op_a.creator == op_b.creator) && (op_a.same_indices(op_b))) return 1.;
+    return 0.;
+}
+
 
 int main()
 {
-    auto t1 =
-        algebra::make_term(1., {algebra::make_creator(0, true), algebra::make_creator(0, false),
-                                algebra::make_annihilator(0, false)});
-    auto t2 = algebra::make_term(1., {algebra::make_creator(0, true)});
+    auto term1 = make_term(1., {make_annihilator(0, true)});
+    auto term2 = make_term(1., {make_annihilator(0, true), make_annihilator(0, true), make_annihilator(0, true)});
 
-    ieompp::inner_product::InnerProductTable table;
-    cout << table.results[0][0] << endl;
-    cout << table.results[1][0] << endl;
+    std::vector<decltype(term1)> comm;
+    commutate(term1, term2, comm);
+
+    for(auto& t : comm) {
+        cout << t << '\n';
+    }
 }
