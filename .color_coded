@@ -1,0 +1,9 @@
+-x
+c++
+-I/home/fabian/code/ieompp/include
+-Wall
+-Wextra
+-std=gnu++14
+-fcolor-diagnostics
+-isystem
+/home/fabian/code/ieompp/external/eigen
