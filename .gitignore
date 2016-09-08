@@ -5,3 +5,4 @@ build/*
 external/eigen
 include/ieompp/version.hpp
 iwyu.html
+*.kdev4
