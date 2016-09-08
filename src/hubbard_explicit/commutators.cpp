@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+#include <ieompp/platform.hpp>
 #include <ieompp/algebra/commutator.hpp>
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
@@ -10,6 +11,13 @@ using namespace ieompp::algebra;
 
 int main()
 {
+    cout << "Arch: " << IEOMPP_ARCH << '\n';
+    cout << "OS: " << IEOMPP_OS << '\n';
+    cout << IEOMPP_COMPILER_NAME << " " << IEOMPP_COMPILER_VERSION << '\n';
+    cout << "Boost " << IEOMPP_BOOST_VERSION << '\n';
+    cout << "Eigen " << IEOMPP_EIGEN_VERSION << '\n';
+    cout << '\n';
+
     auto hopping1 = make_term(symbolic::make_prefactor(1.),
                               {make_creator("k", true), make_annihilator("k", true)});
     auto hopping2 = make_term(symbolic::make_prefactor(1.),
