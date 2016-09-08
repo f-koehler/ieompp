@@ -8,21 +8,19 @@
 #include <type_traits>
 #include <vector>
 
-#include <ieompp/symbolic/kronecker.hpp>
+#include <ieompp/algebra/kronecker.hpp>
 
 namespace ieompp
 {
     namespace symbolic
     {
-        template <typename ValueT, typename KroneckerT = Kronecker,
-                  typename ContainerT = std::vector<KroneckerT>>
+        template <typename ValueT, typename KroneckerT = algebra::Kronecker>
         struct Prefactor {
             using Value     = ValueT;
             using Kronecker = KroneckerT;
-            using Container = ContainerT;
 
             Value value;
-            Container kroneckers;
+            std::vector<Kronecker> kroneckers;
 
             Prefactor& operator*=(const Kronecker& rhs)
             {
@@ -63,16 +61,15 @@ namespace ieompp
         };
 
         template <typename Value>
-        Prefactor<Value> make_prefactor(
-            const Value& val,
-            std::initializer_list<Kronecker> kroneckers = std::initializer_list<Kronecker>())
+        Prefactor<Value> make_prefactor(const Value& val,
+                                        std::initializer_list<algebra::Kronecker> kroneckers =
+                                            std::initializer_list<algebra::Kronecker>())
         {
             return Prefactor<Value>{val, kroneckers};
         }
 
-        template <typename Value, typename Kronecker, typename Container>
-        std::ostream& operator<<(std::ostream& strm,
-                                 const Prefactor<Value, Kronecker, Container>& rhs)
+        template <typename Value, typename Kronecker>
+        std::ostream& operator<<(std::ostream& strm, const Prefactor<Value, Kronecker>& rhs)
         {
             if(rhs.kroneckers.empty()) {
                 strm << rhs.value;
