@@ -27,10 +27,10 @@ namespace ieompp
             static_assert(std::is_same<typename Container::value_type, Term>::value,
                           "Container type must hold values of the same type as Term");
 
-            auto& a_ops = a.operators;
-            auto& b_ops = b.operators;
-            auto n      = a_ops.size();
-            auto m      = b_ops.size();
+            const auto& a_ops = a.operators;
+            const auto& b_ops = b.operators;
+            const auto n      = a_ops.size();
+            const auto m      = b_ops.size();
 
             assert(m * n % 2 == 0);
 
@@ -46,6 +46,7 @@ namespace ieompp
                     new_term.prefactor *= sign;
                     /* if(is_symbolic_operator<typename Term::Operator>::value) */
                     /*     new_term.prefactor *= anticommutator(a_ops[k - 1], b_ops[l - 1]); */
+                    anticommutator<Term>(a_ops[k - 1], b_ops[l - 1], new_term.prefactor);
 
                     auto& new_ops = new_term.operators;
                     if(k > 1)

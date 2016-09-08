@@ -3,19 +3,15 @@
 
 #include <ostream>
 #include <string>
+#include <type_traits>
 
 namespace ieompp
 {
-    namespace symbolic
+    namespace algebra
     {
         struct Kronecker {
             std::string a;
             std::string b;
-
-            template <typename Index>
-            Kronecker(const Index& idx1, const Index& idx2) : a(idx1.index), b(idx2.index)
-            {
-            }
 
             bool operator==(const Kronecker& rhs) const
             {
@@ -32,6 +28,18 @@ namespace ieompp
         {
             strm << u8"δ_{" << kronecker.a << "," << kronecker.b << "}";
             return strm;
+        }
+
+        Kronecker make_kronecker(const std::string& a, const std::string& b)
+        {
+            return Kronecker{a, b};
+        }
+
+        template <typename IndexType>
+        typename std::enable_if<std::is_arithmetic<IndexType>::value, Kronecker>::type
+        make_kronecker(const IndexType& a, const IndexType& b)
+        {
+            return Kronecker{to_string(a), to_string(b)};
         }
     }
 }

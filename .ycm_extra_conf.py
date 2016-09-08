@@ -36,11 +36,11 @@ import ycm_core
 flags = [
     '-x',
     'c++',
-    '-I/home/fabian/code/ieompp/include',
+    '-Iinclude',
     '-Wall',
     '-Wextra',
     '-std=gnu++14',
-    '-isystem', '/home/fabian/code/ieompp/external/eigen',
+    '-isystem', 'external/eigen',
 ]
 
 

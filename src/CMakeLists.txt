@@ -8,3 +8,4 @@ add_subdirectory(hubbard_explicit)
 
 add_executable(main main.cpp)
 add_executable(inner_product inner_product.cpp)
+add_executable(commutate commutate.cpp)
