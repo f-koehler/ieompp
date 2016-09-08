@@ -22,6 +22,11 @@ namespace ieompp
                 // TODO: write explicit form
                 return !(*this == rhs);
             }
+
+            void order()
+            {
+                if(a > b) std::swap(a, b);
+            }
         };
 
         std::ostream& operator<<(std::ostream& strm, const Kronecker& kronecker)

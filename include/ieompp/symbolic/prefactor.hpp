@@ -58,6 +58,17 @@ namespace ieompp
                 copy *= rhs;
                 return copy;
             }
+
+            void order_kroneckers()
+            {
+                for(auto& k : kroneckers) k.order();
+                std::sort(kroneckers.begin(), kroneckers.end(),
+                          [](const Kronecker& a, const Kronecker& b) {
+                              if(a.a < b.a) return true;
+                              if(a.b > b.a) return false;
+                              return a.b < b.b;
+                          });
+            }
         };
 
         template <typename Value>
