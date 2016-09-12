@@ -31,8 +31,8 @@ BOOST_AUTO_TEST_CASE(test_same_indices_2)
 
 BOOST_AUTO_TEST_CASE(test_same_indices_3)
 {
-    Op3 a{true, {0ul, true, 'a'}}, b{false, {0ul, true, 'b'}}, c{true, {0ul, false, 'a'}},
-        d{false, {1ul, true, 'a'}};
+    Op3 a{true, std::make_tuple(0ul, true, 'a')}, b{false, std::make_tuple(0ul, true, 'b')},
+        c{true, std::make_tuple(0ul, false, 'a')}, d{false, std::make_tuple(1ul, true, 'a')};
 
     BOOST_TEST(a.same_indices(a));
     BOOST_TEST(b.same_indices(b));
