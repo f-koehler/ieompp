@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(test_index_tuple_2)
 
 BOOST_AUTO_TEST_CASE(test_index_tuple_3)
 {
-    Op3 op{true, {1ul, true, 'a'}};
+    Op3 op{true, std::make_tuple(1ul, true, 'a')};
 
     BOOST_TEST((op.index_tuple() == std::make_tuple(1ul, true, 'a')));
 }

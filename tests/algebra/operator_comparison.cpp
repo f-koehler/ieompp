@@ -46,8 +46,9 @@ BOOST_AUTO_TEST_CASE(test_equality_2)
 
 BOOST_AUTO_TEST_CASE(test_equality_3)
 {
-    Op3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
-        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
+    Op3 a{true, std::make_tuple(0ul, true, 'a')}, b{true, std::make_tuple(1ul, true, 'a')},
+        c{true, std::make_tuple(0ul, false, 'a')}, d{true, std::make_tuple(0ul, true, 'b')},
+        e{false, std::make_tuple(0ul, true, 'a')};
 
     BOOST_TEST(a == a);
     BOOST_TEST(b == b);
@@ -127,8 +128,9 @@ BOOST_AUTO_TEST_CASE(test_inequality_2)
 
 BOOST_AUTO_TEST_CASE(test_inequality_3)
 {
-    Op3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
-        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
+    Op3 a{true, std::make_tuple(0ul, true, 'a')}, b{true, std::make_tuple(1ul, true, 'a')},
+        c{true, std::make_tuple(0ul, false, 'a')}, d{true, std::make_tuple(0ul, true, 'b')},
+        e{false, std::make_tuple(0ul, true, 'a')};
 
     BOOST_TEST(!(a != a));
     BOOST_TEST(!(b != b));
