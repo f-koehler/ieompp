@@ -11,13 +11,6 @@ using namespace ieompp::algebra;
 
 int main()
 {
-    cout << "Arch: " << IEOMPP_ARCH << '\n';
-    cout << "OS: " << IEOMPP_OS << '\n';
-    cout << IEOMPP_COMPILER_NAME << " " << IEOMPP_COMPILER_VERSION << '\n';
-    cout << "Boost " << IEOMPP_BOOST_VERSION << '\n';
-    cout << "Eigen " << IEOMPP_EIGEN_VERSION << '\n';
-    cout << '\n';
-
     auto hopping1 = make_term(symbolic::make_prefactor(1.),
                               {make_creator("k", true), make_annihilator("k", true)});
     auto hopping2 = make_term(symbolic::make_prefactor(1.),
@@ -48,8 +41,7 @@ int main()
     cout << "\t[ " << interaction << "  ,  " << t1 << " ]=\n";
     {
         vector<Term> comm;
-        commutate(hopping1, t1, comm);
-        commutate(hopping2, t1, comm);
+        commutate(interaction, t1, comm);
         for(auto& t : comm) {
             t.prefactor.order_kroneckers();
             cout << "\t\t" << t << '\n';
@@ -73,8 +65,7 @@ int main()
     cout << "\t[ " << interaction << "  ,  " << t2 << " ]=\n";
     {
         vector<Term> comm;
-        commutate(hopping1, t2, comm);
-        commutate(hopping2, t2, comm);
+        commutate(interaction, t2, comm);
         for(auto& t : comm) {
             t.prefactor.order_kroneckers();
             cout << "\t\t" << t << '\n';
