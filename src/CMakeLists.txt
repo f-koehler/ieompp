@@ -8,3 +8,6 @@ add_subdirectory(hubbard_explicit)
 
 add_executable(main main.cpp)
 add_executable(inner_product inner_product.cpp)
+
+depend_eigen(main)
+depend_eigen(inner_product)
