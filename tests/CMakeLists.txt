@@ -2,6 +2,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 function(add_ieompp_test test_name)
     target_link_libraries(${test_name} ${Boost_LIBRARIES})
+    depend_eigen(${test_name})
     add_test(${test_name} ${test_name})
 endfunction()
 
