@@ -1,56 +1,94 @@
 #ifndef IEOMPP_PLATFORM_HPP_
 #define IEOMPP_PLATFORM_HPP_
 
-#include <string>
 #include <sstream>
+#include <string>
 
+#include <Eigen/src/Core/util/Macros.h>
 #include <boost/predef.h>
 #include <boost/version.hpp>
-#include <Eigen/src/Core/util/Macros.h>
+
+/*
+ * silence warning about the destruction of static objects in reversed order
+ * we are only dealing with std::string objects
+ */
+#include <boost/predef.h>
+#if(BOOST_COMP_CLANG)
+#if __has_warning("-Wexit-time-destructors")
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+#endif
+#endif
 
 namespace ieompp
 {
-    template <typename... Ts>
-    std::string stringize(const Ts&... ts)
+    namespace platform
     {
-        std::ostringstream strm;
-        using Tmp = int[];
-        (void)Tmp{0, ((void)(strm << ts), 0)...};
-        return strm.str();
-    }
+        template <typename... Ts>
+        std::string stringize(const Ts&... ts)
+        {
+            std::ostringstream strm;
+            using Tmp = int[];
+            (void)Tmp{0, ((void)(strm << ts), 0)...};
+            return strm.str();
+        }
 
-    const auto IEOMPP_BOOST_VERSION =
-        stringize(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
-                  BOOST_VERSION % 100);
-    const auto IEOMPP_EIGEN_VERSION =
-        stringize(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
+        auto boost()
+        {
+            static const auto str =
+                stringize(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
+                          BOOST_VERSION % 100);
+            return str;
+        }
 
+        auto eigen()
+        {
+            static const auto str =
+                stringize(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
+            return str;
+        }
+
+        auto architecture()
+        {
 #if BOOST_ARCH_X86_32
-    const auto IEOMPP_ARCH = stringize("x86_32");
+            static const auto str = stringize("x86_32");
 #elif BOOST_ARCH_X86_64
-    const auto IEOMPP_ARCH = stringize("x86_64");
+            static const auto str = stringize("x86_64");
 #else
-    const auto IEOMPP_ARCH = stringize("UntestedArch");
+            static const auto str = stringize("UntestedArch");
 #endif
+            return str;
+        }
 
+        auto operating_system()
+        {
 #if BOOST_OS_LINUX
-    const auto IEOMPP_OS = stringize("Linux");
+            static const auto str = stringize("Linux");
 #else
-    const auto IEOMPP_OS = stringize("UntestedOS");
+            static const auto str = stringize("UntestedOS");
 #endif
+            return str;
+        }
 
+        auto compiler()
+        {
 #if BOOST_COMP_CLANG
-    const auto IEOMPP_COMPILER_NAME    = stringize("Clang");
-    const auto IEOMPP_COMPILER_VERSION =
-        stringize(__clang_major__, '.', __clang_minor__, '.', __clang_patchlevel__);
+            static const auto str = stringize("Clang ", __clang_major__, '.', __clang_minor__, '.',
+                                              __clang_patchlevel__);
 #elif BOOST_COMP_GNUC
-    const auto IEOMPP_COMPILER_NAME    = stringize("Gcc");
-    const auto IEOMPP_COMPILER_VERSION =
-        stringize(__GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
+            static const auto str =
+                stringize("Gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
 #else
-    const auto IEOMPP_COMPILER_NAME    = stringize("UntestedCompiler");
-    const auto IEOMPP_COMPILER_VERSION = stringize("UntestedVersion");
+            static const auto str = stringize("UntestedCompiler");
 #endif
+            return str;
+        }
+    }
 }
+
+
+#if(BOOST_COMP_CLANG)
+#pragma clang diagnostic pop
+#endif
 
 #endif
