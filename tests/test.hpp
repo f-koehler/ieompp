@@ -2,9 +2,13 @@
 #define TEST_HPP_
 
 #include <boost/predef.h>
+
 #if(BOOST_COMP_CLANG)
-#if __has_warning("-Wdisabled-macro-expansion")
-#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
+#if __has_warning("-Wglobal-constructors")
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+#include <boost/test/unit_test.hpp>
+#pragma clang diagnostic pop
 #endif
 #endif
 

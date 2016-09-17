@@ -1,5 +1,6 @@
 #include "operator.hpp"
 #include <ieompp/algebra/operator/make.hpp>
+using namespace ieompp::algebra;
 
 // TODO: the next three tests are very basic
 BOOST_AUTO_TEST_CASE(make_creator_types_1)

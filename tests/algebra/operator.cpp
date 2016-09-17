@@ -1,5 +1,6 @@
 #include "operator.hpp"
 #include <ieompp/algebra/operator/is_symbolic.hpp>
+using namespace ieompp::algebra;
 
 // check number of indices
 static_assert(Op1::number_of_indices == 1, "Op1 should have 1 index");

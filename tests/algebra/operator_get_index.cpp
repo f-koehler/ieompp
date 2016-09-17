@@ -1,5 +1,6 @@
 #include "operator.hpp"
 #include <ieompp/algebra/operator/get_index.hpp>
+using namespace ieompp::algebra;
 
 // check index_type
 static_assert(std::is_same<index_type<0, Op1>::type, std::size_t>::value,
