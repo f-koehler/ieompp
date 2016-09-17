@@ -1,17 +1,13 @@
 language: cpp
 
-addons:
-  apt:
-    packages: libboost-all-dev
-
 matrix:
   include:
     - os: linux
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-4.9', 'g++-4.9', 'libboost-all-dev']
+          sources: ['ubuntu-toolchain-r-test', 'boost-latest']
+          packages: ['gcc-4.9', 'g++-4.9', 'libboost1.55-all-dev']
       env:
         - COMPILER_CC=gcc-4.9
         - COMPILER_CXX=g++-4.9
