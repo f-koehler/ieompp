@@ -1,19 +1,16 @@
 #!/bin/bash
 
-CMAKE_NAME="cmake-3.5.2"
-CMAKE_URL="https://cmake.org/files/v3.5/cmake-3.5.2.tar.gz"
-CMAKE_SHA512="7b08eb9f1b37993553f89c03eceedc465dc52b787dec99b78c74ebff2817d0aac9764e82ad835e8fc39f61cd2d2c0a3544d3f5ae299234ed52e9a940edf30b81  cmake-3.5.2.tar.gz"
+CMAKE_NAME="cmake-3.6.2"
+CMAKE_URL="https://cmake.org/files/v3.6/cmake-3.6.2.tar.gz"
+CMAKE_SHA512="50b217d3205cc65c2b55ece4ba050b1aa80dfa8a7e22ee0ec16c741cd99a639847d197a2e8448d7710c2a6ea7ba7bbcd6e3f12810f65dcc74bd27bcdb02f844a  cmake-3.6.2.tar.gz"
 
-# create a dir for cmake
-mkdir -p ${CMAKE_NAME}
-cd ${CMAKE_NAME}
-
-if [[ -e build.successful ]]; then
-    echo "cmake already built; skipping"
+cd ..
+if [[ -e ${CMAKE_NAME}.successful ]]; then
+    echo "${CMAKE_NAME} already built; skipping"
     exit 0
 fi
 
-echo "cmake not present; building"
+echo "${CMAKE_NAME} not present; building"
 
 # download cmake tarball
 if [[ ! -f ${CMAKE_NAME}.tar.gz ]]; then
@@ -30,12 +27,15 @@ fi
 
 # extract tarball
 tar xf ${CMAKE_NAME}.tar.gz
+rm ${CMAKE_NAME}.tar.gz
 
 # create build dir
-mkdir -p build
-cd build
-CC=gcc CXX=g++ ../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$PWD/../dist --system-curl --no-qt-gui
+mkdir -p ${CMAKE_NAME}-build
+cd ${CMAKE_NAME}-build
+CC=gcc CXX=g++ ../${CMAKE_NAME}/configure --parallel=$(nproc) --prefix=$HOME/local/ --system-curl --no-qt-gui
 CC=gcc CXX=g++ make -j$(nproc) && make -j$(nproc) install
 
 cd ..
-touch build.successful
+rm -rf ${CMAKE_NAME}
+rm -rf ${CMAKE_NAME}-build
+touch ${CMAKE_NAME}.successful
