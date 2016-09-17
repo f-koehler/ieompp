@@ -25,6 +25,7 @@ get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
 find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # enable OpenMP if possible
 find_package(OpenMP)
@@ -38,6 +39,9 @@ add_subdirectory(src)
 # option to enable unit testing
 option(ieompp_ENABLE_TESTS "Enable unit tests" ON)
 if(${ieompp_ENABLE_TESTS})
+    if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+        option(ieompp_ENABLE_CLANG_COVERAGE "Enable Clang coverage reports" OFF)
+    endif()
     enable_testing()
     add_subdirectory(tests)
 endif()

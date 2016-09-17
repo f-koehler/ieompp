@@ -8,18 +8,6 @@
 #include <boost/predef.h>
 #include <boost/version.hpp>
 
-/*
- * silence warning about the destruction of static objects in reversed order
- * we are only dealing with std::string objects
- */
-#include <boost/predef.h>
-#if(BOOST_COMP_CLANG)
-#if __has_warning("-Wexit-time-destructors")
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wexit-time-destructors"
-#endif
-#endif
-
 namespace ieompp
 {
     namespace platform

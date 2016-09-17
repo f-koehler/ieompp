@@ -1,4 +1,5 @@
 #include "operator.hpp"
+using namespace ieompp::algebra;
 
 BOOST_AUTO_TEST_CASE(test_index_tuple_1)
 {
