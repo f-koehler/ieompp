@@ -5,7 +5,7 @@ using namespace std;
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/hubbard/explicit_momentum_space.hpp>
+#include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
 #include <ieompp/ieom/basis.hpp>
 #include <ieompp/ieom/dynamical_system.hpp>
 using namespace ieompp::algebra;
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     po::options_description desc(program_desc);
     desc.add_options()
         ("help", "print this help message")
-        ("N", po::value<long>()->default_value(16), "set number of lattice sites")
+        ("N", po::value<size_t>()->default_value(16), "set number of lattice sites")
         ("q", po::value<double>()->default_value(ieompp::HalfPi<double>::value), "set momentum of operator")
         ("J", po::value<double>()->default_value(1.), "set hopping prefactor")
         ("U", po::value<double>()->default_value(1.), "set interaction prefactor");
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    const auto N = vm["N"].as<long>();
+    const auto N = vm["N"].as<size_t>();
     auto q       = vm["q"].as<double>();
     const auto J = vm["J"].as<double>();
     const auto U = vm["U"].as<double>();
@@ -45,8 +45,8 @@ int main(int argc, char** argv)
     cout << "U = " << U << '\n';
     cout << '\n';
 
-    ieompp::discretization::LinearDiscretization<double, long> momentum_space(N);
-    ieompp::discretization::LinearDiscretization<double, long> lattice(N, 1.);
+    ieompp::discretization::LinearDiscretization<double, size_t> momentum_space(N);
+    ieompp::discretization::LinearDiscretization<double, size_t> lattice(N, 1.);
     auto q_idx = momentum_space(q);
     q = momentum_space[q_idx];
 
@@ -55,26 +55,34 @@ int main(int argc, char** argv)
     cout << "q_idx = " << q_idx << '\n';
     cout << '\n';
 
-    auto term = make_term(std::complex<double>(1.), {make_creator(long(q_idx), true)});
+    auto term = make_term(1., {make_creator(size_t(q_idx), true)});
     cout << "term  = " << term << '\n';
-    auto hamiltonian = ieompp::hubbard::momentum_space::Hamiltonian<double>{J, U};
+    ieompp::hubbard::momentum_space::MatrixElements<double> matrix_elements{J, U};
 
+    cout << std::flush;
+
+    const auto basis_size = N * N + 1ul;
     using Term = decltype(term);
-
-    auto generator = [&hamiltonian, &momentum_space, &lattice](const Term& t,
-                                                               std::vector<Term>& container) {
-        hamiltonian.generate_terms(t, momentum_space, lattice, container);
-    };
-
-    ieompp::ieom::DynamicalSystem<Term> dyn;
-    dyn.basis = ieompp::ieom::make_basis(term, generator, 2);
-    cout << "basis size = " << dyn.basis.size() << '\n';
-    dyn.create_matrix(generator);
-    cout << dyn.matrix << '\n';
-    /* cout << '\n' << dyn.matrix.transpose() << '\n'; */
-
-    cout << '\n';
-    for(const auto& t : dyn.basis) {
-        cout << t << '\t' << total_momentum<0>(t, momentum_space) << '\n';
+    std::vector<Term> basis;
+    basis.reserve(basis_size);
+    basis.push_back(term);
+    for(const auto k1_idx : momentum_space) {
+        const auto k1 = momentum_space[k1_idx];
+        for(const auto k2_idx : momentum_space) {
+            const auto k2     = momentum_space[k2_idx];
+            const auto k3_idx = momentum_space(k1 + k2 - q);
+            basis.push_back(make_term(1., {make_creator(k1_idx, true), make_creator(k2_idx, false),
+                                           make_annihilator(k3_idx, false)}));
+        }
     }
+
+    Eigen::MatrixXd m(basis_size, basis_size);
+    for(auto i = 0l; i < basis_size; ++i) {
+        for(auto j = 0l; j < basis_size; ++j) {
+            m(i, j) = matrix_elements.hopping(basis[i], basis[j], momentum_space, lattice)
+                      + matrix_elements.interaction(basis[i], basis[j], momentum_space);
+        }
+    }
+
+    cout << "\n\n" << m << "\n\n";
 }
