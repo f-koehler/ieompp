@@ -66,10 +66,9 @@ namespace ieompp
                         if(op1.same_indices(col_term.operators.front())) {
                             return disp(momentum_space[op1.index1], lattice);
                         }
-                        return 0.;
                     }
                     return 0.;
-                } else if(len_row == 3) {
+                } else {
                     if(len_col == 1) {
                         return 0.;
                     } else {
@@ -108,17 +107,31 @@ namespace ieompp
                         }
                         return 0.;
                     } else {
-                        auto momentum_total = momentum_space[col_term.operators[0].index1]
-                                              + momentum_space[col_term.operators[1].index1]
-                                              - momentum_space[col_term.operators[2].index1];
+                        const auto& op1 = col_term.operators[0];
+                        const auto& op2 = col_term.operators[1];
+                        const auto& op3 = col_term.operators[2];
+                        auto momentum_total = momentum_space[op1.index1]
+                                              + momentum_space[op2.index1]
+                                              - momentum_space[op3.index1];
                         if(row_term.operators[0].index1 == momentum_space(momentum_total)) {
                             return U / momentum_space.num();
                         }
                         return 0.;
                     }
-                } else if(len_row == 3) {
+                } else {
                     if(len_col == 1) {
+                        const auto& op1 = row_term.operators[0];
+                        const auto& op2 = row_term.operators[1];
+                        const auto& op3 = row_term.operators[2];
+                        auto momentum_total = momentum_space[op1.index1]
+                                              + momentum_space[op2.index1]
+                                              - momentum_space[op3.index1];
+                        if(col_term.operators[0].index1 == momentum_space(momentum_total)) {
+                            return U / (2 * momentum_space.num());
+                        }
+                        return 0.;
                     } else {
+                        return 0.;
                     }
                 }
             }

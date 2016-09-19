@@ -19,6 +19,8 @@ include(cmake/native.cmake)
 # include(cmake/version-script.cmake)
 # run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+
 # fetch Eigen
 include(cmake/get-eigen.cmake)
 get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
