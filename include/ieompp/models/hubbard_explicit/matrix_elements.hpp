@@ -9,6 +9,89 @@ namespace ieompp
 {
     namespace hubbard
     {
+        template <typename Term>
+        bool valid_1op_term(const Term& t)
+        {
+            return (t.operators.size() == 1) && t.operators[0].creator && t.operators[0].index2;
+        }
+
+        template <typename Term>
+        bool valid_3op_term(const Term& t)
+        {
+            return (t.operators.size() == 3) && t.operators[0].creator && t.operators[1].creator
+                   && !t.operators[2].creator && t.operators[0].index2 && !t.operators[1].index2
+                   && !t.operators[2].index2;
+        }
+
+        namespace real_space
+        {
+            template <typename PrefactorT>
+            struct MatrixElements {
+                using Prefactor = PrefactorT;
+
+                const Prefactor J = 1., U = 1.;
+
+                template <typename Term, typename Lattice>
+                Prefactor hopping(const Term& row_term, const Term& col_term,
+                                  const Lattice& lattice) const;
+
+                template <typename Term, typename Lattice>
+                Prefactor interaction(const Term& row_term, const Term& col_term,
+                                      const Lattice& lattice) const;
+            };
+
+            template <typename Prefactor>
+            template <typename Term, typename Lattice>
+            Prefactor MatrixElements<Prefactor>::hopping(const Term& row_term, const Term& col_term,
+                                                         const Lattice& lattice) const
+            {
+            }
+
+            template <typename Prefactor>
+            template <typename Term, typename Lattice>
+            Prefactor MatrixElements<Prefactor>::interaction(const Term& row_term,
+                                                             const Term& col_term,
+                                                             const Lattice& lattice) const
+            {
+                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator-type in Term-type must be a Hubbard like operator!");
+                const auto len_row = row_term.operators.size();
+                const auto len_col = col_term.operators.size();
+
+                assert(valid_1op_term(row_term) || valid_3op_term(row_term));
+                assert(valid_1op_term(col_term) || valid_3op_term(col_term));
+
+                const auto& row_ops = row_term.operators;
+                const auto& col_ops = col_term.operators;
+
+                if(len_row == 1) {
+                    if(len_col == 1) {
+                        return (row_ops[0].index1 == col_ops[0].index1) ? U / 2. : 0.;
+                    } else {
+                        if((row_ops[0].index1 == col_ops[0].index1)
+                           && (col_ops[0].index1 == col_ops[1].index1)
+                           && (col_ops[1].index1 == col_ops[2].index1))
+                            return U / 2.;
+                        return 0.;
+                    }
+                } else {
+                    if(len_col == 1) {
+                        if((row_ops[0].index1 == col_ops[0].index1)
+                           && (row_ops[0].index1 == row_ops[1].index1)
+                           && (row_ops[1].index1 == row_ops[2].index1))
+                            return U / .2;
+                        return 0.;
+                    } else {
+                        if((row_ops[0].index1 == col_ops[0].index1)
+                           && (row_ops[1].index1 == col_ops[1].index1)
+                           && (row_ops[2].index1 == col_ops[2].index1))
+                            return U / 2.;
+                        return 0.;
+                    }
+                }
+            }
+        } /* namespace real_space */
+
         namespace momentum_space
         {
             template <typename PrefactorT>
@@ -25,30 +108,13 @@ namespace ieompp
                 template <typename Term, typename MomentumSpace>
                 Prefactor interaction(const Term& row_term, const Term& col_term,
                                       const MomentumSpace& momentum_space) const;
-
-                template <typename Term>
-                bool valid_1op_term(const Term& t) const
-                {
-                    return (t.operators.size() == 1) && t.operators[0].creator
-                           && t.operators[0].index2;
-                }
-
-                template <typename Term>
-                bool valid_3op_term(const Term& t) const
-                {
-                    return (t.operators.size() == 3) && t.operators[0].creator
-                           && t.operators[1].creator && !t.operators[2].creator
-                           && t.operators[0].index2 && !t.operators[1].index2
-                           && !t.operators[2].index2;
-                }
             };
 
             template <typename Prefactor>
             template <typename Term, typename MomentumSpace, typename Lattice>
-            typename MatrixElements<Prefactor>::Prefactor
-            MatrixElements<Prefactor>::hopping(const Term& row_term, const Term& col_term,
-                                               const MomentumSpace& momentum_space,
-                                               const Lattice& lattice) const
+            Prefactor MatrixElements<Prefactor>::hopping(const Term& row_term, const Term& col_term,
+                                                         const MomentumSpace& momentum_space,
+                                                         const Lattice& lattice) const
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
@@ -87,7 +153,7 @@ namespace ieompp
 
             template <typename Prefactor>
             template <typename Term, typename MomentumSpace>
-            typename MatrixElements<Prefactor>::Prefactor
+            Prefactor
             MatrixElements<Prefactor>::interaction(const Term& row_term, const Term& col_term,
                                                    const MomentumSpace& momentum_space) const
             {
@@ -135,9 +201,9 @@ namespace ieompp
                     }
                 }
             }
-        }
-    }
-}
+        } /* namespace momentum_space */
+    } /* namespace hubbard */
+} /* namespace ieompp */
 
 
 #endif
