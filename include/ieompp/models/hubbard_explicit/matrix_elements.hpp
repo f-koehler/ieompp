@@ -115,7 +115,7 @@ namespace ieompp
                         if((row_ops[0].index1 == col_ops[0].index1)
                            && (row_ops[0].index1 == row_ops[1].index1)
                            && (row_ops[1].index1 == row_ops[2].index1))
-                            return U / .2;
+                            return U / 2.;
                         return 0.;
                     } else {
                         if((row_ops[0].index1 == col_ops[0].index1)
