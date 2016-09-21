@@ -23,7 +23,7 @@ namespace ieompp
                     if(is_symbolic_index<I, Operator>::value)
                         return anticommutates_helper<Operator, I + 1, N>::call(a, b);
                     if(get_index<I>(a) != get_index<I>(b)) return true;
-                    anticommutates_helper<Operator, I + 1, N>::call(a, b);
+                    return anticommutates_helper<Operator, I + 1, N>::call(a, b);
                 }
             };
 
@@ -45,7 +45,8 @@ namespace ieompp
                         auto& idx2 = get_index<I>(op2);
                         if(idx1 != idx2) prefactor *= make_kronecker(idx1, idx2);
                     }
-                    anticommutator_helper<Operator, Prefactor, I + 1, N>::call(op1, op2, prefactor);
+                    return anticommutator_helper<Operator, Prefactor, I + 1, N>::call(op1, op2,
+                                                                                      prefactor);
                 }
             };
 
