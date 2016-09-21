@@ -35,9 +35,8 @@ namespace ieompp
                 Prefactor hopping(const Term& row_term, const Term& col_term,
                                   const Lattice& lattice) const;
 
-                template <typename Term, typename Lattice>
-                Prefactor interaction(const Term& row_term, const Term& col_term,
-                                      const Lattice& lattice) const;
+                template <typename Term>
+                Prefactor interaction(const Term& row_term, const Term& col_term) const;
             };
 
             template <typename Prefactor>
@@ -45,13 +44,50 @@ namespace ieompp
             Prefactor MatrixElements<Prefactor>::hopping(const Term& row_term, const Term& col_term,
                                                          const Lattice& lattice) const
             {
+                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator-type in Term-type must be a Hubbard like operator!");
+                const auto len_row = row_term.operators.size();
+                const auto len_col = col_term.operators.size();
+
+                assert(valid_1op_term(row_term) || valid_3op_term(row_term));
+                assert(valid_1op_term(col_term) || valid_3op_term(col_term));
+
+                const auto& row_ops = row_term.operators;
+                const auto& col_ops = col_term.operators;
+
+                if(len_row == 1) {
+                    if(len_col == 1) {
+                        if(lattice.neighboring(row_ops[0].index1, col_ops[0].index1)) return -J;
+                        return 0.;
+                    }
+                    return 0.;
+                } else {
+                    if(len_col == 1) {
+                        return 0.;
+                    }
+                    if((row_ops[1].index1 == col_ops[1].index1)
+                       && (row_ops[2].index1 == col_ops[2].index1)
+                       && lattice.neighboring(row_ops[0].index1, col_ops[0].index1)) {
+                        return -J;
+                    }
+                    if((row_ops[0].index1 == col_ops[0].index1)
+                       && (row_ops[2].index1 == col_ops[2].index1)
+                       && lattice.neighboring(row_ops[1].index1, col_ops[1].index1)) {
+                        return -J;
+                    }
+                    if((row_ops[0].index1 == col_ops[0].index1)
+                       && (row_ops[1].index1 == col_ops[1].index1)
+                       && lattice.neighboring(row_ops[2].index1, col_ops[2].index1)) {
+                        return J;
+                    }
+                    return 0.;
+                }
             }
 
             template <typename Prefactor>
-            template <typename Term, typename Lattice>
+            template <typename Term>
             Prefactor MatrixElements<Prefactor>::interaction(const Term& row_term,
-                                                             const Term& col_term,
-                                                             const Lattice& lattice) const
+                                                             const Term& col_term) const
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
