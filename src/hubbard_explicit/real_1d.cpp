@@ -5,14 +5,16 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
-#include <ieompp/types/number.hpp>
+#include <ieompp/types/eigen_init.hpp>
 using namespace ieompp::algebra;
 
 #include <Eigen/Sparse>
 
 int main()
 {
-    const size_t N = 30;
+    Eigen::initParallel();
+
+    const size_t N = 4;
 
     ieompp::discretization::LinearDiscretization<double, size_t> lattice(N, 1.);
 
@@ -35,13 +37,12 @@ int main()
     const auto basis_size = basis.size();
 
     ieompp::hubbard::real_space::MatrixElements<double> elements{1., 1.};
-    Eigen::SparseMatrix<double> matrix(basis_size, basis_size);
 
-    for(auto i = 0ul; i < basis_size; ++i) {
-        for(auto j = 0ul; j < basis_size; ++j) {
-            const auto val = elements.interaction(basis[i], basis[j])
-                             + elements.hopping(basis[i], basis[j], lattice);
-            if(!ieompp::types::is_zero(val)) matrix.insert(i, j) = val;
-        }
-    }
+    auto generator = [&elements, &basis, &lattice](std::size_t i, std::size_t j) {
+        return elements.hopping(basis[i], basis[j], lattice)
+               + elements.interaction(basis[i], basis[j]);
+    };
+    auto matrix = ieompp::types::init_parallel<Eigen::SparseMatrix<double>>(basis_size, basis_size,
+                                                                            generator);
+    cout << matrix << '\n';
 }

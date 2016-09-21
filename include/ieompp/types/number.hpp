@@ -55,6 +55,19 @@ namespace ieompp
             using Real = typename real_type<T>::type;
             return is_zero<Real>(c.real()) && is_zero<Real>(c.imag());
         }
+
+        template <typename T>
+        typename std::enable_if<is_complex<T>::value, T>::type conjugate(T t)
+        {
+            t.imag(-t.imag());
+            return t;
+        }
+
+        template <typename T>
+        typename std::enable_if<!is_complex<T>::value, T>::type conjugate(T t)
+        {
+            return t;
+        }
     }
 }
 

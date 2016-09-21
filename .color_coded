@@ -7,3 +7,4 @@ c++
 -fcolor-diagnostics
 -isystem
 external/eigen
+-fopenmp=libomp
