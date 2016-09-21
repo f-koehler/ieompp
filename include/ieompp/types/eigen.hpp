@@ -4,6 +4,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #pragma GCC diagnostic pop
 
 namespace ieompp
@@ -11,13 +12,48 @@ namespace ieompp
     namespace types
     {
         template <typename T>
-        struct is_eigen_matrix
-        {
+        struct is_eigen_matrix {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
         struct is_eigen_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename Scalar, int Options, typename Index>
+        struct is_eigen_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename T>
+        struct is_dense_eigen_matrix {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
+        struct is_dense_eigen_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename Scalar, int Options, typename Index>
+        struct is_dense_eigen_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+            static constexpr bool value = false;
+        };
+
+        template <typename T>
+        struct is_sparse_eigen_matrix {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
+        struct is_sparse_eigen_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows,
+                                                    MaxCols>> {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, int Options, typename Index>
+        struct is_sparse_eigen_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
 
@@ -34,6 +70,15 @@ namespace ieompp
             static constexpr auto options  = Options;
             static constexpr auto max_rows = MaxRows;
             static constexpr auto max_cols = MaxCols;
+        };
+
+        template <typename ScalarT, int Options, typename IndexT>
+        struct eigen_matrix_traits<Eigen::SparseMatrix<ScalarT, Options, IndexT>> {
+            using Scalar  = ScalarT;
+            using Index   = IndexT;
+            using Triplet = Eigen::Triplet<Scalar, Index>;
+
+            static constexpr auto options = Options;
         };
 
         namespace detail

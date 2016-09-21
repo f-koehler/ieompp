@@ -41,6 +41,7 @@ flags = [
     '-Wextra',
     '-std=gnu++14',
     '-isystem', 'external/eigen',
+    '-fopenmp=libomp',
 ]
 
 
