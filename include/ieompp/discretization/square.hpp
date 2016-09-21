@@ -62,6 +62,8 @@ namespace ieompp
                 const Real& dy() const;
                 const std::array<Vector, 2>& lattice_vectors() const;
 
+                bool neighboring(const Index a, const Index b) const;
+
                 ConstIndexIterator begin() const;
                 ConstIndexIterator end() const;
                 IndexIterator begin();
@@ -229,6 +231,25 @@ namespace ieompp
         SquareDiscretization<Real, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
+        }
+
+        template <typename Real, typename Index>
+        bool SquareDiscretization<Real, Index>::neighboring(const Index a, const Index b) const
+        {
+            const auto x_a = a / _num_y;
+            const auto y_a = a % _num_x;
+            const auto x_b = b / _num_y;
+            const auto y_b = b % _num_x;
+
+            if(x_a == x_b) {
+                return ((y_a + 1) % _num_y == y_b) || ((y_b + 1) % _num_y == y_a);
+            }
+
+            if(y_a == y_b) {
+                return ((x_a + 1) % _num_x == x_b) || ((x_b + 1) % _num_x == x_a);
+            }
+
+            return false;
         }
 
         template <typename Real, typename Index>

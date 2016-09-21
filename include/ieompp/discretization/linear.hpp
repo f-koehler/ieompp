@@ -47,6 +47,8 @@ namespace ieompp
                 const Real& dx() const;
                 const std::array<Vector, 1>& lattice_vectors() const;
 
+                bool neighboring(const Index a, const Index b) const;
+
                 ConstIndexIterator begin() const;
                 ConstIndexIterator end() const;
                 IndexIterator begin();
@@ -165,6 +167,13 @@ namespace ieompp
         LinearDiscretization<Real, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
+        }
+
+
+        template <typename Real, typename Index>
+        bool LinearDiscretization<Real, Index>::neighboring(const Index a, const Index b) const
+        {
+            return ((a + 1) % _num == b) || ((b + 1) % _num == a);
         }
 
         template <typename Real, typename Index>
