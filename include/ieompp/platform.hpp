@@ -71,6 +71,15 @@ namespace ieompp
 #endif
             return str;
         }
+
+        auto license()
+        {
+            return stringize("ieompp  Copyright (C) 2015  Fabian Köhler\n"
+                             "This program comes with ABSOLUTELY NO WARRANTY.\n"
+                             "This is free software, and you are welcome to redistribute it under "
+                             "certain conditions.\n"
+                             "For details please refer to the distributed LICENSE file.\n");
+        }
     }
 }
 
