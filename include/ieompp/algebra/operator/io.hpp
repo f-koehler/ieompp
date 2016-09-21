@@ -14,7 +14,11 @@ namespace ieompp
     namespace algebra
     {
         struct BoolSpinPrinter {
+#ifndef IEOMPP_DISABLE_ARROWS
             static void print(std::ostream& strm, bool b) { strm << (b ? u8"↑" : u8"↓"); }
+#else
+            static void print(std::ostream& strm, bool b) { strm << b; }
+#endif
         };
 
         template <typename T>
