@@ -12,26 +12,25 @@ namespace ieompp
     namespace types
     {
         template <typename Matrix>
-        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, Matrix>::type init(
-            std::size_t rows, std::size_t cols,
+        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, void>::type init(
+            Matrix& m, std::size_t rows, std::size_t cols,
             std::function<typename eigen_matrix_traits<Matrix>::Scalar(std::size_t, std::size_t)> f)
         {
-            Matrix m(rows, cols);
+            m = Matrix(rows, cols);
             for(std::size_t i = 0; i < rows; ++i) {
                 for(std::size_t j = 0; j < cols; ++j) {
                     const auto val = f(i, j);
                     if(!is_zero(val)) m.insert(i, j) = val;
                 }
             }
-            return m;
         }
 
         template <typename Matrix>
-        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, Matrix>::type init_symmetric(
-            std::size_t rows,
+        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, void>::type init_symmetric(
+            Matrix& m, std::size_t rows,
             std::function<typename eigen_matrix_traits<Matrix>::Scalar(std::size_t, std::size_t)> f)
         {
-            Matrix m(rows, rows);
+            m = Matrix(rows, rows);
             for(std::size_t i = 0; i < rows; ++i) {
                 for(std::size_t j = 0; j < i; ++j) {
                     const auto val = f(i, j);
@@ -43,30 +42,27 @@ namespace ieompp
                 const auto val = f(i, i);
                 if(!is_zero(val)) m.insert(i, i) = val;
             }
-            return m;
         }
 
         template <typename Matrix>
-        typename std::enable_if<!is_sparse_eigen_matrix<Matrix>::value, Matrix>::type init(
-            std::size_t rows, std::size_t cols,
+        typename std::enable_if<!is_sparse_eigen_matrix<Matrix>::value, void>::type init(
+            Matrix& m, std::size_t rows, std::size_t cols,
             std::function<typename eigen_matrix_traits<Matrix>::Scalar(std::size_t, std::size_t)> f)
         {
-            Matrix m(rows, cols);
+            m = Matrix::Zero(rows, cols);
             for(std::size_t i = 0; i < rows; ++i) {
                 for(std::size_t j = 0; j < cols; ++j) {
                     m(i, j) = f(i, j);
                 }
             }
-            return m;
         }
 
         template <typename Matrix>
-        typename std::enable_if<!is_sparse_eigen_matrix<Matrix>::value, Matrix>::type
-        init_symmetric(
-            std::size_t rows,
+        typename std::enable_if<!is_sparse_eigen_matrix<Matrix>::value, void>::type init_symmetric(
+            Matrix& m, std::size_t rows,
             std::function<typename eigen_matrix_traits<Matrix>::Scalar(std::size_t, std::size_t)> f)
         {
-            Matrix m(rows, rows);
+            m = Matrix::Zero(rows, rows);
             for(std::size_t i = 0; i < rows; ++i) {
                 for(std::size_t j = 0; j < i; ++j) {
                     const auto val = f(i, j);
@@ -75,16 +71,15 @@ namespace ieompp
                 }
                 m(i, i) = f(i, i);
             }
-            return m;
         }
 
         template <typename Matrix>
-        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, Matrix>::type init_parallel(
-            std::size_t rows, std::size_t cols,
+        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, void>::type init_parallel(
+            Matrix& m, std::size_t rows, std::size_t cols,
             std::function<typename eigen_matrix_traits<Matrix>::Scalar(std::size_t, std::size_t)> f)
         {
 #if defined(_OPENMP)
-            Matrix m(rows, cols);
+            m = Matrix(rows, cols);
 
             omp_lock_t write_lock;
             omp_init_lock(&write_lock);
@@ -108,11 +103,11 @@ namespace ieompp
             }
 
             omp_destroy_lock(&write_lock);
-
-            return m;
+#else
+            init<Matrix>(rows, cols, f);
 #endif
-            return init<Matrix>(rows, cols, f);
         }
     }
+}
 
 #endif
