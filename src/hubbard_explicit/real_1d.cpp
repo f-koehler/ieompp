@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 using namespace std;
 
@@ -5,16 +6,44 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
+#include <ieompp/ode.hpp>
 #include <ieompp/types/eigen_init.hpp>
 using namespace ieompp::algebra;
 
 #include <Eigen/Sparse>
 
-int main()
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+
+int main(int argc, char** argv)
 {
     Eigen::initParallel();
 
-    const size_t N = 4;
+    po::options_description description("Solve the 1d Hubbard model in real space\n\nOptions");
+    description.add_options()
+        ("help", "print this help message")
+        ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
+        ("J", po::value<double>()->default_value(1.), "hopping prefactor")
+        ("U", po::value<double>()->default_value(.25), "interaction strength")
+        ("dt", po::value<double>()->default_value(.01), "step width for integrator")
+        ("t_end", po::value<double>()->default_value(1.), "stop time for the simulation")
+        ("out", po::value<string>()->default_value("real_1d.txt"), "output file");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, description), vm);
+    po::notify(vm);
+
+    if(vm.count("help")) {
+        cout << description << '\n';
+        return 1;
+    }
+
+    const auto N     = vm["N"].as<size_t>();
+    const auto J     = vm["J"].as<double>();
+    const auto U     = vm["U"].as<double>();
+    const auto dt    = vm["dt"].as<double>();
+    const auto t_end = vm["t_end"].as<double>();
+    const auto out   = vm["out"].as<string>();
 
     ieompp::discretization::LinearDiscretization<double, size_t> lattice(N, 1.);
 
@@ -36,13 +65,40 @@ int main()
     }
     const auto basis_size = basis.size();
 
-    ieompp::hubbard::real_space::MatrixElements<double> elements{1., 1.};
+    ieompp::hubbard::real_space::MatrixElements<double> elements{J, U};
 
     auto generator = [&elements, &basis, &lattice](std::size_t i, std::size_t j) {
         return elements.hopping(basis[i], basis[j], lattice)
                + elements.interaction(basis[i], basis[j]);
     };
-    auto matrix = ieompp::types::init_parallel<Eigen::SparseMatrix<double>>(basis_size, basis_size,
-                                                                            generator);
-    cout << matrix << '\n';
+
+    /* using Matrix = Eigen::MatrixXd; */
+    using Matrix = Eigen::SparseMatrix<double>;
+    using Vector = Eigen::VectorXcd;
+
+    Vector current(basis_size);
+    current.setZero();
+    current(0) = 1.;
+
+    ieompp::RungeKutta4<Matrix, Vector> rk4(basis_size);
+    ieompp::types::init_symmetric(rk4.matrix(), basis_size, generator);
+
+
+    ofstream file(out.c_str());
+
+    const auto W = 4 * J;
+
+    const auto steps = size_t(round(t_end / dt));
+    for(size_t step = 0; step < steps; ++step) {
+        rk4.step(current, dt);
+        const auto t   = (step + 1) * dt;
+        const auto val = abs(current(0));
+        cout << t << "\t" << val << '\n';
+        file << t / W << "\t" << val << '\n';
+    }
+
+    file.flush();
+    file.close();
+
+    return 0;
 }
