@@ -71,6 +71,53 @@ namespace ieompp
 #endif
             return str;
         }
+
+        auto cpp_library()
+        {
+#if defined(BOOST_LIB_STD_GNU)
+            static const auto str = stringize("libstdc++", BOOST_LIB_STD_GNU);
+#elif defined(BOOST_LIB_STD_CXX)
+            static const auto str = stringize("libc++", _LIBCPP_VERSION);
+#else
+            static const auto str = "UnknownC++Library";
+#endif
+            return str;
+        }
+
+        enum class Endian : uint8_t { Unknown, Big, Little, BigWord, LittleWord };
+        auto endianess()
+        {
+#if defined(BOOST_ENDIAN_BIG_BYTE)
+            return Endian::Big;
+#elif defined(BOOST_ENDIAN_LITTLE_BYTE)
+            return Endian::Little;
+#elif defined(BOOST_ENDIAN_BIG_WORD)
+            return Endian::BigWord;
+#elif defined(BOOST_LITTLE_WORD)
+            return Endian::LittleWord;
+#endif
+        }
+
+        std::ostream& operator<<(std::ostream& strm, Endian e)
+        {
+            switch(e) {
+                case Endian::Big:
+                    strm << "BigEndian";
+                    return strm;
+                case Endian::Little:
+                    strm << "LittleEndian";
+                    return strm;
+                case Endian::BigWord:
+                    strm << "BigWordSwappedEndian";
+                    return strm;
+                case Endian::LittleWord:
+                    strm << "LittleWordSwappedEndian";
+                    return strm;
+                default:
+                    strm << "UnknownEndian";
+                    return strm;
+            }
+        }
     }
 }
 

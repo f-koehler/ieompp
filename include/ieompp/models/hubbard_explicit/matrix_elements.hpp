@@ -239,6 +239,29 @@ namespace ieompp
             }
         } /* namespace momentum_space */
     } /* namespace hubbard */
+
+    namespace io
+    {
+        template <typename FileInfoHeader, typename Prefactor>
+        FileInfoHeader& add_file_info(FileInfoHeader& header,
+                                      const hubbard::real_space::MatrixElements<Prefactor>& m)
+        {
+            header.add_entry("MatrixElements (real space)");
+            header.add_entry("  J", m.J);
+            header.add_entry("  U", m.U);
+            return header;
+        }
+
+        template <typename FileInfoHeader, typename Prefactor>
+        FileInfoHeader& add_file_info(FileInfoHeader& header,
+                                      const hubbard::momentum_space::MatrixElements<Prefactor>& m)
+        {
+            header.add_entry("MatrixElements (momentum space)");
+            header.add_entry("  J", m.J);
+            header.add_entry("  U", m.U);
+            return header;
+        }
+    }
 } /* namespace ieompp */
 
 
