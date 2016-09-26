@@ -5,6 +5,7 @@ using namespace std;
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
+#include <ieompp/io/file_info.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
 #include <ieompp/ode.hpp>
 #include <ieompp/types/eigen_init.hpp>
@@ -80,17 +81,23 @@ int main(int argc, char** argv)
     current.setZero();
     current(0) = 1.;
 
-    ieompp::RungeKutta4<Matrix, Vector> rk4(basis_size);
+    ieompp::RungeKutta4<Matrix, Vector> rk4(basis_size, dt);
     ieompp::types::init_symmetric(rk4.matrix(), basis_size, generator);
 
 
     ofstream file(out.c_str());
+    ieompp::io::FileInfoHeader fih;
+    fih.add_blank();
+    ieompp::io::add_file_info(fih, elements);
+    fih.add_blank();
+    ieompp::io::add_file_info(fih, rk4);
+    file << fih << '\n';
 
     const auto W = 4 * J;
 
     const auto steps = size_t(round(t_end / dt));
     for(size_t step = 0; step < steps; ++step) {
-        rk4.step(current, dt);
+        rk4.step(current);
         const auto t   = (step + 1) * dt;
         const auto val = abs(current(0));
         cout << t << "\t" << val << '\n';
