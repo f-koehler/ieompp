@@ -61,11 +61,11 @@ namespace ieompp
         auto compiler()
         {
 #if BOOST_COMP_CLANG
-            static const auto str = stringize("Clang ", __clang_major__, '.', __clang_minor__, '.',
+            static const auto str = stringize("clang ", __clang_major__, '.', __clang_minor__, '.',
                                               __clang_patchlevel__);
 #elif BOOST_COMP_GNUC
             static const auto str =
-                stringize("Gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
+                stringize("gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
 #else
             static const auto str = stringize("UntestedCompiler");
 #endif
