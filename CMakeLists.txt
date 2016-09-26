@@ -16,10 +16,8 @@ include(cmake/warnings.cmake)
 include(cmake/native.cmake)
 
 # create version.hpp
-# include(cmake/version-script.cmake)
-# run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+include(cmake/version-script.cmake)
+run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
 # fetch Eigen
 include(cmake/get-eigen.cmake)
