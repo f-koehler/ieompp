@@ -64,6 +64,8 @@ namespace ieompp
         template <typename ScalarT, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
         struct eigen_matrix_traits<Eigen::Matrix<ScalarT, Rows, Cols, Options, MaxRows, MaxCols>> {
             using Scalar = ScalarT;
+            using Index =
+                typename Eigen::Matrix<ScalarT, Rows, Cols, Options, MaxRows, MaxCols>::Index;
 
             static constexpr auto rows     = Rows;
             static constexpr auto columns  = Cols;

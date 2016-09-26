@@ -82,30 +82,8 @@ int main(int argc, char** argv)
     current(0) = 1.;
 
     ieompp::RungeKutta4<Matrix, Vector> rk4(basis_size, dt);
-    ieompp::types::init_symmetric(rk4.matrix(), basis_size, generator);
-
-
-    ofstream file(out.c_str());
-    ieompp::io::FileInfoHeader fih;
-    fih.add_blank();
-    ieompp::io::add_file_info(fih, elements);
-    fih.add_blank();
-    ieompp::io::add_file_info(fih, rk4);
-    file << fih << '\n';
-
-    const auto W = 4 * J;
-
-    const auto steps = size_t(round(t_end / dt));
-    for(size_t step = 0; step < steps; ++step) {
-        rk4.step(current);
-        const auto t   = (step + 1) * dt;
-        const auto val = abs(current(0));
-        cout << t << "\t" << val << '\n';
-        file << t / W << "\t" << val << '\n';
-    }
-
-    file.flush();
-    file.close();
+    ieompp::types::init_parallel(rk4.matrix(), basis_size, basis_size, generator);
+    cout << rk4.matrix() << endl;
 
     return 0;
 }
