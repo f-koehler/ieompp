@@ -106,7 +106,7 @@ namespace ieompp
 
             template <typename T>
             struct is_eigen_column_vector_helper<T, true> {
-                static constexpr bool value = (eigen_matrix_traits<T>::cols == 1);
+                static constexpr bool value = (eigen_matrix_traits<T>::columns == 1);
             };
 
             template <typename T, bool is_matrix>
@@ -148,6 +148,19 @@ namespace ieompp
         {
             using type = typename detail::scalar_type_helper<T, is_eigen_matrix<T>::value>::type;
         };
+
+
+        template <typename T>
+        typename std::enable_if<is_dense_eigen_matrix<T>::value, bool>::type is_zero(const T& t)
+        {
+            using Index = typename eigen_matrix_traits<T>::Index;
+            for(Index i = 0; i < t.rows(); ++i) {
+                for(Index j = 0; j < t.cols(); ++j) {
+                    if(!is_zero(t(i, j))) return false;
+                }
+            }
+            return true;
+        }
     }
 }
 
