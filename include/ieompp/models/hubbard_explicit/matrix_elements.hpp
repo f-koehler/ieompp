@@ -2,6 +2,7 @@
 #define IEOMPP_MODELS_HUBBARD_MATRIX_ELEMENTS_HPP_
 
 #include <cassert>
+#include <ieompp/description.hpp>
 #include <ieompp/models/hubbard_explicit/dispersion.hpp>
 #include <ieompp/models/hubbard_explicit/operator.hpp>
 
@@ -240,28 +241,25 @@ namespace ieompp
         } /* namespace momentum_space */
     } /* namespace hubbard */
 
-    namespace io
-    {
-        template <typename FileInfoHeader, typename Prefactor>
-        FileInfoHeader& add_file_info(FileInfoHeader& header,
-                                      const hubbard::real_space::MatrixElements<Prefactor>& m)
+    template <typename Prefactor>
+    struct VariableDescription<hubbard::real_space::MatrixElements<Prefactor>> {
+        static Description get(const hubbard::real_space::MatrixElements<Prefactor>& m)
         {
-            header.add_entry("MatrixElements (real space)");
-            header.add_entry("  J", m.J);
-            header.add_entry("  U", m.U);
-            return header;
+            return {{"MatrixElements (real space)", ""},
+                    {"  J", std::to_string(m.J)},
+                    {"  U", std::to_string(m.U)}};
         }
+    };
 
-        template <typename FileInfoHeader, typename Prefactor>
-        FileInfoHeader& add_file_info(FileInfoHeader& header,
-                                      const hubbard::momentum_space::MatrixElements<Prefactor>& m)
+    template <typename Prefactor>
+    struct VariableDescription<hubbard::momentum_space::MatrixElements<Prefactor>> {
+        static Description get(const hubbard::momentum_space::MatrixElements<Prefactor>& m)
         {
-            header.add_entry("MatrixElements (momentum space)");
-            header.add_entry("  J", m.J);
-            header.add_entry("  U", m.U);
-            return header;
+            return {{"MatrixElements (momentum space)", ""},
+                    {"  J", std::to_string(m.J)},
+                    {"  U", std::to_string(m.U)}};
         }
-    }
+    };
 } /* namespace ieompp */
 
 

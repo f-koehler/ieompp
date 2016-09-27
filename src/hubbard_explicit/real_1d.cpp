@@ -5,9 +5,9 @@ using namespace std;
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/io/file_info.hpp>
+#include <ieompp/io/file_header.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
-#include <ieompp/ode.hpp>
+#include <ieompp/platform.hpp>
 #include <ieompp/types/eigen_init.hpp>
 using namespace ieompp::algebra;
 
@@ -26,8 +26,6 @@ int main(int argc, char** argv)
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("U", po::value<double>()->default_value(.25), "interaction strength")
-        ("dt", po::value<double>()->default_value(.01), "step width for integrator")
-        ("t_end", po::value<double>()->default_value(1.), "stop time for the simulation")
         ("out", po::value<string>()->default_value("real_1d.txt"), "output file");
 
     po::variables_map vm;
@@ -42,8 +40,6 @@ int main(int argc, char** argv)
     const auto N     = vm["N"].as<size_t>();
     const auto J     = vm["J"].as<double>();
     const auto U     = vm["U"].as<double>();
-    const auto dt    = vm["dt"].as<double>();
-    const auto t_end = vm["t_end"].as<double>();
     const auto out   = vm["out"].as<string>();
 
     ieompp::discretization::LinearDiscretization<double, size_t> lattice(N, 1.);
@@ -81,9 +77,12 @@ int main(int argc, char** argv)
     current.setZero();
     current(0) = 1.;
 
-    ieompp::RungeKutta4<Matrix, Vector> rk4(basis_size, dt);
-    ieompp::types::init_parallel(rk4.matrix(), basis_size, basis_size, generator);
-    cout << rk4.matrix() << endl;
+    Matrix m;
+    ofstream file(out.c_str());
+    ieompp::io::write_header(
+        file, {ieompp::get_description(ieompp::Platform()), ieompp::get_description(elements)});
+    ieompp::types::init_symmetric(m, basis_size, generator);
+    file.close();
 
     return 0;
 }
