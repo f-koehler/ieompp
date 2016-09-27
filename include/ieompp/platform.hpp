@@ -2,8 +2,6 @@
 #define IEOMPP_PLATFORM_HPP_
 
 #include <cstdlib>
-#include <sstream>
-#include <string>
 
 #include <Eigen/src/Core/util/Macros.h>
 #include <boost/predef.h>
@@ -16,43 +14,35 @@
 #endif
 
 #include <ieompp/description.hpp>
+#include <ieompp/string.hpp>
 #include <ieompp/version.hpp>
 
 namespace ieompp
 {
-    template <typename... Ts>
-    std::string stringize(const Ts&... ts)
-    {
-        std::ostringstream strm;
-        using Tmp = int[];
-        (void)Tmp{0, ((void)(strm << ts), 0)...};
-        return strm.str();
-    }
-
     struct Platform {
         auto boost() const
         {
             static const auto str =
-                stringize(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
-                          BOOST_VERSION % 100);
+                compose(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
+                        BOOST_VERSION % 100);
             return str;
         }
 
         auto eigen() const
         {
             static const auto str =
-                stringize(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
+                compose(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
             return str;
         }
 
         auto architecture() const
         {
 #if BOOST_ARCH_X86_32
-            static const auto str = stringize("x86_32");
+            static const auto str = compose("x86_32");
 #elif BOOST_ARCH_X86_64
-            static const auto str = stringize("x86_64");
+            static const auto str = compose("x86_64");
 #else
-            static const auto str = stringize("UntestedArch");
+            static const auto str = compose("UntestedArch");
 #endif
             return str;
         }
@@ -60,9 +50,9 @@ namespace ieompp
         auto operating_system() const
         {
 #if BOOST_OS_LINUX
-            static const auto str = stringize("Linux");
+            static const auto str = compose("Linux");
 #else
-            static const auto str = stringize("UntestedOS");
+            static const auto str = compose("UntestedOS");
 #endif
             return str;
         }
@@ -70,13 +60,13 @@ namespace ieompp
         auto compiler() const
         {
 #if BOOST_COMP_CLANG
-            static const auto str = stringize("clang ", __clang_major__, '.', __clang_minor__, '.',
-                                              __clang_patchlevel__);
+            static const auto str =
+                compose("clang ", __clang_major__, '.', __clang_minor__, '.', __clang_patchlevel__);
 #elif BOOST_COMP_GNUC
             static const auto str =
-                stringize("gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
+                compose("gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
 #else
-            static const auto str = stringize("UntestedCompiler");
+            static const auto str = compose("UntestedCompiler");
 #endif
             return str;
         }
@@ -84,9 +74,9 @@ namespace ieompp
         auto cpp_library() const
         {
 #if BOOST_LIB_STD_GNU
-            static const auto str = stringize("libstdc++", BOOST_LIB_STD_GNU);
+            static const auto str = compose("libstdc++", BOOST_LIB_STD_GNU);
 #elif defined(BOOST_LIB_STD_CXX)
-            static const auto str = stringize("libc++", _LIBCPP_VERSION);
+            static const auto str = compose("libc++", _LIBCPP_VERSION);
 #else
             static const auto str = "UnknownC++Library";
 #endif
@@ -160,9 +150,9 @@ namespace ieompp
                     {"  Compiler", platform.compiler()},
                     {"  C++ std lib", platform.cpp_library()},
                     {"  OS", platform.operating_system()},
-                    {"  Compiled by", stringize(platform.user(), '@', platform.host())},
+                    {"  Compiled by", compose(platform.user(), '@', platform.host())},
                     {"  Architecture", platform.architecture()},
-                    {"  Endian", stringize(platform.endianess())}};
+                    {"  Endian", compose(platform.endianess())}};
         }
     };
 }

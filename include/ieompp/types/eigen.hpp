@@ -7,6 +7,8 @@
 #include <Eigen/Sparse>
 #pragma GCC diagnostic pop
 
+#include <ieompp/description.hpp>
+
 namespace ieompp
 {
     namespace types

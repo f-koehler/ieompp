@@ -5,10 +5,28 @@
 #include <utility>
 #include <vector>
 
+#include <ieompp/string.hpp>
+
 namespace ieompp
 {
     using DescriptionEntry = std::pair<std::string, std::string>;
-    using Description      = std::vector<DescriptionEntry>;
+
+    struct Description : public std::vector<DescriptionEntry> {
+        using std::vector<DescriptionEntry>::vector;
+
+        void indent(std::size_t n)
+        {
+            for(auto& entry : *this) {
+                entry.first.insert(0, n, ' ');
+            }
+        }
+
+        Description& operator+=(const Description& rhs)
+        {
+            std::copy(rhs.begin(), rhs.end(), std::back_inserter(*this));
+            return *this;
+        }
+    };
 
     template <typename T>
     struct VariableDescription {
@@ -16,6 +34,19 @@ namespace ieompp
         {
             static_cast<void>(t);
             return {};
+        }
+    };
+
+    template <typename T>
+    struct TypeProperties {
+    };
+
+    template <typename T>
+    struct TypeDescription {
+        static Description get()
+        {
+            return {{"type:", compose(TypeProperties<T>::name, ' ', "(size ",
+                                      TypeProperties<T>::size, ")")}};
         }
     };
 
