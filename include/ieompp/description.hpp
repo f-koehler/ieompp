@@ -14,11 +14,12 @@ namespace ieompp
     struct Description : public std::vector<DescriptionEntry> {
         using std::vector<DescriptionEntry>::vector;
 
-        void indent(std::size_t n)
+        Description& indent(std::size_t n)
         {
             for(auto& entry : *this) {
                 entry.first.insert(0, n, ' ');
             }
+            return *this;
         }
 
         Description& operator+=(const Description& rhs)

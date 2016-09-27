@@ -6,6 +6,7 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/file_header.hpp>
+#include <ieompp/io/eigen_sparse.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/types/eigen_init.hpp>
@@ -69,7 +70,6 @@ int main(int argc, char** argv)
                + elements.interaction(basis[i], basis[j]);
     };
 
-    /* using Matrix = Eigen::MatrixXd; */
     using Matrix = Eigen::SparseMatrix<double>;
     using Vector = Eigen::VectorXcd;
 
@@ -79,9 +79,11 @@ int main(int argc, char** argv)
 
     Matrix m;
     ofstream file(out.c_str());
-    ieompp::io::write_header(
-        file, {ieompp::get_description(ieompp::Platform()), ieompp::get_description(elements)});
-    ieompp::types::init_symmetric(m, basis_size, generator);
+    ieompp::io::write_header(file, {ieompp::get_description(ieompp::Platform()),
+                                    ieompp::get_description(elements), ieompp::get_description(m)});
+    ieompp::types::init(m, basis_size, basis_size, generator);
+    cout << m << endl;
+    ieompp::io::write_matrix(file, m);
     file.close();
 
     return 0;
