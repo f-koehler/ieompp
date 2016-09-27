@@ -2,6 +2,9 @@
 #define IEOMPP_TYPES_EIGEN_INIT_HPP_
 
 #include <functional>
+#include <vector>
+#include <random>
+
 #include <omp.h>
 
 #include <ieompp/types/eigen.hpp>
@@ -111,19 +114,39 @@ namespace ieompp
             omp_lock_t write_lock;
             omp_init_lock(&write_lock);
 
+/* #pragma omp parallel for */
+            /* for(Index i = 0; i < rows; ++i) { */
+            /*     for(Index j = 0; j < cols; ++j) { */
+            /*         const auto val = f(i, j); */
+            /*         if(!is_zero(val)) { */
+            /*             omp_set_lock(&write_lock); */
+            /*             m.insert(i, j) = val; */
+            /*             omp_unset_lock(&write_lock); */
+            /*         } */
+            /*     } */
+            /* } */
+
 #pragma omp parallel for
             for(Index i = 0; i < rows; ++i) {
-                for(Index j = 0; j < rows; ++j) {
+                std::vector<Eigen::Triplet<double, Index>> triplets;
+                triplets.reserve(1024 + omp_get_thread_num() * 64);
+                for(Index j = 0; j < cols; ++j) {
                     const auto val = f(i, j);
                     if(!is_zero(val)) {
-                        omp_set_lock(&write_lock);
-                        m.insert(i, j) = val;
-                        omp_unset_lock(&write_lock);
+                        triplets.emplace_back(i, j, val);
+                        if(triplets.size() == triplets.capacity()) {
+                            omp_set_lock(&write_lock);
+                            m.setFromTriplets(triplets.begin(), triplets.end());
+                            omp_unset_lock(&write_lock);
+                            triplets.clear();
+                        }
                     }
                 }
+                omp_set_lock(&write_lock);
+                m.setFromTriplets(triplets.begin(), triplets.end());
+                omp_unset_lock(&write_lock);
             }
 
-            /* #pragma omp parallel for */
             omp_destroy_lock(&write_lock);
 #else
             init<Matrix>(rows, cols, f);

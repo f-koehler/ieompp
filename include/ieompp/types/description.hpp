@@ -73,6 +73,27 @@ namespace ieompp
         static constexpr auto name = "uint64_t";
         static constexpr auto size = sizeof(uint64_t);
     };
+
+    template <>
+    struct TypeProperties<float> {
+        using type                 = float;
+        static constexpr auto name = "float";
+        static constexpr auto size = sizeof(float);
+    };
+
+    template <>
+    struct TypeProperties<double> {
+        using type                 = double;
+        static constexpr auto name = "double";
+        static constexpr auto size = sizeof(double);
+    };
+
+    template <>
+    struct TypeProperties<long double> {
+        using type                 = long double;
+        static constexpr auto name = "long double";
+        static constexpr auto size = sizeof(long double);
+    };
 }
 
 #endif
