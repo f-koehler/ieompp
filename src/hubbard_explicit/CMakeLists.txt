@@ -3,3 +3,4 @@ add_executable(commutators_momentum_space commutators_momentum_space.cpp)
 add_executable(commutators_real_space commutators_real_space.cpp)
 
 target_link_libraries(real_1d ${Boost_LIBRARIES})
+enable_iwyu(real_1d)
