@@ -37,6 +37,15 @@ if(${ieompp_ENABLE_OPENMP})
     endif()
 endif()
 
+# option to use include-what-you-use
+option(ieompp_USE_IWYU "Enable include-what-you-use" OFF)
+if(${ieompp_USE_IWYU})
+    include(cmake/iwyu.cmake)
+else()
+    function(enable_iwyu TARGET)
+    endfunction()
+endif()
+
 add_subdirectory(src)
 
 # option to enable unit testing

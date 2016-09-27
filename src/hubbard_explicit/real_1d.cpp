@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 using namespace std;
 
@@ -11,8 +10,6 @@ using namespace std;
 #include <ieompp/platform.hpp>
 #include <ieompp/types/eigen_init.hpp>
 using namespace ieompp::algebra;
-
-#include <Eigen/Sparse>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
