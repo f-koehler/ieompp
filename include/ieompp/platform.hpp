@@ -1,6 +1,7 @@
 #ifndef IEOMPP_PLATFORM_HPP_
 #define IEOMPP_PLATFORM_HPP_
 
+#include <cstdlib>
 #include <sstream>
 #include <string>
 
@@ -8,20 +9,28 @@
 #include <boost/predef.h>
 #include <boost/version.hpp>
 
+#if BOOST_OS_WINDOWS
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+#include <ieompp/description.hpp>
+#include <ieompp/version.hpp>
+
 namespace ieompp
 {
-    namespace platform
+    template <typename... Ts>
+    std::string stringize(const Ts&... ts)
     {
-        template <typename... Ts>
-        std::string stringize(const Ts&... ts)
-        {
-            std::ostringstream strm;
-            using Tmp = int[];
-            (void)Tmp{0, ((void)(strm << ts), 0)...};
-            return strm.str();
-        }
+        std::ostringstream strm;
+        using Tmp = int[];
+        (void)Tmp{0, ((void)(strm << ts), 0)...};
+        return strm.str();
+    }
 
-        auto boost()
+    struct Platform {
+        auto boost() const
         {
             static const auto str =
                 stringize(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
@@ -29,14 +38,14 @@ namespace ieompp
             return str;
         }
 
-        auto eigen()
+        auto eigen() const
         {
             static const auto str =
                 stringize(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
             return str;
         }
 
-        auto architecture()
+        auto architecture() const
         {
 #if BOOST_ARCH_X86_32
             static const auto str = stringize("x86_32");
@@ -48,7 +57,7 @@ namespace ieompp
             return str;
         }
 
-        auto operating_system()
+        auto operating_system() const
         {
 #if BOOST_OS_LINUX
             static const auto str = stringize("Linux");
@@ -58,7 +67,7 @@ namespace ieompp
             return str;
         }
 
-        auto compiler()
+        auto compiler() const
         {
 #if BOOST_COMP_CLANG
             static const auto str = stringize("clang ", __clang_major__, '.', __clang_minor__, '.',
@@ -72,9 +81,9 @@ namespace ieompp
             return str;
         }
 
-        auto cpp_library()
+        auto cpp_library() const
         {
-#if defined(BOOST_LIB_STD_GNU)
+#if BOOST_LIB_STD_GNU
             static const auto str = stringize("libstdc++", BOOST_LIB_STD_GNU);
 #elif defined(BOOST_LIB_STD_CXX)
             static const auto str = stringize("libc++", _LIBCPP_VERSION);
@@ -84,41 +93,78 @@ namespace ieompp
             return str;
         }
 
-        enum class Endian : uint8_t { Unknown, Big, Little, BigWord, LittleWord };
-        auto endianess()
+        auto host() const
         {
-#if defined(BOOST_ENDIAN_BIG_BYTE)
-            return Endian::Big;
-#elif defined(BOOST_ENDIAN_LITTLE_BYTE)
-            return Endian::Little;
-#elif defined(BOOST_ENDIAN_BIG_WORD)
-            return Endian::BigWord;
-#elif defined(BOOST_LITTLE_WORD)
-            return Endian::LittleWord;
+#if BOOST_OS_WINDOWS
+#else
+            static char buffer[128];
+            gethostname(buffer, 128);
+            return std::string(buffer);
 #endif
         }
 
-        std::ostream& operator<<(std::ostream& strm, Endian e)
+        auto user() const
         {
-            switch(e) {
-                case Endian::Big:
-                    strm << "BigEndian";
-                    return strm;
-                case Endian::Little:
-                    strm << "LittleEndian";
-                    return strm;
-                case Endian::BigWord:
-                    strm << "BigWordSwappedEndian";
-                    return strm;
-                case Endian::LittleWord:
-                    strm << "LittleWordSwappedEndian";
-                    return strm;
-                default:
-                    strm << "UnknownEndian";
-                    return strm;
-            }
+#if BOOST_OS_WINDOWS
+#else
+            return std::string(std::getenv("LOGNAME"));
+#endif
+        }
+
+
+        enum class Endian : uint8_t { Unknown, Big, Little, BigWord, LittleWord };
+        auto endianess() const
+        {
+#if BOOST_ENDIAN_BIG_BYTE
+            return Endian::Big;
+#elif BOOST_ENDIAN_LITTLE_BYTE
+            return Endian::Little;
+#elif BOOST_ENDIAN_BIG_WORD
+            return Endian::BigWord;
+#elif BOOST_LITTLE_WORD
+            return Endian::LittleWord;
+#else
+            return Endian::Unkown;
+#endif
+        }
+    };
+
+    std::ostream& operator<<(std::ostream& strm, Platform::Endian e)
+    {
+        switch(e) {
+            case Platform::Endian::Big:
+                strm << "BigEndian";
+                return strm;
+            case Platform::Endian::Little:
+                strm << "LittleEndian";
+                return strm;
+            case Platform::Endian::BigWord:
+                strm << "BigWordSwappedEndian";
+                return strm;
+            case Platform::Endian::LittleWord:
+                strm << "LittleWordSwappedEndian";
+                return strm;
+            default:
+                strm << "UnknownEndian";
+                return strm;
         }
     }
+
+    template <>
+    struct VariableDescription<Platform> {
+        static Description get(const Platform& platform)
+        {
+            return {{"Platform", ""},
+                    {"  ieompp", version},
+                    {"  boost", platform.boost()},
+                    {"  Compiler", platform.compiler()},
+                    {"  C++ std lib", platform.cpp_library()},
+                    {"  OS", platform.operating_system()},
+                    {"  Compiled by", stringize(platform.user(), '@', platform.host())},
+                    {"  Architecture", platform.architecture()},
+                    {"  Endian", stringize(platform.endianess())}};
+        }
+    };
 }
 
 
