@@ -1,6 +1,7 @@
 #ifndef IEOMPP_ALGEBRA_TERM_TERM_HPP_
 #define IEOMPP_ALGEBRA_TERM_TERM_HPP_
 
+#include <algorithm>
 #include <vector>
 
 namespace ieompp

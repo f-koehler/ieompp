@@ -23,7 +23,7 @@ namespace ieompp
                 Scalar val = 0.;
                 for(auto& vec : lattice.lattice_vectors())
                     val += std::cos(types::dot_product(vec, momentum));
-                return 2 * J * val;
+                return -2 * J * val;
             }
         };
     }

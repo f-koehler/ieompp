@@ -45,8 +45,8 @@ namespace ieompp
 
                 Index index(const Index& i, const Index& j) const;
 
-                std::array<Index, 4> neighbours(const Index& idx) const;
-                std::array<Index, 2> unique_neighbours(const Index& idx) const;
+                std::array<Index, 4> neighbors(const Index& idx) const;
+                std::array<Index, 2> unique_neighbors(const Index& idx) const;
                 Index closest(Vector v) const;
 
                 const Index& num() const;
@@ -61,6 +61,8 @@ namespace ieompp
                 const Real& y_length() const;
                 const Real& dy() const;
                 const std::array<Vector, 2>& lattice_vectors() const;
+
+                bool neighboring(const Index a, const Index b) const;
 
                 ConstIndexIterator begin() const;
                 ConstIndexIterator end() const;
@@ -114,7 +116,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename SquareDiscretization<Real, Index>::Index, 4>
-        SquareDiscretization<Real, Index>::neighbours(const Index& idx) const
+        SquareDiscretization<Real, Index>::neighbors(const Index& idx) const
         {
             const auto i = idx / _num_y;
             const auto j = idx % _num_x;
@@ -125,7 +127,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename SquareDiscretization<Real, Index>::Index, 2>
-        SquareDiscretization<Real, Index>::unique_neighbours(const Index& idx) const
+        SquareDiscretization<Real, Index>::unique_neighbors(const Index& idx) const
         {
             const auto i = idx / _num_y;
             const auto j = idx % _num_x;
@@ -229,6 +231,25 @@ namespace ieompp
         SquareDiscretization<Real, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
+        }
+
+        template <typename Real, typename Index>
+        bool SquareDiscretization<Real, Index>::neighboring(const Index a, const Index b) const
+        {
+            const auto x_a = a / _num_y;
+            const auto y_a = a % _num_x;
+            const auto x_b = b / _num_y;
+            const auto y_b = b % _num_x;
+
+            if(x_a == x_b) {
+                return ((y_a + 1) % _num_y == y_b) || ((y_b + 1) % _num_y == y_a);
+            }
+
+            if(y_a == y_b) {
+                return ((x_a + 1) % _num_x == x_b) || ((x_b + 1) % _num_x == x_a);
+            }
+
+            return false;
         }
 
         template <typename Real, typename Index>

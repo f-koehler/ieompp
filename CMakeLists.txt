@@ -16,8 +16,8 @@ include(cmake/warnings.cmake)
 include(cmake/native.cmake)
 
 # create version.hpp
-# include(cmake/version-script.cmake)
-# run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
+include(cmake/version-script.cmake)
+run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
 # fetch Eigen
 include(cmake/get-eigen.cmake)
@@ -28,10 +28,22 @@ find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # enable OpenMP if possible
-find_package(OpenMP)
-if(${OPENMP_FOUND})
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+option(ieompp_ENABLE_OPENMP "Enable OpenMP" ON)
+if(${ieompp_ENABLE_OPENMP})
+    find_package(OpenMP REQUIRED)
+    if(${OPENMP_FOUND})
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    endif()
+endif()
+
+# option to use include-what-you-use
+option(ieompp_USE_IWYU "Enable include-what-you-use" OFF)
+if(${ieompp_USE_IWYU})
+    include(cmake/iwyu.cmake)
+else()
+    function(enable_iwyu TARGET)
+    endfunction()
 endif()
 
 add_subdirectory(src)

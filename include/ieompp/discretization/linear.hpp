@@ -34,8 +34,8 @@ namespace ieompp
                 LinearDiscretization(const Index& num);
                 LinearDiscretization(const Index& num, const Real& dx);
 
-                std::array<Index, 2> neighbours(const Index& idx) const;
-                std::array<Index, 1> unique_neighbours(const Index& idx) const;
+                std::array<Index, 2> neighbors(const Index& idx) const;
+                std::array<Index, 1> unique_neighbors(const Index& idx) const;
                 Index closest(Vector v) const;
 
                 const Index& num() const;
@@ -46,6 +46,8 @@ namespace ieompp
                 const Real& x_length() const;
                 const Real& dx() const;
                 const std::array<Vector, 1>& lattice_vectors() const;
+
+                bool neighboring(const Index a, const Index b) const;
 
                 ConstIndexIterator begin() const;
                 ConstIndexIterator end() const;
@@ -83,7 +85,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename LinearDiscretization<Real, Index>::Index, 2>
-        LinearDiscretization<Real, Index>::neighbours(const Index& idx) const
+        LinearDiscretization<Real, Index>::neighbors(const Index& idx) const
         {
             return std::array<Index, 2>{
                 {(idx > 0) ? idx - 1 : _last, (idx < _last) ? idx + 1 : _first}};
@@ -91,7 +93,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename LinearDiscretization<Real, Index>::Index, 1>
-        LinearDiscretization<Real, Index>::unique_neighbours(const Index& idx) const
+        LinearDiscretization<Real, Index>::unique_neighbors(const Index& idx) const
         {
             return std::array<Index, 1>{{(idx < _last) ? idx + 1 : _first}};
         }
@@ -165,6 +167,13 @@ namespace ieompp
         LinearDiscretization<Real, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
+        }
+
+
+        template <typename Real, typename Index>
+        bool LinearDiscretization<Real, Index>::neighboring(const Index a, const Index b) const
+        {
+            return ((a + 1) % _num == b) || ((b + 1) % _num == a);
         }
 
         template <typename Real, typename Index>

@@ -6,7 +6,6 @@
 
 #include <ieompp/algebra/operator/operator.hpp>
 #include <ieompp/algebra/operator/get_index.hpp>
-#include <ieompp/types/zero.hpp>
 
 namespace ieompp
 {
@@ -16,7 +15,8 @@ namespace ieompp
         typename Discretization::Vector total_momentum(const Term& t,
                                                        const Discretization& momentum_space)
         {
-            auto momentum = types::zero(momentum_space.lattice_vectors()[0]);
+            auto momentum = momentum_space.lattice_vectors()[0];
+            momentum.setZero();
             for(auto& op : t.operators) {
                 if(op.creator)
                     momentum += momentum_space[get_index<Index>(op)];
