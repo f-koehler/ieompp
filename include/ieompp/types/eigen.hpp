@@ -61,6 +61,19 @@ namespace ieompp
         };
 
         template <typename T>
+        struct is_eigen_triplet {
+            static constexpr bool value = false;
+        };
+
+        template <typename ScalarT, typename IndexT>
+        struct is_eigen_triplet<Eigen::Triplet<ScalarT, IndexT>> {
+            using Scalar = ScalarT;
+            using Index  = IndexT;
+
+            static constexpr bool value = true;
+        };
+
+        template <typename T>
         struct eigen_matrix_traits {
         };
 
