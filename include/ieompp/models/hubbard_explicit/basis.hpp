@@ -19,11 +19,18 @@ namespace ieompp
                 static_assert(is_hubbard_operator<typename Term::Operator>::value,
                               "Operator must be of Hubbard type");
 
+                const Index N;
+                const Index N_squared;
+
+                Index get_3op_index(Index i1, Index i2, Index i3) const
+                {
+                    return N + N_squared * i1 + N * i2 + i3;
+                }
+
                 template <typename Lattice>
-                Basis3Operator(const Lattice& lattice)
+                Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
                 {
                     // TODO: emplace
-                    const auto N = lattice.num();
                     this->reserve(N * (N * N + 1));
 
                     for(auto i : lattice) this->push_back(Term{1, {{true, i, true}}});
@@ -34,22 +41,6 @@ namespace ieompp
                                     1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                         }
                     }
-                }
-
-                template <typename Lattice>
-                Index operator()(const Term& t, const Lattice& lattice) const
-                {
-                    const auto N  = lattice.num();
-                    const auto N2 = N * N;
-
-                    assert((lattice.operators.size() == 1) && (lattice.operators.size() == 3));
-
-                    // TODO: handle invalid terms
-                    if(t.operators.size() == 1) {
-                        return t.operators.front().index1;
-                    }
-                    return N + N2 * t.operators[0].index1 + N * t.operators[1].index1
-                           + t.operators[2].index1;
                 }
             };
         } /* namespace real_space */
@@ -64,11 +55,13 @@ namespace ieompp
                 static_assert(is_hubbard_operator<typename Term::Operator>::value,
                               "Operator must be of Hubbard type");
 
+                const std::size_t N;
+
                 template <typename MomentumSpace>
                 Basis3Operator(Index q_idx, const MomentumSpace& momentum_space)
+                    : N(momentum_space.num())
                 {
                     // TODO: emplace?
-                    const auto N = momentum_space.num();
                     this->reserve(N * N + 1);
 
                     for(auto i : momentum_space) this->push_back(Term{1, {{true, q_idx, true}}});
@@ -82,20 +75,6 @@ namespace ieompp
                                 Term{1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                         }
                     }
-                }
-
-                template <typename Lattice>
-                Index operator()(const Term& t, const Lattice& lattice) const
-                {
-                    const auto N  = lattice.num();
-
-                    assert((lattice.operators.size() == 1) && (lattice.operators.size() == 3));
-
-                    // TODO: handle invalid terms
-                    if(t.operators.size() == 1) {
-                        return t.operators.front().index1;
-                    }
-                    return 1 + N * t.operators[0].index1 + t.operators[1].index1;
                 }
             };
         } /* namespace momentum_space */

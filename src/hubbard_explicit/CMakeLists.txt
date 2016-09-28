@@ -1,6 +1,10 @@
-add_executable(real_1d real_1d.cpp)
 add_executable(commutators_momentum_space commutators_momentum_space.cpp)
 add_executable(commutators_real_space commutators_real_space.cpp)
 
-target_link_libraries(real_1d ${Boost_LIBRARIES})
-enable_iwyu(real_1d)
+add_executable(interaction_matrix_1d_real interaction_matrix_1d_real.cpp)
+target_link_libraries(interaction_matrix_1d_real ${Boost_LIBRARIES})
+enable_iwyu(interaction_matrix_1d_real)
+
+add_executable(kinetic_matrix_1d_real kinetic_matrix_1d_real.cpp)
+target_link_libraries(kinetic_matrix_1d_real ${Boost_LIBRARIES})
+enable_iwyu(kinetic_matrix_1d_real)

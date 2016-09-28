@@ -45,8 +45,8 @@ namespace ieompp
 
                 Index index(const Index& i, const Index& j) const;
 
-                std::array<Index, 4> neighbours(const Index& idx) const;
-                std::array<Index, 2> unique_neighbours(const Index& idx) const;
+                std::array<Index, 4> neighbors(const Index& idx) const;
+                std::array<Index, 2> unique_neighbors(const Index& idx) const;
                 Index closest(Vector v) const;
 
                 const Index& num() const;
@@ -116,7 +116,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename SquareDiscretization<Real, Index>::Index, 4>
-        SquareDiscretization<Real, Index>::neighbours(const Index& idx) const
+        SquareDiscretization<Real, Index>::neighbors(const Index& idx) const
         {
             const auto i = idx / _num_y;
             const auto j = idx % _num_x;
@@ -127,7 +127,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename SquareDiscretization<Real, Index>::Index, 2>
-        SquareDiscretization<Real, Index>::unique_neighbours(const Index& idx) const
+        SquareDiscretization<Real, Index>::unique_neighbors(const Index& idx) const
         {
             const auto i = idx / _num_y;
             const auto j = idx % _num_x;

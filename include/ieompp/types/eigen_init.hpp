@@ -69,6 +69,8 @@ namespace ieompp
         {
             using Index = typename is_eigen_triplet<typename Container::value_type>::Index;
 
+            c.clear();
+
             for(Index i = 0; i < rows; ++i) {
                 for(Index j = 0; j < cols; ++j) {
                     const auto val = f(i, j);
