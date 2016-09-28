@@ -1,7 +1,7 @@
 #ifndef IEOMPP_IO_EIGEN_DENSE_HPP_
 #define IEOMPP_IO_EIGEN_DENSE_HPP_
 
-#include <fstream>
+#include <ostream>
 
 #include <ieompp/types/eigen.hpp>
 
@@ -18,7 +18,7 @@ namespace ieompp
             if(!binary) {
                 for(Index i = 0; i < m.outerSize(); ++i) {
                     for(typename Matrix::InnerIterator it(m, i); it; ++it) {
-                        strm << '\t' << it.row() << '\t' << it.col() << '\t' << it.value() << '\n';
+                        strm << it.row() << '\t' << it.col() << '\t' << it.value() << '\n';
                     }
                 }
             }

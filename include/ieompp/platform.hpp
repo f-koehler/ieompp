@@ -157,9 +157,4 @@ namespace ieompp
     };
 }
 
-
-#if(BOOST_COMP_CLANG)
-#pragma clang diagnostic pop
-#endif
-
 #endif

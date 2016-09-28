@@ -34,8 +34,8 @@ namespace ieompp
                 LinearDiscretization(const Index& num);
                 LinearDiscretization(const Index& num, const Real& dx);
 
-                std::array<Index, 2> neighbours(const Index& idx) const;
-                std::array<Index, 1> unique_neighbours(const Index& idx) const;
+                std::array<Index, 2> neighbors(const Index& idx) const;
+                std::array<Index, 1> unique_neighbors(const Index& idx) const;
                 Index closest(Vector v) const;
 
                 const Index& num() const;
@@ -85,7 +85,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename LinearDiscretization<Real, Index>::Index, 2>
-        LinearDiscretization<Real, Index>::neighbours(const Index& idx) const
+        LinearDiscretization<Real, Index>::neighbors(const Index& idx) const
         {
             return std::array<Index, 2>{
                 {(idx > 0) ? idx - 1 : _last, (idx < _last) ? idx + 1 : _first}};
@@ -93,7 +93,7 @@ namespace ieompp
 
         template <typename Real, typename Index>
         std::array<typename LinearDiscretization<Real, Index>::Index, 1>
-        LinearDiscretization<Real, Index>::unique_neighbours(const Index& idx) const
+        LinearDiscretization<Real, Index>::unique_neighbors(const Index& idx) const
         {
             return std::array<Index, 1>{{(idx < _last) ? idx + 1 : _first}};
         }

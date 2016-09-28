@@ -182,25 +182,30 @@ namespace ieompp
     }
 
     template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-    struct VariableDescription<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
-        static Description
-        get(const Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>& m)
+    struct TypeDescription<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        static Description get()
         {
             return {{"Dense matrix", ""},
-                    {"  rows", std::to_string(m.rows())},
-                    {"  cols", std::to_string(m.cols())},
                     {"  scalar", compose(TypeProperties<Scalar>::name, ' ', "(size ",
                                          TypeProperties<Scalar>::size, ")")}};
         }
     };
 
     template <typename Scalar, int Options, typename Index>
-    struct VariableDescription<Eigen::SparseMatrix<Scalar, Options, Index>> {
-        static Description get(const Eigen::SparseMatrix<Scalar, Options, Index>& m)
+    struct TypeDescription<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        static Description get()
         {
             return {{"Sparse matrix", ""},
-                    {"  rows", std::to_string(m.rows())},
-                    {"  cols", std::to_string(m.cols())},
+                    {"  scalar", compose(TypeProperties<Scalar>::name, ' ', "(size ",
+                                         TypeProperties<Scalar>::size, ")")}};
+        }
+    };
+
+    template <typename Scalar, typename Index>
+    struct TypeDescription<std::vector<Eigen::Triplet<Scalar, Index>>> {
+        static Description get()
+        {
+            return {{"Eigen triplet list (vector)", ""},
                     {"  scalar", compose(TypeProperties<Scalar>::name, ' ', "(size ",
                                          TypeProperties<Scalar>::size, ")")}};
         }

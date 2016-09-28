@@ -56,6 +56,12 @@ namespace ieompp
     {
         return VariableDescription<T>::get(t);
     }
+
+    template <typename T>
+    Description get_description()
+    {
+        return TypeDescription<T>::get();
+    }
 }
 
 #endif
