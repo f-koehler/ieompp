@@ -58,6 +58,27 @@ namespace ieompp
             }
         }
 
+        template <typename Container>
+        typename std::enable_if<is_eigen_triplet<typename Container::value_type>::value, void>::type
+        init(Container& c, typename is_eigen_triplet<typename Container::value_type>::Index rows,
+             typename is_eigen_triplet<typename Container::value_type>::Index cols,
+             std::function<typename is_eigen_triplet<typename Container::value_type>::Scalar(
+                 typename is_eigen_triplet<typename Container::value_type>::Scalar,
+                 typename is_eigen_triplet<typename Container::value_type>::Scalar)>
+                 f)
+        {
+            using Index = typename is_eigen_triplet<typename Container::value_type>::Index;
+
+            for(Index i = 0; i < rows; ++i) {
+                for(Index j = 0; j < cols; ++j) {
+                    const auto val = f(i, j);
+                    if(!is_zero(val)) {
+                        c.emplace_back(i, j, val);
+                    }
+                }
+            }
+        }
+
         template <typename Matrix>
         typename std::enable_if<is_dense_eigen_matrix<Matrix>::value, void>::type
         init(Matrix& m, typename eigen_matrix_traits<Matrix>::Index rows,
