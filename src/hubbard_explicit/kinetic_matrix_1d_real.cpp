@@ -10,6 +10,9 @@ using namespace std;
 #include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/matrix.hpp>
 #include <ieompp/platform.hpp>
+
+
+#include <ieompp/io/eigen_sparse.hpp>
 using namespace ieompp;
 
 #include <boost/program_options.hpp>
@@ -50,10 +53,15 @@ int main(int argc, char** argv)
     std::vector<Eigen::Triplet<double>> elements;
     hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
 
+    std::sort(elements.begin(), elements.end(),
+              [](const Eigen::Triplet<double>& a, const Eigen::Triplet<double>& b) {
+                  return a.row() < a.row();
+              });
+
     ofstream file(out_path.c_str());
     io::write_header(file, {get_description(Platform()), get_description<decltype(elements)>()});
     file << '\n' << basis.size() << 'x' << basis.size() << '\n';
-    io::write_matrix(file, elements);
+    io::write_triplet_list(file, elements);
     file.close();
 
     return 0;
