@@ -37,9 +37,20 @@ if(${ieompp_ENABLE_OPENMP})
     endif()
 endif()
 
+# option to build documentation using sphinx
+option(ieompp_ENABLE_DOCUMENTATION "Enable html documentation built with sphinx" OFF)
+if(${ieompp_ENABLE_DOCUMENTATION})
+    find_program(SPHINX_EXECUTABLE sphinx-build)
+    add_custom_target(doc
+        COMMAND ${SPHINX_EXECUTABLE} -b html . ${CMAKE_BINARY_DIR}/doc
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/doc
+        COMMENT "Build documentation using sphinx"
+    )
+endif()
+
 # option to use include-what-you-use
-option(ieompp_USE_IWYU "Enable include-what-you-use" OFF)
-if(${ieompp_USE_IWYU})
+option(ieompp_ENABLE_IWYU "Enable include-what-you-use" OFF)
+if(${ieompp_ENABLE_IWYU})
     include(cmake/iwyu.cmake)
 else()
     function(enable_iwyu TARGET)
