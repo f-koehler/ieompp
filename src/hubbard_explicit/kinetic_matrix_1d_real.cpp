@@ -50,13 +50,9 @@ int main(int argc, char** argv)
     // init operator basis
     hubbard::real_space::Basis3Operator<Term> basis(lattice);
 
-    std::vector<Eigen::Triplet<double>> elements;
+    types::TripletList<double> elements(basis.size(), basis.size());
     hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
-
-    std::sort(elements.begin(), elements.end(),
-              [](const Eigen::Triplet<double>& a, const Eigen::Triplet<double>& b) {
-                  return a.row() < a.row();
-              });
+    elements.sort();
 
     ofstream file(out_path.c_str());
     io::write_header(file, {get_description(Platform()), get_description<decltype(elements)>()});

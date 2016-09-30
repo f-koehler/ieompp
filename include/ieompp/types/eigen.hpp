@@ -200,16 +200,6 @@ namespace ieompp
                                          TypeProperties<Scalar>::size, ")")}};
         }
     };
-
-    template <typename Scalar, typename Index>
-    struct TypeDescription<std::vector<Eigen::Triplet<Scalar, Index>>> {
-        static Description get()
-        {
-            return {{"Eigen triplet list (vector)", ""},
-                    {"  scalar", compose(TypeProperties<Scalar>::name, ' ', "(size ",
-                                         TypeProperties<Scalar>::size, ")")}};
-        }
-    };
 }
 
 #endif

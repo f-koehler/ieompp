@@ -31,10 +31,8 @@ namespace ieompp
 
         template <typename Matrix>
         typename std::enable_if<types::is_sparse_eigen_matrix<Matrix>::value, void>::type
-        read_matrix(std::istream& strm, Matrix& m, bool binary = false)
+        read_matrix(std::istream& strm, Matrix& m, typename Matrix::Index nnz_per_inner_vec, bool binary = false)
         {
-            using Index = typename types::eigen_matrix_traits<Matrix>::Index;
-
             static const std::regex dimension_reg("^\\s*(\\d+)\\s*x\\s*(\\d+)\\s*$");
 
             if(!binary) {
@@ -56,6 +54,7 @@ namespace ieompp
 
                 m = Matrix(std::strtoul(match[1].str().c_str(), nullptr, 10),
                            std::strtoul(match[1].str().c_str(), nullptr, 10));
+                m.reserve(Eigen::VectorXi::Constant(m.cols(), nnz_per_inner_vec));
 
                 using Index  = typename Matrix::Index;
                 using Scalar = typename Matrix::Scalar;

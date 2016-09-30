@@ -6,31 +6,30 @@
 #include <string>
 
 #include <ieompp/io/line.hpp>
-#include <ieompp/types/eigen.hpp>
+#include <ieompp/types/eigen_triplet_list.hpp>
 
 namespace ieompp
 {
     namespace io
     {
-        template <typename Container>
-        typename std::enable_if<types::is_eigen_triplet<typename Container::value_type>::value,
-                                void>::type
-        write_triplet_list(std::ostream& strm, const Container& container, bool binary = false)
+        template <typename Scalar, typename Index = std::size_t>
+        void write_triplet_list(std::ostream& strm, const types::TripletList<Scalar, Index>& list,
+                                bool binary = false)
         {
             if(!binary) {
-                strm << container.size() << '\n';
-                for(auto& element : container) {
+                strm << list.size() << '\n';
+                for(auto& element : list) {
                     strm << element.row() << '\t' << element.col() << '\t' << element.value()
                          << '\n';
                 }
             }
         }
 
-        template <typename Container>
-        typename std::enable_if<types::is_eigen_triplet<typename Container::value_type>::value,
-                                void>::type
-        read_triplet_list(std::istream& strm, const Container& container, bool binary = false)
+        template <typename Scalar, typename Index = std::size_t>
+        void read_triplet_list(std::istream& strm, types::TripletList<Scalar, Index>& list,
+                               bool binary = false)
         {
+            (void)list;
             if(!binary) {
                 std::string buf;
                 do {
