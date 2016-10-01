@@ -6,7 +6,7 @@
 #include <string>
 
 #include <ieompp/io/line.hpp>
-#include <ieompp/types/eigen_triplet_list.hpp>
+#include <ieompp/types/eigen/triplet_list.hpp>
 
 namespace ieompp
 {

@@ -3,8 +3,8 @@
 
 #include <type_traits>
 
-#include <ieompp/types/eigen_triplet_list.hpp>
 #include <ieompp/models/hubbard_explicit/operator.hpp>
+#include <ieompp/types/eigen/triplet_list.hpp>
 
 namespace ieompp
 {
@@ -45,7 +45,7 @@ namespace ieompp
                     neighbors = lattice.unique_neighbors(ops[2].index1);
                     for(auto neighbor : neighbors) {
                         matrix.emplace_back(
-                            i, basis.get_3op_index(ops[0].index1, ops[2].index1, neighbor), J);
+                            i, basis.get_3op_index(ops[0].index1, ops[1].index1, neighbor), J);
                     }
                 }
             }
@@ -70,22 +70,6 @@ namespace ieompp
                     const auto& ops = basis[i].operators;
                     if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))
                         matrix.emplace_back(i, ops[0].index1, U / 2.);
-                }
-            }
-
-            template <typename Basis, typename Container>
-            void sort(Container& container, bool col_major = true)
-            {
-                if(col_major) {
-                    std::sort(container.begin(), container.end(),
-                              [](const Eigen::Triplet<double>& a, const Eigen::Triplet<double>& b) {
-                                  return (a.col() < b.col()) || (a.row() < b.row());
-                              });
-                } else {
-                    std::sort(container.begin(), container.end(),
-                              [](const Eigen::Triplet<double>& a, const Eigen::Triplet<double>& b) {
-                                  return (a.row() < b.row()) || (a.col() < b.col());
-                              });
                 }
             }
         }

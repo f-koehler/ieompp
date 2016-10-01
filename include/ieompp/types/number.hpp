@@ -53,7 +53,7 @@ namespace ieompp
                                                                                        const T& t2)
         {
             static const auto epsilon  = std::nextafter(std::numeric_limits<T>::min(), 1.);
-            return std::abs(t1-t2) < epsilon;
+            return std::abs(t1 - t2) < epsilon;
         }
 
         template <typename T>

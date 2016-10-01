@@ -22,11 +22,6 @@ namespace ieompp
                 const Index N;
                 const Index N_squared;
 
-                Index get_3op_index(Index i1, Index i2, Index i3) const
-                {
-                    return N + N_squared * i1 + N * i2 + i3;
-                }
-
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
                 {
@@ -41,6 +36,11 @@ namespace ieompp
                                     1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                         }
                     }
+                }
+
+                Index get_3op_index(Index i1, Index i2, Index i3) const
+                {
+                    return N + N_squared * i1 + N * i2 + i3;
                 }
             };
         } /* namespace real_space */

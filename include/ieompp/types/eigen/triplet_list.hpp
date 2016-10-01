@@ -7,6 +7,7 @@
 #include <Eigen/Sparse>
 
 #include <ieompp/description.hpp>
+#include <ieompp/types/description.hpp>
 
 namespace ieompp
 {
