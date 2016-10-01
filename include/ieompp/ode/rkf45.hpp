@@ -20,19 +20,24 @@ namespace ieompp
             const std::size_t _dimension;
             Real _step_width;
             Real _last_error;
+            Real _tolerance;
 
         public:
-            RKF45(std::size_t dimension, const Real& step_width)
-                : _dimension(dimension), _step_width(step_width), _last_error(0.)
+            RKF45(std::size_t dimension, const Real& step_width, const Real& tolerance = 0.01)
+                : _dimension(dimension), _step_width(step_width), _last_error(0.),
+                  _tolerance(tolerance)
             {
             }
 
-            Real& step_width() const { return _step_width; }
+            const Real& step_width() const { return _step_width; }
+            Real& step_width() { return _step_width; }
             std::size_t dimension() const { return _dimension; }
             const Real& last_error() const { return _last_error; }
+            const Real& tolerance() const { return _tolerance; }
+            Real& tolerance() { return _tolerance; }
 
             template <typename Matrix, typename Vector>
-            void step(const Matrix& m, Vector& u, Real tolerance = 0.01)
+            void step(const Matrix& m, Vector& u)
             {
                 assert(types::is_quadratic(m));
                 assert(m.rows() == _dimension);
@@ -71,12 +76,13 @@ namespace ieompp
                     u5 = u + _step_width * (b5_1 * k_1 + b5_2 * k_2 + b5_3 * k_3 + b5_4 * k_4 + b5_5 * k_5 + b5_6 * k_6);
 
                     error = (u4 - u5).norm();
-                    if(error < tolerance) {
+                    if(error < _tolerance) {
                         _last_error = error;
+                        u = u5;
                         break;
                     }
                     _step_width = Real(.9) * _step_width
-                                  * std::min(std::max(tolerance / error, Real(.3)), Real(2));
+                                  * std::min(std::max(_tolerance / error, Real(.3)), Real(2));
                 } while(true);
             }
         };

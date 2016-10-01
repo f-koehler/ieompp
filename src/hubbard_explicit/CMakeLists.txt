@@ -8,3 +8,7 @@ enable_iwyu(interaction_matrix_1d_real)
 add_executable(kinetic_matrix_1d_real kinetic_matrix_1d_real.cpp)
 target_link_libraries(kinetic_matrix_1d_real ${Boost_LIBRARIES})
 enable_iwyu(kinetic_matrix_1d_real)
+
+add_executable(kinetic_matrix_1d_real_1 kinetic_matrix_1d_real_1.cpp)
+target_link_libraries(kinetic_matrix_1d_real_1 ${Boost_LIBRARIES})
+enable_iwyu(kinetic_matrix_1d_real_1)

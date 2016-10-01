@@ -46,10 +46,10 @@ int main(int argc, char** argv)
     using Term     = algebra::Term<double, Operator>;
 
     // init operator basis
-    hubbard::real_space::Basis3Operator<Term> basis(lattice);
+    hubbard::real_space::Basis1Operator<Term> basis(lattice);
 
     types::TripletList<double> elements(basis.size(), basis.size());
-    hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
+    hubbard::real_space::init_kinetic_matrix_1(elements, basis, lattice, J);
     elements.sort();
 
     ofstream file(out_path.c_str());

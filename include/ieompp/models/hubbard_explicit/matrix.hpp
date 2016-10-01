@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+#include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/operator.hpp>
 #include <ieompp/types/eigen/triplet_list.hpp>
 
@@ -12,37 +13,53 @@ namespace ieompp
     {
         namespace real_space
         {
-            template <typename Scalar, typename Index, typename Basis, typename Lattice>
-            void init_kinetic_matrix(types::TripletList<Scalar, Index>& matrix, const Basis& basis,
-                                     Lattice& lattice, const Scalar& J = 1.)
+            template <typename Scalar, typename Index, typename Term, typename Lattice>
+            void init_kinetic_matrix_1(types::TripletList<Scalar, Index>& matrix,
+                                       const Basis1Operator<Term>& basis, Lattice& lattice,
+                                       const Scalar& J = 1.)
             {
                 static_assert(
-                    ieompp::hubbard::is_hubbard_operator<typename Basis::Term::Operator>::value,
+                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                    "Operator-type in Term-type must be a Hubbard like operator!");
+
+                for(typename Basis1Operator<Term>::Index i = 0; i < basis.N; ++i) {
+                    const auto neighbors = lattice.neighbors(i);
+                    for(auto neighbor : neighbors) matrix.emplace_back(i, neighbor, -J);
+                }
+            }
+
+            template <typename Scalar, typename Index, typename Term, typename Lattice>
+            void init_kinetic_matrix(types::TripletList<Scalar, Index>& matrix,
+                                     const Basis3Operator<Term>& basis, Lattice& lattice,
+                                     const Scalar& J = 1.)
+            {
+                static_assert(
+                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                     "Operator-type in Term-type must be a Hubbard like operator!");
 
                 const auto basis_size = basis.size();
 
-                for(typename Basis::Index i = 0; i < basis.N; ++i) {
-                    const auto neighbors = lattice.unique_neighbors(i);
+                for(typename Basis3Operator<Term>::Index i = 0; i < basis.N; ++i) {
+                    const auto neighbors = lattice.neighbors(i);
                     for(auto neighbor : neighbors) matrix.emplace_back(i, neighbor, -J);
                 }
 
-                for(typename Basis::Index i = basis.N; i < basis_size; ++i) {
+                for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
                     const auto& ops = basis[i].operators;
 
-                    auto neighbors = lattice.unique_neighbors(ops[0].index1);
+                    auto neighbors = lattice.neighbors(ops[0].index1);
                     for(auto neighbor : neighbors) {
                         matrix.emplace_back(
                             i, basis.get_3op_index(neighbor, ops[1].index1, ops[2].index1), -J);
                     }
 
-                    neighbors = lattice.unique_neighbors(ops[1].index1);
+                    neighbors = lattice.neighbors(ops[1].index1);
                     for(auto neighbor : neighbors) {
                         matrix.emplace_back(
                             i, basis.get_3op_index(ops[0].index1, neighbor, ops[2].index1), -J);
                     }
 
-                    neighbors = lattice.unique_neighbors(ops[2].index1);
+                    neighbors = lattice.neighbors(ops[2].index1);
                     for(auto neighbor : neighbors) {
                         matrix.emplace_back(
                             i, basis.get_3op_index(ops[0].index1, ops[1].index1, neighbor), J);
@@ -50,22 +67,22 @@ namespace ieompp
                 }
             }
 
-            template <typename Scalar, typename Index, typename Basis>
+            template <typename Scalar, typename Index, typename Term>
             void init_interaction_matrix(types::TripletList<Scalar, Index>& matrix,
-                                         const Basis& basis, const Scalar& U = 1.)
+                                         const Basis3Operator<Term>& basis, const Scalar& U = 1.)
             {
                 static_assert(
-                    ieompp::hubbard::is_hubbard_operator<typename Basis::Term::Operator>::value,
+                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                     "Operator-type in Term-type must be a Hubbard like operator!");
 
                 const auto basis_size = basis.size();
 
-                for(typename Basis::Index i = 0; i < basis.N; ++i) {
+                for(typename Basis3Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     matrix.emplace_back(i, i, U / 2.);
                     matrix.emplace_back(i, basis.get_3op_index(i, i, i), U / 2.);
                 }
 
-                for(typename Basis::Index i = basis.N; i < basis_size; ++i) {
+                for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
                     matrix.emplace_back(i, i, U / 2.);
                     const auto& ops = basis[i].operators;
                     if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))

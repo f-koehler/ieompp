@@ -17,8 +17,6 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
-    Eigen::initParallel();
-
     po::options_description description("Calculate the interaction matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
     description.add_options()
         ("help", "print this help message")

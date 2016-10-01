@@ -12,6 +12,24 @@ namespace ieompp
         namespace real_space
         {
             template <typename TermT>
+            struct Basis1Operator : public std::vector<TermT> {
+                using Term  = TermT;
+                using Index = typename std::vector<Term>::size_type;
+
+                static_assert(is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator must be of Hubbard type");
+
+                const Index N;
+
+                template <typename Lattice>
+                Basis1Operator(const Lattice& lattice) : N(lattice.num())
+                {
+                    this->reserve(N);
+                    for(auto i : lattice) this->emplace_back(Term{1, {{true, i, true}}});
+                }
+            };
+
+            template <typename TermT>
             struct Basis3Operator : public std::vector<TermT> {
                 using Term  = TermT;
                 using Index = typename std::vector<Term>::size_type;
