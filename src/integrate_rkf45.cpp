@@ -54,8 +54,9 @@ int main(int argc, char** argv)
         integrator.step(M, h);
         t += integrator.step_width();
         auto val = abs(h(0));
-        cout << t << '\t' << val << '\t' << integrator.step_width() << '\t'
-             << integrator.last_error() << '\n';
+        /* cout << t << '\t' << val << '\t' << integrator.step_width() << '\t' */
+        /*      << integrator.last_error() << '\n'; */
+        out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
     out_file.close();
 

@@ -1,6 +1,7 @@
 #ifndef IEOMPP_IO_LINE_HPP_
 #define IEOMPP_IO_LINE_HPP_
 
+#include <istream>
 #include <regex>
 
 namespace ieompp
@@ -11,6 +12,15 @@ namespace ieompp
         {
             static const std::regex reg("^\\s*(?:#.*)?$");
             return std::regex_match(str, reg);
+        }
+
+        std::string next_line(std::istream& strm)
+        {
+            std::string buf;
+            do {
+                std::getline(strm, buf);
+                if(!is_skippable_line(buf)) return buf;
+            } while(true);
         }
     }
 }

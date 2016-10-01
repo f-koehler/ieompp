@@ -2,7 +2,9 @@
 #define IEOMPP_IO_EIGEN_DENSE_HPP_
 
 #include <cstdlib>
+#include <istream>
 #include <ostream>
+#include <sstream>
 #include <string>
 
 #include <ieompp/io/exception.hpp>
@@ -36,44 +38,32 @@ namespace ieompp
             static const std::regex dimension_reg("^\\s*(\\d+)\\s*x\\s*(\\d+)\\s*$");
 
             if(!binary) {
-                std::string buf;
-                do {
-                    std::getline(strm, buf);
-                    if(strm.fail())
-                        THROW(IOException,
-                              "Failed to read through skippable lines at the beginning of stream");
-                    if(!is_skippable_line(buf)) break;
-                } while(!strm.eof());
-
+                auto line = next_line(strm);
                 std::smatch match;
-                if(!std::regex_match(buf, match, dimension_reg))
+                if(!std::regex_match(line, match, dimension_reg)) {
                     THROW(
                         IOException,
                         "Expected a line of the type \"123x456\" specifying the matrix dimensions");
+                }
 
-
-                m = Matrix(std::strtoul(match[1].str().c_str(), nullptr, 10),
-                           std::strtoul(match[1].str().c_str(), nullptr, 10));
-                m.reserve(Eigen::VectorXi::Constant(m.cols(), nnz_per_inner_vec));
+                auto rows = std::strtoul(match[1].str().c_str(), nullptr, 10);
+                auto cols = std::strtoul(match[2].str().c_str(), nullptr, 10);
+                m = Matrix(rows, cols);
+                m.reserve(Eigen::VectorXi::Constant(cols, nnz_per_inner_vec));
 
                 using Index  = typename Matrix::Index;
                 using Scalar = typename Matrix::Scalar;
 
-                Index nnz;
-                strm >> nnz;
-                if(strm.fail()) THROW(IOException, "Failed to determine number of entries");
-                m.reserve(nnz);
+                line = next_line(strm);
 
+                Index num_entries = std::strtoul(line.c_str(), nullptr, 10);
                 Index i, j;
                 Scalar val;
-                for(Index n = 1; n < nnz; ++n) {
-                    strm >> i >> j >> val;
-                    if(strm.fail()) THROW(IOException, compose("Failed to read element ", n));
+                for(Index n = 0; n < num_entries; ++n) {
+                    std::istringstream ss(next_line(strm));
+                    ss >> i >> j >> val;
                     m.insert(i, j) = val;
                 }
-
-                m.insert(i, j) = val;
-                return;
             }
         }
     }

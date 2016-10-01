@@ -1,14 +1,21 @@
-add_executable(commutators_momentum_space commutators_momentum_space.cpp)
-add_executable(commutators_real_space commutators_real_space.cpp)
+add_executable(hubbard_commutators_momentum_space hubbard_commutators_momentum_space.cpp)
+add_executable(hubbard_commutators_real_space hubbard_commutators_real_space.cpp)
 
-add_executable(interaction_matrix_1d_real interaction_matrix_1d_real.cpp)
-target_link_libraries(interaction_matrix_1d_real ${Boost_LIBRARIES})
-enable_iwyu(interaction_matrix_1d_real)
+add_executable(hubbard_interaction_matrix_1d_real hubbard_interaction_matrix_1d_real.cpp)
+target_link_libraries(hubbard_interaction_matrix_1d_real ${Boost_LIBRARIES})
+enable_iwyu(hubbard_interaction_matrix_1d_real)
 
-add_executable(kinetic_matrix_1d_real kinetic_matrix_1d_real.cpp)
-target_link_libraries(kinetic_matrix_1d_real ${Boost_LIBRARIES})
-enable_iwyu(kinetic_matrix_1d_real)
+add_executable(hubbard_kinetic_matrix_1d_real hubbard_kinetic_matrix_1d_real.cpp)
+target_link_libraries(hubbard_kinetic_matrix_1d_real ${Boost_LIBRARIES})
+enable_iwyu(hubbard_kinetic_matrix_1d_real)
 
-add_executable(kinetic_matrix_1d_real_1 kinetic_matrix_1d_real_1.cpp)
-target_link_libraries(kinetic_matrix_1d_real_1 ${Boost_LIBRARIES})
-enable_iwyu(kinetic_matrix_1d_real_1)
+add_executable(hubbard_kinetic_matrix_1d_real_1 hubbard_kinetic_matrix_1d_real_1.cpp)
+target_link_libraries(hubbard_kinetic_matrix_1d_real_1 ${Boost_LIBRARIES})
+enable_iwyu(hubbard_kinetic_matrix_1d_real_1)
+
+install(
+    TARGETS hubbard_commutators_momentum_space hubbard_commutators_real_space hubbard_interaction_matrix_1d_real hubbard_kinetic_matrix_1d_real hubbard_kinetic_matrix_1d_real_1
+    RUNTIME
+    DESTINATION bin
+    CONFIGURATIONS Release
+)
