@@ -11,12 +11,18 @@ namespace ieompp
     namespace types
     {
         template <typename Matrix>
+        bool is_quadratic(const Matrix& m)
+        {
+            return m.rows() == m.cols();
+        }
+
+        template <typename Matrix>
         typename std::enable_if<is_eigen_matrix<Matrix>::value, bool>::type
         is_symmetric(const Matrix& m)
         {
             using Index = typename eigen_matrix_traits<Matrix>::Index;
 
-            if(m.rows() != m.cols()) return false;
+            if(!is_quadratic(m)) return false;
 
             const Index N = m.rows();
             for(Index i = 0; i < N; ++i) {
@@ -34,7 +40,7 @@ namespace ieompp
         {
             using Index = typename eigen_matrix_traits<Matrix>::Index;
 
-            if(m.rows() != m.cols()) return false;
+            if(!is_quadratic(m)) return false;
 
             const Index N = m.rows();
             for(Index i = 0; i < N; ++i) {
