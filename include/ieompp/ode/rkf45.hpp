@@ -3,9 +3,8 @@
 
 #include <cassert>
 
-#include <ieompp/types/eigen/traits.hpp>
+#include <ieompp/description.hpp>
 #include <ieompp/types/eigen/check.hpp>
-#include <ieompp/types/number.hpp>
 
 namespace ieompp
 {

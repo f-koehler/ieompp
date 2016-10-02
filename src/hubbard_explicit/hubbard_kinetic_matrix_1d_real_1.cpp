@@ -20,11 +20,11 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
-    po::options_description description("Calculate the interaction matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
+    po::options_description description("Calculate the kinetic matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
     description.add_options()
         ("help", "print this help message")
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
-        ("J", po::value<double>()->default_value(1.), "interaction strength")
+        ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("o", po::value<string>()->default_value("kinetic_matrix_1d_real.txt"), "output file");
 
     po::variables_map vm;

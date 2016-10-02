@@ -47,7 +47,6 @@ int main(int argc, char** argv)
     Eigen::VectorXcd h(M.rows());
     h.setZero();
     h(0) = 1.;
-    cout << h << endl;
 
     ofstream out_file (output_path.c_str());
     ode::RK4<double> integrator(M.rows(), dt);
