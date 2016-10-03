@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 
     ofstream out_file (output_path.c_str());
     ode::RKF45<double> integrator(M.rows(), dt, 0.000001);
+    out_file << 0 << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     for(double t = 0.; t < t_end;) {
         integrator.step(M, h);
         t += integrator.step_width();
