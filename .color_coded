@@ -7,4 +7,6 @@ c++
 -fcolor-diagnostics
 -isystem
 external/eigen
+-isystem
+external/spdlog/include
 -fopenmp=libomp

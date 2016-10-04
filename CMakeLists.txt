@@ -20,7 +20,7 @@ include(cmake/version-script.cmake)
 run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
 # include spdlog
-include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/spdlog)
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/spdlog/include)
 
 # include Eigen
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)

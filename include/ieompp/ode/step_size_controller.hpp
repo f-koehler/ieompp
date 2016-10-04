@@ -15,7 +15,7 @@ namespace ieompp
             Real lower_limit   = 0.2;
             Real upper_limit   = 2.0;
             Real order         = 0.25;
-            Real tolerance     = 1e-7;
+            Real tolerance     = 1e-3;
 
             bool operator()(Real& step_size, const Real& error) const {
                 bool retval = error > tolerance;
