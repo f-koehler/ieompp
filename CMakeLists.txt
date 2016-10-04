@@ -19,11 +19,13 @@ include(cmake/native.cmake)
 include(cmake/version-script.cmake)
 run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
 
-# fetch Eigen
-include(cmake/get-eigen.cmake)
-get_eigen(${CMAKE_SOURCE_DIR}/external/eigen)
+# include spdlog
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/spdlog)
+
+# include Eigen
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 
+# use boost
 find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 

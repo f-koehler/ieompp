@@ -1,8 +1,9 @@
+*.kdev4
 *.pyc
 *.session
 *.swp
 build/*
 external/eigen
+external/eigen.tar.gz
 include/ieompp/version.hpp
 iwyu.html
-*.kdev4
