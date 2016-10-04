@@ -49,14 +49,11 @@ int main(int argc, char** argv)
     h(0) = 1.;
 
     ofstream out_file (output_path.c_str());
-    ode::RKF45<double> integrator(M.rows(), dt, 0.000001);
+    ode::RKF45<double> integrator(M.rows(), dt);
     out_file << 0 << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     for(double t = 0.; t < t_end;) {
         integrator.step(M, h);
-        t += integrator.step_width();
-        auto val = abs(h(0));
-        /* cout << t << '\t' << val << '\t' << integrator.step_width() << '\t' */
-        /*      << integrator.last_error() << '\n'; */
+        t += integrator.step_size();
         out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
     out_file.close();

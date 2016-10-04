@@ -8,8 +8,12 @@ add_executable(integrate_rkf45 integrate_rkf45.cpp)
 target_link_libraries(integrate_rkf45 ${Boost_LIBRARIES})
 enable_iwyu(integrate_rkf45)
 
+add_executable(integrate_rkck integrate_rkck.cpp)
+target_link_libraries(integrate_rkck ${Boost_LIBRARIES})
+enable_iwyu(integrate_rkck)
+
 install(
-    TARGETS integrate_rk4 integrate_rkf45
+    TARGETS integrate_rk4 integrate_rkf45 integrate_rkck
     RUNTIME
     DESTINATION bin
     CONFIGURATIONS Release

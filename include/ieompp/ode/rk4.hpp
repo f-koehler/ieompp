@@ -17,15 +17,15 @@ namespace ieompp
 
         private:
             const std::size_t _dimension;
-            const Real _step_width;
+            const Real _step_size;
 
         public:
-            RK4(std::size_t dimension, const Real& step_width)
-                : _dimension(dimension), _step_width(step_width)
+            RK4(std::size_t dimension, const Real& step_size)
+                : _dimension(dimension), _step_size(step_size)
             {
             }
 
-            const Real& step_width() const { return _step_width; }
+            const Real& step_size() const { return _step_size; }
             std::size_t dimension() const { return _dimension; }
 
             template <typename Matrix, typename Vector>
@@ -39,10 +39,10 @@ namespace ieompp
                 static Vector k_1, k_2, k_3, k_4;
 
                 k_1 = m * u;
-                k_2 = m * (u + (_step_width / 2) * k_1);
-                k_3 = m * (u + (_step_width / 2) * k_2);
-                k_4 = m * (u + _step_width * k_3);
-                u += (_step_width / 6) * (k_1 + 2. * k_2 + 2. * k_3 + k_4);
+                k_2 = m * (u + (_step_size / 2) * k_1);
+                k_3 = m * (u + (_step_size / 2) * k_2);
+                k_4 = m * (u + _step_size * k_3);
+                u += (_step_size / 6) * (k_1 + 2. * k_2 + 2. * k_3 + k_4);
             }
         };
     }

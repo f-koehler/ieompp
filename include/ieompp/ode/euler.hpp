@@ -17,21 +17,21 @@ namespace ieompp
 
         private:
             const std::size_t _dimension;
-            Real _step_width;
+            Real _step_size;
 
         public:
-            Euler(std::size_t dimension, const Real& step_width)
-                : _dimension(dimension), _step_width(step_width)
+            Euler(std::size_t dimension, const Real& step_size)
+                : _dimension(dimension), _step_size(step_size)
             {
             }
 
-            const Real& step_width() const { return _step_width; }
+            const Real& step_size() const { return _step_size; }
             std::size_t dimension() const { return _dimension; }
 
             template <typename Matrix, typename Vector>
             void step(const Matrix& m, Vector& u) const
             {
-                u += _step_width * m * u;
+                u += _step_size * m * u;
             }
         };
     }

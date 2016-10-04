@@ -3,7 +3,7 @@
 using namespace std;
 
 #include <ieompp/io/eigen_sparse.hpp>
-#include <ieompp/ode/rk4.hpp>
+#include <ieompp/ode/rkck.hpp>
 using namespace ieompp;
 
 #include <boost/program_options.hpp>
@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     description.add_options()
         ("help", "print this help message")
         ("i", po::value<string>(), "input file containing a sparse matrix")
-        ("o", po::value<string>()->default_value("integrate_rk4.txt"), "output file")
+        ("o", po::value<string>()->default_value("integrate_rkf45.txt"), "output file")
         ("dt", po::value<double>()->default_value(.01), "step width")
         ("nnz", po::value<size_t>()->default_value(8), "number of non zero elements per row")
         ("t_end", po::value<double>()->default_value(10.), "stop time for the integration");
@@ -49,12 +49,11 @@ int main(int argc, char** argv)
     h(0) = 1.;
 
     ofstream out_file (output_path.c_str());
-    ode::RK4<double> integrator(M.rows(), dt);
+    ode::RKCK<double> integrator(M.rows(), dt);
     out_file << 0 << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     for(double t = 0.; t < t_end;) {
         integrator.step(M, h);
         t += integrator.step_size();
-        auto val = abs(h(0));
         out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
     out_file.close();
