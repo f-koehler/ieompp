@@ -49,11 +49,20 @@ namespace ieompp
 
     template <typename Scalar, typename Index>
     struct TypeDescription<types::TripletList<Scalar, Index>> {
-        static Description get()
+        static Description description()
         {
-            return {{"Eigen triplet list", ""},
-                    {"  scalar", compose(TypeProperties<Scalar>::name, ' ', "(size ",
-                                         TypeProperties<Scalar>::size, ")")}};
+            return Description{{"type", "TripletList"}, {"scalar", ""}}
+                   + get_type_description<Scalar>().indent(2) + Description{{"index", ""}}
+                   + get_type_description<Index>().indent(2);
+        }
+    };
+
+    template <typename Scalar, typename Index>
+    struct InstanceDescription<types::TripletList<Scalar, Index>> {
+        static Description description(const types::TripletList<Scalar, Index>& list)
+        {
+            return Description{{"rows", std::to_string(list.rows())},
+                               {"cols", std::to_string(list.cols())}};
         }
     };
 }

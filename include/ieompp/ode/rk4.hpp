@@ -49,14 +49,13 @@ namespace ieompp
 
     template <typename Real>
     struct TypeDescription<ode::RK4<Real>> {
-        static Description get()
-        {
-            return {{"RK4 Integrator", ""},
-                    {"  fixed-step integrator", ""},
-                    {"  real", compose(TypeProperties<Real>::name, ' ', "(size ",
-                                       TypeProperties<Real>::size, ")")}};
-        }
+        static const Description description;
     };
+
+    template <typename Real>
+    const Description TypeDescription<ode::RK4<Real>>::description =
+        Description{{"type", "RK4 integrator"}, {"real type", ""}}
+        + get_type_description<Real>().indent(2);
 }
 
 #endif

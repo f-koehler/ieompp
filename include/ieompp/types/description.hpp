@@ -12,87 +12,99 @@
 namespace ieompp
 {
     template <>
-    struct TypeProperties<bool> {
-        using type                 = bool;
-        static constexpr auto name = "bool";
-        static constexpr auto size = sizeof(bool);
+    struct TypeDescription<bool> {
+        static Description description()
+        {
+            return {{"type", "bool"}, {"size", std::to_string(sizeof(bool))}};
+        }
     };
 
     template <>
-    struct TypeProperties<int8_t> {
-        using type                 = int8_t;
-        static constexpr auto name = "int8_t";
-        static constexpr auto size = sizeof(int8_t);
+    struct TypeDescription<uint8_t> {
+        static Description description()
+        {
+            return {{"type", "uint8_t"}, {"size", std::to_string(sizeof(uint8_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<int16_t> {
-        using type                 = int16_t;
-        static constexpr auto name = "int16_t";
-        static constexpr auto size = sizeof(int16_t);
+    struct TypeDescription<uint16_t> {
+        static Description description()
+        {
+            return {{"type", "uint16_t"}, {"size", std::to_string(sizeof(uint16_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<int32_t> {
-        using type                 = int32_t;
-        static constexpr auto name = "int32_t";
-        static constexpr auto size = sizeof(int32_t);
+    struct TypeDescription<uint32_t> {
+        static Description description()
+        {
+            return {{"type", "uint32_t"}, {"size", std::to_string(sizeof(uint32_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<int64_t> {
-        using type                 = int64_t;
-        static constexpr auto name = "int64_t";
-        static constexpr auto size = sizeof(int64_t);
+    struct TypeDescription<uint64_t> {
+        static Description description()
+        {
+            return {{"type", "uint64_t"}, {"size", std::to_string(sizeof(uint64_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<uint8_t> {
-        using type                 = uint8_t;
-        static constexpr auto name = "uint8_t";
-        static constexpr auto size = sizeof(uint8_t);
+    struct TypeDescription<int8_t> {
+        static Description description()
+        {
+            return {{"type", "int8_t"}, {"size", std::to_string(sizeof(int8_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<uint16_t> {
-        using type                 = uint16_t;
-        static constexpr auto name = "uint16_t";
-        static constexpr auto size = sizeof(uint16_t);
+    struct TypeDescription<int16_t> {
+        static Description description()
+        {
+            return {{"type", "int16_t"}, {"size", std::to_string(sizeof(int16_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<uint32_t> {
-        using type                 = uint32_t;
-        static constexpr auto name = "uint32_t";
-        static constexpr auto size = sizeof(uint32_t);
+    struct TypeDescription<int32_t> {
+        static Description description()
+        {
+            return {{"type", "int32_t"}, {"size", std::to_string(sizeof(int32_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<uint64_t> {
-        using type                 = uint64_t;
-        static constexpr auto name = "uint64_t";
-        static constexpr auto size = sizeof(uint64_t);
+    struct TypeDescription<int64_t> {
+        static Description description()
+        {
+            return {{"type", "int64_t"}, {"size", std::to_string(sizeof(int64_t))}};
+        }
     };
 
     template <>
-    struct TypeProperties<float> {
-        using type                 = float;
-        static constexpr auto name = "float";
-        static constexpr auto size = sizeof(float);
+    struct TypeDescription<float> {
+        static Description description()
+        {
+            return {{"type", "float"}, {"size", std::to_string(sizeof(float))}};
+        }
     };
 
     template <>
-    struct TypeProperties<double> {
-        using type                 = double;
-        static constexpr auto name = "double";
-        static constexpr auto size = sizeof(double);
+    struct TypeDescription<double> {
+        static Description description()
+        {
+            return {{"type", "double"}, {"size", std::to_string(sizeof(double))}};
+        }
     };
 
     template <>
-    struct TypeProperties<long double> {
-        using type                 = long double;
-        static constexpr auto name = "long double";
-        static constexpr auto size = sizeof(long double);
+    struct TypeDescription<long double> {
+        static Description description()
+        {
+            return {{"type", "long double"}, {"size", std::to_string(sizeof(long double))}};
+        }
     };
 }
 

@@ -20,7 +20,7 @@
 namespace ieompp
 {
     struct Platform {
-        auto boost() const
+        static auto boost()
         {
             static const auto str =
                 compose(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
@@ -28,14 +28,14 @@ namespace ieompp
             return str;
         }
 
-        auto eigen() const
+        static auto eigen()
         {
             static const auto str =
                 compose(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
             return str;
         }
 
-        auto architecture() const
+        static auto architecture()
         {
 #if BOOST_ARCH_X86_32
             static const auto str = compose("x86_32");
@@ -47,7 +47,7 @@ namespace ieompp
             return str;
         }
 
-        auto operating_system() const
+        static auto operating_system()
         {
 #if BOOST_OS_LINUX
             static const auto str = compose("Linux");
@@ -57,7 +57,7 @@ namespace ieompp
             return str;
         }
 
-        auto compiler() const
+        static auto compiler()
         {
 #if BOOST_COMP_CLANG
             static const auto str =
@@ -71,7 +71,7 @@ namespace ieompp
             return str;
         }
 
-        auto cpp_library() const
+        static auto cpp_library()
         {
 #if BOOST_LIB_STD_GNU
             static const auto str = compose("libstdc++", BOOST_LIB_STD_GNU);
@@ -83,7 +83,7 @@ namespace ieompp
             return str;
         }
 
-        auto host() const
+        static auto host()
         {
 #if BOOST_OS_WINDOWS
 #else
@@ -93,7 +93,7 @@ namespace ieompp
 #endif
         }
 
-        auto user() const
+        static auto user()
         {
 #if BOOST_OS_WINDOWS
 #else
@@ -102,7 +102,7 @@ namespace ieompp
         }
 
         enum class Endian : uint8_t { Unknown, Big, Little, BigWord, LittleWord };
-        auto endianess() const
+        static auto endianess()
         {
 #if BOOST_ENDIAN_BIG_BYTE
             return Endian::Big;
@@ -140,18 +140,18 @@ namespace ieompp
     }
 
     template <>
-    struct VariableDescription<Platform> {
-        static Description get(const Platform& platform)
+    struct TypeDescription<Platform> {
+        static Description description()
         {
             return {{"Platform", ""},
                     {"  ieompp", version},
-                    {"  boost", platform.boost()},
-                    {"  Compiler", platform.compiler()},
-                    {"  C++ std lib", platform.cpp_library()},
-                    {"  OS", platform.operating_system()},
-                    {"  Compiled by", compose(platform.user(), '@', platform.host())},
-                    {"  Architecture", platform.architecture()},
-                    {"  Endian", compose(platform.endianess())}};
+                    {"  boost", Platform::boost()},
+                    {"  Compiler", Platform::compiler()},
+                    {"  C++ std lib", Platform::cpp_library()},
+                    {"  OS", Platform::operating_system()},
+                    {"  Compiled by", compose(Platform::user(), '@', Platform::host())},
+                    {"  Architecture", Platform::architecture()},
+                    {"  Endian", compose(Platform::endianess())}};
         }
     };
 }

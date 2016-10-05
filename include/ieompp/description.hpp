@@ -1,6 +1,7 @@
 #ifndef IEOMPP_DESCRIPTION_HPP_
 #define IEOMPP_DESCRIPTION_HPP_
 
+#include <ostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -27,40 +28,56 @@ namespace ieompp
             std::copy(rhs.begin(), rhs.end(), std::back_inserter(*this));
             return *this;
         }
+
+        Description operator+(const Description& rhs) const
+        {
+            Description desc(*this);
+            desc += rhs;
+            return desc;
+        }
     };
 
     template <typename T>
-    struct VariableDescription {
-        static Description get(const T& t)
+    struct TypeDescription
+    {
+        static Description description()
+        {
+            return {{"undescribed", "type"}};
+        }
+    };
+
+    template <typename T>
+    struct InstanceDescription {
+        static Description description(const T& t)
         {
             static_cast<void>(t);
-            return {};
+            return {{"undescribed", "instance"}};
         }
     };
 
     template <typename T>
-    struct TypeProperties {
-    };
+    Description get_type_description()
+    {
+        return TypeDescription<T>::description();
+    }
 
     template <typename T>
-    struct TypeDescription {
-        static Description get()
-        {
-            return {{"type:", compose(TypeProperties<T>::name, ' ', "(size ",
-                                      TypeProperties<T>::size, ")")}};
-        }
-    };
+    Description get_type_description(const T& t)
+    {
+        static_cast<void>(t);
+        return TypeDescription<T>::description();
+    }
+
+    template <typename T>
+    Description get_instance_description(const T& t)
+    {
+        return InstanceDescription<T>::description(t);
+    }
 
     template <typename T>
     Description get_description(const T& t)
     {
-        return VariableDescription<T>::get(t);
-    }
-
-    template <typename T>
-    Description get_description()
-    {
-        return TypeDescription<T>::get();
+        return get_type_description(t) + get_instance_description(t);
     }
 }
 

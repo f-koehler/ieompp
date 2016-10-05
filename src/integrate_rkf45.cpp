@@ -47,42 +47,43 @@ int main(int argc, char** argv)
     vector<spd::sink_ptr> logging_sinks;
     logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_st>());
     logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_st>(logging_path, true));
-    auto logger = std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
+    auto io_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
+    auto ode_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
 
     Eigen::SparseMatrix<std::complex<double>> M;
 
-    logger->info("Open matrix file {} for reading", input_path);
+    io_logger->info("Open matrix file {} for reading", input_path);
     ifstream in_file(input_path.c_str());
 
-    logger->info("Read matrix file {}", input_path);
+    io_logger->info("Read matrix file {}", input_path);
     io::read_matrix(in_file, M, nnz);
 
-    logger->info("Close matrix file {}", input_path);
+    io_logger->info("Close matrix file {}", input_path);
     in_file.close();
     M *= std::complex<double>(0., 1.);
 
-    logger->info("Set initial values");
+    ode_logger->info("Set initial values");
     Eigen::VectorXcd h(M.rows());
     h.setZero();
     h(0) = 1.;
 
-    logger->info("Open output file {} for writing", output_path);
+    io_logger->info("Open output file {} for writing", output_path);
     ofstream out_file (output_path.c_str());
 
     ode::RKF45<double> integrator(M.rows(), dt);
     out_file << 0 << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     for(double t = 0.; t < t_end;) {
-        logger->info("Performing step at t={}", t);
+        ode_logger->info("Performing step at t={}", t);
         integrator.step(M, h);
-        logger->info("Complete step {} -> {}", t, t + integrator.step_size());
+        ode_logger->info("Complete step {} -> {}", t, t + integrator.step_size());
         t += integrator.step_size();
-        logger->info("\th_0({}) = {} + i {}", t, h(0).real(), h(0).imag());
-        logger->info("\tstep_size = {}", integrator.step_size());
-        logger->info("\tlast_error = {}", integrator.last_error());
+        ode_logger->info("\th_0({}) = {} + i {}", t, h(0).real(), h(0).imag());
+        ode_logger->info("\tstep_size = {}", integrator.step_size());
+        ode_logger->info("\tlast_error = {}", integrator.last_error());
         out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
 
-    logger->info("Close output file {}");
+    io_logger->info("Close output file {}");
     out_file.close();
 
     return 0;

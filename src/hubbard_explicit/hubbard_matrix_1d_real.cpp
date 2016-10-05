@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     elements.sort();
 
     ofstream file(out_path.c_str());
-    io::write_header(file, {get_description(Platform()), get_description<decltype(elements)>()});
+    io::write_header(file, {get_instance_description(Platform()), get_description(elements)});
     file << '\n' << basis.size() << 'x' << basis.size() << '\n';
     io::write_triplet_list(file, elements);
     file.close();
