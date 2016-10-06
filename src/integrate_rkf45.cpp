@@ -2,9 +2,11 @@
 #include <iostream>
 using namespace std;
 
+#include <ieompp/description.hpp>
 #include <ieompp/io/eigen_sparse.hpp>
 #include <ieompp/ode/rkf45.hpp>
 #include <ieompp/platform.hpp>
+#include <ieompp/spdlog.hpp>
 using namespace ieompp;
 
 #include <boost/program_options.hpp>
@@ -48,7 +50,7 @@ int main(int argc, char** argv)
     logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_st>());
     logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_st>(logging_path, true));
     auto io_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
-    auto ode_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
+    auto ode_logger = std::make_shared<spd::logger>("ode", logging_sinks.begin(), logging_sinks.end());
 
     Eigen::SparseMatrix<std::complex<double>> M;
 
@@ -57,6 +59,8 @@ int main(int argc, char** argv)
 
     io_logger->info("Read matrix file {}", input_path);
     io::read_matrix(in_file, M, nnz);
+    /* log<LogLevel::Info>(ode_logger, get_description(M)); */
+    get_description(M);
 
     io_logger->info("Close matrix file {}", input_path);
     in_file.close();
@@ -83,7 +87,7 @@ int main(int argc, char** argv)
         out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
 
-    io_logger->info("Close output file {}");
+    io_logger->info("Close output file {}", output_path);
     out_file.close();
 
     return 0;

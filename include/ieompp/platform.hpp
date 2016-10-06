@@ -65,6 +65,11 @@ namespace ieompp
 #elif BOOST_COMP_GNUC
             static const auto str =
                 compose("gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
+            // BOOST_COMP_INTEL is bogus
+#elif __INTEL_COMPILER
+            static const auto str =
+                compose("intel ", static_cast<uint16_t>(__INTEL_COMPILER / 100), '.',
+                        __INTEL_COMPILER % 100, '.', __INTEL_COMPILER % 10);
 #else
             static const auto str = compose("UntestedCompiler");
 #endif
@@ -75,7 +80,7 @@ namespace ieompp
         {
 #if BOOST_LIB_STD_GNU
             static const auto str = compose("libstdc++", BOOST_LIB_STD_GNU);
-#elif defined(BOOST_LIB_STD_CXX)
+#elif BOOST_LIB_STD_CXX
             static const auto str = compose("libc++", _LIBCPP_VERSION);
 #else
             static const auto str = "UnknownC++Library";

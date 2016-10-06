@@ -106,9 +106,9 @@ namespace ieompp
                                                   const Lattice& lattice, Container& container)
                 {
                     using Operator = typename Term::Operator;
-                    using Real     = typename types::real_type<typename Term::Prefactor>::type;
+                    using Float     = typename types::real_type<typename Term::Prefactor>::type;
 
-                    const auto prefactor = U * t.prefactor / Real(lattice.num());
+                    const auto prefactor = U * t.prefactor / Float(lattice.num());
 
                     auto q_idx   = t.operators.front().index1;
                     const auto q = momentum_space[q_idx];
@@ -138,9 +138,9 @@ namespace ieompp
                                                   const Lattice& lattice, Container& container)
                 {
                     using Operator = typename Term::Operator;
-                    using Real     = typename types::real_type<typename Term::Prefactor>::type;
+                    using Float     = typename types::real_type<typename Term::Prefactor>::type;
 
-                    const auto prefactor = t.prefactor * U / Real(lattice.num());
+                    const auto prefactor = t.prefactor * U / Float(lattice.num());
 
                     auto q1_idx   = t.operators[0].index1;
                     auto q2_idx   = t.operators[1].index1;

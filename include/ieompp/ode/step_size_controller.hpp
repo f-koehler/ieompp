@@ -8,16 +8,16 @@ namespace ieompp
 {
     namespace ode
     {
-        template <typename Real>
+        template <typename Float>
         struct StepSizeController
         {
-            Real safety_factor = 0.9;
-            Real lower_limit   = 0.2;
-            Real upper_limit   = 2.0;
-            Real order         = 0.25;
-            Real tolerance     = 1e-3;
+            Float safety_factor = 0.9;
+            Float lower_limit   = 0.2;
+            Float upper_limit   = 2.0;
+            Float order         = 0.25;
+            Float tolerance     = 1e-3;
 
-            bool operator()(Real& step_size, const Real& error) const {
+            bool operator()(Float& step_size, const Float& error) const {
                 bool retval = error > tolerance;
                 step_size *= std::min(
                     std::max(safety_factor * std::pow(tolerance / error, order), lower_limit),

@@ -78,8 +78,8 @@ namespace ieompp
         template <typename T>
         typename std::enable_if<is_complex<T>::value, bool>::type is_zero(const T& t)
         {
-            using Real = typename real_type<T>::type;
-            return is_zero<Real>(t.real()) && is_zero<Real>(t.imag());
+            using Float = typename real_type<T>::type;
+            return is_zero<Float>(t.real()) && is_zero<Float>(t.imag());
         }
 
         template <typename T>

@@ -5,30 +5,30 @@
 
 namespace ieompp
 {
-    template <typename Real>
+    template <typename Float>
     struct Pi {
-        static const Real value;
+        static const Float value;
     };
 
-    template <typename Real>
+    template <typename Float>
     struct HalfPi {
-        static const Real value;
+        static const Float value;
     };
 
-    template <typename Real>
+    template <typename Float>
     struct TwoPi {
-        static const Real value;
+        static const Float value;
     };
 
 
-    template <typename Real>
-    const Real Pi<Real>::value = boost::math::constants::pi<Real>();
+    template <typename Float>
+    const Float Pi<Float>::value = boost::math::constants::pi<Float>();
 
-    template <typename Real>
-    const Real HalfPi<Real>::value = boost::math::constants::half_pi<Real>();
+    template <typename Float>
+    const Float HalfPi<Float>::value = boost::math::constants::half_pi<Float>();
 
-    template <typename Real>
-    const Real TwoPi<Real>::value = boost::math::constants::two_pi<Real>();
+    template <typename Float>
+    const Float TwoPi<Float>::value = boost::math::constants::two_pi<Float>();
 }
 
 #endif

@@ -10,22 +10,22 @@ namespace ieompp
 {
     namespace ode
     {
-        template <typename RealT>
+        template <typename FloatT>
         class RK4
         {
-            using Real = RealT;
+            using Float = FloatT;
 
         private:
             const std::size_t _dimension;
-            const Real _step_size;
+            const Float _step_size;
 
         public:
-            RK4(std::size_t dimension, const Real& step_size)
+            RK4(std::size_t dimension, const Float& step_size)
                 : _dimension(dimension), _step_size(step_size)
             {
             }
 
-            const Real& step_size() const { return _step_size; }
+            const Float& step_size() const { return _step_size; }
             std::size_t dimension() const { return _dimension; }
 
             template <typename Matrix, typename Vector>
@@ -47,15 +47,15 @@ namespace ieompp
         };
     }
 
-    template <typename Real>
-    struct TypeDescription<ode::RK4<Real>> {
+    template <typename Float>
+    struct TypeDescription<ode::RK4<Float>> {
         static const Description description;
     };
 
-    template <typename Real>
-    const Description TypeDescription<ode::RK4<Real>>::description =
+    template <typename Float>
+    const Description TypeDescription<ode::RK4<Float>>::description =
         Description{{"type", "RK4 integrator"}, {"real type", ""}}
-        + get_type_description<Real>().indent(2);
+        + get_type_description<Float>().indent(2);
 }
 
 #endif

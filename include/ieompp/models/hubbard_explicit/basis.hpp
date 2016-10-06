@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include <ieompp/description.hpp>
 #include <ieompp/models/hubbard_explicit/operator.hpp>
 
 namespace ieompp
@@ -97,6 +98,38 @@ namespace ieompp
             };
         } /* namespace momentum_space */
     } /* namespace hubbard */
+
+    template <typename Term>
+    struct TypeDescription<hubbard::real_space::Basis1Operator<Term>> {
+        static Description description() {
+            return Description{{"basis of 1-operator monomials in real space", ""}, {"term", ""}}
+                   + get_type_description<Term>();
+        }
+    };
+
+    template <typename Term>
+    struct InstanceDescription<hubbard::real_space::Basis1Operator<Term>> {
+        static Description description(const hubbard::real_space::Basis1Operator<Term>& basis)
+        {
+            return Description{{"N", std::to_string(basis.N)}};
+        }
+    };
+
+    template <typename Term>
+    struct TypeDescription<hubbard::real_space::Basis3Operator<Term>> {
+        static Description description() {
+            return Description{{"basis of 1- and 3-operator monomials in real space", ""}, {"term", ""}}
+                   + get_type_description<Term>();
+        }
+    };
+
+    template <typename Term>
+    struct InstanceDescription<hubbard::real_space::Basis3Operator<Term>> {
+        static Description description(const hubbard::real_space::Basis3Operator<Term>& basis)
+        {
+            return Description{{"N", std::to_string(basis.N)}};
+        }
+    };
 } /* namespace ieompp */
 
 #endif

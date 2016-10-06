@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
 
-    logger->info("Close output file {}");
+    logger->info("Close output file {}", output_path);
     out_file.close();
 
     return 0;

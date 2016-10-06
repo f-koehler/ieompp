@@ -79,6 +79,26 @@ namespace ieompp
     {
         return get_type_description(t) + get_instance_description(t);
     }
+
+    std::ostream& operator<<(std::ostream& strm, const Description& description)
+    {
+        std::size_t max_key_len = 0;
+        for(const auto& entry : description) {
+            if(entry.second.empty()) continue;
+            max_key_len = std::max(max_key_len, entry.first.size());
+        }
+
+        for(auto& entry : description) {
+            if(entry.second.empty()) {
+                strm << entry.first << '\n';
+            } else {
+                strm << entry.first;
+                if(entry.first.size() < max_key_len) strm << std::string(max_key_len-entry.first.size(), ' ');
+                strm << " = " << entry.second << '\n';
+            }
+        }
+        return strm;
+    }
 }
 
 #endif

@@ -11,31 +11,31 @@ namespace ieompp
 {
     namespace ode
     {
-        template <typename RealT>
+        template <typename FloatT>
         class RKCK
         {
-            using Real = RealT;
+            using Float = FloatT;
 
         private:
             const std::size_t _dimension;
-            Real _step_size;
-            Real _last_error;
-            StepSizeController<Real> _controller;
+            Float _step_size;
+            Float _last_error;
+            StepSizeController<Float> _controller;
 
         public:
-            RKCK(std::size_t dimension, const Real& step_size)
+            RKCK(std::size_t dimension, const Float& step_size)
                 : _dimension(dimension), _step_size(step_size), _last_error(0.)
             {
             }
 
-            const Real& step_size() const { return _step_size; }
-            Real& step_size() { return _step_size; }
+            const Float& step_size() const { return _step_size; }
+            Float& step_size() { return _step_size; }
 
             std::size_t dimension() const { return _dimension; }
-            const Real& last_error() const { return _last_error; }
+            const Float& last_error() const { return _last_error; }
 
-            const Real& controller() const { return _controller; }
-            Real& controller() { return _controller; }
+            const Float& controller() const { return _controller; }
+            Float& controller() { return _controller; }
 
             template <typename Matrix, typename Vector>
             void step(const Matrix& m, Vector& u)
@@ -45,23 +45,23 @@ namespace ieompp
                 assert(u.cols() == 1);
                 assert(u.rows() == _dimension);
 
-                static const Real a_2_1 = Real(1) / Real(5);
-                static const Real a_3_1 = Real(3) / Real(40), a_3_2 = Real(9) / Real(40);
-                static const Real a_4_1 = Real(3) / Real(10), a_4_2 = Real(-9) / Real(10),
-                                  a_4_3 = Real(6) / Real(5);
-                static const Real a_5_1 = Real(-11) / Real(54), a_5_2 = Real(5) / Real(2),
-                                  a_5_3 = Real(-70) / Real(27), a_5_4 = Real(35) / Real(27);
-                static const Real a_6_1 = Real(1631) / Real(55296), a_6_2 = Real(175) / Real(512),
-                                  a_6_3 = Real(575) / Real(13824),
-                                  a_6_4 = Real(44275) / Real(110592),
-                                  a_6_5 = Real(253) / Real(4096);
-                static const Real b4_1 = Real(2825) / Real(27648), b4_2 = Real(0),
-                                  b4_3 = Real(18575) / Real(48384),
-                                  b4_4 = Real(13525) / Real(55296), b4_5 = Real(277) / Real(14336),
-                                  b4_6 = Real(1) / Real(4);
-                static const Real b5_1 = Real(37) / Real(378), b5_2 = Real(0),
-                                  b5_3 = Real(250) / Real(621), b5_4 = Real(125) / Real(594),
-                                  b5_5 = Real(0), b5_6 = Real(512) / Real(1771);
+                static const Float a_2_1 = Float(1) / Float(5);
+                static const Float a_3_1 = Float(3) / Float(40), a_3_2 = Float(9) / Float(40);
+                static const Float a_4_1 = Float(3) / Float(10), a_4_2 = Float(-9) / Float(10),
+                                  a_4_3 = Float(6) / Float(5);
+                static const Float a_5_1 = Float(-11) / Float(54), a_5_2 = Float(5) / Float(2),
+                                  a_5_3 = Float(-70) / Float(27), a_5_4 = Float(35) / Float(27);
+                static const Float a_6_1 = Float(1631) / Float(55296), a_6_2 = Float(175) / Float(512),
+                                  a_6_3 = Float(575) / Float(13824),
+                                  a_6_4 = Float(44275) / Float(110592),
+                                  a_6_5 = Float(253) / Float(4096);
+                static const Float b4_1 = Float(2825) / Float(27648), b4_2 = Float(0),
+                                  b4_3 = Float(18575) / Float(48384),
+                                  b4_4 = Float(13525) / Float(55296), b4_5 = Float(277) / Float(14336),
+                                  b4_6 = Float(1) / Float(4);
+                static const Float b5_1 = Float(37) / Float(378), b5_2 = Float(0),
+                                  b5_3 = Float(250) / Float(621), b5_4 = Float(125) / Float(594),
+                                  b5_5 = Float(0), b5_6 = Float(512) / Float(1771);
 
                 static Vector k_1, k_2, k_3, k_4, k_5, k_6;
                 static Vector u4, u5;
