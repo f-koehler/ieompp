@@ -5,6 +5,7 @@
 
 #include <ieompp/description.hpp>
 #include <ieompp/types/eigen/check.hpp>
+#include <ieompp/types/multiply_assign.hpp>
 
 namespace ieompp
 {
@@ -38,10 +39,18 @@ namespace ieompp
 
                 static Vector k_1, k_2, k_3, k_4;
 
-                k_1 = m * u;
-                k_2 = m * (u + (_step_size / 2) * k_1);
-                k_3 = m * (u + (_step_size / 2) * k_2);
-                k_4 = m * (u + _step_size * k_3);
+                k_1 = u;
+                types::multiply_assign(m, k_1);
+
+                k_2 = u + (_step_size / 2) * k_1;
+                types::multiply_assign(m, k_2);
+
+                k_3 = u + (_step_size / 2) * k_2;
+                types::multiply_assign(m, k_3);
+
+                k_4 = u + _step_size * k_3;
+                types::multiply_assign(m, k_4);
+
                 u += (_step_size / 6) * (k_1 + 2. * k_2 + 2. * k_3 + k_4);
             }
         };

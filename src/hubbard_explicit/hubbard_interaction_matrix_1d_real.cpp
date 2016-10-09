@@ -27,8 +27,8 @@ int main(int argc, char** argv)
         ("version", "print version information")
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("U", po::value<double>()->default_value(1.), "interaction strength")
-        ("out", po::value<string>()->default_value("kinetic_interaction_1d_real.txt"), "output file")
-        ("log", po::value<string>()->default_value("kinetic_interaction_1d_real.log"), "log file");
+        ("out", po::value<string>()->default_value("matrix_interaction_1d_real.txt"), "output file")
+        ("log", po::value<string>()->default_value("matrix_interaction_1d_real.log"), "log file");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);

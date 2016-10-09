@@ -27,8 +27,8 @@ namespace ieompp
                     if(j < basis.N) {
                         return 0.;
                     } else {
-                        auto ops_i = basis[i].operators;
-                        auto ops_j = basis[j].operators;
+                        auto& ops_i = basis[i].operators;
+                        auto& ops_j = basis[j].operators;
                         if(lattice.neighboring(ops_i[0].index1, ops_j[0].index1)
                            && (ops_i[1].index1 == ops_j[1].index1)
                            && (ops_i[2].index1 == ops_j[2].index1))
@@ -40,7 +40,7 @@ namespace ieompp
                         if((ops_i[0].index1 == ops_j[0].index1)
                            && (ops_i[1].index1 == ops_j[1].index1)
                            && lattice.neighboring(ops_i[2].index1, ops_j[2].index1))
-                            return -J;
+                            return J;
                         return 0.;
                     }
                 }
@@ -55,7 +55,7 @@ namespace ieompp
                     if(j < basis.N) {
                         return (i == j) ? U / 2. : 0.;
                     } else {
-                        return (i == basis.get_3op_index(i, i, i)) ? U / 2. : 0.;
+                        return (basis.get_3op_index(i, i, i) == j) ? U / 2. : 0.;
                     }
                 } else {
                     if(j < basis.N) {

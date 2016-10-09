@@ -44,7 +44,7 @@ namespace ieompp
 
             const Index N = m.rows();
             for(Index i = 0; i < N; ++i) {
-                for(Index j = 0; j < i; ++j) {
+                for(Index j = 0; j <= i; ++j) {
                     if(!is_equal(m(i, j), conjugate(m(i, j)))) return false;
                 }
             }
