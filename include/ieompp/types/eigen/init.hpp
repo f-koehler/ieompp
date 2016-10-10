@@ -8,15 +8,14 @@ namespace ieompp
     namespace types
     {
         template <typename Matrix>
-        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, void>::type
-        init(Matrix& m, typename eigen_matrix_traits<Matrix>::Index rows,
-             typename eigen_matrix_traits<Matrix>::Index cols,
-             std::function<typename eigen_matrix_traits<Matrix>::Scalar(
-                 typename eigen_matrix_traits<Matrix>::Index,
-                 typename eigen_matrix_traits<Matrix>::Index)>
+        typename std::enable_if<is_eigen_sparse_matrix<Matrix>::value, void>::type
+        init(Matrix& m, typename index_type<Matrix>::type rows,
+             typename index_type<Matrix>::index cols,
+             std::function<typename scalar_type<Matrix>::type(typename index_type<Matrix>::type,
+                                                              typename index_type<Matrix>::type)>
                  f)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::type;
 
             m = Matrix(rows, cols);
             for(Index i = 0; i < rows; ++i) {
@@ -28,14 +27,13 @@ namespace ieompp
         }
 
         template <typename Matrix>
-        typename std::enable_if<is_sparse_eigen_matrix<Matrix>::value, void>::type
-        init_symmetric(Matrix& m, typename eigen_matrix_traits<Matrix>::Index rows,
-                       std::function<typename eigen_matrix_traits<Matrix>::Scalar(
-                           typename eigen_matrix_traits<Matrix>::Index,
-                           typename eigen_matrix_traits<Matrix>::Index)>
-                           f)
+        typename std::enable_if<is_eigen_sparse_matrix<Matrix>::value, void>::type init_symmetric(
+            Matrix& m, typename index_type<Matrix>::type rows,
+            std::function<typename scalar_type<Matrix>::scalar(typename index_type<Matrix>::type,
+                                                               typename index_type<Matrix>::type)>
+                f)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::type;
 
             m = Matrix(rows, rows);
             for(Index i = 0; i < rows; ++i) {
@@ -51,39 +49,38 @@ namespace ieompp
             }
         }
 
-        template <typename Container>
-        typename std::enable_if<is_eigen_triplet<typename Container::value_type>::value, void>::type
-        init(Container& c, typename is_eigen_triplet<typename Container::value_type>::Index rows,
-             typename is_eigen_triplet<typename Container::value_type>::Index cols,
-             std::function<typename is_eigen_triplet<typename Container::value_type>::Scalar(
-                 typename is_eigen_triplet<typename Container::value_type>::Scalar,
-                 typename is_eigen_triplet<typename Container::value_type>::Scalar)>
-                 f)
-        {
-            using Index = typename is_eigen_triplet<typename Container::value_type>::Index;
+        /* template <typename Container> */
+        /* typename std::enable_if<is_eigen_triplet<typename Container::value_type>::value, void>::type */
+        /* init(Container& c, typename is_eigen_triplet<typename Container::value_type>::Index rows, */
+        /*      typename is_eigen_triplet<typename Container::value_type>::Index cols, */
+        /*      std::function<typename is_eigen_triplet<typename Container::value_type>::Scalar( */
+        /*          typename is_eigen_triplet<typename Container::value_type>::Scalar, */
+        /*          typename is_eigen_triplet<typename Container::value_type>::Scalar)> */
+        /*          f) */
+        /* { */
+        /*     using Index = typename is_eigen_triplet<typename Container::value_type>::Index; */
 
-            c.clear();
+        /*     c.clear(); */
 
-            for(Index i = 0; i < rows; ++i) {
-                for(Index j = 0; j < cols; ++j) {
-                    const auto val = f(i, j);
-                    if(!is_zero(val)) {
-                        c.emplace_back(i, j, val);
-                    }
-                }
-            }
-        }
+        /*     for(Index i = 0; i < rows; ++i) { */
+        /*         for(Index j = 0; j < cols; ++j) { */
+        /*             const auto val = f(i, j); */
+        /*             if(!is_zero(val)) { */
+        /*                 c.emplace_back(i, j, val); */
+        /*             } */
+        /*         } */
+        /*     } */
+        /* } */
 
         template <typename Matrix>
-        typename std::enable_if<is_dense_eigen_matrix<Matrix>::value, void>::type
-        init(Matrix& m, typename eigen_matrix_traits<Matrix>::Index rows,
-             typename eigen_matrix_traits<Matrix>::Index cols,
-             std::function<typename eigen_matrix_traits<Matrix>::Scalar(
-                 typename eigen_matrix_traits<Matrix>::Index,
-                 typename eigen_matrix_traits<Matrix>::Index)>
+        typename std::enable_if<is_eigen_dense_matrix<Matrix>::value, void>::type
+        init(Matrix& m, typename index_type<Matrix>::type rows,
+             typename index_type<Matrix>::type cols,
+             std::function<typename scalar_type<Matrix>::type(typename index_type<Matrix>::type,
+                                                              typename index_type<Matrix>::type)>
                  f)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::Index;
 
             m = Matrix::Zero(rows, cols);
             for(Index i = 0; i < rows; ++i) {
@@ -94,14 +91,13 @@ namespace ieompp
         }
 
         template <typename Matrix>
-        typename std::enable_if<is_dense_eigen_matrix<Matrix>::value, void>::type
-        init_symmetric(Matrix& m, typename eigen_matrix_traits<Matrix>::Index rows,
-                       std::function<typename eigen_matrix_traits<Matrix>::Scalar(
-                           typename eigen_matrix_traits<Matrix>::Index,
-                           typename eigen_matrix_traits<Matrix>::Index)>
-                           f)
+        typename std::enable_if<is_eigen_dense_matrix<Matrix>::value, void>::type init_symmetric(
+            Matrix& m, typename index_type<Matrix>::type rows,
+            std::function<typename scalar_type<Matrix>::type(typename index_type<Matrix>::type,
+                                                             typename index_type<Matrix>::type)>
+                f)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::type;
 
             m = Matrix::Zero(rows, rows);
             for(Index i = 0; i < rows; ++i) {

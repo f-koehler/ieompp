@@ -5,6 +5,5 @@
 #include <ieompp/types/eigen/description.hpp>
 #include <ieompp/types/eigen/init.hpp>
 #include <ieompp/types/eigen/traits.hpp>
-#include <ieompp/types/eigen/triplet_list.hpp>
 
 #endif

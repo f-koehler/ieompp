@@ -9,4 +9,6 @@ c++
 external/eigen
 -isystem
 external/spdlog/include
+-isystem
+external/blaze
 -fopenmp=libomp

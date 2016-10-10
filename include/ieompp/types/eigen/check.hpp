@@ -20,7 +20,7 @@ namespace ieompp
         typename std::enable_if<is_eigen_matrix<Matrix>::value, bool>::type
         is_symmetric(const Matrix& m)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::Index;
 
             if(!is_quadratic(m)) return false;
 
@@ -38,7 +38,7 @@ namespace ieompp
         typename std::enable_if<is_eigen_matrix<Matrix>::value, bool>::type
         is_hermitian(const Matrix& m)
         {
-            using Index = typename eigen_matrix_traits<Matrix>::Index;
+            using Index = typename index_type<Matrix>::Index;
 
             if(!is_quadratic(m)) return false;
 
@@ -53,9 +53,9 @@ namespace ieompp
         }
 
         template <typename T>
-        typename std::enable_if<is_dense_eigen_matrix<T>::value, bool>::type is_zero(const T& t)
+        typename std::enable_if<is_eigen_dense_matrix<T>::value, bool>::type is_zero(const T& t)
         {
-            using Index = typename eigen_matrix_traits<T>::Index;
+            using Index = typename index_type<T>::Index;
             for(Index i = 0; i < t.rows(); ++i) {
                 for(Index j = 0; j < t.cols(); ++j) {
                     if(!is_zero(t(i, j))) return false;

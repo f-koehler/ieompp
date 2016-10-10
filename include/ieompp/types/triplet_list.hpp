@@ -4,22 +4,32 @@
 #include <algorithm>
 #include <vector>
 
-#include <Eigen/Sparse>
-
 #include <ieompp/description.hpp>
 #include <ieompp/types/description.hpp>
+#include <ieompp/types/matrix.hpp>
 
 namespace ieompp
 {
     namespace types
     {
-        template <typename ScalarT, typename IndexT = typename Eigen::SparseMatrix<ScalarT>::Index>
-        class TripletList : public std::vector<Eigen::Triplet<ScalarT, IndexT>>
+        template <typename ScalarT, typename IndexT>
+        struct Triplet {
+            using Scalar = ScalarT;
+            using Index  = IndexT;
+
+            Index row, column;
+            Scalar value;
+
+            Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(val) {}
+        };
+
+        template <typename ScalarT, typename IndexT = std::uint64_t>
+        class TripletList : public std::vector<Triplet<ScalarT, IndexT>>
         {
         public:
             using Scalar  = ScalarT;
             using Index   = IndexT;
-            using Triplet = Eigen::Triplet<Scalar, Index>;
+            using Triplet = Triplet<Scalar, Index>;
 
         private:
             const Index _rows, _cols;
@@ -34,16 +44,26 @@ namespace ieompp
             void sort() {
                 if(ColumnMajor) {
                     std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                        if(a.row() < b.row()) return true;
+                        if(a.row < b.row) return true;
                         return false;
                     });
                 } else {
                     std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                        if(a.col() < b.col()) return true;
+                        if(a.column < b.column) return true;
                         return false;
                     });
                 }
             }
+        };
+
+        template <typename Scalar, typename Index>
+        struct scalar_type<TripletList<Scalar, Index>> {
+            using type = Scalar;
+        };
+
+        template <typename Scalar, typename Index>
+        struct index_type<TripletList<Scalar, Index>> {
+            using type = Index;
         };
     }
 

@@ -15,6 +15,11 @@ include(cmake/warnings.cmake)
 # produce native binaries
 include(cmake/native.cmake)
 
+# optimization of debug builds
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(cmake/debug.cmake)
+endif()
+
 # create version.hpp
 include(cmake/version-script.cmake)
 run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
@@ -24,6 +29,9 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/spdlog/include)
 
 # include Eigen
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
+
+# include blaze
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/blaze)
 
 # use boost
 find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)

@@ -6,13 +6,15 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/file_header.hpp>
-#include <ieompp/io/eigen_triplets.hpp>
+#include <ieompp/io/triplet_list.hpp>
 #include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/matrix.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;
 namespace spd = spdlog;
+
+#include <blaze/math/CompressedMatrix.h>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;

@@ -3,9 +3,9 @@
 
 #include <type_traits>
 
+#include <ieompp/types/matrix.hpp>
 #include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/operator.hpp>
-#include <ieompp/types/eigen/triplet_list.hpp>
 
 namespace ieompp
 {
@@ -13,10 +13,10 @@ namespace ieompp
     {
         namespace real_space
         {
-            template <typename Scalar, typename Index, typename Term, typename Lattice>
-            void init_kinetic_matrix_1(types::TripletList<Scalar, Index>& matrix,
-                                       const Basis1Operator<Term>& basis, Lattice& lattice,
-                                       const Scalar& J = 1.)
+            template <typename Matrix, typename Term, typename Lattice>
+            void init_kinetic_matrix_1(Matrix& matrix, const Basis1Operator<Term>& basis,
+                                       Lattice& lattice,
+                                       const typename types::scalar_type<Matrix>::type& J = 1.)
             {
                 static_assert(
                     ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
@@ -28,10 +28,10 @@ namespace ieompp
                 }
             }
 
-            template <typename Scalar, typename Index, typename Term, typename Lattice>
-            void init_kinetic_matrix(types::TripletList<Scalar, Index>& matrix,
-                                     const Basis3Operator<Term>& basis, Lattice& lattice,
-                                     const Scalar& J = 1.)
+            template <typename Matrix, typename Term, typename Lattice>
+            void init_kinetic_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
+                                     Lattice& lattice,
+                                     const typename types::scalar_type<Matrix>::type& J = 1.)
             {
                 static_assert(
                     ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
@@ -67,9 +67,9 @@ namespace ieompp
                 }
             }
 
-            template <typename Scalar, typename Index, typename Term>
-            void init_interaction_matrix(types::TripletList<Scalar, Index>& matrix,
-                                         const Basis3Operator<Term>& basis, const Scalar& U = 1.)
+            template <typename Matrix, typename Term>
+            void init_interaction_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
+                                         const typename types::scalar_type<Matrix>::type& U = 1.)
             {
                 static_assert(
                     ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,

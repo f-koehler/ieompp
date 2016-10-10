@@ -17,10 +17,10 @@ namespace ieompp
     namespace io
     {
         template <typename Matrix>
-        typename std::enable_if<types::is_sparse_eigen_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::is_eigen_sparse_matrix<Matrix>::value, void>::type
         write_matrix(std::ostream& strm, const Matrix& m, bool binary = false)
         {
-            using Index = typename types::eigen_matrix_traits<Matrix>::Index;
+            using Index = typename types::index_type<Matrix>::type;
 
             if(!binary) {
                 for(Index i = 0; i < m.outerSize(); ++i) {
@@ -32,7 +32,7 @@ namespace ieompp
         }
 
         template <typename Matrix>
-        typename std::enable_if<types::is_sparse_eigen_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::is_eigen_sparse_matrix<Matrix>::value, void>::type
         read_matrix(std::istream& strm, Matrix& m, typename Matrix::Index nnz_per_inner_vec, bool binary = false)
         {
             static const std::regex dimension_reg("^\\s*(\\d+)\\s*x\\s*(\\d+)\\s*$");

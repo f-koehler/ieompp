@@ -42,6 +42,7 @@ flags = [
     '-std=gnu++14',
     '-isystem', 'external/eigen',
     '-isystem', 'external/spdlog/include',
+    '-isystem', 'external/blaze',
     '-fopenmp=libomp',
 ]
 
