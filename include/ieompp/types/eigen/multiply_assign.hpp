@@ -1,6 +1,8 @@
 #ifndef IEOMPP_TYPES_EIGEN_MULTIPLY_ASSIGN_HPP_
 #define IEOMPP_TYPES_EIGEN_MULTIPLY_ASSIGN_HPP_
 
+#include <cassert>
+
 #include <Eigen/Dense>
 
 #include <ieompp/types/function_matrix.hpp>
@@ -18,17 +20,22 @@ namespace ieompp
             assert(matrix.cols() == vector.rows());
 
             const Index rows = matrix.rows();
-            const Index cols = matrix.cols();
+
+            static Eigen::Matrix<Scalar, Eigen::Dynamic, 1, Options, MaxRows, MaxCols> temp;
+            temp.resize(vector.rows());
+            temp.setZero();
 
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
             for(Index row = 0; row < rows; ++row) {
-                vector(row) = 0;
-                for(Index col = 0; col < cols; ++col) {
-                    vector(row) += matrix(row, col) * vector(col);
+                auto& element = temp(row);
+                for(Index col = 0; col < rows; ++col) {
+                    element += matrix(row, col) * vector(col);
                 }
             }
+
+            vector.swap(temp);
         }
     }
 }

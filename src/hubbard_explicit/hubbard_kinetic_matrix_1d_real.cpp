@@ -87,7 +87,7 @@ int main(int argc, char** argv)
     io_logger->info("Open output file \"{}\"", out_path);
     ofstream file(out_path.c_str());
 
-    io::write_header(file, {get_instance_description(Platform()), get_description(elements)});
+    io::write_header(file, {get_type_description(Platform()), get_description(elements)});
 
     io_logger->info("Write triplet list with {} elements", elements.size());
     file << '\n' << basis.size() << 'x' << basis.size() << '\n';

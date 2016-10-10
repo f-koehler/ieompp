@@ -92,6 +92,33 @@ namespace ieompp
         struct index_type<blaze::CompressedVector<Scalar, TransposeFlag>> {
             using type = blaze::size_t;
         };
+
+
+        template <typename T>
+        struct is_blaze_dense_matrix {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, bool StorageOrder>
+        struct is_blaze_dense_matrix<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename T>
+        struct is_blaze_sparse_matrix {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, bool StorageOrder>
+        struct is_blaze_sparse_matrix<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename T>
+        struct is_blaze_matrix {
+            static constexpr bool value =
+                is_blaze_dense_matrix<T>::value || is_blaze_sparse_matrix<T>::value;
+        };
     }
 }
 

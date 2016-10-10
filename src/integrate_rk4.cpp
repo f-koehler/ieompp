@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-#include <ieompp/io/eigen_sparse.hpp>
+#include <ieompp/io/eigen/sparse.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 using namespace ieompp;

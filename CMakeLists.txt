@@ -16,9 +16,19 @@ include(cmake/warnings.cmake)
 include(cmake/native.cmake)
 
 # optimization of debug builds
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE MATCHES Debug)
     include(cmake/debug.cmake)
 endif()
+
+# disable RTTI
+include(cmake/disable-rtti.cmake)
+
+# option to disable exceptions
+# TODO: currently spdlog does not allow to compile without exceptions
+# option(ieompp_ENABLE_EXCEPTIONS "Enable exceptions" ON)
+# if(NOT ${ieompp_ENABLE_EXCEPTIONS})
+#     include(cmake/disable-exceptions.cmake)
+# endif()
 
 # create version.hpp
 include(cmake/version-script.cmake)

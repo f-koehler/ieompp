@@ -3,7 +3,7 @@
 using namespace std;
 
 #include <ieompp/description.hpp>
-#include <ieompp/io/eigen_sparse.hpp>
+#include <ieompp/io/eigen/sparse.hpp>
 #include <ieompp/ode/rkf45.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>

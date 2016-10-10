@@ -12,24 +12,27 @@ namespace ieompp
 {
     namespace types
     {
-        template <typename ScalarT, typename IndexT>
-        struct Triplet {
-            using Scalar = ScalarT;
-            using Index  = IndexT;
+        namespace detail
+        {
+            template <typename ScalarT, typename IndexT>
+            struct Triplet {
+                using Scalar = ScalarT;
+                using Index  = IndexT;
 
-            Index row, column;
-            Scalar value;
+                Index row, column;
+                Scalar value;
 
-            Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(val) {}
-        };
+                Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(val) {}
+            };
+        }
 
         template <typename ScalarT, typename IndexT = std::uint64_t>
-        class TripletList : public std::vector<Triplet<ScalarT, IndexT>>
+        class TripletList : public std::vector<detail::Triplet<ScalarT, IndexT>>
         {
         public:
             using Scalar  = ScalarT;
             using Index   = IndexT;
-            using Triplet = Triplet<Scalar, Index>;
+            using Triplet = detail::Triplet<Scalar, Index>;
 
         private:
             const Index _rows, _cols;

@@ -40,19 +40,12 @@ namespace ieompp
     template <typename T>
     struct TypeDescription
     {
-        static Description description()
-        {
-            return {{"undescribed", "type"}};
-        }
+        static Description description() = delete;
     };
 
     template <typename T>
     struct InstanceDescription {
-        static Description description(const T& t)
-        {
-            static_cast<void>(t);
-            return {{"undescribed", "instance"}};
-        }
+        static Description description(const T&) = delete;
     };
 
     template <typename T>

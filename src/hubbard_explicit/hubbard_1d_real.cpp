@@ -1,12 +1,12 @@
 #include <iostream>
 using namespace std;
 
+#include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/types/eigen/multiply_assign.hpp>
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/matrix_elements.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
