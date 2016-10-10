@@ -58,6 +58,16 @@ namespace ieompp
             }
         };
 
+        template <typename T>
+        struct is_function_matrix {
+            static constexpr bool value = false;
+        };
+
+        template <typename Scalar, typename Index>
+        struct is_function_matrix<FunctionMatrix<Scalar, Index>> {
+            static constexpr bool value = true;
+        };
+
         template <typename Scalar, typename Index>
         std::ostream& operator<<(std::ostream& strm, const FunctionMatrix<Scalar, Index>& matrix)
         {
