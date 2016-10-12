@@ -2,19 +2,19 @@
 #include <fstream>
 using namespace std;
 
+#include <ieompp/types/blaze.hpp>
+
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
+#include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/io/file_header.hpp>
-#include <ieompp/io/triplet_list.hpp>
 #include <ieompp/models/hubbard_explicit/basis.hpp>
 #include <ieompp/models/hubbard_explicit/matrix.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;
 namespace spd = spdlog;
-
-#include <blaze/math/CompressedMatrix.h>
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -30,8 +30,9 @@ int main(int argc, char** argv)
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("U", po::value<double>()->default_value(1.), "interaction strength")
-        ("out", po::value<string>()->default_value("matrix_1d_real.txt"), "output file")
-        ("log", po::value<string>()->default_value("matrix_1d_real.log"), "log file");
+        ("out", po::value<string>()->default_value("matrix_1d_real.blaze"), "output file")
+        ("log", po::value<string>()->default_value("matrix_1d_real.log"), "log file")
+        ("binary", po::value<bool>()->default_value(true), "write binary file");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);
@@ -81,23 +82,20 @@ int main(int argc, char** argv)
     hubbard::real_space::Basis3Operator<Term> basis(lattice);
     log(hubbard_logger, get_description(basis));
 
-    types::TripletList<double> elements(basis.size(), basis.size());
-    hubbard_logger->info("Computing matrix elements in a triplet list");
-    hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
-    hubbard::real_space::init_interaction_matrix(elements, basis, U);
-    hubbard_logger->info("  {} out of {} matrix elements are non-zero", elements.size(),
-                         elements.rows() * elements.cols());
+    blaze::CompressedMatrix<double, blaze::rowMajor> M(basis.size(), basis.size());
+    M.reserve(basis.size() * 10);
+    hubbard_logger->info("Computing matrix elements");
+    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard::real_space::init_interaction_matrix(M, basis, U);
+    hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
+                         M.rows() * M.columns());
     hubbard_logger->info("Sorting matrix elements for col-major format");
-    elements.sort();
 
     io_logger->info("Open output file \"{}\"", out_path);
     ofstream file(out_path.c_str());
 
-    io::write_header(file, {get_type_description(Platform()), get_description(elements)});
-
-    io_logger->info("Write triplet list with {} elements", elements.size());
-    file << '\n' << basis.size() << 'x' << basis.size() << '\n';
-    io::write_triplet_list(file, elements);
+    io_logger->info("Write triplet list with {} non-zero elements", M.nonZeros());
+    io::write_matrix(out_path, M);
 
     io_logger->info("Close output file \"{}\"", out_path);
     file.close();

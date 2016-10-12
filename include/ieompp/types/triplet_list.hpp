@@ -60,6 +60,13 @@ namespace ieompp
         };
 
         template <typename Scalar, typename Index>
+        void matrix_insert(TripletList<Scalar, Index>& matrix, Index row, Index col,
+                           const Scalar& value)
+        {
+            matrix.emplace_back(row, col, value);
+        }
+
+        template <typename Scalar, typename Index>
         struct scalar_type<TripletList<Scalar, Index>> {
             using type = Scalar;
         };
@@ -69,6 +76,7 @@ namespace ieompp
             using type = Index;
         };
     }
+
 
     template <typename Scalar, typename Index>
     struct TypeDescription<types::TripletList<Scalar, Index>> {

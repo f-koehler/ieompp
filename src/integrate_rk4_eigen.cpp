@@ -3,7 +3,7 @@
 using namespace std;
 
 #include <ieompp/types/blaze.hpp>
-#include <ieompp/io/blaze/sparse.hpp>
+#include <ieompp/io/eigen/sparse.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 using namespace ieompp;
@@ -50,29 +50,36 @@ int main(int argc, char** argv)
     logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_st>(logging_path, true));
     auto logger = std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
 
-    blaze::CompressedMatrix<std::complex<double>> M;
+    Eigen::SparseMatrix<std::complex<double>> M;
+
+    logger->info("Open matrix file {} for reading", input_path);
+    ifstream in_file(input_path.c_str());
 
     logger->info("Read matrix file {}", input_path);
-    io::read_matrix(input_path, M);
+    io::read_matrix(in_file, M, nnz);
+
+    logger->info("Close matrix file {}", input_path);
+    in_file.close();
+    M *= std::complex<double>(0., 1.);
 
     logger->info("Set initial values");
-    blaze::DynamicVector<std::complex<double>> h(M.rows());
-    h.reset();
-    h[0] = 1.;
+    Eigen::VectorXcd h(M.rows());
+    h.setZero();
+    h(0) = 1.;
 
     logger->info("Open output file {} for writing", output_path);
     ofstream out_file (output_path.c_str());
 
     ode::RK4<double> integrator(M.rows(), dt);
-    out_file << 0 << '\t' << h[0].real() << '\t' << h[0].imag() << '\n';
+    out_file << 0 << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     for(double t = 0.; t < t_end;) {
         logger->info("Performing step at t={}", t);
         integrator.step(M, h);
         logger->info("Complete step {} -> {}", t, t + integrator.step_size());
         t += integrator.step_size();
-        logger->info("\th_0({}) = {} + i {}", t, h[0].real(), h[0].imag());
+        logger->info("\th_0({}) = {} + i {}", t, h(0).real(), h(0).imag());
         logger->info("\tstep_size = {}", integrator.step_size());
-        out_file << t << '\t' << h[0].real() << '\t' << h[0].imag() << '\n';
+        out_file << t << '\t' << h(0).real() << '\t' << h(0).imag() << '\n';
     }
 
     logger->info("Close output file {}", output_path);

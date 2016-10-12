@@ -8,9 +8,11 @@
 
 #include <ieompp/description.hpp>
 #include <ieompp/string.hpp>
+#include <ieompp/types/names.hpp>
 
 namespace ieompp
 {
+
     template <>
     struct TypeDescription<bool> {
         static Description description()
@@ -104,6 +106,14 @@ namespace ieompp
         static Description description()
         {
             return {{"type", "long double"}, {"size", std::to_string(sizeof(long double))}};
+        }
+    };
+
+    template <typename Float>
+    struct TypeDescription<std::complex<Float>> {
+        static Description description() 
+        {
+            return {{"type", compose("complex<", types::type_name<Float>::name, ">")}};
         }
     };
 }

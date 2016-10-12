@@ -14,9 +14,9 @@ namespace ieompp
         namespace real_space
         {
             template <typename Matrix, typename Term, typename Lattice>
-            void init_kinetic_matrix_1(Matrix& matrix, const Basis1Operator<Term>& basis,
-                                       Lattice& lattice,
-                                       const typename types::scalar_type<Matrix>::type& J = 1.)
+            void init_kinetic_matrix(Matrix& matrix, const Basis1Operator<Term>& basis,
+                                     Lattice& lattice,
+                                     const typename types::scalar_type<Matrix>::type& J = 1.)
             {
                 static_assert(
                     ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
@@ -24,7 +24,7 @@ namespace ieompp
 
                 for(typename Basis1Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     const auto neighbors = lattice.neighbors(i);
-                    for(auto neighbor : neighbors) matrix.emplace_back(i, neighbor, -J);
+                    for(auto neighbor : neighbors) types::matrix_insert(matrix, i, neighbor, -J);
                 }
             }
 
@@ -41,7 +41,7 @@ namespace ieompp
 
                 for(typename Basis3Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     const auto neighbors = lattice.neighbors(i);
-                    for(auto neighbor : neighbors) matrix.emplace_back(i, neighbor, -J);
+                    for(auto neighbor : neighbors) types::matrix_insert(matrix, i, neighbor, -J);
                 }
 
                 for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
@@ -49,20 +49,23 @@ namespace ieompp
 
                     auto neighbors = lattice.neighbors(ops[0].index1);
                     for(auto neighbor : neighbors) {
-                        matrix.emplace_back(
-                            i, basis.get_3op_index(neighbor, ops[1].index1, ops[2].index1), -J);
+                        types::matrix_insert(
+                            matrix, i, basis.get_3op_index(neighbor, ops[1].index1, ops[2].index1),
+                            -J);
                     }
 
                     neighbors = lattice.neighbors(ops[1].index1);
                     for(auto neighbor : neighbors) {
-                        matrix.emplace_back(
-                            i, basis.get_3op_index(ops[0].index1, neighbor, ops[2].index1), -J);
+                        types::matrix_insert(
+                            matrix, i, basis.get_3op_index(ops[0].index1, neighbor, ops[2].index1),
+                            -J);
                     }
 
                     neighbors = lattice.neighbors(ops[2].index1);
                     for(auto neighbor : neighbors) {
-                        matrix.emplace_back(
-                            i, basis.get_3op_index(ops[0].index1, ops[1].index1, neighbor), J);
+                        types::matrix_insert(
+                            matrix, i, basis.get_3op_index(ops[0].index1, ops[1].index1, neighbor),
+                            J);
                     }
                 }
             }
@@ -78,15 +81,15 @@ namespace ieompp
                 const auto basis_size = basis.size();
 
                 for(typename Basis3Operator<Term>::Index i = 0; i < basis.N; ++i) {
-                    matrix.emplace_back(i, i, U / 2.);
-                    matrix.emplace_back(i, basis.get_3op_index(i, i, i), U / 2.);
+                    types::matrix_insert(matrix, i, i, U / 2.);
+                    types::matrix_insert(matrix, i, basis.get_3op_index(i, i, i), U / 2.);
                 }
 
                 for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
-                    matrix.emplace_back(i, i, U / 2.);
+                    types::matrix_insert(matrix, i, i, U / 2.);
                     const auto& ops = basis[i].operators;
                     if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))
-                        matrix.emplace_back(i, ops[0].index1, U / 2.);
+                        types::matrix_insert(matrix, i, ops[0].index1, U / 2.);
                 }
             }
         }

@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 
     types::TripletList<double> elements(basis.size(), basis.size());
     hubbard_logger->info("Computing matrix elements in a triplet list");
-    hubbard::real_space::init_kinetic_matrix_1(elements, basis, lattice, J);
+    hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", elements.size(),
                          elements.rows() * elements.cols());
     hubbard_logger->info("Sorting matrix elements for col-major format");
