@@ -2,13 +2,14 @@
 #include <fstream>
 using namespace std;
 
+#include <ieompp/types/blaze.hpp>
+
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/io/file_header.hpp>
-#include <ieompp/io/triplet_list.hpp>
+#include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/matrix.hpp>
+#include <ieompp/models/hubbard_explicit/matrix_blaze.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;
@@ -21,14 +22,14 @@ int main(int argc, char** argv)
 {
     const std::string program_name("hubbard_kinetic_matrix_1d_real_1");
 
-    po::options_description description("Calculate the kinetic matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
+    po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
     description.add_options()
         ("help", "print this help message")
         ("version", "print version information")
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
-        ("out", po::value<string>()->default_value("kinetic_matrix_1d_real_1.txt"), "output file")
-        ("log", po::value<string>()->default_value("kinetic_matrix_1d_real_1.log"), "log file");
+        ("out", po::value<string>()->default_value("hubbard_kinetic_matrix_1d_real_1.blaze"), "output file")
+        ("log", po::value<string>()->default_value("hubbard_kinetic_matrix_1d_real_1.log"), "log file");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);
@@ -76,25 +77,15 @@ int main(int argc, char** argv)
     hubbard::real_space::Basis1Operator<Term> basis(lattice);
     log(hubbard_logger, get_description(basis));
 
-    types::TripletList<double> elements(basis.size(), basis.size());
-    hubbard_logger->info("Computing matrix elements in a triplet list");
-    hubbard::real_space::init_kinetic_matrix(elements, basis, lattice, J);
-    hubbard_logger->info("  {} out of {} matrix elements are non-zero", elements.size(),
-                         elements.rows() * elements.cols());
-    hubbard_logger->info("Sorting matrix elements for col-major format");
-    elements.sort();
+    blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
+    M.reserve(basis.size() * 10);
+    hubbard_logger->info("Computing matrix elements");
+    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
+                         M.rows() * M.columns());
 
-    io_logger->info("Open output file \"{}\"", out_path);
-    ofstream file(out_path.c_str());
-
-    io::write_header(file, {get_type_description(Platform()), get_description(elements)});
-
-    io_logger->info("Write triplet list with {} elements", elements.size());
-    file << '\n' << basis.size() << 'x' << basis.size() << '\n';
-    io::write_triplet_list(file, elements);
-
-    io_logger->info("Close output file \"{}\"", out_path);
-    file.close();
+    io_logger->info("Write matrix file", M.nonZeros());
+    io::write_matrix(out_path, M);
 
     return 0;
 }

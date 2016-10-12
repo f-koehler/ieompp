@@ -15,7 +15,7 @@ namespace ieompp
         {
             template <typename Matrix, typename Term, typename Lattice>
             void init_kinetic_matrix(Matrix& matrix, const Basis1Operator<Term>& basis,
-                                     Lattice& lattice,
+                                     const Lattice& lattice,
                                      const typename types::scalar_type<Matrix>::type& J = 1.)
             {
                 static_assert(
@@ -30,7 +30,7 @@ namespace ieompp
 
             template <typename Matrix, typename Term, typename Lattice>
             void init_kinetic_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
-                                     Lattice& lattice,
+                                     const Lattice& lattice,
                                      const typename types::scalar_type<Matrix>::type& J = 1.)
             {
                 static_assert(

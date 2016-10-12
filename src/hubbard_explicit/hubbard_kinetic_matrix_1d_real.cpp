@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", elements.size(),
                          elements.rows() * elements.cols());
     hubbard_logger->info("Sorting matrix elements for col-major format");
-    elements.sort();
+    elements.sort_column_major();
 
     io_logger->info("Open output file \"{}\"", out_path);
     ofstream file(out_path.c_str());

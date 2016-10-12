@@ -20,7 +20,7 @@ namespace ieompp
 {
     namespace discretization
     {
-        template <typename FloatT, typename IndexT = std::size_t>
+        template <typename FloatT, typename IndexT = uint64_t>
         class SquareDiscretization
         {
         public:
@@ -29,6 +29,8 @@ namespace ieompp
             using IndexIterator      = iterators::IntegerIterator<Index, false>;
             using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
             using Vector             = Eigen::Matrix<Float, 2, 1>;
+
+            static constexpr uint64_t coordination_number = 4;
 
         private:
             const Index _num_x, _num_y, _num;

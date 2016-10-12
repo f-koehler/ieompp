@@ -16,7 +16,7 @@ namespace ieompp
 {
     namespace discretization
     {
-        template <typename FloatT, typename IndexT = std::size_t>
+        template <typename FloatT, typename IndexT = uint64_t>
         class LinearDiscretization
         {
         public:
@@ -25,6 +25,8 @@ namespace ieompp
             using IndexIterator      = iterators::IntegerIterator<Index, false>;
             using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
             using Vector             = Float;
+
+            static constexpr uint64_t coordination_number = 2;
 
         private:
             const Index _num;

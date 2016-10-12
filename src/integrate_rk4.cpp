@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 
     logger->info("Read matrix file {}", input_path);
     io::read_matrix(input_path, M);
+    M *= std::complex<double>(0, 1);
 
     logger->info("Set initial values");
     blaze::DynamicVector<std::complex<double>> h(M.rows());

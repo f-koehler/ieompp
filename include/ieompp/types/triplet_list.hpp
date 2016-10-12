@@ -43,19 +43,20 @@ namespace ieompp
             Index rows() const { return _rows; }
             Index cols() const { return _rows; }
 
-            template <bool ColumnMajor = true>
-            void sort() {
-                if(ColumnMajor) {
-                    std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                        if(a.row < b.row) return true;
-                        return false;
-                    });
-                } else {
-                    std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                        if(a.column < b.column) return true;
-                        return false;
-                    });
-                }
+            void sort_column_major()
+            {
+                std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
+                    if(a.row < b.row) return true;
+                    return false;
+                });
+            }
+
+            void sort_row_major()
+            {
+                std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
+                    if(a.column < b.column) return true;
+                    return false;
+                });
             }
         };
 

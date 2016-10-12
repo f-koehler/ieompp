@@ -8,9 +8,8 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
-#include <ieompp/io/file_header.hpp>
 #include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/matrix.hpp>
+#include <ieompp/models/hubbard_explicit/matrix_blaze.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;
@@ -31,8 +30,7 @@ int main(int argc, char** argv)
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("U", po::value<double>()->default_value(1.), "interaction strength")
         ("out", po::value<string>()->default_value("matrix_1d_real.blaze"), "output file")
-        ("log", po::value<string>()->default_value("matrix_1d_real.log"), "log file")
-        ("binary", po::value<bool>()->default_value(true), "write binary file");
+        ("log", po::value<string>()->default_value("matrix_1d_real.log"), "log file");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);
@@ -82,23 +80,15 @@ int main(int argc, char** argv)
     hubbard::real_space::Basis3Operator<Term> basis(lattice);
     log(hubbard_logger, get_description(basis));
 
-    blaze::CompressedMatrix<double, blaze::rowMajor> M(basis.size(), basis.size());
+    blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     hubbard_logger->info("Computing matrix elements");
-    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
-    hubbard::real_space::init_interaction_matrix(M, basis, U);
+    hubbard::real_space::init_matrix(M, basis, lattice, J);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                          M.rows() * M.columns());
-    hubbard_logger->info("Sorting matrix elements for col-major format");
 
-    io_logger->info("Open output file \"{}\"", out_path);
-    ofstream file(out_path.c_str());
-
-    io_logger->info("Write triplet list with {} non-zero elements", M.nonZeros());
+    io_logger->info("Write matrix file", M.nonZeros());
     io::write_matrix(out_path, M);
-
-    io_logger->info("Close output file \"{}\"", out_path);
-    file.close();
 
     return 0;
 }
