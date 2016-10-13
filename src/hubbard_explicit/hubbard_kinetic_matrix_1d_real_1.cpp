@@ -52,17 +52,17 @@ int main(int argc, char** argv)
 
     // setting up logging facilities
     vector<spd::sink_ptr> logging_sinks;
-    logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_st>());
-    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_st>(log_path, true));
+    logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_mt>());
+    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_mt>(log_path, true));
     auto main_logger = std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
     auto io_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
     auto hubbard_logger = std::make_shared<spd::logger>("hubbard", logging_sinks.begin(), logging_sinks.end());
 
     main_logger->info("CLI options:");
-    main_logger->info(" N   = {}", N);
-    main_logger->info(" J   = {}", J);
-    main_logger->info(" out = {}", out_path);
-    main_logger->info(" log = {}", log_path);
+    main_logger->info("  N   = {}", N);
+    main_logger->info("  J   = {}", J);
+    main_logger->info("  out = {}", out_path);
+    main_logger->info("  log = {}", log_path);
 
     // setting up a lattice
     hubbard_logger->info("setting up a lattice");

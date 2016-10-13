@@ -23,13 +23,6 @@ endif()
 # disable RTTI
 include(cmake/disable-rtti.cmake)
 
-# option to disable exceptions
-# TODO: currently spdlog does not allow to compile without exceptions
-# option(ieompp_ENABLE_EXCEPTIONS "Enable exceptions" ON)
-# if(NOT ${ieompp_ENABLE_EXCEPTIONS})
-#     include(cmake/disable-exceptions.cmake)
-# endif()
-
 # create version.hpp
 include(cmake/version-script.cmake)
 run_version_script(${CMAKE_SOURCE_DIR}/tools/configure.py ${CMAKE_SOURCE_DIR}/ieompp/include/version.hpp)
@@ -50,10 +43,30 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 # enable OpenMP if possible
 option(ieompp_ENABLE_OPENMP "Enable OpenMP" ON)
 if(${ieompp_ENABLE_OPENMP})
-    find_package(OpenMP REQUIRED)
-    if(${OPENMP_FOUND})
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    option(ieompp_USE_INTEL_OPENMP "Use Intel OpenMP implementation" OFF)
+    if(${ieompp_USE_INTEL_OPENMP})
+        include(cmake/intel-openmp.cmake)
+    else()
+        find_package(OpenMP REQUIRED)
+        if(${OPENMP_FOUND})
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+        endif()
+    endif()
+endif()
+
+# enable Intel MKL
+option(ieompp_ENABLE_MKL "Enable MKL" OFF)
+if(${ieompp_ENABLE_MKL})
+    set(MKLROOT "/opt/intel/mkl/")
+    if(NOT ${ieompp_ENABLE_OPENMP})
+        include(cmake/intel-mkl-serial.cmake)
+    else()
+        if(${ieompp_USE_INTEL_OPENMP})
+            include(cmake/intel-mkl-iomp.cmake)
+        else()
+            include(cmake/intel-mkl-gomp.cmake)
+        endif()
     endif()
 endif()
 

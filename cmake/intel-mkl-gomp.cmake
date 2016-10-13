@@ -1,0 +1,11 @@
+if(${CMAKE_C_COMPILER_ID} STREQUAL "GNU")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include -lmkl_intel_ilp64 -lmkl_core -lmkl_gnu_thread -lm -ldl")
+elseif(${CMAKE_C_COMPILER_ID} STREQUAL "Clang")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include -lmkl_intel_ilp64 -lmkl_core -lmkl_gnu_thread -lm -ldl")
+endif()
+
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include -lmkl_intel_ilp64 -lmkl_core -lmkl_gnu_thread -lm -ldl")
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include -lmkl_intel_ilp64 -lmkl_core -lmkl_gnu_thread -lm -ldl")
+endif()

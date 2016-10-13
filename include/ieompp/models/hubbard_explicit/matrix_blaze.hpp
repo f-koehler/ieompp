@@ -59,11 +59,10 @@ namespace ieompp
                 return basis.size() * 2;
             }
 
-            template <typename Matrix, typename Term, typename Lattice>
+            template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
             typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
             init_kinetic_matrix(Matrix& matrix, const Basis1Operator<Term>& basis,
-                                const Lattice& lattice,
-                                const typename types::scalar_type<Matrix>::type& J = 1.)
+                                const Lattice& lattice, const Prefactor& J = 1.)
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
@@ -93,11 +92,10 @@ namespace ieompp
                 }
             }
 
-            template <typename Matrix, typename Term, typename Lattice>
+            template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
             typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
             init_kinetic_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
-                                const Lattice& lattice,
-                                const typename types::scalar_type<Matrix>::type& J = 1.)
+                                const Lattice& lattice, const Prefactor& J = 1.)
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
@@ -156,10 +154,10 @@ namespace ieompp
                 }
             }
 
-            template <typename Matrix, typename Term>
+            template <typename Matrix, typename Term, typename Prefactor>
             typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
             init_interaction_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
-                                    const typename types::scalar_type<Matrix>::type& U = 1.)
+                                    const Prefactor& U = 1.)
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
@@ -185,11 +183,10 @@ namespace ieompp
                 }
             }
 
-            template <typename Matrix, typename Term, typename Lattice>
+            template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
             typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
             init_matrix(Matrix& matrix, const Basis3Operator<Term>& basis, const Lattice& lattice,
-                        const typename types::scalar_type<Matrix>::type& J = 1.,
-                        const typename types::scalar_type<Matrix>::type& U = 1.)
+                        const Prefactor& J = 1., const Prefactor& U = 1.)
             {
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
@@ -200,7 +197,8 @@ namespace ieompp
 
                 matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();
-                matrix.reserve(number_of_kinetic_elements(basis, lattice));
+                matrix.reserve(number_of_kinetic_elements(basis, lattice)
+                               + number_of_interaction_elements(basis));
 
                 TripletList triplets;
                 for(Index row = 0; row < basis.N; ++row) {
