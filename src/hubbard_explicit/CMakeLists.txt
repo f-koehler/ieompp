@@ -17,6 +17,10 @@ add_executable(hubbard_matrix_1d_real hubbard_matrix_1d_real.cpp)
 target_link_libraries(hubbard_matrix_1d_real ${Boost_LIBRARIES})
 enable_iwyu(hubbard_matrix_1d_real)
 
+add_executable(hubbard_1d_real_rk4 hubbard_1d_real_rk4.cpp)
+target_link_libraries(hubbard_1d_real_rk4 ${Boost_LIBRARIES})
+enable_iwyu(hubbard_1d_real_rk4)
+
 add_executable(hubbard_1d_real hubbard_1d_real.cpp)
 target_link_libraries(hubbard_1d_real ${Boost_LIBRARIES})
 enable_iwyu(hubbard_1d_real)
@@ -29,6 +33,7 @@ install(
         hubbard_kinetic_matrix_1d_real
         hubbard_kinetic_matrix_1d_real_1
         hubbard_matrix_1d_real
+        hubbard_1d_real_rk4
         hubbard_1d_real
     RUNTIME
     DESTINATION bin
