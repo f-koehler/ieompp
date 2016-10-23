@@ -2,7 +2,7 @@
 *.pyc
 *.session
 *.swp
-build/*
+build*
 external/eigen
 external/eigen.tar.gz
 include/ieompp/version.hpp

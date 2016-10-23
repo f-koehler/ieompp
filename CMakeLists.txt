@@ -13,7 +13,9 @@ include(cmake/cpp14.cmake)
 include(cmake/warnings.cmake)
 
 # produce native binaries
-include(cmake/native.cmake)
+if(NOT ${ieompp_DISABLE_NATIVE})
+    include(cmake/native.cmake)
+endif()
 
 # optimization of debug builds
 if(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -37,8 +39,10 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/blaze)
 
 # use boost
-find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+if(NOT ${ieompp_OVERRIDE_BOOST})
+    find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
+    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+endif()
 
 # enable OpenMP if possible
 option(ieompp_ENABLE_OPENMP "Enable OpenMP" ON)
