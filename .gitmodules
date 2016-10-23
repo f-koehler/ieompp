@@ -3,4 +3,4 @@
 	url = https://github.com/gabime/spdlog.git
 [submodule "external/blaze"]
 	path = external/blaze
-	url = git@bitbucket.org:blaze-lib/blaze.git
+	url = https://bitbucket.org/blaze-lib/blaze.git
