@@ -25,10 +25,6 @@ add_executable(hubbard_kinetic_1d_real_rk4 hubbard_kinetic_1d_real_rk4.cpp)
 target_link_libraries(hubbard_kinetic_1d_real_rk4 ${Boost_LIBRARIES})
 enable_iwyu(hubbard_kinetic_1d_real_rk4)
 
-add_executable(hubbard_1d_real hubbard_1d_real.cpp)
-target_link_libraries(hubbard_1d_real ${Boost_LIBRARIES})
-enable_iwyu(hubbard_1d_real)
-
 install(
     TARGETS
         hubbard_commutators_momentum_space
@@ -39,7 +35,6 @@ install(
         hubbard_matrix_1d_real
         hubbard_1d_real_rk4
         hubbard_kinetic_1d_real_rk4
-        hubbard_1d_real
     RUNTIME
     DESTINATION bin
     CONFIGURATIONS Release

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <ieompp/description.hpp>
-#include <ieompp/models/hubbard_explicit/operator.hpp>
+#include <ieompp/models/hubbard/operator.hpp>
 
 namespace ieompp
 {

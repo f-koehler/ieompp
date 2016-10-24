@@ -8,8 +8,8 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/matrix_blaze.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;
@@ -20,7 +20,7 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
-    const std::string program_name("hubbard_kinetic_matrix_1d_real_1");
+    const std::string program_name("hubbard_matrix_1d_real");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear lattice in real space\n\nOptions");
     description.add_options()
@@ -28,8 +28,9 @@ int main(int argc, char** argv)
         ("version", "print version information")
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
-        ("out", po::value<string>()->default_value("hubbard_kinetic_matrix_1d_real_1.blaze"), "output file")
-        ("log", po::value<string>()->default_value("hubbard_kinetic_matrix_1d_real_1.log"), "log file");
+        ("U", po::value<double>()->default_value(1.), "interaction strength")
+        ("out", po::value<string>()->default_value("hubbard_matrix_1d_real.blaze"), "output file")
+        ("log", po::value<string>()->default_value("hubbard_matrix_1d_real.log"), "log file");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
 
     const auto N        = vm["N"].as<size_t>();
     const auto J        = vm["J"].as<double>();
+    const auto U        = vm["U"].as<double>();
     const auto out_path = vm["out"].as<string>();
     const auto log_path = vm["log"].as<string>();
 
@@ -61,6 +63,7 @@ int main(int argc, char** argv)
     main_logger->info("CLI options:");
     main_logger->info("  N   = {}", N);
     main_logger->info("  J   = {}", J);
+    main_logger->info("  U   = {}", U);
     main_logger->info("  out = {}", out_path);
     main_logger->info("  log = {}", log_path);
 
@@ -74,13 +77,13 @@ int main(int argc, char** argv)
 
     // init operator basis
     hubbard_logger->info("Setting up operator basis");
-    hubbard::real_space::Basis1Operator<Term> basis(lattice);
+    hubbard::real_space::Basis3Operator<Term> basis(lattice);
     log(hubbard_logger, get_description(basis));
 
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     hubbard_logger->info("Computing matrix elements");
-    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard::real_space::init_matrix(M, basis, lattice, J, U);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                          M.rows() * M.columns());
 

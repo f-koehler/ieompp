@@ -4,7 +4,7 @@
 #include <cassert>
 
 #include <ieompp/description.hpp>
-#include <ieompp/types/eigen/check.hpp>
+#include <ieompp/types/matrix_check.hpp>
 #include <ieompp/types/multiply_assign.hpp>
 #include <ieompp/types/function_matrix.hpp>
 
@@ -35,9 +35,9 @@ namespace ieompp
             step(const Matrix& m, Vector& u) const
             {
                 assert(types::is_quadratic(m));
-                assert(m.rows() == _dimension);
-                assert(u.cols() == 1);
-                assert(u.rows() == _dimension);
+                assert(types::matrix_dimension_info<Matrix>::rows(m) == _dimension);
+                assert(types::matrix_dimension_info<Vector>::columns(u) == 1);
+                assert(types::matrix_dimension_info<Vector>::rows(u) == _dimension);
 
                 static Vector k_1, k_2, k_3, k_4;
 
@@ -53,9 +53,9 @@ namespace ieompp
             step(const Matrix& m, Vector& u) const
             {
                 assert(types::is_quadratic(m));
-                assert(m.rows() == _dimension);
-                assert(u.cols() == 1);
-                assert(u.rows() == _dimension);
+                assert(types::matrix_dimension_info<Matrix>::rows(m) == _dimension);
+                assert(types::matrix_dimension_info<Vector>::columns(u) == 1);
+                assert(types::matrix_dimension_info<Vector>::rows(u) == _dimension);
 
                 static Vector k_1, k_2, k_3, k_4;
 

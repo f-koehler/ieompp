@@ -6,7 +6,7 @@
 
 #include <ieompp/constants.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/types/matrix.hpp>
 #include <ieompp/types/number.hpp>
 

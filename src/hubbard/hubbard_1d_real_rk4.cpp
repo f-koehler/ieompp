@@ -8,9 +8,9 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/expectation_values.hpp>
-#include <ieompp/models/hubbard_explicit/matrix_blaze.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/expectation_values.hpp>
+#include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
@@ -32,6 +32,7 @@ int main(int argc, char** argv)
         ("version", "print version information")
         ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
+        ("U", po::value<double>()->default_value(1.), "interaction strength")
         ("dt", po::value<double>()->default_value(0.01), "step width of RK4 integrator")
         ("t_end", po::value<double>()->default_value(10.), "stop time of integration")
         ("out", po::value<string>()->default_value("hubbard_1d_real_rk4.txt"), "output file")
@@ -53,8 +54,9 @@ int main(int argc, char** argv)
 
     const auto N        = vm["N"].as<size_t>();
     const auto J        = vm["J"].as<double>();
-    const auto dt       = vm["dt"].as<double>();
-    const auto t_end    = vm["t_end"].as<double>();
+    const auto U        = vm["U"].as<double>();
+    const auto dt = vm["dt"].as<double>();
+    const auto t_end = vm["t_end"].as<double>();
     const auto out_path = vm["out"].as<string>();
     const auto log_path = vm["log"].as<string>();
 
@@ -70,6 +72,7 @@ int main(int argc, char** argv)
     main_logger->info("CLI options:");
     main_logger->info("  N   = {}", N);
     main_logger->info("  J   = {}", J);
+    main_logger->info("  U   = {}", U);
     main_logger->info("  out = {}", out_path);
     main_logger->info("  log = {}", log_path);
 
@@ -83,14 +86,14 @@ int main(int argc, char** argv)
 
     // init operator basis
     hubbard_logger->info("Setting up operator basis");
-    hubbard::real_space::Basis1Operator<Term> basis(lattice);
+    hubbard::real_space::Basis3Operator<Term> basis(lattice);
     log(hubbard_logger, get_description(basis));
 
     // computing matrix
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     hubbard_logger->info("Computing matrix elements");
-    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard::real_space::init_matrix(M, basis, lattice, J, U);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                          M.rows() * M.columns());
     M *= std::complex<double>(0, 1);
@@ -103,7 +106,7 @@ int main(int argc, char** argv)
     //
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
-    hubbard::real_space::SiteOccupation1Op<decltype(lattice)> occ(0, lattice);
+    hubbard::real_space::SiteOccupation<decltype(lattice)> occ(0, basis, lattice);
     for(auto t = 0.; t < t_end; t += dt) {
         auto tmp = occ(h);
         out_file << t << '\t' << tmp.real() << '\t' << tmp.imag() << '\n';

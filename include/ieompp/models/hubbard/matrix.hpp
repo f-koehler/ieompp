@@ -4,8 +4,8 @@
 #include <type_traits>
 
 #include <ieompp/types/matrix.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/operator.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/operator.hpp>
 
 namespace ieompp
 {

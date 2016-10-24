@@ -1,8 +1,8 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MATRIX_BLAZE_HPP_
 #define IEOMPP_MODELS_HUBBARD_MATRIX_BLAZE_HPP_
 
-#include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/operator.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/operator.hpp>
 #include <ieompp/types/blaze.hpp>
 
 namespace ieompp

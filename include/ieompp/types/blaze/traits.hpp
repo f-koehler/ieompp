@@ -119,6 +119,58 @@ namespace ieompp
             static constexpr bool value =
                 is_blaze_dense_matrix<T>::value || is_blaze_sparse_matrix<T>::value;
         };
+
+        template <typename Scalar, bool StorageOrder>
+        struct matrix_dimension_info<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+            static blaze::size_t rows(const blaze::DynamicMatrix<Scalar, StorageOrder>& m)
+            {
+                return m.rows();
+            }
+
+            static blaze::size_t columns(const blaze::DynamicMatrix<Scalar, StorageOrder>& m)
+            {
+                return m.columns();
+            }
+        };
+
+        template <typename Scalar, bool StorageOrder>
+        struct matrix_dimension_info<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+            static blaze::size_t rows(const blaze::CompressedMatrix<Scalar, StorageOrder>& m)
+            {
+                return m.rows();
+            }
+
+            static blaze::size_t columns(const blaze::CompressedMatrix<Scalar, StorageOrder>& m)
+            {
+                return m.columns();
+            }
+        };
+
+        template <typename Scalar, bool TransposeFlag>
+        struct matrix_dimension_info<blaze::DynamicVector<Scalar, TransposeFlag>> {
+            static blaze::size_t rows(const blaze::DynamicVector<Scalar, TransposeFlag>& v)
+            {
+                return v.size();
+            }
+
+            static blaze::size_t columns(const blaze::DynamicVector<Scalar, TransposeFlag>&)
+            {
+                return 1;
+            }
+        };
+
+        template <typename Scalar, bool TransposeFlag>
+        struct matrix_dimension_info<blaze::CompressedVector<Scalar, TransposeFlag>> {
+            static blaze::size_t rows(const blaze::CompressedVector<Scalar, TransposeFlag>& v)
+            {
+                return v.size();
+            }
+
+            static blaze::size_t columns(const blaze::CompressedVector<Scalar, TransposeFlag>&)
+            {
+                return 1;
+            }
+        };
     }
 }
 

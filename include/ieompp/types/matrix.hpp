@@ -32,6 +32,10 @@ namespace ieompp
         template <typename T>
         struct index_type {
         };
+
+        template <typename T>
+        struct matrix_dimension_info {
+        };
     }
 }
 

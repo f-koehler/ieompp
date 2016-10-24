@@ -7,8 +7,8 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/file_header.hpp>
 #include <ieompp/io/triplet_list.hpp>
-#include <ieompp/models/hubbard_explicit/basis.hpp>
-#include <ieompp/models/hubbard_explicit/matrix.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/matrix.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 using namespace ieompp;

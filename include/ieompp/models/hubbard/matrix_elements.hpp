@@ -4,7 +4,7 @@
 #include <cassert>
 #include <tuple>
 
-#include <ieompp/models/hubbard_explicit/basis.hpp>
+#include <ieompp/models/hubbard/basis.hpp>
 
 namespace ieompp
 {
