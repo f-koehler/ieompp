@@ -9,10 +9,9 @@
 namespace ieompp
 {
     template <typename MomentumIndexT, typename PrefactorT>
-    struct MomentumConservation
-    {
+    struct MomentumConservation {
         using MomentumIndex = MomentumIndexT;
-        using Prefactor = PrefactorT;
+        using Prefactor     = PrefactorT;
 
         std::vector<std::tuple<Prefactor, MomentumIndex>> momenta;
 

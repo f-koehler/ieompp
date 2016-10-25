@@ -97,11 +97,12 @@ namespace ieompp
                 }
             };
         } /* namespace momentum_space */
-    } /* namespace hubbard */
+    }     /* namespace hubbard */
 
     template <typename Term>
     struct TypeDescription<hubbard::real_space::Basis1Operator<Term>> {
-        static Description description() {
+        static Description description()
+        {
             return Description{{"basis of 1-operator monomials in real space", ""}, {"term", ""}}
                    + get_type_description<Term>();
         }
@@ -117,8 +118,10 @@ namespace ieompp
 
     template <typename Term>
     struct TypeDescription<hubbard::real_space::Basis3Operator<Term>> {
-        static Description description() {
-            return Description{{"basis of 1- and 3-operator monomials in real space", ""}, {"term", ""}}
+        static Description description()
+        {
+            return Description{{"basis of 1- and 3-operator monomials in real space", ""},
+                               {"term", ""}}
                    + get_type_description<Term>();
         }
     };

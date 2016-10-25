@@ -52,7 +52,7 @@ namespace ieompp
         template <typename Matrix>
         typename std::enable_if<IsMatrix<Matrix>::value, bool>::type IsZero(const Matrix& m)
         {
-            using Index = typename IndexType<Matrix>::Index;
+            using Index     = typename IndexType<Matrix>::Index;
             const auto rows = MatrixDimensionInfo<Matrix>::rows(m);
             const auto cols = MatrixDimensionInfo<Matrix>::columns(m);
             for(Index i = 0; i < rows; ++i) {

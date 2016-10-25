@@ -43,16 +43,16 @@ namespace ieompp
 
         template <typename T>
         typename std::enable_if<std::is_integral<T>::value, bool>::type IsEqual(const T& t1,
-                                                                                 const T& t2)
+                                                                                const T& t2)
         {
             return t1 == t2;
         }
 
         template <typename T>
         typename std::enable_if<std::is_floating_point<T>::value, bool>::type IsEqual(const T& t1,
-                                                                                       const T& t2)
+                                                                                      const T& t2)
         {
-            static const auto epsilon  = std::nextafter(std::numeric_limits<T>::min(), 1.);
+            static const auto epsilon = std::nextafter(std::numeric_limits<T>::min(), 1.);
             return std::abs(t1 - t2) < epsilon;
         }
 
@@ -71,7 +71,7 @@ namespace ieompp
         template <typename T>
         typename std::enable_if<std::is_floating_point<T>::value, bool>::type IsZero(const T& t)
         {
-            static const auto epsilon  = std::nextafter(std::numeric_limits<T>::min(), 1.);
+            static const auto epsilon = std::nextafter(std::numeric_limits<T>::min(), 1.);
             return std::abs(t) < epsilon;
         }
 

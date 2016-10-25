@@ -46,7 +46,8 @@ namespace ieompp
         }
 
         template <typename... Indices>
-        constexpr Operator<typename std::decay<Indices>::type...> make_annihilator(Indices&&... indices)
+        constexpr Operator<typename std::decay<Indices>::type...>
+        make_annihilator(Indices&&... indices)
         {
             return Operator<typename std::decay<Indices>::type...>{
                 false, std::make_tuple(std::forward<Indices>(indices)...)};

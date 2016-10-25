@@ -7,9 +7,7 @@ namespace ieompp
 {
     namespace io
     {
-        void write_matrix(std::ostream& strm, bool binary = false)
-        {
-        }
+        void write_matrix(std::ostream& strm, bool binary = false) {}
     }
 }
 

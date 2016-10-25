@@ -53,7 +53,8 @@ namespace ieompp
                     result += (std::norm(h0) + std::norm(h1) + std::norm(h2)) / 2;
                     result += (h0 * h1_conj + h0 * h2_conj + h1 * h0_conj + h2 * h0_conj) / pi;
                     result += (h0 * h000_conj + h000 * h0_conj + 2 * std::norm(h000)) / 2.;
-                    result += (h1 * h000_conj + h2 * h000_conj + h000 * h1_conj + h000 * h2_conj) / pi;
+                    result +=
+                        (h1 * h000_conj + h2 * h000_conj + h000 * h1_conj + h000 * h2_conj) / pi;
                     return result;
                 }
             };
@@ -79,12 +80,12 @@ namespace ieompp
                 {
                     static const Float pi = Pi<Float>::value;
 
-                    const auto h0        = vec[_index];
-                    const auto h1        = vec[_left];
-                    const auto h2        = vec[_right];
-                    const auto h0_conj   = types::conjugate(h0);
-                    const auto h1_conj   = types::conjugate(h1);
-                    const auto h2_conj   = types::conjugate(h2);
+                    const auto h0      = vec[_index];
+                    const auto h1      = vec[_left];
+                    const auto h2      = vec[_right];
+                    const auto h0_conj = types::conjugate(h0);
+                    const auto h1_conj = types::conjugate(h1);
+                    const auto h2_conj = types::conjugate(h2);
 
                     typename types::ScalarType<Vector>::type result = 0.;
                     result += (std::norm(h0) + std::norm(h1) + std::norm(h2)) / 2;

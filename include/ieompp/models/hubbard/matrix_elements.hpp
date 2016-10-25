@@ -70,7 +70,7 @@ namespace ieompp
                 }
             }
         } /* namespace real_space */
-    } /* namespace hubbard */
+    }     /* namespace hubbard */
 } /* namespace ieompp */
 
 

@@ -9,20 +9,20 @@ namespace ieompp
 {
     class Exception : public std::exception
     {
-        private:
-            const std::string _msg;
+    private:
+        const std::string _msg;
 
-        public:
-            Exception(const std::string& msg) : _msg(msg) {}
-            Exception(const char* msg) : _msg(msg) {}
-            const char* what() const noexcept override { return _msg.c_str(); }
+    public:
+        Exception(const std::string& msg) : _msg(msg) {}
+        Exception(const char* msg) : _msg(msg) {}
+        const char* what() const noexcept override { return _msg.c_str(); }
     };
 
     class NotImplemented : public Exception
     {
-        public:
-            NotImplemented(const std::string& msg) : Exception(msg) {}
-            NotImplemented(const char* msg) : Exception(msg) {}
+    public:
+        NotImplemented(const std::string& msg) : Exception(msg) {}
+        NotImplemented(const char* msg) : Exception(msg) {}
     };
 
     template <typename T>

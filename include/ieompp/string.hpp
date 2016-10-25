@@ -1,8 +1,8 @@
 #ifndef IEOMPP_STRING_HPP_
 #define IEOMPP_STRING_HPP_
 
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace ieompp
 {

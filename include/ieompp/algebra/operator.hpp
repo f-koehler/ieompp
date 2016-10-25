@@ -29,8 +29,7 @@ namespace ieompp
         }
 
         template <typename Op, typename T>
-        struct HasIndexOfType
-        {
+        struct HasIndexOfType {
             static_assert(IsOperator<Op>::value, "Operator must be an operator");
 
             static constexpr bool value =

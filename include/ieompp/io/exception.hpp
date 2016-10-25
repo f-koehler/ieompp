@@ -9,9 +9,9 @@ namespace ieompp
     {
         class IOException : public Exception
         {
-            public:
-              IOException(const std::string& msg) : Exception(msg) {}
-              IOException(const char* msg) : Exception(msg) {}
+        public:
+            IOException(const std::string& msg) : Exception(msg) {}
+            IOException(const char* msg) : Exception(msg) {}
         };
     }
 }

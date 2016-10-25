@@ -111,7 +111,7 @@ namespace ieompp
 
     template <typename Float>
     struct TypeDescription<std::complex<Float>> {
-        static Description description() 
+        static Description description()
         {
             return {{"type", compose("complex<", types::type_name<Float>::name, ">")}};
         }

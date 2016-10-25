@@ -12,8 +12,8 @@
 #include <ieompp/constraints.hpp>
 #include <ieompp/exception.hpp>
 #include <ieompp/hubbard/dispersion.hpp>
-#include <ieompp/types/number.hpp>
 #include <ieompp/types/dot_product.hpp>
+#include <ieompp/types/number.hpp>
 
 namespace ieompp
 {
@@ -106,7 +106,7 @@ namespace ieompp
                                                   const Lattice& lattice, Container& container)
                 {
                     using Operator = typename Term::Operator;
-                    using Float     = typename types::real_type<typename Term::Prefactor>::type;
+                    using Float    = typename types::real_type<typename Term::Prefactor>::type;
 
                     const auto prefactor = U * t.prefactor / Float(lattice.num());
 
@@ -138,7 +138,7 @@ namespace ieompp
                                                   const Lattice& lattice, Container& container)
                 {
                     using Operator = typename Term::Operator;
-                    using Float     = typename types::real_type<typename Term::Prefactor>::type;
+                    using Float    = typename types::real_type<typename Term::Prefactor>::type;
 
                     const auto prefactor = t.prefactor * U / Float(lattice.num());
 

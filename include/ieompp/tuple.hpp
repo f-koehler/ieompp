@@ -10,18 +10,18 @@ namespace ieompp
     namespace detail
     {
         template <typename Tuple, std::size_t I, std::size_t N>
-        struct TuplePrinter
-        {
-            static void print(std::ostream& strm, const Tuple& t, const std::string& delimiter) {
+        struct TuplePrinter {
+            static void print(std::ostream& strm, const Tuple& t, const std::string& delimiter)
+            {
                 strm << std::get<N>(t) << delimiter;
                 TuplePrinter<Tuple, I + 1, N>::print(strm, t, delimiter);
             }
         };
 
         template <typename Tuple, std::size_t N>
-        struct TuplePrinter<Tuple, N, N>
-        {
-            static void print(std::ostream& strm, const Tuple& t, const std::string& delimiter) {
+        struct TuplePrinter<Tuple, N, N> {
+            static void print(std::ostream& strm, const Tuple& t, const std::string& delimiter)
+            {
                 (void)delimiter;
                 strm << std::get<N>(t);
             }

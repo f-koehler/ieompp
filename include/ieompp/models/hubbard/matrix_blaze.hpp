@@ -127,8 +127,8 @@ namespace ieompp
                 for(Index row = basis.N; row < basis.size(); ++row) {
                     triplets.clear();
 
-                    const auto& ops      = basis[row].operators;
-                    auto neighbors = lattice.neighbors(ops[0].index1);
+                    const auto& ops = basis[row].operators;
+                    auto neighbors  = lattice.neighbors(ops[0].index1);
                     for(auto neighbor : neighbors) {
                         triplets.emplace_back(
                             row, basis.get_3op_index(neighbor, ops[1].index1, ops[2].index1), -J);
@@ -162,7 +162,7 @@ namespace ieompp
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Index  = typename types::IndexType<Matrix>::type;
+                using Index = typename types::IndexType<Matrix>::type;
 
                 matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();
@@ -221,8 +221,8 @@ namespace ieompp
                 for(Index row = basis.N; row < basis.size(); ++row) {
                     triplets.clear();
 
-                    const auto& ops      = basis[row].operators;
-                    auto neighbors = lattice.neighbors(ops[0].index1);
+                    const auto& ops = basis[row].operators;
+                    auto neighbors  = lattice.neighbors(ops[0].index1);
                     for(auto neighbor : neighbors) {
                         triplets.emplace_back(
                             row, basis.get_3op_index(neighbor, ops[1].index1, ops[2].index1), -J);
@@ -252,7 +252,7 @@ namespace ieompp
                 }
             }
         } /* namespace real_space */
-    } /* namespace hubbard */
+    }     /* namespace hubbard */
 } /* namespace ieompp */
 
 #endif

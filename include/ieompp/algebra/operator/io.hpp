@@ -5,9 +5,9 @@
 #include <tuple>
 #include <utility>
 
-#include <ieompp/tuple.hpp>
 #include <ieompp/algebra/operator/get_index.hpp>
 #include <ieompp/algebra/operator/operator.hpp>
+#include <ieompp/tuple.hpp>
 
 namespace ieompp
 {
@@ -74,9 +74,8 @@ namespace ieompp
             struct PrintHelper {
                 static void print(std::ostream& strm, const Operator& op)
                 {
-                    using Printer =
-                        typename get_printer_type<typename IndexType<I, Operator>::type,
-                                                  DefaultPrinters>::type;
+                    using Printer = typename get_printer_type<typename IndexType<I, Operator>::type,
+                                                              DefaultPrinters>::type;
                     Printer::print(strm, get_index<I>(op));
                     strm << ',';
                     PrintHelper<Operator, I + 1, N>::print(strm, op);
@@ -87,9 +86,8 @@ namespace ieompp
             struct PrintHelper<Operator, N, N> {
                 static void print(std::ostream& strm, const Operator& op)
                 {
-                    using Printer =
-                        typename get_printer_type<typename IndexType<N, Operator>::type,
-                                                  DefaultPrinters>::type;
+                    using Printer = typename get_printer_type<typename IndexType<N, Operator>::type,
+                                                              DefaultPrinters>::type;
                     Printer::print(strm, get_index<N>(op));
                 }
             };

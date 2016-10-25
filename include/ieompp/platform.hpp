@@ -65,7 +65,7 @@ namespace ieompp
 #elif BOOST_COMP_GNUC
             static const auto str =
                 compose("gcc ", __GNUC__, '.', __GNUC_MINOR__, '.', __GNUC_PATCHLEVEL__);
-            // BOOST_COMP_INTEL is bogus
+// BOOST_COMP_INTEL is bogus
 #elif __INTEL_COMPILER
             static const auto str =
                 compose("intel ", static_cast<uint16_t>(__INTEL_COMPILER / 100), '.',

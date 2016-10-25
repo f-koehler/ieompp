@@ -3,9 +3,9 @@
 
 #include <type_traits>
 
-#include <ieompp/types/matrix.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/models/hubbard/operator.hpp>
+#include <ieompp/types/matrix.hpp>
 
 namespace ieompp
 {
@@ -18,9 +18,8 @@ namespace ieompp
                                      const Lattice& lattice,
                                      const typename types::ScalarType<Matrix>::type& J = 1.)
             {
-                static_assert(
-                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
-                    "Operator-type in Term-type must be a Hubbard like operator!");
+                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator-type in Term-type must be a Hubbard like operator!");
 
                 for(typename Basis1Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     const auto neighbors = lattice.neighbors(i);
@@ -33,9 +32,8 @@ namespace ieompp
                                      const Lattice& lattice,
                                      const typename types::ScalarType<Matrix>::type& J = 1.)
             {
-                static_assert(
-                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
-                    "Operator-type in Term-type must be a Hubbard like operator!");
+                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator-type in Term-type must be a Hubbard like operator!");
 
                 const auto basis_size = basis.size();
 
@@ -74,9 +72,8 @@ namespace ieompp
             void init_interaction_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
                                          const typename types::ScalarType<Matrix>::type& U = 1.)
             {
-                static_assert(
-                    ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
-                    "Operator-type in Term-type must be a Hubbard like operator!");
+                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                              "Operator-type in Term-type must be a Hubbard like operator!");
 
                 const auto basis_size = basis.size();
 

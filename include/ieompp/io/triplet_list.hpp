@@ -1,8 +1,8 @@
 #ifndef IEOMPP_IO_EIGEN_TRIPLETS_HPP_
 #define IEOMPP_IO_EIGEN_TRIPLETS_HPP_
 
-#include <ostream>
 #include <istream>
+#include <ostream>
 #include <string>
 
 #include <ieompp/io/line.hpp>

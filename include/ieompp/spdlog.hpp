@@ -10,7 +10,8 @@ namespace ieompp
 {
     enum class LogLevel : uint8_t { Debug, Info, Warning, Critical };
     template <typename Logger, LogLevel level = LogLevel::Info>
-    void log(Logger logger, const Description& description){
+    void log(Logger logger, const Description& description)
+    {
         std::size_t longest = 0;
         for(auto& entry : description) {
             if(!entry.second.empty()) longest = std::max(longest, entry.second.size());

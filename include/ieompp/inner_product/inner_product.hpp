@@ -1,8 +1,8 @@
 #ifndef IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 #define IEOMPP_INNER_PRODUCT_INNER_PRODUCT_HPP_
 
-#include <unordered_map>
 #include <iostream>
+#include <unordered_map>
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
@@ -13,19 +13,16 @@ namespace ieompp
 {
     namespace inner_product
     {
-        struct Kronecker
-        {
+        struct Kronecker {
             std::size_t a, b;
         };
 
-        struct InnerProduct
-        {
+        struct InnerProduct {
             using Operator  = ieompp::algebra::Operator<std::size_t>;
             using Prefactor = ieompp::symbolic::Prefactor<double, Kronecker>;
             using Term      = ieompp::algebra::Term<Prefactor, Operator>;
 
-            struct Result : public std::vector<Prefactor>
-            {
+            struct Result : public std::vector<Prefactor> {
                 bool calculated = false;
             };
 
@@ -79,11 +76,12 @@ namespace ieompp
     }
 }
 
-namespace std {
+namespace std
+{
     template <>
     struct hash<ieompp::inner_product::InnerProduct> {
-        using argument_type  = ieompp::inner_product::InnerProduct;
-        using result_type    = std::size_t;
+        using argument_type = ieompp::inner_product::InnerProduct;
+        using result_type   = std::size_t;
 
         result_type operator()(const argument_type& val) const
         {
@@ -104,15 +102,13 @@ namespace ieompp
 
             InnerProductTable()
             {
-                auto idx = add({1, {true}}, {1, {true}});
+                auto idx                = add({1, {true}}, {1, {true}});
                 results[idx].calculated = true;
-                results[idx].emplace_back(
-                    typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
+                results[idx].emplace_back(typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
 
-                idx = add({1, {false}}, {1, {false}});
+                idx                     = add({1, {false}}, {1, {false}});
                 results[idx].calculated = true;
-                results[idx].emplace_back(
-                    typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
+                results[idx].emplace_back(typename InnerProduct::Prefactor{0.5, {Kronecker{0, 1}}});
             }
 
             std::size_t add(const TermStructure& left, const TermStructure& right)

@@ -10,11 +10,10 @@ namespace ieompp
     namespace hubbard
     {
         template <typename MomentumT, typename LatticeT>
-        struct Dispersion
-        {
-            using Momentum   = MomentumT;
-            using Lattice    = LatticeT;
-            using Scalar     = typename types::scalar_type<Momentum>::type;
+        struct Dispersion {
+            using Momentum = MomentumT;
+            using Lattice  = LatticeT;
+            using Scalar   = typename types::scalar_type<Momentum>::type;
 
             Scalar J;
 

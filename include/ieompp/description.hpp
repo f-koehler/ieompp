@@ -38,8 +38,7 @@ namespace ieompp
     };
 
     template <typename T>
-    struct TypeDescription
-    {
+    struct TypeDescription {
         static Description description() = delete;
     };
 
@@ -86,7 +85,8 @@ namespace ieompp
                 strm << entry.first << '\n';
             } else {
                 strm << entry.first;
-                if(entry.first.size() < max_key_len) strm << std::string(max_key_len-entry.first.size(), ' ');
+                if(entry.first.size() < max_key_len)
+                    strm << std::string(max_key_len - entry.first.size(), ' ');
                 strm << " = " << entry.second << '\n';
             }
         }
