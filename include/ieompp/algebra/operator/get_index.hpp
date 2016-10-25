@@ -10,7 +10,7 @@ namespace ieompp
     namespace algebra
     {
         template <std::size_t I, typename Operator>
-        using index_type = typename std::tuple_element<I, typename Operator::Indices>;
+        using IndexType = typename std::tuple_element<I, typename Operator::Indices>;
 
         template <std::size_t I, typename Index>
         constexpr typename std::enable_if<I == 0, Index&>::type& get_index(Operator<Index>& op)

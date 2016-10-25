@@ -15,26 +15,26 @@ namespace ieompp
         namespace detail
         {
             template <typename Op, typename T, std::size_t I, std::size_t N>
-            struct has_index_of_type_helper {
+            struct HasIndexOfTypeHelper {
                 static constexpr bool value =
-                    std::is_same<typename index_type<I, Op>::type, T>::value
-                    || has_index_of_type_helper<Op, T, I + 1, N>::value;
+                    std::is_same<typename IndexType<I, Op>::type, T>::value
+                    || HasIndexOfTypeHelper<Op, T, I + 1, N>::value;
             };
 
             template <typename Op, typename T, std::size_t N>
-            struct has_index_of_type_helper<Op, T, N, N> {
+            struct HasIndexOfTypeHelper<Op, T, N, N> {
                 static constexpr bool value =
-                    std::is_same<typename index_type<N, Op>::type, T>::value;
+                    std::is_same<typename IndexType<N, Op>::type, T>::value;
             };
         }
 
         template <typename Op, typename T>
-        struct has_index_of_type
+        struct HasIndexOfType
         {
-            static_assert(is_operator<Op>::value, "Operator must be an operator");
+            static_assert(IsOperator<Op>::value, "Operator must be an operator");
 
             static constexpr bool value =
-                detail::has_index_of_type_helper<Op, T, 0, Op::number_of_indices>::value;
+                detail::HasIndexOfTypeHelper<Op, T, 0, Op::number_of_indices>::value;
         };
     }
 }

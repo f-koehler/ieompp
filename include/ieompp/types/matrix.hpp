@@ -6,35 +6,35 @@ namespace ieompp
     namespace types
     {
         template <typename T>
-        struct is_matrix {
+        struct IsMatrix {
             static constexpr bool value = false;
         };
 
         template <typename T>
-        struct is_vector {
+        struct IsVector {
             static constexpr bool value = false;
         };
 
         template <typename T>
-        struct is_row_vector {
+        struct IsRowVector {
             static constexpr bool value = false;
         };
 
         template <typename T>
-        struct is_column_vector {
+        struct IsColumnVector {
             static constexpr bool value = false;
         };
 
         template <typename T>
-        struct scalar_type {
+        struct ScalarType {
         };
 
         template <typename T>
-        struct index_type {
+        struct IndexType {
         };
 
         template <typename T>
-        struct matrix_dimension_info {
+        struct MatrixDimensionInfo {
         };
     }
 }

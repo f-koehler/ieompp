@@ -39,7 +39,7 @@ namespace ieompp
                 if((_rows != rhs.rows()) || (_cols != rhs.cols())) return false;
                 for(Index row = 0; row < _rows; ++row) {
                     for(Index col = 0; col < _cols; ++col) {
-                        if(!is_equal(_f(row, col), rhs(row, col))) return false;
+                        if(!IsEqual(_f(row, col), rhs(row, col))) return false;
                     }
                 }
                 return true;
@@ -51,7 +51,7 @@ namespace ieompp
                 if((_rows != rhs.rows()) || (_cols != rhs.cols())) return true;
                 for(Index row = 0; row < _rows; ++row) {
                     for(Index col = 0; col < _cols; ++col) {
-                        if(!is_equal(_f(row, col), rhs(row, col))) return true;
+                        if(!IsEqual(_f(row, col), rhs(row, col))) return true;
                     }
                 }
                 return false;
@@ -95,7 +95,7 @@ namespace ieompp
             const Index N = matrix.rows();
             for(Index row = 0; row < N; ++row) {
                 for(Index col = 0; col < row; ++col) {
-                    if(!is_equal(matrix(row, col), matrix(col, row))) return false;
+                    if(!IsEqual(matrix(row, col), matrix(col, row))) return false;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace ieompp
             const Index N = matrix.rows();
             for(Index row = 0; row < N; ++row) {
                 for(Index col = 0; col <= row; ++col) {
-                    if(!is_equal(matrix(row, col), conjugate(matrix(col, row)))) return false;
+                    if(!IsEqual(matrix(row, col), conjugate(matrix(col, row)))) return false;
                 }
             }
 

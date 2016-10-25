@@ -29,9 +29,9 @@ namespace ieompp
         template <std::size_t Index, typename Term>
         int total_spin(const Term& t)
         {
-            static_assert(std::is_same<typename index_type<Index, typename Term::Operator>::type,
-                                       bool>::value,
-                          "spin index must be a boolean");
+            static_assert(
+                std::is_same<typename IndexType<Index, typename Term::Operator>::type, bool>::value,
+                "spin index must be a boolean");
 
             int spin = 0;
             for(auto& op : t.operators) {

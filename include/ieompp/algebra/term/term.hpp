@@ -79,12 +79,12 @@ namespace ieompp
         }
 
         template <typename T>
-        struct is_term {
+        struct IsTerm {
             static constexpr bool value = false;
         };
 
         template <typename Prefactor, typename Operator, typename Container>
-        struct is_term<Term<Prefactor, Operator, Container>> {
+        struct IsTerm<Term<Prefactor, Operator, Container>> {
             static constexpr bool value = true;
         };
     }

@@ -2,20 +2,20 @@
 #include <ieompp/algebra/operator/get_index.hpp>
 using namespace ieompp::algebra;
 
-// check index_type
-static_assert(std::is_same<index_type<0, Op1>::type, std::size_t>::value,
+// check IndexType
+static_assert(std::is_same<IndexType<0, Op1>::type, std::size_t>::value,
               "Index 0 of Op1 should be of type std::size_t");
 
-static_assert(std::is_same<index_type<0, Op2>::type, std::size_t>::value,
+static_assert(std::is_same<IndexType<0, Op2>::type, std::size_t>::value,
               "Index 0 of Op2 should be of type std::size_t");
-static_assert(std::is_same<index_type<1, Op2>::type, bool>::value,
+static_assert(std::is_same<IndexType<1, Op2>::type, bool>::value,
               "Index 1 of Op2 should be of type bool");
 
-static_assert(std::is_same<index_type<0, Op3>::type, std::size_t>::value,
+static_assert(std::is_same<IndexType<0, Op3>::type, std::size_t>::value,
               "Index 0 of Op3 should be of type std::size_t");
-static_assert(std::is_same<index_type<1, Op3>::type, bool>::value,
+static_assert(std::is_same<IndexType<1, Op3>::type, bool>::value,
               "Index 1 of Op3 should be of type bool");
-static_assert(std::is_same<index_type<2, Op3>::type, char>::value,
+static_assert(std::is_same<IndexType<2, Op3>::type, char>::value,
               "Index 2 of Op3 should be of type char");
 
 BOOST_AUTO_TEST_CASE(get_index1)

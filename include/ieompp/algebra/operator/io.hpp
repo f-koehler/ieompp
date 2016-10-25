@@ -75,7 +75,7 @@ namespace ieompp
                 static void print(std::ostream& strm, const Operator& op)
                 {
                     using Printer =
-                        typename get_printer_type<typename index_type<I, Operator>::type,
+                        typename get_printer_type<typename IndexType<I, Operator>::type,
                                                   DefaultPrinters>::type;
                     Printer::print(strm, get_index<I>(op));
                     strm << ',';
@@ -88,7 +88,7 @@ namespace ieompp
                 static void print(std::ostream& strm, const Operator& op)
                 {
                     using Printer =
-                        typename get_printer_type<typename index_type<N, Operator>::type,
+                        typename get_printer_type<typename IndexType<N, Operator>::type,
                                                   DefaultPrinters>::type;
                     Printer::print(strm, get_index<N>(op));
                 }

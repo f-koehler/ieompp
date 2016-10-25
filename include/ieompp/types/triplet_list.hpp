@@ -68,12 +68,12 @@ namespace ieompp
         }
 
         template <typename Scalar, typename Index>
-        struct scalar_type<TripletList<Scalar, Index>> {
+        struct ScalarType<TripletList<Scalar, Index>> {
             using type = Scalar;
         };
 
         template <typename Scalar, typename Index>
-        struct index_type<TripletList<Scalar, Index>> {
+        struct IndexType<TripletList<Scalar, Index>> {
             using type = Index;
         };
     }

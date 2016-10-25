@@ -21,7 +21,7 @@ namespace ieompp
             for(Index i = 0; i < rows; ++i) {
                 for(Index j = 0; j < cols; ++j) {
                     const auto val = f(i, j);
-                    if(!is_zero(val)) m.insert(i, j) = val;
+                    if(!IsZero(val)) m.insert(i, j) = val;
                 }
             }
         }
@@ -39,38 +39,15 @@ namespace ieompp
             for(Index i = 0; i < rows; ++i) {
                 for(Index j = 0; j < i; ++j) {
                     const auto val = f(i, j);
-                    if(!is_zero(val)) {
+                    if(!IsZero(val)) {
                         m.insert(i, j) = val;
                         m.insert(j, i) = val;
                     }
                 }
                 const auto val = f(i, i);
-                if(!is_zero(val)) m.insert(i, i) = val;
+                if(!IsZero(val)) m.insert(i, i) = val;
             }
         }
-
-        /* template <typename Container> */
-        /* typename std::enable_if<is_eigen_triplet<typename Container::value_type>::value, void>::type */
-        /* init(Container& c, typename is_eigen_triplet<typename Container::value_type>::Index rows, */
-        /*      typename is_eigen_triplet<typename Container::value_type>::Index cols, */
-        /*      std::function<typename is_eigen_triplet<typename Container::value_type>::Scalar( */
-        /*          typename is_eigen_triplet<typename Container::value_type>::Scalar, */
-        /*          typename is_eigen_triplet<typename Container::value_type>::Scalar)> */
-        /*          f) */
-        /* { */
-        /*     using Index = typename is_eigen_triplet<typename Container::value_type>::Index; */
-
-        /*     c.clear(); */
-
-        /*     for(Index i = 0; i < rows; ++i) { */
-        /*         for(Index j = 0; j < cols; ++j) { */
-        /*             const auto val = f(i, j); */
-        /*             if(!is_zero(val)) { */
-        /*                 c.emplace_back(i, j, val); */
-        /*             } */
-        /*         } */
-        /*     } */
-        /* } */
 
         template <typename Matrix>
         typename std::enable_if<is_eigen_dense_matrix<Matrix>::value, void>::type

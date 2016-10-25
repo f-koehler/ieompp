@@ -11,140 +11,140 @@ namespace ieompp
     namespace types
     {
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsMatrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Cols, int Options, int MaxCols>
-        struct is_matrix<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
+        struct IsMatrix<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Options, int MaxRows>
-        struct is_matrix<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
+        struct IsMatrix<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsMatrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_vector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsVector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Cols, int Options, int MaxCols>
-        struct is_vector<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
+        struct IsVector<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Rows, int Options, int MaxRows>
-        struct is_vector<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
+        struct IsVector<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_vector<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsVector<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_row_vector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsRowVector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Cols, int Options, int MaxCols>
-        struct is_row_vector<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
+        struct IsRowVector<Eigen::Matrix<Scalar, 1, Cols, Options, 1, MaxCols>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_row_vector<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsRowVector<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_column_vector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsColumnVector<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Options, int MaxRows>
-        struct is_column_vector<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
+        struct IsColumnVector<Eigen::Matrix<Scalar, Rows, 1, Options, MaxRows, 1>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_column_vector<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsColumnVector<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct scalar_type<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct ScalarType<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             using type = Scalar;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct scalar_type<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct ScalarType<Eigen::SparseMatrix<Scalar, Options, Index>> {
             using type = Scalar;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct index_type<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IndexType<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             using type = int;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct index_type<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IndexType<Eigen::SparseMatrix<Scalar, Options, Index>> {
             using type = Index;
         };
 
 
         template <typename T>
-        struct is_eigen_matrix {
+        struct IsEigenMatrix {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_eigen_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsEigenMatrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_eigen_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsEigenMatrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = false;
         };
 
 
         template <typename T>
-        struct is_eigen_dense_matrix {
+        struct IsEigenDenseMatrix {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_eigen_dense_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsEigenDenseMatrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_eigen_dense_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsEigenDenseMatrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = false;
         };
 
 
         template <typename T>
-        struct is_eigen_sparse_matrix {
+        struct IsEigenSparseMatrix {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Rows, int Cols, int Options, int MaxRows, int MaxCols>
-        struct is_eigen_sparse_matrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
+        struct IsEigenSparseMatrix<Eigen::Matrix<Scalar, Rows, Cols, Options, MaxRows, MaxCols>> {
             static constexpr bool value = false;
         };
 
         template <typename Scalar, int Options, typename Index>
-        struct is_eigen_sparse_matrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
+        struct IsEigenSparseMatrix<Eigen::SparseMatrix<Scalar, Options, Index>> {
             static constexpr bool value = true;
         };
     }

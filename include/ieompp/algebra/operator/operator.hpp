@@ -84,12 +84,12 @@ namespace ieompp
         };
 
         template <typename T>
-        struct is_operator {
+        struct IsOperator {
             static constexpr bool value = false;
         };
 
         template <typename... Ts>
-        struct is_operator<Operator<Ts...>> {
+        struct IsOperator<Operator<Ts...>> {
             static constexpr bool value = true;
         };
     }

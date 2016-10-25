@@ -14,82 +14,82 @@ namespace ieompp
     namespace types
     {
         template <typename Scalar, bool StorageOrder>
-        struct is_matrix<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+        struct IsMatrix<blaze::DynamicMatrix<Scalar, StorageOrder>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct is_matrix<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+        struct IsMatrix<blaze::CompressedMatrix<Scalar, StorageOrder>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct is_vector<blaze::DynamicVector<Scalar, TransposeFlag>> {
+        struct IsVector<blaze::DynamicVector<Scalar, TransposeFlag>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct is_vector<blaze::CompressedVector<Scalar, TransposeFlag>> {
+        struct IsVector<blaze::CompressedVector<Scalar, TransposeFlag>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar>
-        struct is_row_vector<blaze::DynamicVector<Scalar, blaze::rowVector>> {
+        struct IsRowVector<blaze::DynamicVector<Scalar, blaze::rowVector>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar>
-        struct is_row_vector<blaze::CompressedVector<Scalar, blaze::rowVector>> {
+        struct IsRowVector<blaze::CompressedVector<Scalar, blaze::rowVector>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar>
-        struct is_column_vector<blaze::DynamicVector<Scalar, blaze::columnVector>> {
+        struct IsColumnVector<blaze::DynamicVector<Scalar, blaze::columnVector>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar>
-        struct is_column_vector<blaze::CompressedVector<Scalar, blaze::columnVector>> {
+        struct IsColumnVector<blaze::CompressedVector<Scalar, blaze::columnVector>> {
             static constexpr bool value = true;
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct scalar_type<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+        struct ScalarType<blaze::DynamicMatrix<Scalar, StorageOrder>> {
             using type = Scalar;
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct scalar_type<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+        struct ScalarType<blaze::CompressedMatrix<Scalar, StorageOrder>> {
             using type = Scalar;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct scalar_type<blaze::DynamicVector<Scalar, TransposeFlag>> {
+        struct ScalarType<blaze::DynamicVector<Scalar, TransposeFlag>> {
             using type = Scalar;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct scalar_type<blaze::CompressedVector<Scalar, TransposeFlag>> {
+        struct ScalarType<blaze::CompressedVector<Scalar, TransposeFlag>> {
             using type = Scalar;
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct index_type<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+        struct IndexType<blaze::DynamicMatrix<Scalar, StorageOrder>> {
             using type = blaze::size_t;
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct index_type<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+        struct IndexType<blaze::CompressedMatrix<Scalar, StorageOrder>> {
             using type = blaze::size_t;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct index_type<blaze::DynamicVector<Scalar, TransposeFlag>> {
+        struct IndexType<blaze::DynamicVector<Scalar, TransposeFlag>> {
             using type = blaze::size_t;
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct index_type<blaze::CompressedVector<Scalar, TransposeFlag>> {
+        struct IndexType<blaze::CompressedVector<Scalar, TransposeFlag>> {
             using type = blaze::size_t;
         };
 
@@ -121,7 +121,7 @@ namespace ieompp
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct matrix_dimension_info<blaze::DynamicMatrix<Scalar, StorageOrder>> {
+        struct MatrixDimensionInfo<blaze::DynamicMatrix<Scalar, StorageOrder>> {
             static blaze::size_t rows(const blaze::DynamicMatrix<Scalar, StorageOrder>& m)
             {
                 return m.rows();
@@ -134,7 +134,7 @@ namespace ieompp
         };
 
         template <typename Scalar, bool StorageOrder>
-        struct matrix_dimension_info<blaze::CompressedMatrix<Scalar, StorageOrder>> {
+        struct MatrixDimensionInfo<blaze::CompressedMatrix<Scalar, StorageOrder>> {
             static blaze::size_t rows(const blaze::CompressedMatrix<Scalar, StorageOrder>& m)
             {
                 return m.rows();
@@ -147,7 +147,7 @@ namespace ieompp
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct matrix_dimension_info<blaze::DynamicVector<Scalar, TransposeFlag>> {
+        struct MatrixDimensionInfo<blaze::DynamicVector<Scalar, TransposeFlag>> {
             static blaze::size_t rows(const blaze::DynamicVector<Scalar, TransposeFlag>& v)
             {
                 return v.size();
@@ -160,7 +160,7 @@ namespace ieompp
         };
 
         template <typename Scalar, bool TransposeFlag>
-        struct matrix_dimension_info<blaze::CompressedVector<Scalar, TransposeFlag>> {
+        struct MatrixDimensionInfo<blaze::CompressedVector<Scalar, TransposeFlag>> {
             static blaze::size_t rows(const blaze::CompressedVector<Scalar, TransposeFlag>& v)
             {
                 return v.size();

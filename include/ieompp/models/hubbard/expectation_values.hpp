@@ -36,7 +36,7 @@ namespace ieompp
                 }
 
                 template <typename Vector>
-                typename types::scalar_type<Vector>::type operator()(const Vector& vec) const
+                typename types::ScalarType<Vector>::type operator()(const Vector& vec) const
                 {
                     static const Float pi = Pi<Float>::value;
 
@@ -49,7 +49,7 @@ namespace ieompp
                     const auto h2_conj   = types::conjugate(h2);
                     const auto h000_conj = types::conjugate(h000);
 
-                    typename types::scalar_type<Vector>::type result = 0.;
+                    typename types::ScalarType<Vector>::type result = 0.;
                     result += (std::norm(h0) + std::norm(h1) + std::norm(h2)) / 2;
                     result += (h0 * h1_conj + h0 * h2_conj + h1 * h0_conj + h2 * h0_conj) / pi;
                     result += (h0 * h000_conj + h000 * h0_conj + 2 * std::norm(h000)) / 2.;
@@ -75,7 +75,7 @@ namespace ieompp
                 }
 
                 template <typename Vector>
-                typename types::scalar_type<Vector>::type operator()(const Vector& vec) const
+                typename types::ScalarType<Vector>::type operator()(const Vector& vec) const
                 {
                     static const Float pi = Pi<Float>::value;
 
@@ -86,7 +86,7 @@ namespace ieompp
                     const auto h1_conj   = types::conjugate(h1);
                     const auto h2_conj   = types::conjugate(h2);
 
-                    typename types::scalar_type<Vector>::type result = 0.;
+                    typename types::ScalarType<Vector>::type result = 0.;
                     result += (std::norm(h0) + std::norm(h1) + std::norm(h2)) / 2;
                     result += (h0 * h1_conj + h0 * h2_conj + h1 * h0_conj + h2 * h0_conj) / pi;
                     return result;

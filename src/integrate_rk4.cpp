@@ -26,7 +26,6 @@ int main(int argc, char** argv)
         ("out", po::value<string>()->default_value("integrate_rk4.txt"), "output file")
         ("log", po::value<string>()->default_value("integrate_rk4.log"), "log file")
         ("dt", po::value<double>()->default_value(.01), "step width")
-        ("nnz", po::value<size_t>()->default_value(8), "number of non zero elements per row")
         ("t_end", po::value<double>()->default_value(10.), "stop time for the integration");
 
     po::variables_map vm;
@@ -42,7 +41,6 @@ int main(int argc, char** argv)
     const auto output_path  = vm["out"].as<string>();
     const auto logging_path = vm["log"].as<string>();
     const auto dt           = vm["dt"].as<double>();
-    const auto nnz          = vm["nnz"].as<size_t>();
     const auto t_end        = vm["t_end"].as<double>();
 
     vector<spd::sink_ptr> logging_sinks;

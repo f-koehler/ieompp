@@ -67,8 +67,8 @@ namespace ieompp
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Scalar      = typename types::scalar_type<Matrix>::type;
-                using Index       = typename types::index_type<Matrix>::type;
+                using Scalar      = typename types::ScalarType<Matrix>::type;
+                using Index       = typename types::IndexType<Matrix>::type;
                 using TripletList = detail::TripletList<Scalar, Index>;
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -100,8 +100,8 @@ namespace ieompp
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Scalar      = typename types::scalar_type<Matrix>::type;
-                using Index       = typename types::index_type<Matrix>::type;
+                using Scalar      = typename types::ScalarType<Matrix>::type;
+                using Index       = typename types::IndexType<Matrix>::type;
                 using TripletList = detail::TripletList<Scalar, Index>;
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -162,7 +162,7 @@ namespace ieompp
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Index  = typename types::index_type<Matrix>::type;
+                using Index  = typename types::IndexType<Matrix>::type;
 
                 matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();
@@ -191,8 +191,8 @@ namespace ieompp
                 static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Scalar      = typename types::scalar_type<Matrix>::type;
-                using Index       = typename types::index_type<Matrix>::type;
+                using Scalar      = typename types::ScalarType<Matrix>::type;
+                using Index       = typename types::IndexType<Matrix>::type;
                 using TripletList = detail::TripletList<Scalar, Index>;
 
                 matrix.resize(basis.size(), basis.size(), false);
