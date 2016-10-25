@@ -48,7 +48,9 @@ namespace ieompp
         std::ostream& operator<<(std::ostream& strm, const Operator<Index>& op)
         {
             strm << 'c';
-            if(op.creator) strm << "^†";
+            if(op.creator) {
+                strm << "^†";
+            }
             strm << "_{";
             get_printer_type<Index, DefaultPrinters>::type::print(strm, op.index);
             strm << '}';
@@ -59,7 +61,9 @@ namespace ieompp
         std::ostream& operator<<(std::ostream& strm, const Operator<Index1, Index2>& op)
         {
             strm << 'c';
-            if(op.creator) strm << "^†";
+            if(op.creator) {
+                strm << "^†";
+            }
             strm << "_{";
             get_printer_type<Index1, DefaultPrinters>::type::print(strm, op.index1);
             strm << ',';
@@ -91,7 +95,7 @@ namespace ieompp
                     Printer::print(strm, get_index<N>(op));
                 }
             };
-        }
+        } // namespace detail
 
         template <typename... IndexTypes>
         std::ostream& operator<<(std::ostream& strm, const Operator<IndexTypes...>& op)
@@ -99,13 +103,15 @@ namespace ieompp
             using Op = Operator<IndexTypes...>;
 
             strm << 'c';
-            if(op.creator) strm << "^†";
+            if(op.creator) {
+                strm << "^†";
+            }
             strm << "_{";
             detail::PrintHelper<Op, 0, Op::number_of_indices - 1>::print(strm, op);
             strm << '}';
             return strm;
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

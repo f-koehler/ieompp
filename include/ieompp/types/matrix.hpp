@@ -36,7 +36,7 @@ namespace ieompp
         template <typename T>
         struct MatrixDimensionInfo {
         };
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

@@ -25,7 +25,9 @@ namespace ieompp
 
             void order()
             {
-                if(a > b) std::swap(a, b);
+                if(a > b) {
+                    std::swap(a, b);
+                }
             }
         };
 
@@ -46,7 +48,7 @@ namespace ieompp
         {
             return Kronecker{to_string(a), to_string(b)};
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

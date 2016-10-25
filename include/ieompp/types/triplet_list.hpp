@@ -24,7 +24,7 @@ namespace ieompp
 
                 Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(val) {}
             };
-        }
+        } // namespace detail
 
         template <typename ScalarT, typename IndexT = std::uint64_t>
         class TripletList : public std::vector<detail::Triplet<ScalarT, IndexT>>
@@ -46,16 +46,14 @@ namespace ieompp
             void sort_column_major()
             {
                 std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                    if(a.row < b.row) return true;
-                    return false;
+                    return static_cast<bool>(a.row < b.row);
                 });
             }
 
             void sort_row_major()
             {
                 std::sort(this->begin(), this->end(), [](const Triplet& a, const Triplet& b) {
-                    if(a.column < b.column) return true;
-                    return false;
+                    return static_cast<bool>(a.column < b.column);
                 });
             }
         };
@@ -76,7 +74,7 @@ namespace ieompp
         struct IndexType<TripletList<Scalar, Index>> {
             using type = Index;
         };
-    }
+    } // namespace types
 
 
     template <typename Scalar, typename Index>
@@ -97,7 +95,7 @@ namespace ieompp
                                {"cols", std::to_string(list.cols())}};
         }
     };
-}
+} // namespace ieompp
 
 
 #endif

@@ -19,7 +19,7 @@ namespace ieompp
             strm << t.operators.back();
             return strm;
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

@@ -26,7 +26,7 @@ namespace ieompp
                 strm << std::get<N>(t);
             }
         };
-    }
+    } // namespace detail
 
     template <typename... Ts>
     void print_tuple(std::ostream& strm, const std::tuple<Ts...>& t,
@@ -37,6 +37,6 @@ namespace ieompp
         detail::TuplePrinter<std::tuple<Ts...>, 0, sizeof...(Ts)-1>::print(strm, t, delimiter);
         strm << right;
     }
-}
+} // namespace ieompp
 
 #endif

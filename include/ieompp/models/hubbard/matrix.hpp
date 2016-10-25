@@ -23,7 +23,9 @@ namespace ieompp
 
                 for(typename Basis1Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     const auto neighbors = lattice.neighbors(i);
-                    for(auto neighbor : neighbors) types::matrix_insert(matrix, i, neighbor, -J);
+                    for(auto neighbor : neighbors) {
+                        types::matrix_insert(matrix, i, neighbor, -J);
+                    }
                 }
             }
 
@@ -39,7 +41,9 @@ namespace ieompp
 
                 for(typename Basis3Operator<Term>::Index i = 0; i < basis.N; ++i) {
                     const auto neighbors = lattice.neighbors(i);
-                    for(auto neighbor : neighbors) types::matrix_insert(matrix, i, neighbor, -J);
+                    for(auto neighbor : neighbors) {
+                        types::matrix_insert(matrix, i, neighbor, -J);
+                    }
                 }
 
                 for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
@@ -85,12 +89,13 @@ namespace ieompp
                 for(typename Basis3Operator<Term>::Index i = basis.N; i < basis_size; ++i) {
                     types::matrix_insert(matrix, i, i, U / 2.);
                     const auto& ops = basis[i].operators;
-                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))
+                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1)) {
                         types::matrix_insert(matrix, i, ops[0].index1, U / 2.);
+                    }
                 }
             }
-        }
-    }
-}
+        } // namespace real_space
+    }     // namespace hubbard
+} // namespace ieompp
 
 #endif

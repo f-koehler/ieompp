@@ -159,6 +159,6 @@ namespace ieompp
                     {"  Endian", compose(Platform::endianess())}};
         }
     };
-}
+} // namespace ieompp
 
 #endif

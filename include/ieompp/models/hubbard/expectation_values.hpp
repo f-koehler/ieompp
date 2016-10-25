@@ -93,9 +93,9 @@ namespace ieompp
                     return result;
                 }
             };
-        }
-    }
-}
+        } // namespace real_space
+    }     // namespace hubbard
+} // namespace ieompp
 
 
 #endif

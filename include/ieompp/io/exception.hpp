@@ -13,7 +13,7 @@ namespace ieompp
             IOException(const std::string& msg) : Exception(msg) {}
             IOException(const char* msg) : Exception(msg) {}
         };
-    }
-}
+    } // namespace io
+} // namespace ieompp
 
 #endif

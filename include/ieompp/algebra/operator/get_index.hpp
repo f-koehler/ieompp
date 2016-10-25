@@ -94,7 +94,7 @@ namespace ieompp
         {
             return std::get<I>(op.indices);
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

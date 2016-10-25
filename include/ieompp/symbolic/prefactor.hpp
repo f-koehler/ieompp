@@ -61,11 +61,17 @@ namespace ieompp
 
             void order_kroneckers()
             {
-                for(auto& k : kroneckers) k.order();
+                for(auto& k : kroneckers) {
+                    k.order();
+                }
                 std::sort(kroneckers.begin(), kroneckers.end(),
                           [](const Kronecker& a, const Kronecker& b) {
-                              if(a.a < b.a) return true;
-                              if(a.b > b.a) return false;
+                              if(a.a < b.a) {
+                                  return true;
+                              }
+                              if(a.b > b.a) {
+                                  return false;
+                              }
                               return a.b < b.b;
                           });
             }
@@ -86,16 +92,17 @@ namespace ieompp
                 strm << rhs.value;
                 return strm;
             }
-            if(std::is_signed<Value>::value && (rhs.value == Value(-1)))
+            if(std::is_signed<Value>::value && (rhs.value == Value(-1))) {
                 strm << "-";
-            else if(rhs.value != Value(1))
+            } else if(rhs.value != Value(1)) {
                 strm << rhs.value << u8" ⋅ ";
+            }
             std::copy(rhs.kroneckers.begin(), --rhs.kroneckers.end(),
                       std::ostream_iterator<Kronecker>(strm, " "));
             strm << rhs.kroneckers.back();
             return strm;
         }
-    }
-}
+    } // namespace symbolic
+} // namespace ieompp
 
 #endif

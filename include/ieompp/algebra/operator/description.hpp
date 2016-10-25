@@ -36,6 +36,6 @@ namespace ieompp
                    + get_type_description<Index2>().indent(2);
         }
     };
-}
+} // namespace ieompp
 
 #endif

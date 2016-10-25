@@ -13,8 +13,8 @@ namespace ieompp
         {
             matrix.insert(row, col, value);
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 
 #endif

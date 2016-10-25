@@ -21,7 +21,7 @@ namespace ieompp
                 static constexpr bool value =
                     !std::is_arithmetic<typename IndexType<N, Op>::type>::value;
             };
-        }
+        } // namespace detail
 
         template <typename Op>
         struct IsSymbolicOperator {
@@ -34,7 +34,7 @@ namespace ieompp
             static constexpr bool value =
                 !std::is_arithmetic<typename IndexType<I, Operator>::type>::value;
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

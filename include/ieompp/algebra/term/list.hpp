@@ -24,14 +24,15 @@ namespace ieompp
                     lst.push_back(t);
                     continue;
                 }
-                if(pos->same_operators(t))
+                if(pos->same_operators(t)) {
                     pos->prefactor += t.prefactor;
-                else
+                } else {
                     lst.insert(pos, t);
+                }
             }
             std::copy(lst.begin(), lst.end(), std::back_inserter(result));
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

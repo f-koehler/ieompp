@@ -19,10 +19,12 @@ namespace ieompp
             std::string buf;
             do {
                 std::getline(strm, buf);
-                if(!is_skippable_line(buf)) return buf;
+                if(!is_skippable_line(buf)) {
+                    return buf;
+                }
             } while(true);
         }
-    }
-}
+    } // namespace io
+} // namespace ieompp
 
 #endif

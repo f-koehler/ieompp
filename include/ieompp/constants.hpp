@@ -29,6 +29,6 @@ namespace ieompp
 
     template <typename Float>
     const Float TwoPi<Float>::value = boost::math::constants::two_pi<Float>();
-}
+} // namespace ieompp
 
 #endif

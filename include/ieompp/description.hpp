@@ -76,7 +76,9 @@ namespace ieompp
     {
         std::size_t max_key_len = 0;
         for(const auto& entry : description) {
-            if(entry.second.empty()) continue;
+            if(entry.second.empty()) {
+                continue;
+            }
             max_key_len = std::max(max_key_len, entry.first.size());
         }
 
@@ -85,13 +87,14 @@ namespace ieompp
                 strm << entry.first << '\n';
             } else {
                 strm << entry.first;
-                if(entry.first.size() < max_key_len)
+                if(entry.first.size() < max_key_len) {
                     strm << std::string(max_key_len - entry.first.size(), ' ');
+                }
                 strm << " = " << entry.second << '\n';
             }
         }
         return strm;
     }
-}
+} // namespace ieompp
 
 #endif

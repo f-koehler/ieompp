@@ -19,7 +19,7 @@ namespace ieompp
                 Index row, column;
                 Scalar value;
 
-                Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(val) {}
+                Triplet(Index i, Index j, Scalar val) : row(i), column(j), value(std::move(val)) {}
             };
 
             template <typename Scalar, typename Index>
@@ -32,7 +32,7 @@ namespace ieompp
                               });
                 }
             };
-        }
+        } // namespace detail
 
         namespace real_space
         {
@@ -176,8 +176,9 @@ namespace ieompp
 
                 for(Index row = basis.N; row < basis.size(); ++row) {
                     const auto& ops = basis[row].operators;
-                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))
+                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1)) {
                         matrix.append(row, ops[0].index1, U / 2.);
+                    }
                     matrix.append(row, row, U / 2.);
                     matrix.finalize(row);
                 }
@@ -240,8 +241,9 @@ namespace ieompp
                             row, basis.get_3op_index(ops[0].index1, ops[1].index1, neighbor), J);
                     }
 
-                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1))
+                    if((ops[0].index1 == ops[1].index1) && (ops[0].index1 == ops[2].index1)) {
                         triplets.emplace_back(row, ops[0].index1, U / 2.);
+                    }
                     triplets.emplace_back(row, row, U / 2.);
 
                     triplets.sort();

@@ -15,10 +15,14 @@ namespace ieompp
 
                 auto size_a = a.operators.size();
                 auto size_b = b.operators.size();
-                if(size_a != size_b) return size_a < size_b;
+                if(size_a != size_b) {
+                    return size_a < size_b;
+                }
                 for(auto it_a = a.operators.begin(), it_b = b.operators.begin();
                     it_a != a.operators.end(); ++it_a, ++it_b) {
-                    if(*it_a != *it_b) return op_smaller(*it_a, *it_b);
+                    if(*it_a != *it_b) {
+                        return op_smaller(*it_a, *it_b);
+                    }
                 }
                 return false;
             }
@@ -32,15 +36,19 @@ namespace ieompp
 
                 auto size_a = a.operators.size();
                 auto size_b = b.operators.size();
-                if(size_a != size_b) return size_a > size_b;
+                if(size_a != size_b) {
+                    return size_a > size_b;
+                }
                 for(auto it_a = a.operators.begin(), it_b = b.operators.begin();
                     it_a != a.operators.end(); ++it_a, ++it_b) {
-                    if(*it_a != *it_b) return op_greater(*it_a, *it_b);
+                    if(*it_a != *it_b) {
+                        return op_greater(*it_a, *it_b);
+                    }
                 }
                 return false;
             }
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

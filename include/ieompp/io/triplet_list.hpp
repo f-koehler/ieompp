@@ -33,11 +33,13 @@ namespace ieompp
                 std::string buf;
                 do {
                     std::getline(strm, buf);
-                    if(is_skippable_line(buf)) continue;
+                    if(is_skippable_line(buf)) {
+                        continue;
+                    }
                 } while(!strm.eof());
             }
         }
-    }
-}
+    } // namespace io
+} // namespace ieompp
 
 #endif

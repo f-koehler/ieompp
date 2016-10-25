@@ -14,7 +14,9 @@ namespace ieompp
     {
         std::size_t longest = 0;
         for(auto& entry : description) {
-            if(!entry.second.empty()) longest = std::max(longest, entry.second.size());
+            if(!entry.second.empty()) {
+                longest = std::max(longest, entry.second.size());
+            }
         }
 
         std::function<void(const std::string&)> log_f;
@@ -44,6 +46,6 @@ namespace ieompp
         }
         log_f("");
     }
-}
+} // namespace ieompp
 
 #endif

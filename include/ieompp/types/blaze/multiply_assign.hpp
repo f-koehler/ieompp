@@ -36,7 +36,7 @@ namespace ieompp
 
             vector.swap(temp);
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

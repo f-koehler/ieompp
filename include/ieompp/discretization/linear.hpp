@@ -108,8 +108,12 @@ namespace ieompp
         LinearDiscretization<Float, Index>::closest(Vector v) const
         {
             const auto dx2 = _dx / 2;
-            while(v < _x_min - dx2) v += _x_length;
-            while(v > _x_max + dx2) v -= _x_length;
+            while(v < _x_min - dx2) {
+                v += _x_length;
+            }
+            while(v > _x_max + dx2) {
+                v -= _x_length;
+            }
             Float min_dist = ((*this)[Index(0)] - v) * ((*this)[Index(0)] - v), dist;
             Index min      = 0;
             for(auto idx : *this) {
@@ -239,11 +243,15 @@ namespace ieompp
                                 Index>::type
         LinearDiscretization<Float, Index>::operator()(VectorT v) const
         {
-            while(v < _x_min) v += _x_length;
-            while(v > _x_max) v -= _x_length;
+            while(v < _x_min) {
+                v += _x_length;
+            }
+            while(v > _x_max) {
+                v -= _x_length;
+            }
             return Index(std::round((v - _x_min) / _dx)) % _num;
         }
-    }
+    } // namespace discretization
 
     template <typename Float, typename Index>
     struct TypeDescription<discretization::LinearDiscretization<Float, Index>> {
@@ -265,6 +273,6 @@ namespace ieompp
             // TODO: be more verbose
         }
     };
-}
+} // namespace ieompp
 
 #endif

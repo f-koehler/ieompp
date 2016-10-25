@@ -13,7 +13,7 @@ namespace ieompp
                                           && std::is_integral<typename Operator::Index1>::value
                                           && std::is_same<typename Operator::Index2, bool>::value;
         };
-    }
-}
+    } // namespace hubbard
+} // namespace ieompp
 
 #endif

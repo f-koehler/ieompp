@@ -34,7 +34,7 @@ namespace ieompp
             struct RealTypeHelper<T, true> {
                 using type = typename T::value_type;
             };
-        }
+        } // namespace detail
 
         template <typename T>
         struct RealType {
@@ -94,7 +94,7 @@ namespace ieompp
         {
             return t;
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

@@ -116,6 +116,6 @@ namespace ieompp
             return {{"type", compose("complex<", types::type_name<Float>::name, ">")}};
         }
     };
-}
+} // namespace ieompp
 
 #endif

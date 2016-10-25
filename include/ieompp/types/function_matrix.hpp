@@ -36,10 +36,14 @@ namespace ieompp
             template <typename Matrix>
             bool operator==(const Matrix& rhs) const
             {
-                if((_rows != rhs.rows()) || (_cols != rhs.cols())) return false;
+                if((_rows != rhs.rows()) || (_cols != rhs.cols())) {
+                    return false;
+                }
                 for(Index row = 0; row < _rows; ++row) {
                     for(Index col = 0; col < _cols; ++col) {
-                        if(!IsEqual(_f(row, col), rhs(row, col))) return false;
+                        if(!IsEqual(_f(row, col), rhs(row, col))) {
+                            return false;
+                        }
                     }
                 }
                 return true;
@@ -48,10 +52,14 @@ namespace ieompp
             template <typename Matrix>
             bool operator!=(const Matrix& rhs) const
             {
-                if((_rows != rhs.rows()) || (_cols != rhs.cols())) return true;
+                if((_rows != rhs.rows()) || (_cols != rhs.cols())) {
+                    return true;
+                }
                 for(Index row = 0; row < _rows; ++row) {
                     for(Index col = 0; col < _cols; ++col) {
-                        if(!IsEqual(_f(row, col), rhs(row, col))) return true;
+                        if(!IsEqual(_f(row, col), rhs(row, col))) {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -90,12 +98,16 @@ namespace ieompp
         template <typename Scalar, typename Index>
         bool is_symmetric(const FunctionMatrix<Scalar, Index>& matrix)
         {
-            if(!is_quadratic(matrix)) return false;
+            if(!is_quadratic(matrix)) {
+                return false;
+            }
 
             const Index N = matrix.rows();
             for(Index row = 0; row < N; ++row) {
                 for(Index col = 0; col < row; ++col) {
-                    if(!IsEqual(matrix(row, col), matrix(col, row))) return false;
+                    if(!IsEqual(matrix(row, col), matrix(col, row))) {
+                        return false;
+                    }
                 }
             }
 
@@ -105,18 +117,22 @@ namespace ieompp
         template <typename Scalar, typename Index>
         bool is_hermitian(const FunctionMatrix<Scalar, Index>& matrix)
         {
-            if(!is_quadratic(matrix)) return false;
+            if(!is_quadratic(matrix)) {
+                return false;
+            }
 
             const Index N = matrix.rows();
             for(Index row = 0; row < N; ++row) {
                 for(Index col = 0; col <= row; ++col) {
-                    if(!IsEqual(matrix(row, col), conjugate(matrix(col, row)))) return false;
+                    if(!IsEqual(matrix(row, col), conjugate(matrix(col, row)))) {
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

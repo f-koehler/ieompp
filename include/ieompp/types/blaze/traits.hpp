@@ -153,7 +153,8 @@ namespace ieompp
                 return v.size();
             }
 
-            static blaze::size_t columns(const blaze::DynamicVector<Scalar, TransposeFlag>&)
+            static blaze::size_t
+            columns(const blaze::DynamicVector<Scalar, TransposeFlag>& /*unused*/)
             {
                 return 1;
             }
@@ -166,12 +167,13 @@ namespace ieompp
                 return v.size();
             }
 
-            static blaze::size_t columns(const blaze::CompressedVector<Scalar, TransposeFlag>&)
+            static blaze::size_t
+            columns(const blaze::CompressedVector<Scalar, TransposeFlag>& /*unused*/)
             {
                 return 1;
             }
         };
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

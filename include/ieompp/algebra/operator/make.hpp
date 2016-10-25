@@ -52,7 +52,7 @@ namespace ieompp
             return Operator<typename std::decay<Indices>::type...>{
                 false, std::make_tuple(std::forward<Indices>(indices)...)};
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

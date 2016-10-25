@@ -30,13 +30,17 @@ namespace ieompp
                 Term conj{prefactor, {}};
                 std::reverse_copy(operators.begin(), operators.end(),
                                   std::back_inserter(conj.operators));
-                for(auto& op : conj.operators) op.creator = !op.creator;
+                for(auto& op : conj.operators) {
+                    op.creator = !op.creator;
+                }
                 return conj;
             }
 
             bool same_operators(const Term& rhs) const
             {
-                if(operators.size() != rhs.operators.size()) return false;
+                if(operators.size() != rhs.operators.size()) {
+                    return false;
+                }
                 return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
             }
 
@@ -89,8 +93,8 @@ namespace ieompp
         struct IsTerm<Term<Prefactor, Operator, Container>> {
             static constexpr bool value = true;
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 
 #endif

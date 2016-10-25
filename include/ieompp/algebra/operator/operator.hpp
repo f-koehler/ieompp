@@ -92,7 +92,7 @@ namespace ieompp
         struct IsOperator<Operator<Ts...>> {
             static constexpr bool value = true;
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

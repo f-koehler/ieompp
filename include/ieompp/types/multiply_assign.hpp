@@ -10,7 +10,7 @@ namespace ieompp
         {
             vector = matrix * vector;
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

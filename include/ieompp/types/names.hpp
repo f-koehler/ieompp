@@ -71,7 +71,7 @@ namespace ieompp
         struct type_name<long double> {
             static constexpr auto name = "long double";
         };
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

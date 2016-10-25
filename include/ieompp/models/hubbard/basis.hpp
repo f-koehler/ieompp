@@ -26,7 +26,9 @@ namespace ieompp
                 Basis1Operator(const Lattice& lattice) : N(lattice.num())
                 {
                     this->reserve(N);
-                    for(auto i : lattice) this->emplace_back(Term{1, {{true, i, true}}});
+                    for(auto i : lattice) {
+                        this->emplace_back(Term{1, {{true, i, true}}});
+                    }
                 }
             };
 
@@ -47,12 +49,15 @@ namespace ieompp
                     // TODO: emplace
                     this->reserve(N * (N * N + 1));
 
-                    for(auto i : lattice) this->push_back(Term{1, {{true, i, true}}});
+                    for(auto i : lattice) {
+                        this->push_back(Term{1, {{true, i, true}}});
+                    }
                     for(auto i1 : lattice) {
                         for(auto i2 : lattice) {
-                            for(auto i3 : lattice)
+                            for(auto i3 : lattice) {
                                 this->push_back(Term{
                                     1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
+                            }
                         }
                     }
                 }
@@ -83,7 +88,9 @@ namespace ieompp
                     // TODO: emplace?
                     this->reserve(N * N + 1);
 
-                    for(auto i : momentum_space) this->push_back(Term{1, {{true, q_idx, true}}});
+                    for(auto i : momentum_space) {
+                        this->push_back(Term{1, {{true, q_idx, true}}});
+                    }
 
                     const auto q = momentum_space[q_idx];
                     for(auto i1 : momentum_space) {

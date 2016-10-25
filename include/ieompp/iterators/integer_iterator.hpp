@@ -232,7 +232,7 @@ namespace ieompp
         {
             return IntegerIterator<T, const_iterator>(diff - it._val);
         }
-    }
-}
+    } // namespace iterators
+} // namespace ieompp
 
 #endif

@@ -20,12 +20,16 @@ namespace ieompp
         {
             using Index = typename IndexType<Matrix>::Index;
 
-            if(!is_quadratic(m)) return false;
+            if(!is_quadratic(m)) {
+                return false;
+            }
 
             const Index N = MatrixDimensionInfo<Matrix>::rows(m);
             for(Index i = 0; i < N; ++i) {
                 for(Index j = 0; j < i; ++j) {
-                    if(!IsEqual(m(i, j), m(j, i))) return false;
+                    if(!IsEqual(m(i, j), m(j, i))) {
+                        return false;
+                    }
                 }
             }
 
@@ -37,12 +41,16 @@ namespace ieompp
         {
             using Index = typename IndexType<Matrix>::Index;
 
-            if(!is_quadratic(m)) return false;
+            if(!is_quadratic(m)) {
+                return false;
+            }
 
             const Index N = MatrixDimensionInfo<Matrix>::rows(m);
             for(Index i = 0; i < N; ++i) {
                 for(Index j = 0; j <= i; ++j) {
-                    if(!IsEqual(m(i, j), conjugate(m(i, j)))) return false;
+                    if(!IsEqual(m(i, j), conjugate(m(i, j)))) {
+                        return false;
+                    }
                 }
             }
 
@@ -57,12 +65,14 @@ namespace ieompp
             const auto cols = MatrixDimensionInfo<Matrix>::columns(m);
             for(Index i = 0; i < rows; ++i) {
                 for(Index j = 0; j < cols; ++j) {
-                    if(!IsZero(t(i, j))) return false;
+                    if(!IsZero(t(i, j))) {
+                        return false;
+                    }
                 }
             }
             return true;
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

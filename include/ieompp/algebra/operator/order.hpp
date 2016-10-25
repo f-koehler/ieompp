@@ -16,7 +16,9 @@ namespace ieompp
                 {
                     auto& a_idx = get_index<I>(a);
                     auto& b_idx = get_index<I>(b);
-                    if(a_idx != b_idx) return a_idx < b_idx;
+                    if(a_idx != b_idx) {
+                        return a_idx < b_idx;
+                    }
                     return OperatorComparisonHelperRec<Operator, I + 1, N>::smaller(a, b);
                 }
 
@@ -24,7 +26,9 @@ namespace ieompp
                 {
                     auto& a_idx = get_index<I>(a);
                     auto& b_idx = get_index<I>(b);
-                    if(a_idx != b_idx) return a_idx > b_idx;
+                    if(a_idx != b_idx) {
+                        return a_idx > b_idx;
+                    }
                     return OperatorComparisonHelperRec<Operator, I + 1, N>::greater(a, b);
                 }
             };
@@ -49,12 +53,16 @@ namespace ieompp
             struct OperatorComparisonHelper {
                 static bool smaller(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return a.creator;
+                    if(a.creator != b.creator) {
+                        return a.creator;
+                    }
                     return OperatorComparisonHelperRec<Operator, 0, N>::smaller(a, b);
                 }
                 static bool greater(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return b.creator;
+                    if(a.creator != b.creator) {
+                        return b.creator;
+                    }
                     return OperatorComparisonHelperRec<Operator, 0, N>::greater(a, b);
                 }
             };
@@ -64,12 +72,16 @@ namespace ieompp
             struct OperatorComparisonHelper<Operator, 1> {
                 static bool smaller(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return a.creator;
+                    if(a.creator != b.creator) {
+                        return a.creator;
+                    }
                     return a.index < b.index;
                 }
                 static bool greater(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return b.creator;
+                    if(a.creator != b.creator) {
+                        return b.creator;
+                    }
                     return a.index > b.index;
                 }
             };
@@ -78,18 +90,26 @@ namespace ieompp
             struct OperatorComparisonHelper<Operator, 2> {
                 static bool smaller(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return a.creator;
-                    if(a.index1 != b.index1) return a.index1 < b.index1;
+                    if(a.creator != b.creator) {
+                        return a.creator;
+                    }
+                    if(a.index1 != b.index1) {
+                        return a.index1 < b.index1;
+                    }
                     return a.index2 < b.index2;
                 }
                 static bool greater(const Operator& a, const Operator& b)
                 {
-                    if(a.creator != b.creator) return b.creator;
-                    if(a.index1 != b.index1) return a.index1 > b.index1;
+                    if(a.creator != b.creator) {
+                        return b.creator;
+                    }
+                    if(a.index1 != b.index1) {
+                        return a.index1 > b.index1;
+                    }
                     return a.index2 > b.index2;
                 }
             };
-        }
+        } // namespace detail
 
         template <typename Operator>
         struct OperatorSmaller {
@@ -108,7 +128,7 @@ namespace ieompp
                                                         Operator::number_of_indices>::greater(a, b);
             }
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

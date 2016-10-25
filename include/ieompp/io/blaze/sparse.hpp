@@ -30,7 +30,7 @@ namespace ieompp
             blaze::Archive<std::ifstream> archive(path);
             archive >> matrix;
         }
-    }
-}
+    } // namespace io
+} // namespace ieompp
 
 #endif

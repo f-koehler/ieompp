@@ -18,10 +18,11 @@ namespace ieompp
             auto momentum = momentum_space.lattice_vectors()[0];
             momentum.setZero();
             for(auto& op : t.operators) {
-                if(op.creator)
+                if(op.creator) {
                     momentum += momentum_space[get_index<Index>(op)];
-                else
+                } else {
                     momentum -= momentum_space[get_index<Index>(op)];
+                }
             }
             return momentum;
         }
@@ -35,10 +36,11 @@ namespace ieompp
 
             int spin = 0;
             for(auto& op : t.operators) {
-                if(op.creator)
+                if(op.creator) {
                     spin += get_index<Index>(op) ? 1 : -1;
-                else
+                } else {
                     spin -= get_index<Index>(op) ? 1 : -1;
+                }
             }
             return spin;
         }
@@ -48,14 +50,15 @@ namespace ieompp
         {
             int creations = 0;
             for(auto& op : t.operators) {
-                if(op.creator)
+                if(op.creator) {
                     ++creations;
-                else
+                } else {
                     --creations;
+                }
             }
             return creations;
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

@@ -13,7 +13,7 @@ namespace ieompp
         const std::string _msg;
 
     public:
-        Exception(const std::string& msg) : _msg(msg) {}
+        Exception(std::string msg) : _msg(std::move(msg)) {}
         Exception(const char* msg) : _msg(msg) {}
         const char* what() const noexcept override { return _msg.c_str(); }
     };
@@ -32,7 +32,7 @@ namespace ieompp
         strm << file << ':' << line << ": " << msg;
         return T(strm.str());
     }
-}
+} // namespace ieompp
 
 #define THROW(type, msg) throw ieompp::create_exception<type>(__FILE__, __LINE__, msg);
 

@@ -20,9 +20,12 @@ namespace ieompp
             struct AnticommutatesHelper {
                 static bool call(const Operator& a, const Operator& b)
                 {
-                    if(IsSymbolicIndex<I, Operator>::value)
+                    if(IsSymbolicIndex<I, Operator>::value) {
                         return AnticommutatesHelper<Operator, I + 1, N>::call(a, b);
-                    if(get_index<I>(a) != get_index<I>(b)) return true;
+                    }
+                    if(get_index<I>(a) != get_index<I>(b)) {
+                        return true;
+                    }
                     return AnticommutatesHelper<Operator, I + 1, N>::call(a, b);
                 }
             };
@@ -31,7 +34,9 @@ namespace ieompp
             struct AnticommutatesHelper<Operator, N, N> {
                 static bool call(const Operator& a, const Operator& b)
                 {
-                    if(IsSymbolicIndex<N, Operator>::value) return false;
+                    if(IsSymbolicIndex<N, Operator>::value) {
+                        return false;
+                    }
                     return (get_index<N>(a) != get_index<N>(b));
                 }
             };
@@ -43,7 +48,9 @@ namespace ieompp
                     if(IsSymbolicIndex<I, Operator>::value) {
                         auto& idx1 = get_index<I>(op1);
                         auto& idx2 = get_index<I>(op2);
-                        if(idx1 != idx2) prefactor *= make_kronecker(idx1, idx2);
+                        if(idx1 != idx2) {
+                            prefactor *= make_kronecker(idx1, idx2);
+                        }
                     }
                     return AnticommutatorHelper<Operator, Prefactor, I + 1, N>::call(op1, op2,
                                                                                      prefactor);
@@ -57,11 +64,13 @@ namespace ieompp
                     if(IsSymbolicIndex<N, Operator>::value) {
                         auto& idx1 = get_index<N>(op1);
                         auto& idx2 = get_index<N>(op2);
-                        if(idx1 != idx2) prefactor *= make_kronecker(idx1, idx2);
+                        if(idx1 != idx2) {
+                            prefactor *= make_kronecker(idx1, idx2);
+                        }
                     }
                 }
             };
-        }
+        } // namespace detail
 
         template <typename Operator>
         typename std::enable_if<!IsSymbolicOperator<Operator>::value, bool>::type
@@ -98,7 +107,7 @@ namespace ieompp
             (void)op2;
             (void)prefactor;
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

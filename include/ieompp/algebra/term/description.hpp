@@ -16,6 +16,6 @@ namespace ieompp
             // TODO: add container description
         }
     };
-}
+} // namespace ieompp
 
 #endif

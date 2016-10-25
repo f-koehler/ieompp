@@ -14,6 +14,6 @@ namespace ieompp
         (void)_;
         return strm.str();
     }
-}
+} // namespace ieompp
 
 #endif

@@ -26,7 +26,7 @@ namespace ieompp
                 static constexpr bool value =
                     std::is_same<typename IndexType<N, Op>::type, T>::value;
             };
-        }
+        } // namespace detail
 
         template <typename Op, typename T>
         struct HasIndexOfType {
@@ -35,7 +35,7 @@ namespace ieompp
             static constexpr bool value =
                 detail::HasIndexOfTypeHelper<Op, T, 0, Op::number_of_indices>::value;
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif
