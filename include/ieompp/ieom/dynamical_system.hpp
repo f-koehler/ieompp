@@ -3,8 +3,8 @@
 
 #include <Eigen/Dense>
 
-#include <ieompp/exception.hpp>
-#include <ieompp/ieom/basis.hpp>
+#include "ieompp/exception.hpp"
+#include "ieompp/ieom/basis.hpp"
 
 namespace ieompp
 {

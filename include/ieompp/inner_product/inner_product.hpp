@@ -4,10 +4,10 @@
 #include <iostream>
 #include <unordered_map>
 
-#include <ieompp/algebra/operator.hpp>
-#include <ieompp/algebra/term.hpp>
-#include <ieompp/inner_product/term_structure.hpp>
-#include <ieompp/symbolic/prefactor.hpp>
+#include "ieompp/algebra/operator.hpp"
+#include "ieompp/algebra/term.hpp"
+#include "ieompp/inner_product/term_structure.hpp"
+#include "ieompp/symbolic/prefactor.hpp"
 
 namespace ieompp
 {

@@ -1,7 +1,7 @@
 #ifndef IEOMPP_IO_EXCEPTION_HPP_
 #define IEOMPP_IO_EXCEPTION_HPP_
 
-#include <ieompp/exception.hpp>
+#include "ieompp/exception.hpp"
 
 namespace ieompp
 {

@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <vector>
 
-#include <ieompp/algebra/kronecker.hpp>
+#include "ieompp/algebra/kronecker.hpp"
 
 namespace ieompp
 {

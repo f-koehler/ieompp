@@ -1,8 +1,8 @@
 #ifndef IEOMPP_ALGEBRA_OPERATOR_ORDER_HPP_
 #define IEOMPP_ALGEBRA_OPERATOR_ORDER_HPP_
 
-#include <ieompp/algebra/operator/get_index.hpp>
-#include <ieompp/algebra/operator/operator.hpp>
+#include "ieompp/algebra/operator/get_index.hpp"
+#include "ieompp/algebra/operator/operator.hpp"
 
 namespace ieompp
 {

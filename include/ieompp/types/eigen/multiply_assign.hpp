@@ -5,7 +5,7 @@
 
 #include <Eigen/Dense>
 
-#include <ieompp/types/function_matrix.hpp>
+#include "ieompp/types/function_matrix.hpp"
 
 namespace ieompp
 {

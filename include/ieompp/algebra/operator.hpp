@@ -1,12 +1,12 @@
 #ifndef IEOMPP_ALGEBRA_OPERATOR_HPP_
 #define IEOMPP_ALGEBRA_OPERATOR_HPP_
 
-#include <ieompp/algebra/operator/description.hpp>
-#include <ieompp/algebra/operator/get_index.hpp>
-#include <ieompp/algebra/operator/io.hpp>
-#include <ieompp/algebra/operator/make.hpp>
-#include <ieompp/algebra/operator/operator.hpp>
-#include <ieompp/algebra/operator/order.hpp>
+#include "ieompp/algebra/operator/description.hpp"
+#include "ieompp/algebra/operator/get_index.hpp"
+#include "ieompp/algebra/operator/io.hpp"
+#include "ieompp/algebra/operator/make.hpp"
+#include "ieompp/algebra/operator/operator.hpp"
+#include "ieompp/algebra/operator/order.hpp"
 
 namespace ieompp
 {

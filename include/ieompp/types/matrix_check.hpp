@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include <ieompp/types/matrix.hpp>
+#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {

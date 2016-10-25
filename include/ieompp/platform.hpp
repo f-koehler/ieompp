@@ -13,9 +13,9 @@
 #include <unistd.h>
 #endif
 
-#include <ieompp/description.hpp>
-#include <ieompp/string.hpp>
-#include <ieompp/version.hpp>
+#include "ieompp/description.hpp"
+#include "ieompp/string.hpp"
+#include "ieompp/version.hpp"
 
 namespace ieompp
 {

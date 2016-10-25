@@ -5,10 +5,10 @@
 #include <type_traits>
 #include <vector>
 
-#include <ieompp/algebra/kronecker.hpp>
-#include <ieompp/algebra/operator/get_index.hpp>
-#include <ieompp/algebra/operator/is_symbolic.hpp>
-#include <ieompp/algebra/operator/operator.hpp>
+#include "ieompp/algebra/kronecker.hpp"
+#include "ieompp/algebra/operator/get_index.hpp"
+#include "ieompp/algebra/operator/is_symbolic.hpp"
+#include "ieompp/algebra/operator/operator.hpp"
 
 namespace ieompp
 {

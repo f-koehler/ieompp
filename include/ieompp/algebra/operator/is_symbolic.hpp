@@ -1,7 +1,7 @@
 #ifndef IEOMPP_ALGEBRA_IS_SYMBOLIC_HPP_
 #define IEOMPP_ALGEBRA_IS_SYMBOLIC_HPP_
 
-#include <ieompp/algebra/operator/get_index.hpp>
+#include "ieompp/algebra/operator/get_index.hpp"
 
 namespace ieompp
 {

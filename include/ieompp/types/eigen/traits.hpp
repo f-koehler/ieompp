@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
-#include <ieompp/types/matrix.hpp>
+#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {

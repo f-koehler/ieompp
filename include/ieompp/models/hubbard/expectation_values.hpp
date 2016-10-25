@@ -4,11 +4,11 @@
 #include <array>
 #include <cmath>
 
-#include <ieompp/constants.hpp>
-#include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/types/matrix.hpp>
-#include <ieompp/types/number.hpp>
+#include "ieompp/constants.hpp"
+#include "ieompp/discretization/linear.hpp"
+#include "ieompp/models/hubbard/basis.hpp"
+#include "ieompp/types/matrix.hpp"
+#include "ieompp/types/number.hpp"
 
 namespace ieompp
 {

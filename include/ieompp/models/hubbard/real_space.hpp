@@ -6,10 +6,10 @@
 #include <type_traits>
 #include <vector>
 
-#include <ieompp/constraints.hpp>
-#include <ieompp/exception.hpp>
-#include <ieompp/hubbard/dispersion.hpp>
-#include <ieompp/types/dot_product.hpp>
+#include "ieompp/constraints.hpp"
+#include "ieompp/exception.hpp"
+#include "ieompp/hubbard/dispersion.hpp"
+#include "ieompp/types/dot_product.hpp"
 
 namespace ieompp
 {

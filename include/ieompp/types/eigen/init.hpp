@@ -1,7 +1,7 @@
 #ifndef IEOMPP_TYPES_EIGEN_INIT_HPP_
 #define IEOMPP_TYPES_EIGEN_INIT_HPP_
 
-#include <ieompp/types/eigen/traits.hpp>
+#include "ieompp/types/eigen/traits.hpp"
 
 namespace ieompp
 {

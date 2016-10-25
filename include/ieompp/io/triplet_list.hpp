@@ -5,8 +5,8 @@
 #include <ostream>
 #include <string>
 
-#include <ieompp/io/line.hpp>
-#include <ieompp/types/triplet_list.hpp>
+#include "ieompp/io/line.hpp"
+#include "ieompp/types/triplet_list.hpp"
 
 namespace ieompp
 {

@@ -4,8 +4,8 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
-#include <ieompp/description.hpp>
-#include <ieompp/string.hpp>
+#include "ieompp/description.hpp"
+#include "ieompp/string.hpp"
 
 namespace ieompp
 {

@@ -4,7 +4,7 @@
 #include <iterator>
 #include <ostream>
 
-#include <ieompp/algebra/term/term.hpp>
+#include "ieompp/algebra/term/term.hpp"
 
 namespace ieompp
 {

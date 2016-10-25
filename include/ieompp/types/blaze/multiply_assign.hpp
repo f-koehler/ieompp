@@ -5,7 +5,7 @@
 
 #include <blaze/math/DynamicVector.h>
 
-#include <ieompp/types/function_matrix.hpp>
+#include "ieompp/types/function_matrix.hpp"
 
 namespace ieompp
 {

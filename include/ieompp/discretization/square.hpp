@@ -13,8 +13,8 @@
 #include <Eigen/Dense>
 #pragma GCC diagnostic pop
 
-#include <ieompp/constants.hpp>
-#include <ieompp/iterators/integer_iterator.hpp>
+#include "ieompp/constants.hpp"
+#include "ieompp/iterators/integer_iterator.hpp"
 
 namespace ieompp
 {

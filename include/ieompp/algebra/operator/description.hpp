@@ -1,9 +1,9 @@
 #ifndef IEOMPP_ALGEBRA_OPERATOR_DESCRIPTION_HPP_
 #define IEOMPP_ALGEBRA_OPERATOR_DESCRIPTION_HPP_
 
-#include <ieompp/algebra/operator/operator.hpp>
-#include <ieompp/description.hpp>
-#include <ieompp/types/description.hpp>
+#include "ieompp/algebra/operator/operator.hpp"
+#include "ieompp/description.hpp"
+#include "ieompp/types/description.hpp"
 
 namespace ieompp
 {

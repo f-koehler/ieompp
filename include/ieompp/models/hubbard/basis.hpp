@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include <ieompp/description.hpp>
-#include <ieompp/models/hubbard/operator.hpp>
+#include "ieompp/description.hpp"
+#include "ieompp/models/hubbard/operator.hpp"
 
 namespace ieompp
 {

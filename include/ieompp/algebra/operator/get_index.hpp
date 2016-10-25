@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include <ieompp/algebra/operator/operator.hpp>
+#include "ieompp/algebra/operator/operator.hpp"
 
 namespace ieompp
 {

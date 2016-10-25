@@ -5,7 +5,7 @@
 #include <functional>
 #include <list>
 
-#include <ieompp/algebra/term/order.hpp>
+#include "ieompp/algebra/term/order.hpp"
 
 namespace ieompp
 {

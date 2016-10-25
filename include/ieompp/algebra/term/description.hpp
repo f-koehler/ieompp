@@ -1,8 +1,8 @@
 #ifndef IEOMPP_ALGEBRA_TERM_DESCRIPTION_HPP_
 #define IEOMPP_ALGEBRA_TERM_DESCRIPTION_HPP_
 
-#include <ieompp/algebra/term/term.hpp>
-#include <ieompp/description.hpp>
+#include "ieompp/algebra/term/term.hpp"
+#include "ieompp/description.hpp"
 
 namespace ieompp
 {

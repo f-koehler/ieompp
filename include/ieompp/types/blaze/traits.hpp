@@ -7,7 +7,7 @@
 #include <blaze/math/DynamicVector.h>
 #include <blaze/util/Types.h>
 
-#include <ieompp/types/matrix.hpp>
+#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {

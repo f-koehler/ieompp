@@ -3,9 +3,9 @@
 
 #include <cassert>
 
-#include <ieompp/description.hpp>
-#include <ieompp/ode/step_size_controller.hpp>
-#include <ieompp/types/matrix_check.hpp>
+#include "ieompp/description.hpp"
+#include "ieompp/ode/step_size_controller.hpp"
+#include "ieompp/types/matrix_check.hpp"
 
 namespace ieompp
 {

@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <ostream>
 
-#include <ieompp/types/number.hpp>
+#include "ieompp/types/number.hpp"
 
 namespace ieompp
 {

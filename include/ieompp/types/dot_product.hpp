@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include <ieompp/types/eigen.hpp>
+#include "ieompp/types/eigen.hpp"
 
 namespace ieompp
 {
