@@ -52,6 +52,9 @@ namespace ieompp
             const Float& dx() const;
             const std::array<Vector, 1>& lattice_vectors() const;
 
+            template <uint64_t axis = 0>
+            Index lattice_distance(const Index& a, const Index& b) const;
+
             bool neighboring(const Index a, const Index b) const;
 
             ConstIndexIterator begin() const;
@@ -176,6 +179,24 @@ namespace ieompp
         LinearDiscretization<Float, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
+        }
+
+        template <typename Float, typename Index>
+        template <uint64_t axis>
+        Index LinearDiscretization<Float, Index>::lattice_distance(const Index& a,
+                                                                   const Index& b) const
+        {
+            static const Index max_dist = _num / 2;
+            Index dist                  = 0;
+            if(b > a) {
+                dist = b - a;
+            } else {
+                dist = a - b;
+            }
+            if(dist > max_dist) {
+                return _num - max_dist;
+            }
+            return dist;
         }
 
 

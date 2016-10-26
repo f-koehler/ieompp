@@ -10,6 +10,8 @@ using namespace std;
 #include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/models/hubbard/matrix_blaze.hpp>
+#include <ieompp/models/hubbard/expectation_value.hpp>
+#include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
@@ -21,26 +23,31 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
-    const std::string program_name("hubbard_matrix_1d_real");
+    const std::string program_name("hubbard_kinetic_1d_real_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
                                         "lattice in real space and solve the ODE system using RK4 "
                                         "while writing site 0 occupation to file\n\nOptions");
+    // clang-format off
     description.add_options()
         ("help", "print this help message")
         ("version", "print version information")
-        ("N", po::value<size_t>()->default_value(16), "number of lattice sites")
+        ("N", po::value<uint64_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("dt", po::value<double>()->default_value(0.01), "step width of RK4 integrator")
-        ("t_end", po::value<double>()->default_value(10.), "stop time of integration")
-        ("out", po::value<string>()->default_value("hubbard_1d_real_rk4.txt"), "output file")
-        ("log", po::value<string>()->default_value("hubbard_1d_real_rk4.log"), "log file");
+        ("steps", po::value<uint64_t>()->default_value(1000), "number of integrator steps")
+        ("measurement_interval", po::value<uint64_t>()->default_value(10), "interval between measurements")
+        ("flush_interval", po::value<uint64_t>()->default_value(100), "steps between flushes of output file")
+        ("out", po::value<string>()->default_value(program_name + ".txt"), "output file")
+        ("log", po::value<string>()->default_value(program_name + ".log"), "log file");
+    // clang-format on
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, description), vm);
     po::notify(vm);
 
     if(vm.count("help") != 0u) {
+        cout << program_name << "\n\n";
         cout << description << '\n';
         return 1;
     }
@@ -50,21 +57,27 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    const auto N        = vm["N"].as<size_t>();
-    const auto J        = vm["J"].as<double>();
-    const auto dt       = vm["dt"].as<double>();
-    const auto t_end    = vm["t_end"].as<double>();
-    const auto out_path = vm["out"].as<string>();
-    const auto log_path = vm["log"].as<string>();
+    const auto N                    = vm["N"].as<uint64_t>();
+    const auto J                    = vm["J"].as<double>();
+    const auto dt                   = vm["dt"].as<double>();
+    const auto steps                = vm["steps"].as<uint64_t>();
+    const auto measurement_interval = vm["measurement_interval"].as<uint_fast64_t>();
+    const auto flush_interval       = vm["flush_interval"].as<uint64_t>();
+    const auto out_path             = vm["out"].as<string>();
+    const auto log_path             = vm["log"].as<string>();
 
     // setting up logging facilities
     vector<spd::sink_ptr> logging_sinks;
-    logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_st>());
-    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_st>(log_path, true));
-    auto main_logger = std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
-    auto io_logger = std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
-    auto hubbard_logger = std::make_shared<spd::logger>("hubbard", logging_sinks.begin(), logging_sinks.end());
-    auto ode_logger = std::make_shared<spd::logger>("ode", logging_sinks.begin(), logging_sinks.end());
+    logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_mt>());
+    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_mt>(log_path, true));
+    auto main_logger =
+        std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
+    auto io_logger =
+        std::make_shared<spd::logger>("io", logging_sinks.begin(), logging_sinks.end());
+    auto hubbard_logger =
+        std::make_shared<spd::logger>("hubbard", logging_sinks.begin(), logging_sinks.end());
+    auto ode_logger =
+        std::make_shared<spd::logger>("ode", logging_sinks.begin(), logging_sinks.end());
 
     main_logger->info("CLI options:");
     main_logger->info("  N   = {}", N);
@@ -74,15 +87,17 @@ int main(int argc, char** argv)
 
     // setting up a lattice
     hubbard_logger->info("setting up a lattice");
-    discretization::LinearDiscretization<double, size_t> lattice(N, 1.);
+    discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
     log(hubbard_logger, get_description(lattice));
 
-    using Operator = algebra::Operator<size_t, bool>;
+    using Operator = algebra::Operator<uint64_t, bool>;
     using Term     = algebra::Term<double, Operator>;
 
     // init operator basis
+    using Basis = hubbard::real_space::Basis1Operator<Term>;
+
     hubbard_logger->info("Setting up operator basis");
-    hubbard::real_space::Basis1Operator<Term> basis(lattice);
+    Basis basis(lattice);
     log(hubbard_logger, get_description(basis));
 
     // computing matrix
@@ -102,10 +117,41 @@ int main(int argc, char** argv)
     //
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
-    for(auto t = 0.; t < t_end; t += dt) {
-        ode_logger->info("Performing step at t={}", t);
+    hubbard::real_space::ParticleNumber<decltype(basis)> observable{
+        hubbard::real_space::ExpectationValue1DHalfFilled<double, typename Term::Operator,
+                                                          decltype(lattice)>{lattice}};
+
+    double t                     = 0.;
+    uint64_t flush_counter       = 0;
+    uint64_t measurement_counter = 0;
+
+    hubbard_logger->info("Measuring at t={}", t);
+    auto n_ev = observable(basis, h);
+    hubbard_logger->info("\t<n_{0,1}>({}) = {}", t, n_ev);
+    out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
+    hubbard_logger->info("Finish measurement at t={}", t);
+
+    for(uint64_t step = 0; step < steps; ++step) {
+        ode_logger->info("Performing step {} of {} at t={}", step, steps, t);
         solver.step(M, h);
         ode_logger->info("Complete step {} -> {}", t, t + solver.step_size());
+
+        ++flush_counter;
+        t += solver.step_size();
+
+        if(measurement_counter % measurement_interval == 0ul) {
+            hubbard_logger->info("Measuring at t={}", t);
+            n_ev = observable(basis, h);
+            hubbard_logger->info("\t<n(0,up)>({}) = {}", t, n_ev);
+            out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
+            hubbard_logger->info("Finish measurement at t={}", t);
+        }
+
+        if(flush_counter % flush_interval == 0ul) {
+            io_logger->info("Flushing file {} ", out_path);
+            out_file.flush();
+            io_logger->info("Finish flushing file {}", out_path);
+        }
     }
     out_file.close();
 

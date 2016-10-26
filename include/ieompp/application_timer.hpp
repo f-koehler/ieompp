@@ -8,7 +8,7 @@ namespace ieompp
 {
     class ApplicationTimer
     {
-        friend std::ostream& operator<<(std::ostream&, const ApplicationTimer&);
+        friend std::ostream& operator<<(std::ostream& /*strm*/, const ApplicationTimer& /*timer*/);
 
     private:
         const std::chrono::steady_clock::time_point _created;
@@ -25,6 +25,6 @@ namespace ieompp
         strm << std::chrono::duration<double>(now - timer._created).count() << "s";
         return strm;
     }
-}
+} // namespace ieompp
 
 #endif
