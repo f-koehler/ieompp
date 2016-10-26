@@ -9,7 +9,6 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/expectation_values.hpp>
 #include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -103,10 +102,7 @@ int main(int argc, char** argv)
     //
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
-    hubbard::real_space::SiteOccupation1Op<decltype(lattice)> occ(0, lattice);
     for(auto t = 0.; t < t_end; t += dt) {
-        auto tmp = occ(h);
-        out_file << t << '\t' << tmp.real() << '\t' << tmp.imag() << '\n';
         ode_logger->info("Performing step at t={}", t);
         solver.step(M, h);
         ode_logger->info("Complete step {} -> {}", t, t + solver.step_size());

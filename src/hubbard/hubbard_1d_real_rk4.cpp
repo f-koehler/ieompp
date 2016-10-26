@@ -6,10 +6,10 @@ using namespace std;
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
+#include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/expectation_values.hpp>
 #include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -22,6 +22,7 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
+    const ApplicationTimer timer;
     const std::string program_name("hubbard_matrix_1d_real");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
@@ -106,15 +107,14 @@ int main(int argc, char** argv)
     //
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
-    hubbard::real_space::SiteOccupation<decltype(lattice)> occ(0, basis, lattice);
     for(auto t = 0.; t < t_end; t += dt) {
-        auto tmp = occ(h);
-        out_file << t << '\t' << tmp.real() << '\t' << tmp.imag() << '\n';
         ode_logger->info("Performing step at t={}", t);
         solver.step(M, h);
         ode_logger->info("Complete step {} -> {}", t, t + solver.step_size());
     }
     out_file.close();
+
+    main_logger->info("Program took {}", timer);
 
     return 0;
 }

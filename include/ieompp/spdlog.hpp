@@ -2,6 +2,7 @@
 #define IEOMPP_SPDLOG_HPP_
 
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
 
 #include "ieompp/description.hpp"
 #include "ieompp/string.hpp"
