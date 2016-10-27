@@ -194,7 +194,7 @@ namespace ieompp
                 dist = a - b;
             }
             if(dist > max_dist) {
-                return _num - max_dist;
+                return _num - dist;
             }
             return dist;
         }

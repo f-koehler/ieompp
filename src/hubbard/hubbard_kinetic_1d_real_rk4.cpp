@@ -1,16 +1,17 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 using namespace std;
 
 #include <ieompp/types/blaze.hpp>
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
+#include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/models/hubbard/expectation_value.hpp>
+#include <ieompp/models/hubbard/matrix_blaze.hpp>
 #include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -23,6 +24,7 @@ namespace po = boost::program_options;
 
 int main(int argc, char** argv)
 {
+    const ApplicationTimer timer;
     const std::string program_name("hubbard_kinetic_1d_real_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
@@ -86,7 +88,7 @@ int main(int argc, char** argv)
     main_logger->info("  log = {}", log_path);
 
     // setting up a lattice
-    hubbard_logger->info("setting up a lattice");
+    hubbard_logger->info("Setting up lattice");
     discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
     log(hubbard_logger, get_description(lattice));
 
@@ -95,26 +97,29 @@ int main(int argc, char** argv)
 
     // init operator basis
     using Basis = hubbard::real_space::Basis1Operator<Term>;
-
     hubbard_logger->info("Setting up operator basis");
     Basis basis(lattice);
     log(hubbard_logger, get_description(basis));
 
     // computing matrix
+    hubbard_logger->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     hubbard_logger->info("Computing matrix elements");
     hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                          M.rows() * M.columns());
+    hubbard_logger->info("Multiply matrix with prefactor 1i");
     M *= std::complex<double>(0, 1);
 
     // setting up initial vector
+    hubbard_logger->info("Setting up {} dimensional vector with initial conditions", basis.size());
     blaze::DynamicVector<std::complex<double>> h(basis.size());
     h.reset();
     h[0] = 1.;
 
     //
+    io_logger->info("Open output file {}", out_path);
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
     hubbard::real_space::ParticleNumber<decltype(basis)> observable{
@@ -127,7 +132,7 @@ int main(int argc, char** argv)
 
     hubbard_logger->info("Measuring at t={}", t);
     auto n_ev = observable(basis, h);
-    hubbard_logger->info("\t<n_{0,1}>({}) = {}", t, n_ev);
+    hubbard_logger->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
     out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
     hubbard_logger->info("Finish measurement at t={}", t);
 
@@ -142,7 +147,7 @@ int main(int argc, char** argv)
         if(measurement_counter % measurement_interval == 0ul) {
             hubbard_logger->info("Measuring at t={}", t);
             n_ev = observable(basis, h);
-            hubbard_logger->info("\t<n(0,up)>({}) = {}", t, n_ev);
+            hubbard_logger->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
             out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
             hubbard_logger->info("Finish measurement at t={}", t);
         }
@@ -153,7 +158,10 @@ int main(int argc, char** argv)
             io_logger->info("Finish flushing file {}", out_path);
         }
     }
+    io_logger->info("Close file {}", out_path);
     out_file.close();
+
+    main_logger->info("Execution took {}", timer);
 
     return 0;
 }
