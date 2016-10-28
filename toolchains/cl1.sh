@@ -16,8 +16,9 @@ cmake                                                      \
     -DCMAKE_C_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/gcc       \
     -DCMAKE_CXX_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/g++     \
     -DCMAKE_BUILD_TYPE=Release                             \
+    -Dieompp_OVERRIDE_BOOST=ON                             \
     -Dieompp_ENABLE_TESTS=OFF                              \
-    -Dieompp_DISABLE_NATIVE=ON                             \
+    -Dieompp_NATIVE_BINARIES=OFF                           \
     ..
 nice -n 19 make -j${NPROC} install
 cd ..
@@ -32,8 +33,9 @@ cmake                                                  \
     -DCMAKE_C_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/gcc   \
     -DCMAKE_CXX_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/g++ \
     -DCMAKE_BUILD_TYPE=Release                         \
+    -Dieompp_OVERRIDE_BOOST=ON                         \
     -Dieompp_ENABLE_TESTS=OFF                          \
-    -Dieompp_DISABLE_NATIVE=ON                         \
+    -Dieompp_NATIVE_BINARIES=OFF                       \
     ..
 nice -n 19 make -j${NPROC} install
 cd ..
@@ -48,8 +50,9 @@ cmake                                                    \
     -DCMAKE_C_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/gcc     \
     -DCMAKE_CXX_COMPILER=/net/sw/gcc/5.3.0/rtf/bin/g++   \
     -DCMAKE_BUILD_TYPE=Release                           \
+    -Dieompp_OVERRIDE_BOOST=ON                           \
     -Dieompp_ENABLE_TESTS=OFF                            \
-    -Dieompp_DISABLE_NATIVE=ON                           \
+    -Dieompp_NATIVE_BINARIES=OFF                         \
     ..
 nice -n 19 make -j${NPROC} install
 cd ..
