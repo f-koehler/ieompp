@@ -19,7 +19,9 @@ using namespace std;
 using namespace ieompp;
 namespace spd = spdlog;
 
+#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
 int main(int argc, char** argv)
@@ -34,14 +36,16 @@ int main(int argc, char** argv)
     description.add_options()
         ("help", "print this help message")
         ("version", "print version information")
+        ("out", po::value<string>()->default_value(program_name + ".txt"), "output file")
+        ("log", po::value<string>()->default_value(program_name + ".log"), "log file")
         ("N", po::value<uint64_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("dt", po::value<double>()->default_value(0.01), "step width of RK4 integrator")
         ("steps", po::value<uint64_t>()->default_value(1000), "number of integrator steps")
         ("measurement_interval", po::value<uint64_t>()->default_value(10), "interval between measurements")
         ("flush_interval", po::value<uint64_t>()->default_value(100), "steps between flushes of output file")
-        ("out", po::value<string>()->default_value(program_name + ".txt"), "output file")
-        ("log", po::value<string>()->default_value(program_name + ".log"), "log file");
+        ("response_file", po::value<string>(), "file to read program parameters from")
+        ;
     // clang-format on
 
     po::variables_map vm;
@@ -53,10 +57,23 @@ int main(int argc, char** argv)
         cout << description << '\n';
         return 1;
     }
+
     if(vm.count("version") != 0u) {
         cout << program_name << "\n\n";
         cout << get_type_description<Platform>() << '\n';
         return 1;
+    }
+
+    if(vm.count("response_file") != 0u) {
+        ifstream file(vm["response_file"].as<string>().c_str());
+        string buf;
+        vector<string> args;
+        do {
+            getline(file, buf);
+            args.push_back(buf);
+            po::store(po::command_line_parser(args).options(description).run(), vm);
+        } while(!file.eof());
+        file.close();
     }
 
     const auto N                    = vm["N"].as<uint64_t>();
@@ -68,10 +85,24 @@ int main(int argc, char** argv)
     const auto out_path             = vm["out"].as<string>();
     const auto log_path             = vm["log"].as<string>();
 
+    auto rsp_path = fs::path(log_path);
+    rsp_path.replace_extension(".rsp");
+
+    ofstream rsp_file(rsp_path.string().c_str());
+    rsp_file << "--N=" << N << '\n';
+    rsp_file << "--J=" << J << '\n';
+    rsp_file << "--dt=" << dt << '\n';
+    rsp_file << "--steps=" << steps << '\n';
+    rsp_file << "--measurement_interval=" << measurement_interval << '\n';
+    rsp_file << "--flush_interval=" << flush_interval << '\n';
+    rsp_file << "--out=" << out_path << '\n';
+    rsp_file << "--log=" << log_path << '\n';
+    rsp_file.close();
+
     // setting up logging facilities
     vector<spd::sink_ptr> logging_sinks;
     logging_sinks.push_back(make_shared<spd::sinks::stderr_sink_mt>());
-    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_mt>(log_path, true));
+    logging_sinks.push_back(make_shared<spd::sinks::simple_file_sink_mt>(log_path));
     auto main_logger =
         std::make_shared<spd::logger>("main", logging_sinks.begin(), logging_sinks.end());
     auto io_logger =

@@ -41,9 +41,9 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/blaze)
 
 # use boost
 if(${ieompp_OVERRIDE_BOOST})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lboost_program_options -lboost_unit_test_framework")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lboost_program_options -lboost_unit_test_framework -lboost_filesystem")
 else()
-    find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework)
+    find_package(Boost REQUIRED COMPONENTS program_options unit_test_framework filesystem)
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 endif()
 
