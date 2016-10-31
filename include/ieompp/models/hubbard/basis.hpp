@@ -26,8 +26,9 @@ namespace ieompp
                                   "Operator must be of Hubbard type");
 
                     this->reserve(N);
+
                     for(auto i : lattice) {
-                        this->emplace_back(Term{1, {{true, i, true}}});
+                        this->push_back(Term{1, {{true, i, true}}});
                     }
                 }
             };
@@ -46,17 +47,18 @@ namespace ieompp
                     static_assert(is_hubbard_operator<typename Term::Operator>::value,
                                   "Operator must be of Hubbard type");
 
-                    // TODO: emplace
                     this->reserve(N * (N * N + 1));
+                    const auto prefactor = typename Term::Prefactor(1.);
 
                     for(auto i : lattice) {
-                        this->push_back(Term{1, {{true, i, true}}});
+                        this->emplace_back(prefactor, {{true, i, true}});
                     }
                     for(auto i1 : lattice) {
                         for(auto i2 : lattice) {
                             for(auto i3 : lattice) {
-                                this->push_back(Term{
-                                    1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
+                                this->emplace_back(
+                                    prefactor,
+                                    {{true, i1, true}, {true, i2, false}, {false, i3, false}});
                             }
                         }
                     }
