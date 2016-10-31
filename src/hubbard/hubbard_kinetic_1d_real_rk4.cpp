@@ -123,8 +123,7 @@ int main(int argc, char** argv)
     ofstream out_file(out_path.c_str());
     ode::RK4<double> solver(basis.size(), dt);
     hubbard::real_space::ParticleNumber<decltype(basis)> observable{
-        hubbard::real_space::ExpectationValue1DHalfFilled<double, typename Term::Operator,
-                                                          decltype(lattice)>{lattice}};
+        hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
 
     double t                     = 0.;
     uint64_t flush_counter       = 0;

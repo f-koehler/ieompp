@@ -1,9 +1,9 @@
 add_executable(hubbard_commutators_momentum_space hubbard_commutators_momentum_space.cpp)
 add_executable(hubbard_commutators_real_space hubbard_commutators_real_space.cpp)
 
-add_executable(hubbard_1d_real_rk4 hubbard_1d_real_rk4.cpp)
-target_link_libraries(hubbard_1d_real_rk4 ${Boost_LIBRARIES})
-enable_iwyu(hubbard_1d_real_rk4)
+# add_executable(hubbard_1d_real_rk4 hubbard_1d_real_rk4.cpp)
+# target_link_libraries(hubbard_1d_real_rk4 ${Boost_LIBRARIES})
+# enable_iwyu(hubbard_1d_real_rk4)
 
 add_executable(hubbard_kinetic_1d_real_rk4 hubbard_kinetic_1d_real_rk4.cpp)
 target_link_libraries(hubbard_kinetic_1d_real_rk4 ${Boost_LIBRARIES})
@@ -17,7 +17,7 @@ install(
     TARGETS
         hubbard_commutators_momentum_space
         hubbard_commutators_real_space
-        hubbard_1d_real_rk4
+        # hubbard_1d_real_rk4
         hubbard_kinetic_1d_real_rk4
         hubbard_kinetic_1d_real_theory
     RUNTIME

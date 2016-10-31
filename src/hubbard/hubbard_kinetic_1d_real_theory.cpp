@@ -12,27 +12,13 @@ namespace po = boost::program_options;
 
 #include <omp.h>
 
+#include <ieompp/algebra/operator.hpp>
+#include <ieompp/algebra/term.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/discretization/linear.hpp>
-
-double expectation_value(uint64_t i, uint64_t j,
-                         const ieompp::discretization::LinearDiscretization<double> &lattice)
-{
-    static const auto pi = ieompp::Pi<double>::value;
-
-    if(i == j) {
-        return 0.5;
-    }
-
-    const auto dist = lattice.lattice_distance(i, j);
-    if(dist % 2 == 0) {
-        return 0.;
-    }
-    if(((dist - 1) / 2) % 2 == 0) {
-        return 1 / (dist * pi);
-    }
-    return -1 / (dist * pi);
-}
+#include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/expectation_value.hpp>
+#include <ieompp/models/hubbard/observable.hpp>
 
 complex<double> minus_i_power(uint64_t power) {
     switch(power % 4) {
@@ -49,14 +35,17 @@ complex<double> minus_i_power(uint64_t power) {
 
 int main()
 {
-    const uint64_t N = 256;
+    const uint64_t N = 128;
     ieompp::discretization::LinearDiscretization<double> lattice(N, 1.);
+    ieompp::hubbard::real_space::
+        Basis1Operator<ieompp::algebra::Term<double, ieompp::algebra::Operator<uint64_t, bool>>>
+            basis(lattice);
 
     const double dt      = 0.01;
     const uint64_t steps = 10000;
 
+    // precompute time dependent prefactors and their complex conjugates
     vector<vector<complex<double>>> h_vals(N), h_vals_conj(N);
-
 #pragma omp parallel for
     for(uint64_t i = 0; i < N; ++i) {
         h_vals[i].resize(steps);
@@ -70,6 +59,9 @@ int main()
         }
     }
 
+    const ieompp::hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>
+        expectation_value(lattice);
+
     vector<vector<complex<double>>> results;
 #pragma omp parallel
     {
@@ -82,7 +74,8 @@ int main()
 #pragma omp parallel for
     for(uint64_t i = 0; i < N; ++i) {
         for(uint64_t j = 0; j < N; ++j) {
-            const auto ev = expectation_value(i, j, lattice);
+            const auto ev =
+                expectation_value(basis[i].operators.front(), basis[j].operators.front());
             for(uint64_t step = 0; step < steps; ++step) {
                 results[omp_get_thread_num()][step] +=
                     ev * (h_vals[i][step] * h_vals_conj[j][step]);
