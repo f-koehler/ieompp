@@ -17,14 +17,14 @@ namespace ieompp
                 using Term  = TermT;
                 using Index = typename std::vector<Term>::size_type;
 
-                static_assert(is_hubbard_operator<typename Term::Operator>::value,
-                              "Operator must be of Hubbard type");
-
                 const Index N;
 
                 template <typename Lattice>
                 Basis1Operator(const Lattice& lattice) : N(lattice.num())
                 {
+                    static_assert(is_hubbard_operator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
+
                     this->reserve(N);
                     for(auto i : lattice) {
                         this->emplace_back(Term{1, {{true, i, true}}});
@@ -37,15 +37,15 @@ namespace ieompp
                 using Term  = TermT;
                 using Index = typename std::vector<Term>::size_type;
 
-                static_assert(is_hubbard_operator<typename Term::Operator>::value,
-                              "Operator must be of Hubbard type");
-
                 const Index N;
                 const Index N_squared;
 
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
                 {
+                    static_assert(is_hubbard_operator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
+
                     // TODO: emplace
                     this->reserve(N * (N * N + 1));
 
@@ -76,15 +76,15 @@ namespace ieompp
                 using Term  = TermT;
                 using Index = typename std::vector<Term>::size_type;
 
-                static_assert(is_hubbard_operator<typename Term::Operator>::value,
-                              "Operator must be of Hubbard type");
-
                 const std::size_t N;
 
                 template <typename MomentumSpace>
                 Basis3Operator(Index q_idx, const MomentumSpace& momentum_space)
                     : N(momentum_space.num())
                 {
+                    static_assert(is_hubbard_operator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
+
                     // TODO: emplace?
                     this->reserve(N * N + 1);
 

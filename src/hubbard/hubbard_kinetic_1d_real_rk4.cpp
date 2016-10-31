@@ -106,7 +106,7 @@ int main(int argc, char** argv)
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     hubbard_logger->info("Computing matrix elements");
-    hubbard::real_space::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard::init_kinetic_matrix(M, basis, lattice, J);
     hubbard_logger->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                          M.rows() * M.columns());
     hubbard_logger->info("Multiply matrix with prefactor 1i");

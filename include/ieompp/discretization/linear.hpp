@@ -55,7 +55,7 @@ namespace ieompp
             template <uint64_t axis = 0>
             Index lattice_distance(const Index& a, const Index& b) const;
 
-            bool neighboring(const Index a, const Index b) const;
+            bool neighboring(Index a, Index b) const;
 
             ConstIndexIterator begin() const;
             ConstIndexIterator end() const;

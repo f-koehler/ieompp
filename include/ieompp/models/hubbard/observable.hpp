@@ -47,7 +47,8 @@ namespace ieompp
                                 expectation_value(basis[i].operators.front(),
                                                   basis[j].operators.front())
                                 * (vector[i] * std::conj(vector[j]));
-                            // TODO(fkoehler): implement a * b^* without creating a new complex number by conjugating
+                            // TODO(fkoehler): implement a * b^* without creating a new complex
+                            // number by conjugating
                         }
                     }
                     return std::accumulate(results.begin(), results.end(), ResultType(0.));
@@ -70,7 +71,7 @@ namespace ieompp
                 {
                     using ResultType = typename types::ScalarType<Vector>::type;
 
-                    const auto N = basis.N;
+                    const auto N          = basis.N;
                     const auto basis_size = basis.size();
                     std::vector<ResultType> results(omp_get_max_threads(), ResultType(0));
 
@@ -78,11 +79,11 @@ namespace ieompp
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < N; ++j) {
-                            results[thread] +=
-                                expectation_value(basis[i].operators.front(),
-                                                  basis[j].operators.front())
-                                * (vector[i] * std::conj(vector[j]));
-                            // TODO(fkoehler): implement a * b^* without creating a new complex number by conjugating
+                            results[thread] += expectation_value(basis[i].operators.front(),
+                                                                 basis[j].operators.front())
+                                               * (vector[i] * std::conj(vector[j]));
+                            // TODO(fkoehler): implement a * b^* without creating a new complex
+                            // number by conjugating
                         }
                     }
 
@@ -95,7 +96,8 @@ namespace ieompp
                             results[thread] += expectation_value(ops_i.front(), ops_j.front())
                                                * expectation_value(ops_i[1], ops_j[2])
                                                * (vector[i] * std::conj(vector[j]));
-                            // TODO(fkoehler): implement a * b^* without creating a new complex number by conjugating
+                            // TODO(fkoehler): implement a * b^* without creating a new complex
+                            // number by conjugating
                         }
                     }
 
@@ -108,7 +110,8 @@ namespace ieompp
                             results[thread] += expectation_value(ops_i.front(), ops_i[1])
                                                * expectation_value(ops_i.back(), ops_j.front())
                                                * (vector[i] * std::conj(vector[j]));
-                            // TODO(fkoehler): implement a * b^* without creating a new complex number by conjugating
+                            // TODO(fkoehler): implement a * b^* without creating a new complex
+                            // number by conjugating
                         }
                     }
 
@@ -126,7 +129,8 @@ namespace ieompp
                                          * ((ops_j[1].same_indices(ops_i.back()) ? 1. : 0.)
                                             - expectation_value(ops_j[1], ops_i.back())))
                                 * (vector[i] * std::conj(vector[j]));
-                            // TODO(fkoehler): implement a * b^* without creating a new complex number by conjugating
+                            // TODO(fkoehler): implement a * b^* without creating a new complex
+                            // number by conjugating
                         }
                     }
                     return std::accumulate(results.begin(), results.end(), ResultType(0.));

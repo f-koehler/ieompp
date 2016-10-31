@@ -19,7 +19,7 @@ namespace ieompp
             using Value     = ValueT;
             using Kronecker = KroneckerT;
 
-            Value value;
+            Value value{};
             std::vector<Kronecker> kroneckers;
 
             Prefactor& operator*=(const Kronecker& rhs)

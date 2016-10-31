@@ -34,7 +34,7 @@ namespace ieompp
                      const std::string& right = ")")
     {
         strm << left;
-        detail::TuplePrinter<std::tuple<Ts...>, 0, sizeof...(Ts)-1>::print(strm, t, delimiter);
+        detail::TuplePrinter<std::tuple<Ts...>, 0, sizeof...(Ts) - 1>::print(strm, t, delimiter);
         strm << right;
     }
 } // namespace ieompp
