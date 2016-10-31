@@ -87,11 +87,10 @@ namespace ieompp
                     static_assert(is_hubbard_operator<typename Term::Operator>::value,
                                   "Operator must be of Hubbard type");
 
-                    // TODO: emplace?
                     this->reserve(N * N + 1);
 
                     for(auto i : momentum_space) {
-                        this->push_back(Term{1, {{true, q_idx, true}}});
+                        this->emplace_back(1, {{true, q_idx, true}});
                     }
 
                     const auto q = momentum_space[q_idx];
@@ -99,8 +98,8 @@ namespace ieompp
                         const auto k1 = momentum_space[i1];
                         for(auto i2 : momentum_space) {
                             auto i3 = momentum_space(k1 + momentum_space[i2] - q);
-                            this->push_back(
-                                Term{1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
+                            this->emplace_back(
+                                1, {{true, i1, true}, {true, i2, false}, {false, i3, false}});
                         }
                     }
                 }

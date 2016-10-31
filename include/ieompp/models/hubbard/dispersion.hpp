@@ -2,27 +2,40 @@
 #define IEOMPP_HUBBARD_DISPERSION_HPP_
 
 #include <cmath>
+#include <vector>
 
 #include "ieompp/types/dot_product.hpp"
+#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {
     namespace hubbard
     {
-        template <typename MomentumT, typename LatticeT>
-        struct Dispersion {
-            using Momentum = MomentumT;
-            using Lattice  = LatticeT;
-            using Scalar   = typename types::scalar_type<Momentum>::type;
+        template <typename Lattice>
+        class Dispersion
+        {
+        public:
+            using Float = typename types::ScalarType<Lattice::Vector>::type;
+            using Index = typename Lattice::Index;
 
-            Scalar J;
+        private:
+            std::vector<Float> _values;
 
-            Scalar operator()(const Momentum& momentum, const Lattice& lattice) const
+        public:
+            Dispersion(const Lattice& momentum_space, const Lattice& lattice, const Float J = 1.)
+                : _values(momentum_space.num(), Float(0.))
             {
-                Scalar val = 0.;
-                for(auto& vec : lattice.lattice_vectors())
-                    val += std::cos(types::DotProduct(vec, momentum));
-                return -2 * J * val;
+                const auto num = momentum_space.num();
+
+#pragma omp parallel for
+                for(Index i = 0; i < num; ++i) {
+                    const auto& momentum = momentum_space[i];
+                    Float val            = 0.;
+                    for(const auto& vec : lattice.lattice_vectors) {
+                        val += types::dot_product(momentum, vec);
+                    }
+                    _values[i] = -4 * J * val;
+                }
             }
         };
     }

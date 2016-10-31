@@ -3,23 +3,13 @@
 
 #include <type_traits>
 
-#include "ieompp/types/eigen.hpp"
-
 namespace ieompp
 {
     namespace types
     {
         template <typename T>
-        typename std::enable_if<ieompp::types::is_eigen_matrix<T>::value,
-                                typename ieompp::types::eigen_matrix_traits<T>::Scalar>::type
-        DotProduct(const T& a, const T& b)
-        {
-            return a.dot(b);
-        }
-
-        template <typename T>
-        typename std::enable_if<!ieompp::types::is_eigen_matrix<T>::value, T>::type
-        DotProduct(const T& a, const T& b)
+        typename std::enable_if<std::is_arithmetic<T>::value, T>::type dot_product(const T& a,
+                                                                                   const T& b)
         {
             return a * b;
         }

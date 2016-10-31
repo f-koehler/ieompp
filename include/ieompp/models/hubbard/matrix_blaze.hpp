@@ -18,7 +18,13 @@ namespace ieompp
                                             const Lattice& lattice);
 
         template <typename Term>
+        uint64_t number_of_kinetic_elements(const momentum_space::Basis3Operator<Term>& basis);
+
+        template <typename Term>
         uint64_t number_of_interaction_elements(const real_space::Basis3Operator<Term>& basis);
+
+        template <typename Term>
+        uint64_t number_of_interaction_elements(const momentum_space::Basis3Operator<Term>& basis);
 
         template <typename Matrix, typename Basis, typename Lattice, typename Prefactor>
         void init_kinetic_matrix(Matrix& matrix, const Basis& basis, const Lattice& lattice,
@@ -61,7 +67,7 @@ namespace ieompp
         uint64_t number_of_kinetic_elements(const real_space::Basis1Operator<Term>& basis,
                                             const Lattice& lattice)
         {
-            (void)lattice;
+            static_cast<void>(lattice);
             return basis.N * Lattice::coordination_number;
         }
 
@@ -69,9 +75,15 @@ namespace ieompp
         uint64_t number_of_kinetic_elements(const real_space::Basis3Operator<Term>& basis,
                                             const Lattice& lattice)
         {
-            (void)lattice;
+            static_cast<void>(lattice);
             return (basis.N * Lattice::coordination_number)
                    + (basis.N * basis.N_squared * 6 * Lattice::coordination_number);
+        }
+
+        template <typename Term, typename Lattice>
+        uint64_t number_of_kinetic_elements(const momentum_space::Basis3Operator<Term>& basis)
+        {
+            return basis.size();
         }
 
         template <typename Term>
@@ -80,9 +92,16 @@ namespace ieompp
             return basis.size() * 2;
         }
 
+        template <typename Term>
+        uint64_t number_of_interaction_elements(const momentum_space::Basis3Operator<Term>& basis)
+        {
+            const auto N = basis.N;
+            return N + 3 * N * N;
+        }
+
 
         template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
-        typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::IsBlazeSparseMatrix<Matrix>::value, void>::type
         init_kinetic_matrix(Matrix& matrix, const real_space::Basis1Operator<Term>& basis,
                             const Lattice& lattice, const Prefactor& J)
         {
@@ -116,7 +135,7 @@ namespace ieompp
 
 
         template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
-        typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::IsBlazeSparseMatrix<Matrix>::value, void>::type
         init_kinetic_matrix(Matrix& matrix, const real_space::Basis3Operator<Term>& basis,
                             const Lattice& lattice, const Prefactor& J)
         {
@@ -178,7 +197,7 @@ namespace ieompp
         }
 
         template <typename Matrix, typename Term, typename Prefactor>
-        typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::IsBlazeSparseMatrix<Matrix>::value, void>::type
         init_interaction_matrix(Matrix& matrix, const real_space::Basis3Operator<Term>& basis,
                                 const Prefactor& U)
         {
@@ -208,7 +227,7 @@ namespace ieompp
         }
 
         template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
-        typename std::enable_if<types::is_blaze_sparse_matrix<Matrix>::value, void>::type
+        typename std::enable_if<types::IsBlazeSparseMatrix<Matrix>::value, void>::type
         init_matrix(Matrix& matrix, const real_space::Basis3Operator<Term>& basis,
                     const Lattice& lattice, const Prefactor& J, const Prefactor& U)
         {
