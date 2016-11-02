@@ -8,9 +8,9 @@ namespace ieompp
 {
     namespace io
     {
-        bool is_skippable_line(const std::string str)
+        bool is_skippable_line(const std::string& str)
         {
-            static const std::regex reg("^\\s*(?:#.*)?$");
+            static const std::regex reg(R"(^\s*(?:#.*)?$)");
             return std::regex_match(str, reg);
         }
 

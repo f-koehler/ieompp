@@ -12,8 +12,11 @@
 #include <blaze/math/serialization/VectorSerializer.h>
 #include <blaze/util/Serialization.h>
 
+#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
+#include <ieompp/io/line.hpp>
+#include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
 #include <ieompp/types/blaze.hpp>
 
@@ -39,8 +42,21 @@ void add_default_options(boost::program_options::options_description& descriptio
         ("version", "print version information")
         ("response_file", boost::program_options::value<std::string>(), "file to read program parameters from")
         ("checkpoint_interval", boost::program_options::value<std::uint64_t>()->default_value(1000), "steps between checkpoints")
+        ("checkpoint", boost::program_options::value<std::string>(), "checkpoint to use for resume")
         ;
     // clang-format on
+}
+
+void write_platform_info(std::ostream& strm)
+{
+    strm << "# ieompp:     \t" << ieompp::version << '\n';
+    strm << "# arch:       \t" << ieompp::Platform::architecture() << '\n';
+    strm << "# os:         \t" << ieompp::Platform::operating_system() << '\n';
+    strm << "# compiler:   \t" << ieompp::Platform::compiler() << '\n';
+    strm << "# std lib:    \t" << ieompp::Platform::cpp_library() << '\n';
+    strm << "# compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host() << '\n';
+    strm << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
+    strm << "# boost:      \t" << ieompp::Platform::boost() << '\n';
 }
 
 void read_response_file(const std::string& path, boost::program_options::variables_map& vm,
@@ -91,10 +107,43 @@ void write_checkpoint_file(const std::string& path,
     loggers.io->info("Create checkpoint file \"{}\" using vector with {} elements", path,
                      vector.size());
     std::ofstream strm(path.c_str(), std::ofstream::binary);
-    blaze::Archive<std::ofstream> archive(path);
+    blaze::Archive<std::ofstream> archive(strm);
     archive << vector;
     strm.flush();
     strm.close();
+}
+
+template <typename Scalar, bool TransposeFlag>
+void read_checkpoint_file(const std::string& path,
+                          blaze::DynamicVector<Scalar, TransposeFlag>& vector, Loggers& loggers)
+{
+    loggers.io->info("Read checkpoint file \"{}\"", path);
+    std::ifstream strm(path.c_str(), std::ifstream::binary);
+    blaze::Archive<std::ifstream> archive(strm);
+    archive >> vector;
+    strm.close();
+}
+
+void clean_output_file(const std::string& path, uint64_t entries)
+{
+    boost::filesystem::rename(path, path + ".bak");
+
+    std::ifstream in_file((path + ".bak").c_str());
+    std::ofstream out_file(path);
+
+    uint64_t counter = 0;
+    std::string buffer;
+    while(counter < entries) {
+        std::getline(in_file, buffer);
+        if(!ieompp::io::is_skippable_line(buffer)) {
+            ++counter;
+        }
+        out_file << buffer;
+    }
+    out_file.flush();
+
+    out_file.close();
+    in_file.close();
 }
 
 #endif

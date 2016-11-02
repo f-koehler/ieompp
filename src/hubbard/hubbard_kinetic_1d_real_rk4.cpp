@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <regex>
 using namespace std;
 
 #include "program.hpp"
@@ -53,14 +54,16 @@ int main(int argc, char** argv)
     po::notify(vm);
 
     if(vm.count("help") != 0u) {
-        cout << program_name << "\n\n";
+        cout << program_name << " [options]" << '\n';
+        cout << program_name << " [options] --checkpoint=<path>" << '\n';
+        cout << '\n';
         cout << description << '\n';
         return 1;
     }
 
     if(vm.count("version") != 0u) {
         cout << program_name << "\n\n";
-        cout << get_type_description<Platform>() << '\n';
+        write_platform_info(cout);
         return 1;
     }
 
@@ -76,6 +79,9 @@ int main(int argc, char** argv)
     const auto measurement_interval = vm["measurement_interval"].as<uint_fast64_t>();
     const auto flush_interval       = vm["flush_interval"].as<uint64_t>();
     const auto out_path             = vm["out"].as<string>();
+
+    write_platform_info(cout);
+    cout << flush;
 
     const auto rsp_path          = fs::change_extension(out_path, ".rsp").string();
     const auto log_path          = fs::change_extension(out_path, ".log").string();
@@ -118,12 +124,25 @@ int main(int argc, char** argv)
     // setting up initial vector
     loggers.main->info("Setting up {} dimensional vector with initial conditions", basis.size());
     blaze::DynamicVector<std::complex<double>> h(basis.size());
-    h.reset();
-    h[0] = 1.;
+
+    uint64_t initial_step = 0;
+    if(vm.count("checkpoint") == 0) {
+        h.reset();
+        h[0] = 1.;
+    } else {
+        read_checkpoint_file(vm["checkpoint"].as<string>(), h, loggers);
+        const regex re_checkpoint_file("^.*" + checkpoint_prefix + R"((\d+)\.blaze$)");
+        smatch m;
+        regex_match(vm["checkpoint"].as<string>(), m, re_checkpoint_file);
+        initial_step = strtoul(m[1].str().c_str(), nullptr, 10);
+        clean_output_file(out_path, initial_step);
+    }
 
     //
     loggers.io->info("Open output file {}", out_path);
     ofstream out_file(out_path.c_str());
+    write_platform_info(out_file);
+
     ode::RK4<double> solver(basis.size(), dt);
     hubbard::real_space::ParticleNumber<decltype(basis)> observable{
         hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
@@ -136,7 +155,7 @@ int main(int argc, char** argv)
     out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
     loggers.main->info("Finish measurement at t={}", t);
 
-    for(uint64_t step = 0; step < steps; ++step) {
+    for(uint64_t step = initial_step; step < steps; ++step) {
         loggers.ode->info("Performing step {} of {} at t={}", step, steps, t);
         solver.step(M, h);
         loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size());
