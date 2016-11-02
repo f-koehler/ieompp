@@ -51,14 +51,14 @@ namespace ieompp
                     const auto prefactor = typename Term::Prefactor(1.);
 
                     for(auto i : lattice) {
-                        this->emplace_back(prefactor, {{true, i, true}});
+                        this->push_back(Term{prefactor, {{true, i, true}}});
                     }
                     for(auto i1 : lattice) {
                         for(auto i2 : lattice) {
                             for(auto i3 : lattice) {
-                                this->emplace_back(
+                                this->push_back(Term{
                                     prefactor,
-                                    {{true, i1, true}, {true, i2, false}, {false, i3, false}});
+                                    {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                             }
                         }
                     }
@@ -90,7 +90,7 @@ namespace ieompp
                     this->reserve(N * N + 1);
 
                     for(auto i : momentum_space) {
-                        this->emplace_back(1, {{true, q_idx, true}});
+                        this->push_back(Term{1, {{true, q_idx, true}}});
                     }
 
                     const auto q = momentum_space[q_idx];
@@ -98,8 +98,8 @@ namespace ieompp
                         const auto k1 = momentum_space[i1];
                         for(auto i2 : momentum_space) {
                             auto i3 = momentum_space(k1 + momentum_space[i2] - q);
-                            this->emplace_back(
-                                1, {{true, i1, true}, {true, i2, false}, {false, i3, false}});
+                            this->push_back(
+                                Term{1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                         }
                     }
                 }

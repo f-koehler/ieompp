@@ -3,7 +3,6 @@
 
 #include <cstdlib>
 
-#include <Eigen/src/Core/util/Macros.h>
 #include <boost/predef.h>
 #include <boost/version.hpp>
 
@@ -25,13 +24,6 @@ namespace ieompp
             static const auto str =
                 compose(int(BOOST_VERSION / 100000), '.', int(BOOST_VERSION / 100 % 1000), '.',
                         BOOST_VERSION % 100);
-            return str;
-        }
-
-        static auto eigen()
-        {
-            static const auto str =
-                compose(EIGEN_WORLD_VERSION, '.', EIGEN_MAJOR_VERSION, '.', EIGEN_MINOR_VERSION);
             return str;
         }
 
@@ -150,7 +142,6 @@ namespace ieompp
         {
             return {{"Platform", ""},
                     {"  ieompp", version},
-                    {"  boost", Platform::boost()},
                     {"  Compiler", Platform::compiler()},
                     {"  C++ std lib", Platform::cpp_library()},
                     {"  OS", Platform::operating_system()},

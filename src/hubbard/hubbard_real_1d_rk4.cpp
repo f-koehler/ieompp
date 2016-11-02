@@ -29,7 +29,7 @@ namespace fs = boost::filesystem;
 int main(int argc, char** argv)
 {
     const ApplicationTimer timer;
-    const string program_name("hubbard_kinetic_1d_real_rk4");
+    const string program_name("hubbard_real_1d_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
                                         "lattice in real space and solve the ODE system using RK4 "
@@ -42,6 +42,7 @@ int main(int argc, char** argv)
         ("log", po::value<string>()->default_value(program_name + ".log"), "log file")
         ("N", po::value<uint64_t>()->default_value(16), "number of lattice sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
+        ("U", po::value<double>()->default_value(1.), "interaction strength")
         ("dt", po::value<double>()->default_value(0.01), "step width of RK4 integrator")
         ("steps", po::value<uint64_t>()->default_value(1000), "number of integrator steps")
         ("measurement_interval", po::value<uint64_t>()->default_value(10), "interval between measurements")
@@ -74,6 +75,7 @@ int main(int argc, char** argv)
     const auto checkpoint_interval  = vm["checkpoint_interval"].as<uint64_t>();
     const auto N                    = vm["N"].as<uint64_t>();
     const auto J                    = vm["J"].as<double>();
+    const auto U                    = vm["U"].as<double>();
     const auto dt                   = vm["dt"].as<double>();
     const auto steps                = vm["steps"].as<uint64_t>();
     const auto measurement_interval = vm["measurement_interval"].as<uint_fast64_t>();
@@ -104,7 +106,7 @@ int main(int argc, char** argv)
     using Term     = algebra::Term<double, Operator>;
 
     // init operator basis
-    using Basis = hubbard::real_space::Basis1Operator<Term>;
+    using Basis = hubbard::real_space::Basis3Operator<Term>;
     loggers.main->info("Setting up operator basis");
     Basis basis(lattice);
 
@@ -113,7 +115,7 @@ int main(int argc, char** argv)
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    hubbard::init_kinetic_matrix(M, basis, lattice, J);
+    hubbard::init_matrix(M, basis, lattice, J, U);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");

@@ -15,7 +15,7 @@ namespace ieompp
         class Dispersion
         {
         public:
-            using Float = typename types::ScalarType<Lattice::Vector>::type;
+            using Float = typename types::ScalarType<typename Lattice::Vector>::type;
             using Index = typename Lattice::Index;
 
         private:

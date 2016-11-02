@@ -2,6 +2,7 @@
 #define IEOMPP_MODELS_HUBBARD_MATRIX_BLAZE_HPP_
 
 #include "ieompp/models/hubbard/basis.hpp"
+#include "ieompp/models/hubbard/dispersion.hpp"
 #include "ieompp/models/hubbard/operator.hpp"
 #include "ieompp/types/blaze.hpp"
 
@@ -294,6 +295,25 @@ namespace ieompp
                 }
                 matrix.finalize(row);
             }
+        }
+
+        template <typename Matrix, typename Term, typename Lattice, typename Prefactor>
+        typename std::enable_if<types::IsBlazeSparseMatrix<Matrix>::value, void>::type
+        init_matrix(Matrix& matrix, const momentum_space::Basis3Operator<Term>& basis,
+                    const Lattice& lattice, const Dispersion<Lattice>& dispersion,
+                    const Prefactor& U)
+        {
+            static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                          "Operator-type in Term-type must be a Hubbard like operator!");
+
+            using Scalar      = typename types::ScalarType<Matrix>::type;
+            using Index       = typename types::IndexType<Matrix>::type;
+            using TripletList = detail::TripletList<Scalar, Index>;
+
+            matrix.resize(basis.size(), basis.size(), false);
+            matrix.reset();
+            matrix.reserve(number_of_kinetic_elements(basis)
+                           + number_of_interaction_elements(basis));
         }
     } /* namespace hubbard */
 } /* namespace ieompp */

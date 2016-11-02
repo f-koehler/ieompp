@@ -50,13 +50,14 @@ void add_default_options(boost::program_options::options_description& descriptio
 void write_platform_info(std::ostream& strm)
 {
     strm << "# ieompp:     \t" << ieompp::version << '\n';
+    strm << "# boost:      \t" << ieompp::Platform::boost() << '\n';
+    strm << "# blaze:      \t" << ieompp::blaze_version() << '\n';
     strm << "# arch:       \t" << ieompp::Platform::architecture() << '\n';
     strm << "# os:         \t" << ieompp::Platform::operating_system() << '\n';
     strm << "# compiler:   \t" << ieompp::Platform::compiler() << '\n';
     strm << "# std lib:    \t" << ieompp::Platform::cpp_library() << '\n';
     strm << "# compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host() << '\n';
     strm << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
-    strm << "# boost:      \t" << ieompp::Platform::boost() << '\n';
 }
 
 void read_response_file(const std::string& path, boost::program_options::variables_map& vm,
