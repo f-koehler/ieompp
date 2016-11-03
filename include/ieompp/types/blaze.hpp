@@ -16,6 +16,6 @@ namespace ieompp
         static const auto str = compose(BLAZE_MAJOR_VERSION, '.', BLAZE_MINOR_VERSION);
         return str;
     }
-}
+} // namespace ieompp
 
 #endif

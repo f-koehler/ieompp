@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     const string program_name("hubbard_real_1d_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
-                                        "lattice in real space and solve the ODE system using RK4 "
+                                        "momentum_space in real space and solve the ODE system using RK4 "
                                         "while writing site 0 occupation to file\n\nOptions");
     add_default_options(description);
 
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     description.add_options()
         ("out", po::value<string>()->default_value(program_name + ".txt"), "output file")
         ("log", po::value<string>()->default_value(program_name + ".log"), "log file")
-        ("N", po::value<uint64_t>()->default_value(16), "number of lattice sites")
+        ("N", po::value<uint64_t>()->default_value(16), "number of momentum_space sites")
         ("J", po::value<double>()->default_value(1.), "hopping prefactor")
         ("U", po::value<double>()->default_value(1.), "interaction strength")
         ("dt", po::value<double>()->default_value(0.01), "step width of RK4 integrator")
@@ -98,24 +98,29 @@ int main(int argc, char** argv)
 
     write_response_file(rsp_path, argc, argv, loggers);
 
-    // setting up a lattice
+    // setting up lattice
+    discretization::LinearDiscretization<double, uint64_t> momentum_space(N);
     discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
 
     using Operator = algebra::Operator<uint64_t, bool>;
     using Term     = algebra::Term<double, Operator>;
 
     // init operator basis
-    using Basis = hubbard::real_space::Basis3Operator<Term>;
+    using Basis = hubbard::momentum_space::Basis3Operator<Term>;
     loggers.main->info("Setting up operator basis");
-    Basis basis(lattice);
+    Basis basis(0, momentum_space);
 
-    // compute matrix
-    hubbard::real_space::Liouvillian<double> L{J, U};
+    // init dispersion
+    hubbard::Dispersion<decltype(lattice)> dispersion(momentum_space, lattice, J);
+
+    hubbard::momentum_space::Liouvillian<double> L{U};
+
+    // computing matrix
     loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    L.init_matrix(M, basis, lattice);
+    L.init_matrix(M, basis, momentum_space, lattice, dispersion);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");
@@ -146,46 +151,46 @@ int main(int argc, char** argv)
     write_platform_info(out_file);
 
     ode::RK4<double> solver(basis.size(), dt);
-    hubbard::real_space::ParticleNumber<decltype(basis)> observable{
-        hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
+    /* hubbard::real_space::ParticleNumber<decltype(basis)> observable{ */
+    /*     hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(momentum_space)>{momentum_space}}; */
 
     double t = 0.;
 
-    loggers.main->info("Measuring at t={}", t);
-    auto n_ev = observable(basis, h);
-    loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-    out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
-    loggers.main->info("Finish measurement at t={}", t);
+    /* loggers.main->info("Measuring at t={}", t); */
+    /* auto n_ev = observable(basis, h); */
+    /* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); */
+    /* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; */
+    /* loggers.main->info("Finish measurement at t={}", t); */
 
-    for(uint64_t step = initial_step; step < steps; ++step) {
-        loggers.ode->info("Performing step {} of {} at t={}", step, steps, t);
-        solver.step(M, h);
-        loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size());
+    /* for(uint64_t step = initial_step; step < steps; ++step) { */
+    /*     loggers.ode->info("Performing step {} of {} at t={}", step, steps, t); */
+    /*     solver.step(M, h); */
+    /*     loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size()); */
 
-        t += solver.step_size();
+    /*     t += solver.step_size(); */
 
-        if(step % checkpoint_interval == 0ul) {
-            write_checkpoint_file(checkpoint_prefix + std::to_string(step) + ".blaze", h, loggers);
-        }
+    /*     if(step % checkpoint_interval == 0ul) { */
+    /*         write_checkpoint_file(checkpoint_prefix + std::to_string(step) + ".blaze", h, loggers); */
+    /*     } */
 
-        if(step % measurement_interval == 0ul) {
-            loggers.main->info("Measuring at t={}", t);
-            n_ev = observable(basis, h);
-            loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-            out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
-            loggers.main->info("Finish measurement at t={}", t);
-        }
+    /*     if(step % measurement_interval == 0ul) { */
+    /*         /1* loggers.main->info("Measuring at t={}", t); *1/ */
+    /*         /1* n_ev = observable(basis, h); *1/ */
+    /*         /1* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); *1/ */
+    /*         /1* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; *1/ */
+    /*         /1* loggers.main->info("Finish measurement at t={}", t); *1/ */
+    /*     } */
 
-        if(step % flush_interval == 0ul) {
-            loggers.io->info("Flushing file {} ", out_path);
-            out_file.flush();
-            loggers.io->info("Finish flushing file {}", out_path);
-        }
-    }
-    loggers.io->info("Close file {}", out_path);
-    out_file.close();
+    /*     if(step % flush_interval == 0ul) { */
+    /*         loggers.io->info("Flushing file {} ", out_path); */
+    /*         out_file.flush(); */
+    /*         loggers.io->info("Finish flushing file {}", out_path); */
+    /*     } */
+    /* } */
+    /* loggers.io->info("Close file {}", out_path); */
+    /* out_file.close(); */
 
-    loggers.main->info("Execution took {}", timer);
+    /* loggers.main->info("Execution took {}", timer); */
 
     return 0;
 }

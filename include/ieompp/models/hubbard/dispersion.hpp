@@ -27,18 +27,25 @@ namespace ieompp
             {
                 const auto num = momentum_space.num();
 
+                const auto lattice_vectors = lattice.lattice_vectors();
+
 #pragma omp parallel for
                 for(Index i = 0; i < num; ++i) {
                     const auto& momentum = momentum_space[i];
                     Float val            = 0.;
-                    for(const auto& vec : lattice.lattice_vectors) {
+                    for(const auto& vec : lattice_vectors) {
                         val += types::dot_product(momentum, vec);
                     }
                     _values[i] = -4 * J * val;
                 }
             }
+
+            const Float& operator[](const typename std::vector<Float>::size_type idx) const
+            {
+                return _values[idx];
+            }
         };
-    }
-}
+    } // namespace hubbard
+} // namespace ieompp
 
 #endif

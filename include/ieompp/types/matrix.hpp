@@ -27,6 +27,7 @@ namespace ieompp
 
         template <typename T>
         struct ScalarType {
+            using type = T;
         };
 
         template <typename T>

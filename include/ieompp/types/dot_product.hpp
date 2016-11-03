@@ -13,7 +13,7 @@ namespace ieompp
         {
             return a * b;
         }
-    }
-}
+    } // namespace types
+} // namespace ieompp
 
 #endif

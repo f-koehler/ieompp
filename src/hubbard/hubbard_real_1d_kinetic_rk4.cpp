@@ -10,10 +10,9 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/io/blaze/sparse.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/matrix_blaze.hpp>
+#include <ieompp/models/hubbard/liouvillian_blaze.hpp>
 #include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -97,7 +96,6 @@ int main(int argc, char** argv)
     write_response_file(rsp_path, argc, argv, loggers);
 
     // setting up a lattice
-    loggers.main->info("Setting up lattice");
     discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
 
     using Operator = algebra::Operator<uint64_t, bool>;
@@ -108,12 +106,13 @@ int main(int argc, char** argv)
     loggers.main->info("Setting up operator basis");
     Basis basis(lattice);
 
-    // computing matrix
+    // compute matrix
+    hubbard::real_space::Liouvillian<double> L{J, 0.};
     loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    hubbard::init_kinetic_matrix(M, basis, lattice, J);
+    L.init_kinetic_matrix(M, basis, lattice);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");

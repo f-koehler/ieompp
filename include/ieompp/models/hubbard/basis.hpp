@@ -89,9 +89,7 @@ namespace ieompp
 
                     this->reserve(N * N + 1);
 
-                    for(auto i : momentum_space) {
-                        this->push_back(Term{1, {{true, q_idx, true}}});
-                    }
+                    this->push_back(Term{1, {{true, q_idx, true}}});
 
                     const auto q = momentum_space[q_idx];
                     for(auto i1 : momentum_space) {
@@ -103,9 +101,36 @@ namespace ieompp
                         }
                     }
                 }
+
+                Index get_3op_index(Index i1, Index i2) const { return 1 + i1 * N + i2; }
             };
         } /* namespace momentum_space */
-    }     /* namespace hubbard */
+
+        template <typename Basis>
+        struct IsOneOperatorBasis {
+            static constexpr bool value = false;
+        };
+
+        template <typename Term>
+        struct IsOneOperatorBasis<real_space::Basis1Operator<Term>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename Basis>
+        struct IsThreeOperatorBasis {
+            static constexpr bool value = false;
+        };
+
+        template <typename Term>
+        struct IsThreeOperatorBasis<real_space::Basis3Operator<Term>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename Term>
+        struct IsThreeOperatorBasis<momentum_space::Basis3Operator<Term>> {
+            static constexpr bool value = true;
+        };
+    } /* namespace hubbard */
 
     template <typename Term>
     struct TypeDescription<hubbard::real_space::Basis1Operator<Term>> {
