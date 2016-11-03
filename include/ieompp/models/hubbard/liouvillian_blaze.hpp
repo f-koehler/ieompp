@@ -64,7 +64,7 @@ namespace ieompp
 
                 template <typename Matrix, typename Term, typename Lattice>
                 void init_matrix(Matrix& matrix, const Basis3Operator<Term>& basis,
-                                 const Lattice& momentum_space, const Lattice& lattice,
+                                 const Lattice& lattice,
                                  const Dispersion<Lattice>& dispersion) const;
             };
         } // namespace momentum_space
@@ -337,7 +337,6 @@ namespace ieompp
             template <typename Matrix, typename Term, typename Lattice>
             void Liouvillian<Prefactor>::init_matrix(Matrix& matrix,
                                                      const Basis3Operator<Term>& basis,
-                                                     const Lattice& momentum_space,
                                                      const Lattice& lattice,
                                                      const Dispersion<Lattice>& dispersion) const
             {

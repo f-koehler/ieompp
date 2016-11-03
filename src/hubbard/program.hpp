@@ -60,6 +60,18 @@ void write_platform_info(std::ostream& strm)
     strm << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
 }
 
+void log_platform_info(const Loggers& loggers) {
+    loggers.main->info("# ieompp:     \t{}", ieompp::version);
+    loggers.main->info("# boost:      \t{}", ieompp::Platform::boost());
+    loggers.main->info("# blaze:      \t{}", ieompp::blaze_version());
+    loggers.main->info("# arch:       \t{}", ieompp::Platform::architecture());
+    loggers.main->info("# os:         \t{}", ieompp::Platform::operating_system());
+    loggers.main->info("# compiler:   \t{}", ieompp::Platform::compiler());
+    loggers.main->info("# std lib:    \t{}", ieompp::Platform::cpp_library());
+    loggers.main->info("# compiled by:\t{}@{}", ieompp::Platform::user(), ieompp::Platform::host());
+    loggers.main->info("# endianess   \t{}", ieompp::Platform::endianess());
+}
+
 void read_response_file(const std::string& path, boost::program_options::variables_map& vm,
                         boost::program_options::options_description& description)
 {
