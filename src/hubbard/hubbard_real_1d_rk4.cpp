@@ -11,8 +11,8 @@ using namespace std;
 #include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
+#include <ieompp/models/hubbard/blaze_sparse.hpp>
 #include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/liouvillian_blaze.hpp>
 #include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    L.init_matrix(M, basis, lattice);
+    hubbard::real_space::init_matrix(L, M, basis, lattice);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");

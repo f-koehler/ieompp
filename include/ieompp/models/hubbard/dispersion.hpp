@@ -11,18 +11,20 @@ namespace ieompp
 {
     namespace hubbard
     {
-        template <typename Lattice>
+        template <typename FloatT, typename IndexT>
         class Dispersion
         {
         public:
-            using Float = typename types::ScalarType<typename Lattice::Vector>::type;
-            using Index = typename Lattice::Index;
+            using Float = FloatT;
+            using Index = IndexT;
 
         private:
             std::vector<Float> _values;
 
         public:
-            Dispersion(const Lattice& momentum_space, const Lattice& lattice, const Float J = 1.)
+            template <typename MomentumSpace, typename Lattice>
+            Dispersion(const MomentumSpace& momentum_space, const Lattice& lattice,
+                       const Float& J = 1.)
                 : _values(momentum_space.num(), Float(0.))
             {
                 const auto num = momentum_space.num();
@@ -40,11 +42,20 @@ namespace ieompp
                 }
             }
 
-            const Float& operator[](const typename std::vector<Float>::size_type idx) const
+            const Float& operator[](typename std::vector<Float>::size_type idx) const
             {
                 return _values[idx];
             }
         };
+
+        template <typename MomentumSpace, typename Lattice>
+        Dispersion<typename MomentumSpace::Float, typename MomentumSpace::Index>
+        make_dispersion(const MomentumSpace& momentum_space, const Lattice& lattice,
+                        const typename MomentumSpace::Float& J = 1.)
+        {
+            return Dispersion<typename MomentumSpace::Float, typename MomentumSpace::Index>(
+                momentum_space, lattice, J);
+        }
     } // namespace hubbard
 } // namespace ieompp
 

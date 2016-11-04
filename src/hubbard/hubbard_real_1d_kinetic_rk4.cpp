@@ -12,7 +12,7 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/liouvillian_blaze.hpp>
+#include <ieompp/models/hubbard/blaze_sparse.hpp>
 #include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -107,12 +107,12 @@ int main(int argc, char** argv)
     Basis basis(lattice);
 
     // compute matrix
-    hubbard::real_space::Liouvillian<double> L{J, 0.};
+    const auto L = hubbard::real_space::make_liouvillian(J, 0.);
     loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    L.init_kinetic_matrix(M, basis, lattice);
+    hubbard::real_space::init_kinetic_matrix(L, M, basis, lattice);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");

@@ -12,7 +12,7 @@ using namespace std;
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard/basis.hpp>
 #include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/liouvillian_blaze.hpp>
+#include <ieompp/models/hubbard/liouvillian.hpp>
 #include <ieompp/models/hubbard/observable.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
@@ -110,91 +110,89 @@ int main(int argc, char** argv)
     Basis basis(N / 4, momentum_space);
 
     // init dispersion
-    hubbard::Dispersion<decltype(lattice)> dispersion(momentum_space, lattice, J);
+    const auto L = hubbard::momentum_space::make_liouvillian(momentum_space, lattice, J, U);
 
-    hubbard::momentum_space::Liouvillian<double> L{U};
+    /* // computing matrix */
+    /* loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size()); */
+    /* blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size()); */
+    /* M.reserve(basis.size() * 10); */
+    /* loggers.main->info("Computing matrix elements"); */
+    /* L.init_matrix(M, basis, lattice, dispersion); */
+    /* loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(), */
+    /*                    M.rows() * M.columns()); */
+    /* loggers.main->info("Multiply matrix with prefactor 1i"); */
+    /* M *= std::complex<double>(0, 1); */
 
-    // computing matrix
-    loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
-    blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
-    M.reserve(basis.size() * 10);
-    loggers.main->info("Computing matrix elements");
-    L.init_matrix(M, basis, lattice, dispersion);
-    loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
-                       M.rows() * M.columns());
-    loggers.main->info("Multiply matrix with prefactor 1i");
-    M *= std::complex<double>(0, 1);
+    /* write_matrix_file(matrix_path, M, loggers); */
 
-    write_matrix_file(matrix_path, M, loggers);
+    /* // setting up initial vector */
+    /* loggers.main->info("Setting up {} dimensional vector with initial conditions", basis.size()); */
+    /* blaze::DynamicVector<std::complex<double>> h(basis.size()); */
 
-    // setting up initial vector
-    loggers.main->info("Setting up {} dimensional vector with initial conditions", basis.size());
-    blaze::DynamicVector<std::complex<double>> h(basis.size());
+    /* uint64_t initial_step = 0; */
+    /* if(vm.count("checkpoint") == 0) { */
+    /*     h.reset(); */
+    /*     h[0] = 1.; */
+    /* } else { */
+    /*     read_checkpoint_file(vm["checkpoint"].as<string>(), h, loggers); */
+    /*     const regex re_checkpoint_file("^.*" + checkpoint_prefix + R"((\d+)\.blaze$)"); */
+    /*     smatch m; */
+    /*     regex_match(vm["checkpoint"].as<string>(), m, re_checkpoint_file); */
+    /*     initial_step = strtoul(m[1].str().c_str(), nullptr, 10); */
+    /*     clean_output_file(out_path, initial_step); */
+    /* } */
 
-    uint64_t initial_step = 0;
-    if(vm.count("checkpoint") == 0) {
-        h.reset();
-        h[0] = 1.;
-    } else {
-        read_checkpoint_file(vm["checkpoint"].as<string>(), h, loggers);
-        const regex re_checkpoint_file("^.*" + checkpoint_prefix + R"((\d+)\.blaze$)");
-        smatch m;
-        regex_match(vm["checkpoint"].as<string>(), m, re_checkpoint_file);
-        initial_step = strtoul(m[1].str().c_str(), nullptr, 10);
-        clean_output_file(out_path, initial_step);
-    }
+    /* // */
+    /* loggers.io->info("Open output file {}", out_path); */
+    /* ofstream out_file(out_path.c_str()); */
+    /* write_platform_info(out_file); */
 
-    //
-    loggers.io->info("Open output file {}", out_path);
-    ofstream out_file(out_path.c_str());
-    write_platform_info(out_file);
+    /* ode::RK4<double> solver(basis.size(), dt); */
+    /* /1* hubbard::real_space::ParticleNumber<decltype(basis)> observable{ *1/ */
+    /* /1*     hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(momentum_space)>{momentum_space}}; *1/ */
 
-    ode::RK4<double> solver(basis.size(), dt);
-    /* hubbard::real_space::ParticleNumber<decltype(basis)> observable{ */
-    /*     hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(momentum_space)>{momentum_space}}; */
+    /* double t = 0.; */
 
-    double t = 0.;
+    /* /1* loggers.main->info("Measuring at t={}", t); *1/ */
+    /* /1* auto n_ev = observable(basis, h); *1/ */
+    /* /1* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); *1/ */
+    /* /1* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; *1/ */
+    /* /1* loggers.main->info("Finish measurement at t={}", t); *1/ */
 
-    /* loggers.main->info("Measuring at t={}", t); */
-    /* auto n_ev = observable(basis, h); */
-    /* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); */
-    /* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; */
-    /* loggers.main->info("Finish measurement at t={}", t); */
+    /* for(uint64_t step = initial_step; step < steps; ++step) { */
+    /*     loggers.ode->info("Performing step {} of {} at t={}", step, steps, t); */
+    /*     solver.step(M, h); */
+    /*     loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size()); */
 
-    for(uint64_t step = initial_step; step < steps; ++step) {
-        loggers.ode->info("Performing step {} of {} at t={}", step, steps, t);
-        solver.step(M, h);
-        loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size());
+    /*     t += solver.step_size(); */
 
-        t += solver.step_size();
+    /*     loggers.ode->info("\th_0= {} + {}i", h[0].real(), h[0].imag()); */
+    /*     out_file << t << '\t' << h[0].real() << '\t' << h[0].imag() << '\t' << h[1].real() << '\t' */
+    /*              << h[1].imag() << '\t' << h[basis.size()/2+10].real() << '\t' << h[basis.size()/2+10].imag() << '\n'; */
 
-        loggers.ode->info("\th_0= {} + {}i", h[0].real(), h[0].imag());
-        out_file << t << '\t' << h[0].real() << '\t' << h[0].imag() << '\t' << h[1].real() << '\t'
-                 << h[1].imag() << '\t' << h[basis.size()/2+10].real() << '\t' << h[basis.size()/2+10].imag() << '\n';
+    /*     /1*     if(step % checkpoint_interval == 0ul) { *1/ */
+    /*     /1*         write_checkpoint_file(checkpoint_prefix + std::to_string(step) + ".blaze", h, */
+    /*      * loggers); *1/ */
+    /*     /1*     } *1/ */
 
-        /*     if(step % checkpoint_interval == 0ul) { */
-        /*         write_checkpoint_file(checkpoint_prefix + std::to_string(step) + ".blaze", h,
-         * loggers); */
-        /*     } */
+    /*     /1*     if(step % measurement_interval == 0ul) { *1/ */
+    /*     /1*         /2* loggers.main->info("Measuring at t={}", t); *2/ *1/ */
+    /*     /1*         /2* n_ev = observable(basis, h); *2/ *1/ */
+    /*     /1*         /2* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); *2/ *1/ */
+    /*     /1*         /2* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; *2/ *1/ */
+    /*     /1*         /2* loggers.main->info("Finish measurement at t={}", t); *2/ *1/ */
+    /*     /1*     } *1/ */
 
-        /*     if(step % measurement_interval == 0ul) { */
-        /*         /1* loggers.main->info("Measuring at t={}", t); *1/ */
-        /*         /1* n_ev = observable(basis, h); *1/ */
-        /*         /1* loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev); *1/ */
-        /*         /1* out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n'; *1/ */
-        /*         /1* loggers.main->info("Finish measurement at t={}", t); *1/ */
-        /*     } */
+    /*     /1*     if(step % flush_interval == 0ul) { *1/ */
+    /*     /1*         loggers.io->info("Flushing file {} ", out_path); *1/ */
+    /*     /1*         out_file.flush(); *1/ */
+    /*     /1*         loggers.io->info("Finish flushing file {}", out_path); *1/ */
+    /*     /1*     } *1/ */
+    /* } */
+    /* loggers.io->info("Close file {}", out_path); */
+    /* out_file.close(); */
 
-        /*     if(step % flush_interval == 0ul) { */
-        /*         loggers.io->info("Flushing file {} ", out_path); */
-        /*         out_file.flush(); */
-        /*         loggers.io->info("Finish flushing file {}", out_path); */
-        /*     } */
-    }
-    loggers.io->info("Close file {}", out_path);
-    out_file.close();
-
-    /* loggers.main->info("Execution took {}", timer); */
+    /* /1* loggers.main->info("Execution took {}", timer); *1/ */
 
     return 0;
 }
