@@ -94,6 +94,14 @@ namespace ieompp
         {
             return t;
         }
+
+        template <typename Scalar>
+        std::complex<Scalar> multiply_with_conjugate(const std::complex<Scalar>& a,
+                                                     const std::complex<Scalar>& b)
+        {
+            return std::complex<Scalar>(a.real() * b.real() + a.imag() * b.imag(),
+                                        -a.real() * b.imag() + b.real() * a.imag());
+        }
     } // namespace types
 } // namespace ieompp
 
