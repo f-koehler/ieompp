@@ -5,6 +5,7 @@ using namespace std;
 
 #include "program.hpp"
 
+#include <ieompp/types/blaze.hpp>
 
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
@@ -118,6 +119,12 @@ int main(int argc, char** argv)
     hubbard::real_space::init_matrix(L, M, basis, lattice);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
+
+    if(!types::is_symmetric(M)) {
+        loggers.main->critical("Matrix is not symmetric!");
+        return 1;
+    }
+
     loggers.main->info("Multiply matrix with prefactor 1i");
     M *= std::complex<double>(0, 1);
 

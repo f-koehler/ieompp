@@ -78,8 +78,7 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < N; ++j) {
                             results[thread] +=
-                                expectation_value(basis[i].operators.front(),
-                                                  basis[j].operators.front())
+                                expectation_value(basis[i].operators[0], basis[j].operators[0])
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -91,8 +90,8 @@ namespace ieompp
                         for(auto j = N; j < basis_size; ++j) {
                             const auto& ops_j = basis[j].operators;
                             results[thread] +=
-                                expectation_value(ops_i.front(), ops_j.front())
-                                * expectation_value(ops_i[1], ops_j[2])
+                                expectation_value(ops_i[0], ops_j[0])
+                                * expectation_value(ops_j[1], ops_j[2])
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -104,8 +103,8 @@ namespace ieompp
                         for(auto j = 0ul; j < N; ++j) {
                             const auto& ops_j = basis[j].operators;
                             results[thread] +=
-                                expectation_value(ops_i.front(), ops_i[1])
-                                * expectation_value(ops_i.back(), ops_j.front())
+                                expectation_value(ops_i[0], ops_i[1])
+                                * expectation_value(ops_i[2], ops_j[0])
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -115,14 +114,16 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         const auto& ops_i = basis[i].operators;
                         for(auto j = N; j < basis_size; ++j) {
-                            const auto& ops_j = basis[j].operators;
+                            const auto& ops_j   = basis[j].operators;
+                            const auto summand1 = expectation_value(ops_i[0], ops_j[0])
+                                                  * expectation_value(ops_i[1], ops_i[2])
+                                                  * expectation_value(ops_j[1], ops_j[2]);
+                            const auto summand2 = expectation_value(ops_i[0], ops_j[0])
+                                                  * expectation_value(ops_i[1], ops_j[2])
+                                                  * ((ops_i[2].same_indices(ops_j[1]) ? 1. : 0.)
+                                                     - expectation_value(ops_i[2], ops_j[1]));
                             results[thread] +=
-                                expectation_value(ops_i.front(), ops_j.front())
-                                * (expectation_value(ops_i[1], ops_i.back())
-                                       * expectation_value(ops_j[1], ops_j.back())
-                                   + expectation_value(ops_i[1], ops_j.back())
-                                         * ((ops_j[1].same_indices(ops_i.back()) ? 1. : 0.)
-                                            - expectation_value(ops_j[1], ops_i.back())))
+                                (summand1 + summand2)
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
