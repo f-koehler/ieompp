@@ -1,5 +1,5 @@
-#ifndef IEOMPP_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
-#define IEOMPP_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
+#define IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
 
 #include "ieompp/models/hubbard/basis.hpp"
 #include "ieompp/models/hubbard/blaze_sparse/triplet.hpp"
