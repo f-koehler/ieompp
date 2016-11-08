@@ -7,6 +7,6 @@
 
 ### Compiler Support
 ieompp has been tested on Linux using:
- - clang 3.8.1
+ - clang 3.9.0
  - gcc 6.2.1
  - icc 17.0.0

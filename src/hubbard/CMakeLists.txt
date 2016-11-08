@@ -1,6 +1,8 @@
 add_executable(hubbard_commutators_momentum_space hubbard_commutators_momentum_space.cpp)
 add_executable(hubbard_commutators_real_space hubbard_commutators_real_space.cpp)
 
+add_executable(hubbard_trivial hubbard_trivial.cpp)
+
 add_executable(hubbard_momentum_1d_rk4 hubbard_momentum_1d_rk4.cpp)
 target_link_libraries(hubbard_momentum_1d_rk4  ${Boost_LIBRARIES})
 enable_iwyu(hubbard_momentum_1d_rk4)
