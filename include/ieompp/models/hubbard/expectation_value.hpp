@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ieompp/constants.hpp"
+#include "ieompp/models/hubbard/basis.hpp"
 #include "ieompp/models/hubbard/operator.hpp"
 #include "ieompp/types/number.hpp"
 
@@ -15,7 +16,8 @@ namespace ieompp
         namespace real_space
         {
             template <typename Float, typename Lattice>
-            struct ExpectationValue1DHalfFilled {
+            class ExpectationValue1DHalfFilled
+            {
             private:
                 std::reference_wrapper<const Lattice> _lattice;
                 std::vector<Float> _values;
@@ -54,6 +56,45 @@ namespace ieompp
                 }
             };
         } // namespace real_space
+
+        namespace momentum_space
+        {
+            template <typename Float>
+            class ExpectationValue1D
+            {
+            public:
+                struct ExpectationValueInfo {
+                    bool vanishes;
+                    Float value;
+                };
+
+            private:
+                std::vector<ExpectationValueInfo> _infos;
+                std::vector<ExpectationValueInfo> _infos_conj;
+
+            public:
+                template <typename Term, typename MomentumSpace, typename Dispersion>
+                ExpectationValue1D(const Basis3Operator<Term>& basis,
+                                   const MomentumSpace& momentum_space,
+                                   const Dispersion& dispersion, const Float& fermi_energy = 0.)
+                    : _infos(basis.size(), {false, 0.}), _infos_conj(basis.size(), {false, 0.})
+                {
+                    const auto basis_size = basis.size();
+
+                    for(decltype(basis_size) i = 0; i < basis_size; ++i) {
+                        const auto& term     = basis[i];
+                        const auto term_conj = basis[i].conjugate();
+                        const auto& ops      = term.operators;
+                        const auto& ops_conj = term_conj.operators;
+                        auto& entry          = _infos[i];
+                        auto& entry_conj     = _infos_conj[i];
+
+                        for(const auto& op : ops) {
+                        }
+                    }
+                }
+            };
+        } // namespace momentum_space
     }     // namespace hubbard
 } // namespace ieompp
 

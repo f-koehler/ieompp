@@ -131,6 +131,26 @@ namespace ieompp
                 }
             };
         } // namespace real_space
+
+        namespace momentum_space
+        {
+            template <typename Basis>
+            struct ParticleNumber {
+            };
+
+            template <typename Term>
+            struct ParticleNumber<Basis3Operator<Term>> {
+                using Basis    = Basis3Operator<Term>;
+                using Float    = typename types::RealType<typename Term::Prefactor>::type;
+                using Operator = typename Term::Operator;
+
+                template <typename Vector>
+                typename types::ScalarType<Vector>::type operator()(const Basis& basis,
+                                                                    const Vector& vector) const
+                {
+                }
+            };
+        } // namespace momentum_space
     }     // namespace hubbard
 } // namespace ieompp
 
