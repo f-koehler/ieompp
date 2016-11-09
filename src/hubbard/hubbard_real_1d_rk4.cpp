@@ -120,11 +120,6 @@ int main(int argc, char** argv)
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
 
-    if(!types::is_symmetric(M)) {
-        loggers.main->critical("Matrix is not symmetric!");
-        return 1;
-    }
-
     loggers.main->info("Multiply matrix with prefactor 1i");
     M *= std::complex<double>(0, 1);
 
@@ -157,14 +152,17 @@ int main(int argc, char** argv)
         hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
 
     double t = 0.;
-
-    loggers.main->info("Measuring at t={}", t);
-    auto n_ev = observable(basis, h);
-    loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-    out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
-    loggers.main->info("Finish measurement at t={}", t);
+    double n_ev;
 
     for(uint64_t step = initial_step; step < steps; ++step) {
+        if(step % measurement_interval == 0ul) {
+            loggers.main->info("Measuring at t={}", t);
+            n_ev = observable(basis, h);
+            loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
+            out_file << t << '\t' << n_ev << '\n';
+            loggers.main->info("Finish measurement at t={}", t);
+        }
+
         loggers.ode->info("Performing step {} of {} at t={}", step, steps, t);
         solver.step(M, h);
         loggers.ode->info("Complete step {} -> {}", t, t + solver.step_size());
@@ -175,20 +173,21 @@ int main(int argc, char** argv)
             write_checkpoint_file(checkpoint_prefix + std::to_string(step) + ".blaze", h, loggers);
         }
 
-        if(step % measurement_interval == 0ul) {
-            loggers.main->info("Measuring at t={}", t);
-            n_ev = observable(basis, h);
-            loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-            out_file << t << '\t' << n_ev.real() << '\t' << n_ev.imag() << '\n';
-            loggers.main->info("Finish measurement at t={}", t);
-        }
-
         if(step % flush_interval == 0ul) {
             loggers.io->info("Flushing file {} ", out_path);
             out_file.flush();
             loggers.io->info("Finish flushing file {}", out_path);
         }
     }
+
+    if(steps % measurement_interval == 0ul) {
+        loggers.main->info("Measuring at t={}", t);
+        n_ev = observable(basis, h);
+        loggers.main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
+        out_file << t << '\t' << n_ev << '\n';
+        loggers.main->info("Finish measurement at t={}", t);
+    }
+
     loggers.io->info("Close file {}", out_path);
     out_file.close();
 

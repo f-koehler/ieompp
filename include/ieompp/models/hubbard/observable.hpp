@@ -32,24 +32,26 @@ namespace ieompp
                 ExpectationValueFunction expectation_value;
 
                 template <typename Vector>
-                typename types::ScalarType<Vector>::type operator()(const Basis& basis,
-                                                                    const Vector& vector) const
+                Float operator()(const Basis& basis, const Vector& vector) const
                 {
-                    using ResultType = typename types::ScalarType<Vector>::type;
-
                     const auto size = basis.size();
-                    std::vector<ResultType> results(omp_get_max_threads(), ResultType(0));
+                    std::vector<Float> results(omp_get_max_threads(), 0);
 
 #pragma omp parallel for
                     for(auto i = 0ul; i < size; ++i) {
-                        for(auto j = 0ul; j < size; ++j) {
-                            results[omp_get_thread_num()] +=
+                        const auto thread = omp_get_thread_num();
+                        for(auto j = 0ul; j < i; ++j) {
+                            results[thread] +=
                                 expectation_value(basis[i].operators.front(),
                                                   basis[j].operators.front())
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                * types::add_conjugate_products(vector[i], vector[j]);
                         }
+                        results[thread] +=
+                            std::norm(vector[i]) * expectation_value(basis[i].operators.front(),
+                                                                     basis[i].operators.front());
                     }
-                    return std::accumulate(results.begin(), results.end(), ResultType(0.));
+
+                    return std::accumulate(results.begin(), results.end(), 0.);
                 }
             };
 
@@ -64,35 +66,36 @@ namespace ieompp
                 ExpectationValueFunction expectation_value;
 
                 template <typename Vector>
-                typename types::ScalarType<Vector>::type operator()(const Basis& basis,
-                                                                    const Vector& vector) const
+                Float operator()(const Basis& basis, const Vector& vector) const
                 {
-                    using ResultType = typename types::ScalarType<Vector>::type;
-
                     const auto N          = basis.N;
                     const auto basis_size = basis.size();
-                    std::vector<ResultType> results(omp_get_max_threads(), ResultType(0));
+                    std::vector<Float> results(omp_get_max_threads(), 0);
 
 #pragma omp parallel for
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
-                        for(auto j = 0ul; j < N; ++j) {
+                        for(auto j = 0ul; j < i; ++j) {
                             results[thread] +=
                                 expectation_value(basis[i].operators[0], basis[j].operators[0])
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                * types::add_conjugate_products(vector[i], vector[j]);
                         }
+                        results[thread] +=
+                            std::norm(vector[i])
+                            * expectation_value(basis[i].operators[0], basis[i].operators[0]);
                     }
 
 #pragma omp parallel for
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
-                        const auto& ops_i = basis[i].operators;
+                        const auto& op_a  = basis[i].operators[0];
                         for(auto j = N; j < basis_size; ++j) {
-                            const auto& ops_j = basis[j].operators;
+                            const auto& ops_b = basis[j].operators;
+
                             results[thread] +=
-                                expectation_value(ops_i[0], ops_j[0])
-                                * expectation_value(ops_j[1], ops_j[2])
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                expectation_value(op_a, ops_b[0])
+                                * expectation_value(ops_b[1], ops_b[2])
+                                * types::add_conjugate_products(vector[i], vector[j]);
                         }
                     }
 
@@ -100,34 +103,31 @@ namespace ieompp
                     for(auto i = N; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
                         const auto& ops_i = basis[i].operators;
-                        for(auto j = 0ul; j < N; ++j) {
-                            const auto& ops_j = basis[j].operators;
-                            results[thread] +=
-                                expectation_value(ops_i[0], ops_i[1])
-                                * expectation_value(ops_i[2], ops_j[0])
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
-                        }
-                    }
-
-#pragma omp parallel for
-                    for(auto i = N; i < basis_size; ++i) {
-                        const auto thread = omp_get_thread_num();
-                        const auto& ops_i = basis[i].operators;
-                        for(auto j = N; j < basis_size; ++j) {
+                        for(auto j = N; j < i; ++j) {
                             const auto& ops_j   = basis[j].operators;
                             const auto summand1 = expectation_value(ops_i[0], ops_j[0])
                                                   * expectation_value(ops_i[1], ops_i[2])
                                                   * expectation_value(ops_j[1], ops_j[2]);
-                            const auto summand2 = expectation_value(ops_i[0], ops_j[0])
-                                                  * expectation_value(ops_i[1], ops_j[2])
-                                                  * ((ops_i[2].same_indices(ops_j[1]) ? 1. : 0.)
-                                                     - expectation_value(ops_i[2], ops_j[1]));
+                            const auto summand2 =
+                                expectation_value(ops_i[0], ops_j[0])
+                                * expectation_value(ops_i[1], ops_j[2])
+                                * (((ops_i[2].index1 == ops_j[1].index1) ? 1. : 0.)
+                                   - expectation_value(ops_j[1], ops_i[2]));
                             results[thread] +=
                                 (summand1 + summand2)
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                * types::add_conjugate_products(vector[i], vector[j]);
                         }
+                        const auto summand1 = expectation_value(ops_i[0], ops_i[0])
+                                              * expectation_value(ops_i[1], ops_i[2])
+                                              * expectation_value(ops_i[1], ops_i[2]);
+                        const auto summand2 = expectation_value(ops_i[0], ops_i[0])
+                                              * expectation_value(ops_i[1], ops_i[2])
+                                              * (((ops_i[2].index1 == ops_i[1].index1) ? 1. : 0.)
+                                                 - expectation_value(ops_i[1], ops_i[2]));
+                        results[thread] += (summand1 + summand2) * std::norm(vector[i]);
                     }
-                    return std::accumulate(results.begin(), results.end(), ResultType(0.));
+
+                    return std::accumulate(results.begin(), results.end(), 0.);
                 }
             };
         } // namespace real_space
