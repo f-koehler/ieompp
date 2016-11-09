@@ -103,8 +103,8 @@ namespace ieompp
                         for(auto j = 0ul; j < N; ++j) {
                             const auto& ops_j = basis[j].operators;
                             results[thread] +=
-                                expectation_value(ops_i[0], ops_i[1])
-                                * expectation_value(ops_i[2], ops_j[0])
+                                expectation_value(ops_i[0], ops_j[0])
+                                * expectation_value(ops_i[1], ops_i[2])
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -118,10 +118,11 @@ namespace ieompp
                             const auto summand1 = expectation_value(ops_i[0], ops_j[0])
                                                   * expectation_value(ops_i[1], ops_i[2])
                                                   * expectation_value(ops_j[1], ops_j[2]);
-                            const auto summand2 = expectation_value(ops_i[0], ops_j[0])
-                                                  * expectation_value(ops_i[1], ops_j[2])
-                                                  * ((ops_i[2].same_indices(ops_j[1]) ? 1. : 0.)
-                                                     - expectation_value(ops_i[2], ops_j[1]));
+                            const auto summand2 =
+                                expectation_value(ops_i[0], ops_j[0])
+                                * expectation_value(ops_i[1], ops_j[2])
+                                * (((ops_i[2].index1 == ops_j[1].index1) ? 1. : 0.)
+                                   - expectation_value(ops_j[1], ops_i[2]));
                             results[thread] +=
                                 (summand1 + summand2)
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
