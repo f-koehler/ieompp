@@ -120,11 +120,6 @@ int main(int argc, char** argv)
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
 
-    if(!types::is_symmetric(M)) {
-        loggers.main->critical("Matrix is not symmetric!");
-        return 1;
-    }
-
     loggers.main->info("Multiply matrix with prefactor 1i");
     M *= std::complex<double>(0, 1);
 
