@@ -102,6 +102,12 @@ namespace ieompp
             return std::complex<Scalar>(a.real() * b.real() + a.imag() * b.imag(),
                                         -a.real() * b.imag() + b.real() * a.imag());
         }
+
+        template <typename Scalar>
+        Scalar add_conjugate_products(const std::complex<Scalar>& a, const std::complex<Scalar>& b)
+        {
+            return 2 * (a.real() * b.real() + a.imag() * b.imag());
+        }
     } // namespace types
 } // namespace ieompp
 
