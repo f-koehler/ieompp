@@ -20,6 +20,8 @@ namespace ieompp
                 std::list<Index> created_particles;
                 std::list<Index> annihilated_particles;
 
+                ExcitedFermiSea() = default;
+
                 template <typename Term, typename Dispersion>
                 ExcitedFermiSea(const Term& term, const Dispersion& dispersion,
                                 const typename Dispersion::Float& fermi_energy = 0.)
