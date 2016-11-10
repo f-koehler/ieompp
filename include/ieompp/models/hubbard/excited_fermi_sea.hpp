@@ -101,6 +101,27 @@ namespace ieompp
                     return std::make_pair(it == created_particles.end(), it);
                 }
             };
+
+            template <typename Index>
+            bool have_vanishing_overlap(const ExcitedFermiSea<Index>& left_state,
+                                        const ExcitedFermiSea<Index>& right_state)
+            {
+                // the states are orthogonal if all creations/annihilations cancel out
+                if(left_state.created_particles.size()
+                   != right_state.annihilated_particles.size()) {
+                    return true;
+                }
+                if(left_state.annihilated_particles.size()
+                   != right_state.created_particles.size()) {
+                    return true;
+                }
+                return !std::equal(left_state.created_particles.begin(),
+                                   left_state.created_particles.end(),
+                                   right_state.annihilated_particles.begin())
+                       || !std::equal(left_state.annihilated_particles.begin(),
+                                      left_state.annihilated_particles.end(),
+                                      right_state.created_particles());
+            }
         }
     }
 }
