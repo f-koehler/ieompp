@@ -1,5 +1,5 @@
-#ifndef IEOMPP_MODELS_HUBBARD_OBSERVABLE_HPP_
-#define IEOMPP_MODELS_HUBBARD_OBSERVABLE_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_SITE_OCCUPATION_HPP_
+#define IEOMPP_MODELS_HUBBARD_REAL_SPACE_SITE_OCCUPATION_HPP_
 
 #include <functional>
 #include <numeric>
@@ -7,22 +7,22 @@
 
 #include <omp.h>
 
-#include "ieompp/models/hubbard/basis.hpp"
+#include "ieompp/models/hubbard_real_space/basis.hpp"
 #include "ieompp/types/matrix.hpp"
 #include "ieompp/types/number.hpp"
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace models
     {
-        namespace real_space
+        namespace hubbard_real_space
         {
             template <typename Basis>
-            struct ParticleNumber {
+            struct SiteOccupation {
             };
 
             template <typename Term>
-            struct ParticleNumber<Basis1Operator<Term>> {
+            struct SiteOccupation<Basis1Operator<Term>> {
                 using Basis    = Basis1Operator<Term>;
                 using Float    = typename types::RealType<typename Term::Prefactor>::type;
                 using Operator = typename Term::Operator;
@@ -56,7 +56,7 @@ namespace ieompp
             };
 
             template <typename Term>
-            struct ParticleNumber<Basis3Operator<Term>> {
+            struct SiteOccupation<Basis3Operator<Term>> {
                 using Basis    = Basis3Operator<Term>;
                 using Float    = typename types::RealType<typename Term::Prefactor>::type;
                 using Operator = typename Term::Operator;
@@ -129,28 +129,8 @@ namespace ieompp
                     return std::accumulate(results.begin(), results.end(), 0.);
                 }
             };
-        } // namespace real_space
-
-        namespace momentum_space
-        {
-            template <typename Basis>
-            struct ParticleNumber {
-            };
-
-            template <typename Term>
-            struct ParticleNumber<Basis3Operator<Term>> {
-                using Basis    = Basis3Operator<Term>;
-                using Float    = typename types::RealType<typename Term::Prefactor>::type;
-                using Operator = typename Term::Operator;
-
-                template <typename Vector>
-                typename types::ScalarType<Vector>::type operator()(const Basis& basis,
-                                                                    const Vector& vector) const
-                {
-                }
-            };
-        } // namespace momentum_space
-    }     // namespace hubbard
+        } // namespace hubbard_real_space
+    }     // namespace models
 } // namespace ieompp
 
 #endif

@@ -1,17 +1,20 @@
-#ifndef IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_MOMENTUM_SPACE_HPP_
-#define IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_MOMENTUM_SPACE_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
+#define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
 
-#include "ieompp/models/hubbard/basis.hpp"
-#include "ieompp/models/hubbard/liouvillian.hpp"
+#include <cstdint>
+
+#include "ieompp/models/hubbard_common/operator_traits.hpp"
+#include "ieompp/models/hubbard_momentum_space/basis.hpp"
+#include "ieompp/models/hubbard_momentum_space/liouvillian.hpp"
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace models
     {
-        namespace momentum_space
+        namespace hubbard_momentum_space
         {
             template <typename Term>
-            uint64_t number_of_matrix_elements(const momentum_space::Basis3Operator<Term>& basis)
+            uint64_t number_of_matrix_elements(const Basis3Operator<Term>& basis)
             {
                 return basis.N * (1 + 3 * basis.N);
             }
@@ -20,7 +23,7 @@ namespace ieompp
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                              const Basis3Operator<Term>& basis, const Lattice& lattice)
             {
-                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
                 using Index = typename types::IndexType<Matrix>::type;
@@ -57,8 +60,8 @@ namespace ieompp
                     matrix.finalize(row);
                 }
             }
-        } // namespace momentum_space
-    }     // namespace hubbard
+        } // namespace hubbard_momentum_space
+    }     // namespace models
 } // namespace ieompp
 
 #endif

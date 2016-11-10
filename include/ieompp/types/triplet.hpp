@@ -1,12 +1,12 @@
-#ifndef IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_TRIPLET_HPP_
-#define IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_TRIPLET_HPP_
+#ifndef IEOMPP_TYPES_TRIPLET_HPP_
+#define IEOMPP_TYPES_TRIPLET_HPP_
 
 #include <algorithm>
 #include <vector>
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace types
     {
         template <typename ScalarT, typename IndexT>
         struct Triplet {
@@ -29,7 +29,7 @@ namespace ieompp
                           });
             }
         };
-    } // namespace hubbard
+    } // namespace types
 } // namespace ieompp
 
 #endif

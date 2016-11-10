@@ -1,31 +1,33 @@
-#ifndef IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
-#define IEOMPP_MODELS_HUBBARD_BLAZE_SPARSE_REAL_SPACE_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_BLAZE_SPARSE_HPP_
+#define IEOMPP_MODELS_HUBBARD_REAL_SPACE_BLAZE_SPARSE_HPP_
 
-#include "ieompp/models/hubbard/basis.hpp"
-#include "ieompp/models/hubbard/blaze_sparse/triplet.hpp"
-#include "ieompp/models/hubbard/liouvillian.hpp"
+#include <cstdint>
+
+#include "ieompp/models/hubbard_real_space/basis.hpp"
+#include "ieompp/models/hubbard_real_space/liouvillian.hpp"
+#include "ieompp/types/triplet.hpp"
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace models
     {
-        namespace real_space
+        namespace hubbard_real_space
         {
             template <typename Term, typename Lattice>
-            uint64_t number_of_kinetic_elements(const real_space::Basis1Operator<Term>& basis)
+            uint64_t number_of_kinetic_elements(const Basis1Operator<Term>& basis)
             {
                 return basis.N * Lattice::coordination_number;
             }
 
             template <typename Term, typename Lattice>
-            uint64_t number_of_kinetic_elements(const real_space::Basis3Operator<Term>& basis)
+            uint64_t number_of_kinetic_elements(const Basis3Operator<Term>& basis)
             {
                 return (basis.N * Lattice::coordination_number)
                        + (basis.N * basis.N_squared * 6 * Lattice::coordination_number);
             }
 
             template <typename Term>
-            uint64_t number_of_interaction_elements(const real_space::Basis3Operator<Term>& basis)
+            uint64_t number_of_interaction_elements(const Basis3Operator<Term>& basis)
             {
                 return basis.size() * 2;
             }
@@ -37,14 +39,14 @@ namespace ieompp
                 using Scalar = typename types::ScalarType<Matrix>::type;
                 using Index  = typename types::IndexType<Matrix>::type;
 
-                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();
                 matrix.reserve(number_of_kinetic_elements<Term, Lattice>(basis));
 
-                TripletList<Scalar, Index> triplets;
+                types::TripletList<Scalar, Index> triplets;
                 for(Index row = 0; row < basis.N; ++row) {
                     triplets.clear();
 
@@ -63,9 +65,9 @@ namespace ieompp
 
             template <typename Liouvillian, typename Matrix, typename Term, typename Lattice>
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
-                             const real_space::Basis3Operator<Term>& basis, const Lattice& lattice)
+                             const Basis3Operator<Term>& basis, const Lattice& lattice)
             {
-                static_assert(ieompp::hubbard::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
                 using Scalar = typename types::ScalarType<Matrix>::type;
@@ -74,7 +76,7 @@ namespace ieompp
                 matrix.reserve(number_of_kinetic_elements<Term, Lattice>(basis)
                                + number_of_interaction_elements(basis));
 
-                TripletList<Scalar, Index> triplets;
+                types::TripletList<Scalar, Index> triplets;
                 for(Index row = 0; row < basis.N; ++row) {
                     triplets.clear();
 
@@ -130,8 +132,8 @@ namespace ieompp
                     matrix.finalize(row);
                 }
             }
-        } // namespace real_space
-    }     // namespace hubbard
+        } // namespace hubbard_real_space
+    }     // namespace models
 } // namespace ieompp
 
 #endif

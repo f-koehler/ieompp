@@ -16,9 +16,8 @@ namespace po = boost::program_options;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/observable.hpp>
+#include <ieompp/models/hubbard_real_space.hpp>
+namespace hubbard = ieompp::models::hubbard_real_space;
 
 complex<double> minus_i_power(uint64_t power) {
     switch(power % 4) {
@@ -37,9 +36,9 @@ int main()
 {
     const uint64_t N = 128;
     ieompp::discretization::LinearDiscretization<double> lattice(N, 1.);
-    ieompp::hubbard::real_space::
-        Basis1Operator<ieompp::algebra::Term<double, ieompp::algebra::Operator<uint64_t, bool>>>
-            basis(lattice);
+    hubbard::Basis1Operator<ieompp::algebra::Term<double,
+                                                  ieompp::algebra::Operator<uint64_t, bool>>>
+        basis(lattice);
 
     const double dt      = 0.01;
     const uint64_t steps = 10000;
@@ -59,8 +58,8 @@ int main()
         }
     }
 
-    const ieompp::hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>
-        expectation_value(lattice);
+    const hubbard::ExpectationValue1DHalfFilled<double, decltype(lattice)> expectation_value(
+        lattice);
 
     vector<vector<complex<double>>> results;
 #pragma omp parallel

@@ -10,14 +10,11 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/liouvillian.hpp>
-#include <ieompp/models/hubbard/observable.hpp>
+#include <ieompp/models/hubbard_momentum_space.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
-using namespace ieompp;
+namespace hubbard = ieompp::models::hubbard_momentum_space;
 namespace spd = spdlog;
 
 #include <boost/filesystem.hpp>
@@ -27,7 +24,7 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char** argv)
 {
-    const ApplicationTimer timer;
+    const ieompp::ApplicationTimer timer;
     const string program_name("hubbard_momentum_1d_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
@@ -98,19 +95,19 @@ int main(int argc, char** argv)
     write_response_file(rsp_path, argc, argv, loggers);
 
     // setting up lattice
-    discretization::LinearDiscretization<double, uint64_t> momentum_space(N);
-    discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
+    ieompp::discretization::LinearDiscretization<double, uint64_t> momentum_space(N);
+    ieompp::discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
 
-    using Operator = algebra::Operator<uint64_t, bool>;
-    using Term     = algebra::Term<double, Operator>;
+    using Operator = ieompp::algebra::Operator<uint64_t, bool>;
+    using Term     = ieompp::algebra::Term<double, Operator>;
 
     // init operator basis
-    using Basis = hubbard::momentum_space::Basis3Operator<Term>;
+    using Basis = hubbard::Basis3Operator<Term>;
     loggers.main->info("Setting up operator basis");
     Basis basis(N / 4, momentum_space);
 
     // init dispersion
-    const auto L = hubbard::momentum_space::make_liouvillian(momentum_space, lattice, J, U);
+    const auto L = hubbard::make_liouvillian(momentum_space, lattice, J, U);
 
     /* // computing matrix */
     /* loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size()); */

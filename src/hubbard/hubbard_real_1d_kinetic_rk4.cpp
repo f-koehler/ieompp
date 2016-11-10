@@ -10,14 +10,11 @@ using namespace std;
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/application_timer.hpp>
 #include <ieompp/discretization/linear.hpp>
-#include <ieompp/models/hubbard/basis.hpp>
-#include <ieompp/models/hubbard/expectation_value.hpp>
-#include <ieompp/models/hubbard/blaze_sparse.hpp>
-#include <ieompp/models/hubbard/observable.hpp>
+#include <ieompp/models/hubbard_real_space.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/platform.hpp>
 #include <ieompp/spdlog.hpp>
-using namespace ieompp;
+namespace hubbard = ieompp::models::hubbard_real_space;
 namespace spd = spdlog;
 
 #include <boost/filesystem.hpp>
@@ -27,7 +24,7 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char** argv)
 {
-    const ApplicationTimer timer;
+    const ieompp::ApplicationTimer timer;
     const string program_name("hubbard_real_1d_kinetic_rk4");
 
     po::options_description description("Calculate the matrix for the 1D Hubbard model on a linear "
@@ -96,23 +93,23 @@ int main(int argc, char** argv)
     write_response_file(rsp_path, argc, argv, loggers);
 
     // setting up a lattice
-    discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
+    ieompp::discretization::LinearDiscretization<double, uint64_t> lattice(N, 1.);
 
-    using Operator = algebra::Operator<uint64_t, bool>;
-    using Term     = algebra::Term<double, Operator>;
+    using Operator = ieompp::algebra::Operator<uint64_t, bool>;
+    using Term     = ieompp::algebra::Term<double, Operator>;
 
     // init operator basis
-    using Basis = hubbard::real_space::Basis1Operator<Term>;
+    using Basis = hubbard::Basis1Operator<Term>;
     loggers.main->info("Setting up operator basis");
     Basis basis(lattice);
 
     // compute matrix
-    const auto L = hubbard::real_space::make_liouvillian(J, 0.);
+    const auto L = hubbard::make_liouvillian(J, 0.);
     loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
     M.reserve(basis.size() * 10);
     loggers.main->info("Computing matrix elements");
-    hubbard::real_space::init_kinetic_matrix(L, M, basis, lattice);
+    hubbard::init_kinetic_matrix(L, M, basis, lattice);
     loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
                        M.rows() * M.columns());
     loggers.main->info("Multiply matrix with prefactor 1i");
@@ -142,9 +139,9 @@ int main(int argc, char** argv)
     ofstream out_file(out_path.c_str());
     write_platform_info(out_file);
 
-    ode::RK4<double> solver(basis.size(), dt);
-    hubbard::real_space::ParticleNumber<decltype(basis)> observable{
-        hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
+    ieompp::ode::RK4<double> solver(basis.size(), dt);
+    hubbard::SiteOccupation<decltype(basis)> observable{
+        hubbard::ExpectationValue1DHalfFilled<double, decltype(lattice)>{lattice}};
 
     double t = 0.;
     double n_ev = 0.;

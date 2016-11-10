@@ -1,19 +1,19 @@
-#ifndef IEOMPP_MODELS_HUBBARD_NON_VANISHING_EXPECTATION_VALUES_HPP_
-#define IEOMPP_MODELS_HUBBARD_NON_VANISHING_EXPECTATION_VALUES_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_NON_VANISHING_EXPECTATION_VALUES_HPP_
+#define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_NON_VANISHING_EXPECTATION_VALUES_HPP_
 
 #include <algorithm>
 #include <vector>
 
 #include <omp.h>
 
-#include "ieompp/models/hubbard/basis.hpp"
-#include "ieompp/models/hubbard/excited_fermi_sea.hpp"
+#include "ieompp/models/hubbard_momentum_space/basis.hpp"
+#include "ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp"
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace models
     {
-        namespace momentum_space
+        namespace hubbard_momentum_space
         {
             template <typename Index, typename Float>
             class NonVanishingExpectationValues : public std::vector<std::pair<Index, Index>>
@@ -57,15 +57,17 @@ namespace ieompp
 
                     // merge vectors into one
                     std::size_t total_size = 0;
-                    for(const auto& vec : non_vanishing) total_size += vec.size();
+                    for(const auto& vec : non_vanishing) {
+                        total_size += vec.size();
+                    }
                     this->reserve(total_size);
                     for(const auto& vec : non_vanishing) {
                         this->insert(this->end(), vec.begin(), vec.end());
                     }
                 }
             };
-        }
-    }
-}
+        } // namespace hubbard_momentum_space
+    }     // namespace models
+} // namespace ieompp
 
 #endif

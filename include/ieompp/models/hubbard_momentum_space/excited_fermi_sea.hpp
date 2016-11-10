@@ -1,5 +1,5 @@
-#ifndef IEOMPP_MODELS_HUBBARD_EXCITED_FERMI_SEA_HPP_
-#define IEOMPP_MODELS_HUBBARD_EXCITED_FERMI_SEA_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_EXCITED_FERMI_SEA_HPP_
+#define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_EXCITED_FERMI_SEA_HPP_
 
 #include <algorithm>
 #include <list>
@@ -8,9 +8,9 @@
 
 namespace ieompp
 {
-    namespace hubbard
+    namespace models
     {
-        namespace momentum_space
+        namespace hubbard_momentum_space
         {
             template <typename IndexT>
             struct ExcitedFermiSea {
@@ -124,8 +124,8 @@ namespace ieompp
                                       left_state.annihilated_particles.end(),
                                       right_state.created_particles());
             }
-        }
-    }
-}
+        } // namespace hubbard_momentum_space
+    }     // namespace models
+} // namespace ieompp
 
 #endif
