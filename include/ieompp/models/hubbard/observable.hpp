@@ -94,7 +94,7 @@ namespace ieompp
 
                             results[thread] +=
                                 expectation_value(op_a, ops_b[0])
-                                * expectation_value(ops_b[1], ops_b[2])
+                                * expectation_value(ops_b[2], ops_b[1])
                                 * types::add_conjugate_products(vector[i], vector[j]);
                         }
                     }
@@ -107,23 +107,22 @@ namespace ieompp
                             const auto& ops_j   = basis[j].operators;
                             const auto summand1 = expectation_value(ops_i[0], ops_j[0])
                                                   * expectation_value(ops_i[1], ops_i[2])
-                                                  * expectation_value(ops_j[1], ops_j[2]);
+                                                  * expectation_value(ops_j[2], ops_j[1]);
                             const auto summand2 =
                                 expectation_value(ops_i[0], ops_j[0])
-                                * expectation_value(ops_i[1], ops_j[2])
-                                * (((ops_i[2].index1 == ops_j[1].index1) ? 1. : 0.)
-                                   - expectation_value(ops_j[1], ops_i[2]));
+                                * expectation_value(ops_i[1], ops_j[1])
+                                * (((ops_i[2].index1 == ops_j[2].index1) ? 1. : 0.)
+                                   - expectation_value(ops_j[2], ops_i[2]));
                             results[thread] +=
                                 (summand1 + summand2)
                                 * types::add_conjugate_products(vector[i], vector[j]);
                         }
                         const auto summand1 = expectation_value(ops_i[0], ops_i[0])
                                               * expectation_value(ops_i[1], ops_i[2])
-                                              * expectation_value(ops_i[1], ops_i[2]);
+                                              * expectation_value(ops_i[2], ops_i[1]);
                         const auto summand2 = expectation_value(ops_i[0], ops_i[0])
-                                              * expectation_value(ops_i[1], ops_i[2])
-                                              * (((ops_i[2].index1 == ops_i[1].index1) ? 1. : 0.)
-                                                 - expectation_value(ops_i[1], ops_i[2]));
+                                              * expectation_value(ops_i[1], ops_i[1])
+                                              * (1 - expectation_value(ops_i[2], ops_i[2]));
                         results[thread] += (summand1 + summand2) * std::norm(vector[i]);
                     }
 
