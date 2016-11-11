@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     // init operator basis
     using Basis = hubbard::Basis3Operator<Term>;
     loggers.main->info("Setting up operator basis");
-    Basis basis(N / 4, momentum_space);
+    Basis basis(0, momentum_space);
 
     // init dispersion
     const auto L = hubbard::make_liouvillian(momentum_space, lattice, J, U);
@@ -146,8 +146,9 @@ int main(int argc, char** argv)
 
     ieompp::ode::RK4<double> solver(basis.size(), dt);
 
-    const auto test = hubbard::NonVanishingExpectationValues<typename Operator::Index1, double>(
-        basis, L.dispersion);
+    const auto particle_number = hubbard::ParticleNumber<decltype(basis)>(basis, L.dispersion, 0.);
+    cout << particle_number(h) << '\n';
+    return 0;
 
     /* double t = 0.; */
 

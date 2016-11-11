@@ -42,30 +42,30 @@ namespace ieompp
                             Excitation(conjugate_basis[i], dispersion, fermi_energy);
                     }
 
-                    /* // store all non-vanishing combinations in vectors */
-                    /* std::vector<std::vector<std::pair<Index, Index>>> non_vanishing( */
-                    /*     omp_get_max_threads()); */
-                    /* #pragma omp parallel for */
-                    /* for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) { */
-                    /*     const auto thread = omp_get_thread_num(); */
-                    /*     for(typename Basis3Operator<Term>::Index j = 0; j < i; ++j) { */
-                    /*         if(have_vanishing_overlap(excited_states[i], excited_states[j])) { */
-                    /*             continue; */
-                    /*         } */
-                    /*         non_vanishing[thread].push_back(std::make_pair(i, j)); */
-                    /*         non_vanishing[thread].push_back(std::make_pair(j, i)); */
-                    /*     } */
-                    /* } */
+                    // store all non-vanishing combinations in vectors
+                    std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
+                        omp_get_max_threads());
+#pragma omp parallel for
+                    for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) {
+                        const auto thread = omp_get_thread_num();
+                        for(typename Basis3Operator<Term>::Index j = 0; j < i; ++j) {
+                            if(have_vanishing_overlap(excited_states[i], excited_states[j])) {
+                                continue;
+                            }
+                            non_vanishing[thread].push_back(std::make_pair(i, j));
+                            non_vanishing[thread].push_back(std::make_pair(j, i));
+                        }
+                    }
 
-                    /* // merge vectors into one */
-                    /* std::size_t total_size = 0; */
-                    /* for(const auto& vec : non_vanishing) { */
-                    /*     total_size += vec.size(); */
-                    /* } */
-                    /* this->reserve(total_size); */
-                    /* for(const auto& vec : non_vanishing) { */
-                    /*     this->insert(this->end(), vec.begin(), vec.end()); */
-                    /* } */
+                    // merge vectors into one
+                    std::size_t total_size = 0;
+                    for(const auto& vec : non_vanishing) {
+                        total_size += vec.size();
+                    }
+                    this->reserve(total_size);
+                    for(const auto& vec : non_vanishing) {
+                        this->insert(this->end(), vec.begin(), vec.end());
+                    }
                 }
             };
         } // namespace hubbard_momentum_space

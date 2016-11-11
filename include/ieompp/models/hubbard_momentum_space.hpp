@@ -6,5 +6,6 @@
 #include "ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp"
 #include "ieompp/models/hubbard_momentum_space/liouvillian.hpp"
 #include "ieompp/models/hubbard_momentum_space/non_vanishing_expectation_values.hpp"
+#include "ieompp/models/hubbard_momentum_space/particle_number.hpp"
 
 #endif
