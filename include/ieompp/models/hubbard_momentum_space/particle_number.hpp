@@ -37,7 +37,8 @@ namespace ieompp
                 }
 
                 template <typename Vector>
-                Float operator()(const Vector& vec) const {
+                Float operator()(const Vector& vec) const
+                {
                     const auto num = non_vanishing_expectation_values.size();
                     std::vector<Float> results(omp_get_max_threads(), 0);
 
@@ -49,7 +50,8 @@ namespace ieompp
                         if(pair.first == pair.second) {
                             results[thread] += std::norm(vec[pair.first]);
                         } else {
-                            results[thread] += types::add_conjugate_products(vec[pair.first], vec[pair.second]);
+                            results[thread] +=
+                                types::add_conjugate_products(vec[pair.first], vec[pair.second]);
                         }
                     }
 
