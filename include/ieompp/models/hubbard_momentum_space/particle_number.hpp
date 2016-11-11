@@ -59,7 +59,7 @@ namespace ieompp
                 }
             };
         } // namespace hubbard_momentum_space
-    } // namespace models
+    }     // namespace models
 } // namespace ieompp
 
 #endif

@@ -44,7 +44,7 @@ namespace ieompp
                     }
                 }
 
-                const Float& operator[](typename std::vector<Float>::size_type idx) const
+                const Float& operator()(typename std::vector<Float>::size_type idx) const
                 {
                     return _values[idx];
                 }

@@ -38,7 +38,7 @@ namespace ieompp
                 const auto& op = basis[0].operators.front();
 
                 // add diagonal element
-                matrix.append(0, 0, liouvillian.dispersion[op.index1] + interaction1);
+                matrix.append(0, 0, liouvillian.dispersion(op.index1) + interaction1);
 
                 // add off-diagonal elements
                 for(Index i = 1; i < basis.size(); ++i) {
@@ -53,9 +53,9 @@ namespace ieompp
                     matrix.append(row, 0, interaction2);
 
                     // add diagonal element
-                    matrix.append(row, row, liouvillian.dispersion[ops[0].index1]
-                                                + liouvillian.dispersion[ops[1].index1]
-                                                - liouvillian.dispersion[ops[2].index1]
+                    matrix.append(row, row, liouvillian.dispersion(ops[0].index1)
+                                                + liouvillian.dispersion(ops[1].index1)
+                                                - liouvillian.dispersion(ops[2].index1)
                                                 + interaction1);
                     matrix.finalize(row);
                 }

@@ -30,7 +30,7 @@ namespace ieompp
 
                     for(auto it = ops.crbegin(); it != ops.crend(); ++it) {
                         // get energy of next creation/annihilation
-                        const auto energy = dispersion[it->index1];
+                        const auto energy = dispersion(it->index1);
 
                         if(it->creator) {
                             // check if creation is below fermi level
