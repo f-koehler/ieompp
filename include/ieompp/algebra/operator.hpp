@@ -17,14 +17,14 @@ namespace ieompp
             template <typename Op, typename T, std::size_t I, std::size_t N>
             struct HasIndexOfTypeHelper {
                 static constexpr bool value =
-                    std::is_same<typename IndexType<I, Op>::type, T>::value
+                    std::is_same<typename IndexType<I, Op>::Type, T>::value
                     || HasIndexOfTypeHelper<Op, T, I + 1, N>::value;
             };
 
             template <typename Op, typename T, std::size_t N>
             struct HasIndexOfTypeHelper<Op, T, N, N> {
                 static constexpr bool value =
-                    std::is_same<typename IndexType<N, Op>::type, T>::value;
+                    std::is_same<typename IndexType<N, Op>::Type, T>::value;
             };
         } // namespace detail
 

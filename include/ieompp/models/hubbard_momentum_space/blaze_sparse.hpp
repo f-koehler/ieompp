@@ -23,10 +23,10 @@ namespace ieompp
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                              const Basis3Operator<Term>& basis, const Lattice& lattice)
             {
-                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Index = typename types::IndexType<Matrix>::type;
+                using Index = typename types::IndexType<Matrix>::Type;
 
                 const auto interaction1 = liouvillian.U / 2.,
                            interaction2 = liouvillian.U / (2. * lattice.num());

@@ -24,7 +24,7 @@ namespace ieompp
             template <typename Term>
             struct SiteOccupation<Basis1Operator<Term>> {
                 using Basis    = Basis1Operator<Term>;
-                using Float    = typename types::RealType<typename Term::Prefactor>::type;
+                using Float    = typename types::RealType<typename Term::Prefactor>::Type;
                 using Operator = typename Term::Operator;
                 using ExpectationValueFunction =
                     std::function<Float(const Operator&, const Operator&)>;
@@ -58,7 +58,7 @@ namespace ieompp
             template <typename Term>
             struct SiteOccupation<Basis3Operator<Term>> {
                 using Basis    = Basis3Operator<Term>;
-                using Float    = typename types::RealType<typename Term::Prefactor>::type;
+                using Float    = typename types::RealType<typename Term::Prefactor>::Type;
                 using Operator = typename Term::Operator;
                 using ExpectationValueFunction =
                     std::function<Float(const Operator&, const Operator&)>;

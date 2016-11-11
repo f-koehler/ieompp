@@ -27,18 +27,18 @@ namespace ieompp
 
             template <typename T>
             struct RealTypeHelper<T, false> {
-                using type = T;
+                using Type = T;
             };
 
             template <typename T>
             struct RealTypeHelper<T, true> {
-                using type = typename T::value_type;
+                using Type = typename T::value_type;
             };
         } // namespace detail
 
         template <typename T>
         struct RealType {
-            using type = typename detail::RealTypeHelper<T, IsComplex<T>::value>::type;
+            using Type = typename detail::RealTypeHelper<T, IsComplex<T>::value>::Type;
         };
 
         template <typename T>
@@ -78,7 +78,7 @@ namespace ieompp
         template <typename T>
         typename std::enable_if<IsComplex<T>::value, bool>::type IsZero(const T& t)
         {
-            using Float = typename RealType<T>::type;
+            using Float = typename RealType<T>::Type;
             return IsZero<Float>(t.real()) && IsZero<Float>(t.imag());
         }
 

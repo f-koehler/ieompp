@@ -14,3 +14,8 @@ add_executable(
     algebra/operator_same_indices.cpp
 )
 add_ieompp_test(algebra)
+
+# add_executable(
+#     models.hubbard_momentum_space
+#     models/hubbard_momentum_space/operator_traits.cpp
+# )

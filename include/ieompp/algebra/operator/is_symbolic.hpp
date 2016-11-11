@@ -12,14 +12,14 @@ namespace ieompp
             template <typename Op, std::size_t I, std::size_t N>
             struct IsSymbolicOperatorHelper {
                 static constexpr bool value =
-                    !std::is_arithmetic<typename IndexType<I, Op>::type>::value
+                    !std::is_arithmetic<typename IndexType<I, Op>::Type>::value
                     || IsSymbolicOperatorHelper<Op, I + 1, N>::value;
             };
 
             template <typename Op, std::size_t N>
             struct IsSymbolicOperatorHelper<Op, N, N> {
                 static constexpr bool value =
-                    !std::is_arithmetic<typename IndexType<N, Op>::type>::value;
+                    !std::is_arithmetic<typename IndexType<N, Op>::Type>::value;
             };
         } // namespace detail
 
@@ -32,7 +32,7 @@ namespace ieompp
         template <std::size_t I, typename Operator>
         struct IsSymbolicIndex {
             static constexpr bool value =
-                !std::is_arithmetic<typename IndexType<I, Operator>::type>::value;
+                !std::is_arithmetic<typename IndexType<I, Operator>::Type>::value;
         };
     } // namespace algebra
 } // namespace ieompp

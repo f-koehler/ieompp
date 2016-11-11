@@ -21,9 +21,8 @@ namespace ieompp
                 template <typename Lattice>
                 Basis1Operator(const Lattice& lattice) : N(lattice.num())
                 {
-                    static_assert(
-                        hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N);
 
@@ -44,9 +43,8 @@ namespace ieompp
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
                 {
-                    static_assert(
-                        hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N * (N * N + 1));
                     const auto prefactor = typename Term::Prefactor(1.);

@@ -48,7 +48,7 @@ namespace ieompp
                 template <typename Operator>
                 Float operator()(const Operator& a, const Operator& b) const
                 {
-                    static_assert(hubbard_common::is_hubbard_operator<Operator>::value,
+                    static_assert(hubbard_common::IsHubbardOperator<Operator>::value,
                                   "Operator must be of Hubbard type");
                     static_assert(Operator::number_of_indices == 2, "Operator must have 2 indices");
 

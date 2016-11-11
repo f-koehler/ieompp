@@ -15,7 +15,7 @@ namespace ieompp
             using Operator  = OperatorT;
             using Container = ContainerT;
 
-            Prefactor prefactor;
+            Prefactor prefactor{};
             Container operators;
 
             void conjugate()

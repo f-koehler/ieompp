@@ -55,42 +55,42 @@ namespace ieompp
 
         template <typename Scalar, bool StorageOrder>
         struct ScalarType<blaze::DynamicMatrix<Scalar, StorageOrder>> {
-            using type = Scalar;
+            using Type = Scalar;
         };
 
         template <typename Scalar, bool StorageOrder>
         struct ScalarType<blaze::CompressedMatrix<Scalar, StorageOrder>> {
-            using type = Scalar;
+            using Type = Scalar;
         };
 
         template <typename Scalar, bool TransposeFlag>
         struct ScalarType<blaze::DynamicVector<Scalar, TransposeFlag>> {
-            using type = Scalar;
+            using Type = Scalar;
         };
 
         template <typename Scalar, bool TransposeFlag>
         struct ScalarType<blaze::CompressedVector<Scalar, TransposeFlag>> {
-            using type = Scalar;
+            using Type = Scalar;
         };
 
         template <typename Scalar, bool StorageOrder>
         struct IndexType<blaze::DynamicMatrix<Scalar, StorageOrder>> {
-            using type = blaze::size_t;
+            using Type = blaze::size_t;
         };
 
         template <typename Scalar, bool StorageOrder>
         struct IndexType<blaze::CompressedMatrix<Scalar, StorageOrder>> {
-            using type = blaze::size_t;
+            using Type = blaze::size_t;
         };
 
         template <typename Scalar, bool TransposeFlag>
         struct IndexType<blaze::DynamicVector<Scalar, TransposeFlag>> {
-            using type = blaze::size_t;
+            using Type = blaze::size_t;
         };
 
         template <typename Scalar, bool TransposeFlag>
         struct IndexType<blaze::CompressedVector<Scalar, TransposeFlag>> {
-            using type = blaze::size_t;
+            using Type = blaze::size_t;
         };
 
 

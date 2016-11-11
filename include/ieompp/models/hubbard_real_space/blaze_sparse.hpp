@@ -36,10 +36,10 @@ namespace ieompp
             void init_kinetic_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                                      const Basis1Operator<Term>& basis, const Lattice& lattice)
             {
-                using Scalar = typename types::ScalarType<Matrix>::type;
-                using Index  = typename types::IndexType<Matrix>::type;
+                using Scalar = typename types::ScalarType<Matrix>::Type;
+                using Index  = typename types::IndexType<Matrix>::Type;
 
-                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -67,11 +67,11 @@ namespace ieompp
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                              const Basis3Operator<Term>& basis, const Lattice& lattice)
             {
-                static_assert(hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
+                static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
                               "Operator-type in Term-type must be a Hubbard like operator!");
 
-                using Scalar = typename types::ScalarType<Matrix>::type;
-                using Index  = typename types::IndexType<Matrix>::type;
+                using Scalar = typename types::ScalarType<Matrix>::Type;
+                using Index  = typename types::IndexType<Matrix>::Type;
                 matrix.reset();
                 matrix.reserve(number_of_kinetic_elements<Term, Lattice>(basis)
                                + number_of_interaction_elements(basis));

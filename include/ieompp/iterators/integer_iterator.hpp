@@ -7,6 +7,7 @@ namespace ieompp
 {
     namespace iterators
     {
+        // TODO: this is a reimplementation of std::conditional
         template <typename T1, typename T2, bool value>
         struct use_first;
 

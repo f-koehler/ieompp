@@ -18,7 +18,7 @@ namespace ieompp
         template <typename Matrix>
         bool is_symmetric(const Matrix& m)
         {
-            using Index = typename IndexType<Matrix>::type;
+            using Index = typename IndexType<Matrix>::Type;
 
             if(!is_quadratic(m)) {
                 return false;
@@ -39,7 +39,7 @@ namespace ieompp
         template <typename Matrix>
         bool is_hermitian(const Matrix& m)
         {
-            using Index = typename IndexType<Matrix>::type;
+            using Index = typename IndexType<Matrix>::Type;
 
             if(!is_quadratic(m)) {
                 return false;
@@ -60,7 +60,7 @@ namespace ieompp
         template <typename Matrix>
         typename std::enable_if<IsMatrix<Matrix>::value, bool>::type IsZero(const Matrix& m)
         {
-            using Index     = typename IndexType<Matrix>::type;
+            using Index     = typename IndexType<Matrix>::Type;
             const auto rows = MatrixDimensionInfo<Matrix>::rows(m);
             const auto cols = MatrixDimensionInfo<Matrix>::columns(m);
             for(Index i = 0; i < rows; ++i) {

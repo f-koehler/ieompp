@@ -29,19 +29,19 @@ namespace ieompp
         using DefaultPrinters = std::tuple<std::pair<bool, BoolSpinPrinter>>;
 
         template <typename T, typename PrinterList>
-        struct get_printer_type {
+        struct GetPrinterType {
         };
 
         template <typename T>
-        struct get_printer_type<T, std::tuple<>> {
-            using type = DefaultPrinter<T>;
+        struct GetPrinterType<T, std::tuple<>> {
+            using Type = DefaultPrinter<T>;
         };
 
         template <typename T, typename U, typename... Ts>
-        struct get_printer_type<T, std::tuple<U, Ts...>> {
-            using type = typename std::
+        struct GetPrinterType<T, std::tuple<U, Ts...>> {
+            using Type = typename std::
                 conditional<std::is_same<T, typename U::first_type>::value, typename U::second_type,
-                            typename get_printer_type<T, std::tuple<Ts...>>::type>::type;
+                            typename GetPrinterType<T, std::tuple<Ts...>>::Type>::type;
         };
 
         template <typename Index>
@@ -52,7 +52,7 @@ namespace ieompp
                 strm << "^†";
             }
             strm << "_{";
-            get_printer_type<Index, DefaultPrinters>::type::print(strm, op.index);
+            GetPrinterType<Index, DefaultPrinters>::Type::print(strm, op.index);
             strm << '}';
             return strm;
         }
@@ -65,9 +65,9 @@ namespace ieompp
                 strm << "^†";
             }
             strm << "_{";
-            get_printer_type<Index1, DefaultPrinters>::type::print(strm, op.index1);
+            GetPrinterType<Index1, DefaultPrinters>::Type::print(strm, op.index1);
             strm << ',';
-            get_printer_type<Index2, DefaultPrinters>::type::print(strm, op.index2);
+            GetPrinterType<Index2, DefaultPrinters>::Type::print(strm, op.index2);
             strm << '}';
             return strm;
         }
@@ -78,8 +78,8 @@ namespace ieompp
             struct PrintHelper {
                 static void print(std::ostream& strm, const Operator& op)
                 {
-                    using Printer = typename get_printer_type<typename IndexType<I, Operator>::type,
-                                                              DefaultPrinters>::type;
+                    using Printer = typename GetPrinterType<typename IndexType<I, Operator>::Type,
+                                                            DefaultPrinters>::Type;
                     Printer::print(strm, get_index<I>(op));
                     strm << ',';
                     PrintHelper<Operator, I + 1, N>::print(strm, op);
@@ -90,8 +90,8 @@ namespace ieompp
             struct PrintHelper<Operator, N, N> {
                 static void print(std::ostream& strm, const Operator& op)
                 {
-                    using Printer = typename get_printer_type<typename IndexType<N, Operator>::type,
-                                                              DefaultPrinters>::type;
+                    using Printer = typename GetPrinterType<typename IndexType<N, Operator>::Type,
+                                                            DefaultPrinters>::Type;
                     Printer::print(strm, get_index<N>(op));
                 }
             };

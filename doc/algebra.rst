@@ -96,7 +96,7 @@ Algebra
     This type represents the index type of index *I* of the operator type that was passed.
 
 .. cpp:function:: constexpr template <std::size_t I, typename Operator> \
-    typename index_type<I, Operator>::type get_index(Operator& op)
+    typename IndexType<I, Operator>::Type get_index(Operator& op)
 
 .. cpp:function:: template <Operator> bool anticommutates(const Operator& a, const Operator& b)
 

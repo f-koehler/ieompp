@@ -24,7 +24,7 @@ namespace ieompp
                 using Term  = TermT;
                 using Basis = Basis3Operator<Term>;
                 using Index = typename Term::Operator::Index1;
-                using Float = typename types::RealType<typename Term::Prefactor>::type;
+                using Float = typename types::RealType<typename Term::Prefactor>::Type;
 
                 const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
 
@@ -58,8 +58,8 @@ namespace ieompp
                     return std::accumulate(results.begin(), results.end(), 0.);
                 }
             };
-        }
-    }
-}
+        } // namespace hubbard_momentum_space
+    } // namespace models
+} // namespace ieompp
 
 #endif

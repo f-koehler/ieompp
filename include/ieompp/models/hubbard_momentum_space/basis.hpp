@@ -22,9 +22,8 @@ namespace ieompp
                 Basis3Operator(Index q_idx, const MomentumSpace& momentum_space)
                     : N(momentum_space.num())
                 {
-                    static_assert(
-                        hubbard_common::is_hubbard_operator<typename Term::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N * N + 1);
 
