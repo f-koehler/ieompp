@@ -35,72 +35,69 @@ namespace ieompp
                         if(it->creator) {
                             // check if creation is below fermi level
                             if(energy < fermi_energy) {
-                                // particle already exists if no annihilation took place
-                                auto find = find_annihilation(it->index1);
-                                if(!find.first) {
-                                    // cannot create another particle
+                                // initially the particle exists -> check if annihilation took place
+                                auto pos = std::find(annihilated_particles.begin(),
+                                                     annihilated_particles.end(), it->index1);
+                                if(pos == annihilated_particles.end()) {
+                                    // initial particle still exists -> cannot create another
                                     vanishes = true;
                                     break;
                                 } else {
-                                    // creation reverts previous annihilation
-                                    annihilated_particles.remove(find.second);
+                                    // initial particle was annihilated -> creation is possible
+                                    // this reverts the annihilation
+                                    annihilated_particles.erase(pos);
                                 }
                             } else {
-                                // particle does not exist unless creation took place
-                                auto find = find_creation(it->index1);
-                                if(find.first) {
-                                    // cannot create another particle
+                                // initially the particle does not exist -> check if creation took
+                                // place
+                                auto pos = std::find(created_particles.begin(),
+                                                     created_particles.end(), it->index1);
+                                if(pos != created_particles.end()) {
+                                    // particle was already created -> creation is impossible
                                     vanishes = true;
                                     break;
                                 } else {
-                                    // create new particle
+                                    // particle was not yet created
                                     created_particles.push_back(it->index1);
                                 }
                             }
                         } else {
                             // check if annihilation is below fermi level
                             if(energy < fermi_energy) {
-                                // particle does exist unless annihilation took place
-                                auto find = find_annihilation(it->index1);
-                                if(find.first) {
-                                    // annihilation of annihilated particle fails
+                                // initially the particle exists -> check if annihilation took place
+                                auto pos = std::find(annihilated_particles.begin(),
+                                                     annihilated_particles.end(), it->index1);
+                                if(pos != annihilated_particles.end()) {
+                                    // initial particle was already annihilated -> annihilation
+                                    // impossible
                                     vanishes = true;
                                     break;
                                 } else {
-                                    // annihilate present particle
-                                    annihilated_particles.push_back(it->index2);
+                                    // initial particle was not yet annihilated -> annihilation
+                                    // possible
+                                    annihilated_particles.push_back(it->index1);
                                 }
                             } else {
-                                // particle does not exist if no creation took place
-                                auto find = find_creation(it->index1);
-                                if(!find.first) {
-                                    // annihilation of absent particle fails
+                                // initially the particle does not exist -> check if creation took
+                                // place
+                                auto pos = std::find(created_particles.begin(),
+                                                     created_particles.end(), it->index1);
+                                if(pos == created_particles.end()) {
+                                    // particle was not created -> annihilation impossible
                                     vanishes = true;
                                     break;
                                 } else {
-                                    // annihilate created particle
-                                    created_particles.remove(find.second);
+                                    // particle was created -> annihilation possible
+                                    created_particles.erase(pos);
                                 }
                             }
                         }
                     }
 
                     if(!vanishes) {
-                        std::sort(created_particles.begin(), created_particles.end());
-                        std::sort(annihilated_particles.begin(), annihilated_particles.end());
+                        created_particles.sort();
+                        annihilated_particles.sort();
                     }
-                }
-
-                auto find_creation(const Index& site)
-                {
-                    auto it = std::find(created_particles.begin(), created_particles.end(), site);
-                    return std::make_pair(it == created_particles.end(), it);
-                }
-
-                auto find_annihilation(const Index& site)
-                {
-                    auto it = std::find(created_particles.begin(), created_particles.end(), site);
-                    return std::make_pair(it == created_particles.end(), it);
                 }
             };
 
@@ -122,7 +119,7 @@ namespace ieompp
                                    right_state.annihilated_particles.begin())
                        || !std::equal(left_state.annihilated_particles.begin(),
                                       left_state.annihilated_particles.end(),
-                                      right_state.created_particles());
+                                      right_state.created_particles.begin());
             }
         } // namespace hubbard_momentum_space
     }     // namespace models

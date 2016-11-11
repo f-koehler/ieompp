@@ -109,44 +109,45 @@ int main(int argc, char** argv)
     // init dispersion
     const auto L = hubbard::make_liouvillian(momentum_space, lattice, J, U);
 
-    /* // computing matrix */
-    /* loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size()); */
-    /* blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size()); */
-    /* M.reserve(basis.size() * 10); */
-    /* loggers.main->info("Computing matrix elements"); */
-    /* L.init_matrix(M, basis, lattice, dispersion); */
-    /* loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(), */
-    /*                    M.rows() * M.columns()); */
-    /* loggers.main->info("Multiply matrix with prefactor 1i"); */
-    /* M *= std::complex<double>(0, 1); */
+    // computing matrix
+    loggers.main->info("Creating {}x{} sparse, complex matrix", basis.size(), basis.size());
+    blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
+    M.reserve(basis.size() * 10);
+    loggers.main->info("Computing matrix elements");
+    init_matrix(L, M, basis, lattice);
+    loggers.main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
+                       M.rows() * M.columns());
+    loggers.main->info("Multiply matrix with prefactor 1i");
+    M *= std::complex<double>(0, 1);
 
-    /* write_matrix_file(matrix_path, M, loggers); */
+    write_matrix_file(matrix_path, M, loggers);
 
-    /* // setting up initial vector */
-    /* loggers.main->info("Setting up {} dimensional vector with initial conditions", basis.size()); */
-    /* blaze::DynamicVector<std::complex<double>> h(basis.size()); */
+    // setting up initial vector
+    loggers.main->info("Setting up {} dimensional vector with initial conditions", basis.size());
+    blaze::DynamicVector<std::complex<double>> h(basis.size());
 
-    /* uint64_t initial_step = 0; */
-    /* if(vm.count("checkpoint") == 0) { */
-    /*     h.reset(); */
-    /*     h[0] = 1.; */
-    /* } else { */
-    /*     read_checkpoint_file(vm["checkpoint"].as<string>(), h, loggers); */
-    /*     const regex re_checkpoint_file("^.*" + checkpoint_prefix + R"((\d+)\.blaze$)"); */
-    /*     smatch m; */
-    /*     regex_match(vm["checkpoint"].as<string>(), m, re_checkpoint_file); */
-    /*     initial_step = strtoul(m[1].str().c_str(), nullptr, 10); */
-    /*     clean_output_file(out_path, initial_step); */
-    /* } */
+    uint64_t initial_step = 0;
+    if(vm.count("checkpoint") == 0) {
+        h.reset();
+        h[0] = 1.;
+    } else {
+        read_checkpoint_file(vm["checkpoint"].as<string>(), h, loggers);
+        const regex re_checkpoint_file("^.*" + checkpoint_prefix + R"((\d+)\.blaze$)");
+        smatch m;
+        regex_match(vm["checkpoint"].as<string>(), m, re_checkpoint_file);
+        initial_step = strtoul(m[1].str().c_str(), nullptr, 10);
+        clean_output_file(out_path, initial_step);
+    }
 
     /* // */
     /* loggers.io->info("Open output file {}", out_path); */
     /* ofstream out_file(out_path.c_str()); */
     /* write_platform_info(out_file); */
 
-    /* ode::RK4<double> solver(basis.size(), dt); */
-    /* /1* hubbard::real_space::ParticleNumber<decltype(basis)> observable{ *1/ */
-    /* /1*     hubbard::real_space::ExpectationValue1DHalfFilled<double, decltype(momentum_space)>{momentum_space}}; *1/ */
+    ieompp::ode::RK4<double> solver(basis.size(), dt);
+
+    const auto test = hubbard::NonVanishingExpectationValues<typename Operator::Index1, double>(
+        basis, L.dispersion);
 
     /* double t = 0.; */
 
