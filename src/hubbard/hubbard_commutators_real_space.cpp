@@ -1,10 +1,10 @@
 #include <iostream>
 using namespace std;
 
-#include <ieompp/platform.hpp>
 #include <ieompp/algebra/commutator.hpp>
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
+#include <ieompp/platform.hpp>
 #include <ieompp/symbolic/prefactor.hpp>
 using namespace ieompp;
 using namespace ieompp::algebra;

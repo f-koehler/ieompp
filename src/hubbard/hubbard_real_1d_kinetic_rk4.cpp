@@ -11,7 +11,7 @@ namespace hubbard = ieompp::models::hubbard_real_space;
 
 int main(int argc, char** argv)
 {
-    Application::name = "hubbard_real_1d_rk4";
+    Application::name        = "hubbard_real_1d_rk4";
     Application::description = "Calculate <n_{0,↑}>(t) for the 1d Hubbard model (kinetic only)";
     Application::add_default_options();
 
@@ -55,7 +55,8 @@ int main(int argc, char** argv)
     write_matrix_file(app.matrix_path, M);
 
     // setting up initial vector
-    get_loggers().main->info("Setting up {} dimensional vector with initial conditions", basis.size());
+    get_loggers().main->info("Setting up {} dimensional vector with initial conditions",
+                             basis.size());
     blaze::DynamicVector<std::complex<double>> h(basis.size());
 
     uint64_t initial_step = 0;

@@ -5,6 +5,7 @@ from os.path import join, splitext
 
 search_paths = [
     "include/ieompp",
+    "src",
     "tests"
 ]
 

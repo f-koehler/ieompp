@@ -9,7 +9,7 @@ namespace hubbard = ieompp::models::hubbard_momentum_space;
 
 int main(int argc, char** argv)
 {
-    Application::name = "hubbard_momentum_1d_rk4";
+    Application::name        = "hubbard_momentum_1d_rk4";
     Application::description = "Calculate <n_{k,↑}>(t) for the 1d Hubbard model";
     Application::add_default_options();
 

@@ -6,8 +6,8 @@
 #include <ieompp/discretization/linear.hpp>
 #include <ieompp/models/hubbard_real_space/basis.hpp>
 
-using Basis1 = ieompp::models::hubbard_real_space::Basis1Operator<Term1d>;
-using Basis3 = ieompp::models::hubbard_real_space::Basis3Operator<Term1d>;
+using Basis1  = ieompp::models::hubbard_real_space::Basis1Operator<Term1d>;
+using Basis3  = ieompp::models::hubbard_real_space::Basis3Operator<Term1d>;
 using Lattice = ieompp::discretization::LinearDiscretization<double, uint64_t>;
 
 #endif

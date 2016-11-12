@@ -23,8 +23,8 @@ template <typename Scalar, bool StorageOrder>
 void write_matrix_file(const std::string& path,
                        const blaze::CompressedMatrix<Scalar, StorageOrder>& matrix)
 {
-    get_loggers().io->info("Write matrix {}x{} matrix to \"{}\"",  matrix.rows(),
-                           matrix.columns(), path);
+    get_loggers().io->info("Write matrix {}x{} matrix to \"{}\"", matrix.rows(), matrix.columns(),
+                           path);
     std::ofstream strm(path.c_str(), std::ofstream::binary);
     blaze::Archive<std::ofstream> archive(strm);
     archive << matrix;

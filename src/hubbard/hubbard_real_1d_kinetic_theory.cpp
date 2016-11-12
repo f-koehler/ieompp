@@ -19,7 +19,8 @@ namespace po = boost::program_options;
 #include <ieompp/models/hubbard_real_space.hpp>
 namespace hubbard = ieompp::models::hubbard_real_space;
 
-complex<double> minus_i_power(uint64_t power) {
+complex<double> minus_i_power(uint64_t power)
+{
     switch(power % 4) {
         case 0:
             return 1.;
@@ -49,7 +50,7 @@ int main()
     for(uint64_t i = 0; i < N; ++i) {
         h_vals[i].resize(steps);
         h_vals_conj[i].resize(steps);
-        const auto j = lattice.lattice_distance(0, i);
+        const auto j                   = lattice.lattice_distance(0, i);
         std::complex<double> prefactor = minus_i_power(j);
         for(uint64_t step = 0; step < steps; ++step) {
             double bess          = boost::math::cyl_bessel_j(j, 2 * step * dt);

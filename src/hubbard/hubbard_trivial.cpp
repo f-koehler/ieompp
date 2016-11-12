@@ -3,9 +3,9 @@
 #include <iostream>
 using namespace std;
 
+#include <ieompp/constants.hpp>
 #include <ieompp/ode/rk4.hpp>
 #include <ieompp/types/blaze.hpp>
-#include <ieompp/constants.hpp>
 
 complex<double> particle_number(const blaze::DynamicVector<complex<double>>& h)
 {

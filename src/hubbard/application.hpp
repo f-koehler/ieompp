@@ -41,11 +41,13 @@ struct Application {
             std::exit(1);
         }
 
-        output_path       = variables["out"].as<std::string>();
-        response_path     = boost::filesystem::change_extension(output_path, ".rsp").string();
-        log_path          = boost::filesystem::change_extension(output_path, ".log").string();
-        matrix_path       = boost::filesystem::change_extension(output_path, "").string() + "_matrix.blaze";
-        checkpoint_prefix = boost::filesystem::change_extension(output_path, "").string() + "_checkpoint_";
+        output_path   = variables["out"].as<std::string>();
+        response_path = boost::filesystem::change_extension(output_path, ".rsp").string();
+        log_path      = boost::filesystem::change_extension(output_path, ".log").string();
+        matrix_path =
+            boost::filesystem::change_extension(output_path, "").string() + "_matrix.blaze";
+        checkpoint_prefix =
+            boost::filesystem::change_extension(output_path, "").string() + "_checkpoint_";
 
         get_loggers().init(log_path);
 
@@ -66,13 +68,15 @@ struct Application {
         output_file << "# os:         \t" << ieompp::Platform::operating_system() << '\n';
         output_file << "# compiler:   \t" << ieompp::Platform::compiler() << '\n';
         output_file << "# std lib:    \t" << ieompp::Platform::cpp_library() << '\n';
-        output_file << "# compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host() << '\n';
+        output_file << "# compiled by:\t" << ieompp::Platform::user() << '@'
+                    << ieompp::Platform::host() << '\n';
         output_file << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
     }
 
     Application(const Application&) = delete;
 
-    ~Application() {
+    ~Application()
+    {
         get_loggers().io->info("Closing output file \"{}\"", output_path);
         output_file.close();
         get_loggers().io->info("File \"{}\" closed", output_path);
@@ -105,7 +109,8 @@ struct Application {
         std::cout << Application::options_description << '\n';
     }
 
-    static void print_version() {
+    static void print_version()
+    {
         std::cout << "ieompp:     \t" << ieompp::version << '\n';
         std::cout << "boost:      \t" << ieompp::Platform::boost() << '\n';
         std::cout << "blaze:      \t" << ieompp::blaze_version() << '\n';
@@ -113,7 +118,8 @@ struct Application {
         std::cout << "os:         \t" << ieompp::Platform::operating_system() << '\n';
         std::cout << "compiler:   \t" << ieompp::Platform::compiler() << '\n';
         std::cout << "std lib:    \t" << ieompp::Platform::cpp_library() << '\n';
-        std::cout << "compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host() << '\n';
+        std::cout << "compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host()
+                  << '\n';
         std::cout << "endianess   \t" << ieompp::Platform::endianess() << '\n';
     }
 };
