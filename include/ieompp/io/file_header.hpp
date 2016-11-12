@@ -1,5 +1,5 @@
-#ifndef IEOMPP_IO_DESCRIPTION_HPP_
-#define IEOMPP_IO_DESCRIPTION_HPP_
+#ifndef IEOMPP_IO_FILE_HEADER_HPP_
+#define IEOMPP_IO_FILE_HEADER_HPP_
 
 #include <algorithm>
 #include <chrono>

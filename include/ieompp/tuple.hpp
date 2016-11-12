@@ -1,5 +1,5 @@
-#ifndef TUPLE_HPP_
-#define TUPLE_HPP_
+#ifndef IEOMPP_TUPLE_HPP_
+#define IEOMPP_TUPLE_HPP_
 
 #include <ostream>
 #include <string>

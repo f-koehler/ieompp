@@ -1,5 +1,5 @@
-#ifndef IEOMPP_IO_EIGEN_DENSE_HPP_
-#define IEOMPP_IO_EIGEN_DENSE_HPP_
+#ifndef IEOMPP_IO_EIGEN_SPARSE_HPP_
+#define IEOMPP_IO_EIGEN_SPARSE_HPP_
 
 #include <cstdlib>
 #include <istream>

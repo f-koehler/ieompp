@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-
+import jinja2
 import os
 import subprocess
-import jinja2
 
 source_files = [
     "src/commutators.cpp",

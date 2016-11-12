@@ -1,5 +1,5 @@
-#ifndef IEOMPP_ALGEBRA_IS_SYMBOLIC_HPP_
-#define IEOMPP_ALGEBRA_IS_SYMBOLIC_HPP_
+#ifndef IEOMPP_ALGEBRA_OPERATOR_IS_SYMBOLIC_HPP_
+#define IEOMPP_ALGEBRA_OPERATOR_IS_SYMBOLIC_HPP_
 
 #include "ieompp/algebra/operator/get_index.hpp"
 

@@ -1,12 +1,12 @@
-#ifndef IEOMPP_IO_EIGEN_TRIPLETS_HPP_
-#define IEOMPP_IO_EIGEN_TRIPLETS_HPP_
+#ifndef IEOMPP_IO_TRIPLET_LIST_HPP_
+#define IEOMPP_IO_TRIPLET_LIST_HPP_
 
 #include <istream>
 #include <ostream>
 #include <string>
 
 #include "ieompp/io/line.hpp"
-#include "ieompp/types/triplet_list.hpp"
+#include "ieompp/types/eigen/triplet_list.hpp"
 
 namespace ieompp
 {

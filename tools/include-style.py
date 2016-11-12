@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from re import compile
 from os import walk
 from os.path import join, splitext
+from re import compile
 
 regex_bad_include = compile(r"^\s*#\s*include\s*<(ieompp/.*\.hpp)>\s*$")
 

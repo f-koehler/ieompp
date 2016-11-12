@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-from subprocess import check_output
 from os import walk
 from os.path import join, splitext
+from subprocess import check_output
 
 search_paths = [
     "include/ieompp",

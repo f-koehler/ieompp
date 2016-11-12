@@ -1,5 +1,5 @@
-#ifndef IEOMPP_SYMBOLIC_KRONECKER_HPP_
-#define IEOMPP_SYMBOLIC_KRONECKER_HPP_
+#ifndef IEOMPP_ALGEBRA_KRONECKER_HPP_
+#define IEOMPP_ALGEBRA_KRONECKER_HPP_
 
 #include <ostream>
 #include <string>

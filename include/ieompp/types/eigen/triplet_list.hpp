@@ -1,5 +1,5 @@
-#ifndef EIGEN_TRIPLET_LIST_HPP_
-#define EIGEN_TRIPLET_LIST_HPP_
+#ifndef IEOMPP_TYPES_EIGEN_TRIPLET_LIST_HPP_
+#define IEOMPP_TYPES_EIGEN_TRIPLET_LIST_HPP_
 
 #include <algorithm>
 #include <vector>
