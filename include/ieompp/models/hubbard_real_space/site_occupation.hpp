@@ -72,7 +72,7 @@ namespace ieompp
                     const auto basis_size = basis.size();
                     std::vector<Float> results(omp_get_max_threads(), 0);
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 1)
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < i; ++j) {
@@ -85,7 +85,7 @@ namespace ieompp
                             * expectation_value(basis[i].operators[0], basis[i].operators[0]);
                     }
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 1)
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         const auto& op_a  = basis[i].operators[0];
@@ -99,7 +99,7 @@ namespace ieompp
                         }
                     }
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 1)
                     for(auto i = N; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
                         const auto& ops_i = basis[i].operators;
