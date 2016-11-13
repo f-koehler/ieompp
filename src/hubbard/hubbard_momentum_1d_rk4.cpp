@@ -5,6 +5,7 @@ using namespace std;
 
 #include "momentum_space_1d.hpp"
 
+#include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
 namespace hubbard = ieompp::models::hubbard_momentum_space;
 
 int main(int argc, char** argv)
@@ -75,6 +76,8 @@ int main(int argc, char** argv)
     get_loggers().main->info("Finished setting up initial conditions");
 
     const auto rk4 = init_rk4(basis.size(), dt);
+    hubbard::ParticleNumber<Basis3> obs(basis, L.dispersion, 0.);
+    cout << obs.non_vanishing_expectation_values.size() << '\n';
 
     return 0;
 }

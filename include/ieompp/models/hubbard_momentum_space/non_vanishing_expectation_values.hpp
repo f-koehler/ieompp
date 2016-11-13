@@ -45,15 +45,15 @@ namespace ieompp
                     // store all non-vanishing combinations in vectors
                     std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
                         omp_get_max_threads());
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 1)
                     for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
+                        non_vanishing[thread].push_back(std::make_pair(i, i));
                         for(typename Basis3Operator<Term>::Index j = 0; j < i; ++j) {
-                            if(have_vanishing_overlap(excited_states[i], excited_states[j])) {
+                            if(excited_states[i] != excited_states[j]) {
                                 continue;
                             }
                             non_vanishing[thread].push_back(std::make_pair(i, j));
-                            non_vanishing[thread].push_back(std::make_pair(j, i));
                         }
                     }
 

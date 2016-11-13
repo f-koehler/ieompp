@@ -99,28 +99,42 @@ namespace ieompp
                         annihilated_particles.sort();
                     }
                 }
-            };
 
-            template <typename Index>
-            bool have_vanishing_overlap(const ExcitedFermiSea<Index>& left_state,
-                                        const ExcitedFermiSea<Index>& right_state)
-            {
-                // the states are orthogonal if all creations/annihilations cancel out
-                if(left_state.created_particles.size()
-                   != right_state.annihilated_particles.size()) {
-                    return true;
+                bool operator==(const ExcitedFermiSea& rhs) const
+                {
+                    if(vanishes || rhs.vanishes) {
+                        return false;
+                    }
+                    if(created_particles.size() != rhs.created_particles.size()) {
+                        return false;
+                    }
+                    if(annihilated_particles.size() != rhs.annihilated_particles.size()) {
+                        return false;
+                    }
+                    return std::equal(created_particles.begin(), created_particles.end(),
+                                      rhs.created_particles.begin())
+                           && std::equal(annihilated_particles.begin(), annihilated_particles.end(),
+                                         rhs.annihilated_particles.begin());
                 }
-                if(left_state.annihilated_particles.size()
-                   != right_state.created_particles.size()) {
-                    return true;
+
+                bool operator!=(const ExcitedFermiSea& rhs) const
+                {
+                    if(vanishes || rhs.vanishes) {
+                        return true;
+                    }
+                    if(created_particles.size() != rhs.created_particles.size()) {
+                        return true;
+                    }
+                    if(annihilated_particles.size() != rhs.annihilated_particles.size()) {
+                        return true;
+                    }
+                    return !std::equal(created_particles.begin(), created_particles.end(),
+                                       rhs.created_particles.begin())
+                           || !std::equal(annihilated_particles.begin(),
+                                          annihilated_particles.end(),
+                                          rhs.annihilated_particles.begin());
                 }
-                return !std::equal(left_state.created_particles.begin(),
-                                   left_state.created_particles.end(),
-                                   right_state.annihilated_particles.begin())
-                       || !std::equal(left_state.annihilated_particles.begin(),
-                                      left_state.annihilated_particles.end(),
-                                      right_state.created_particles.begin());
-            }
+            };
         } // namespace hubbard_momentum_space
     }     // namespace models
 } // namespace ieompp
