@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 {
     Application::name        = "hubbard_real_1d_rk4";
     Application::description = "Calculate <n_{0,↑}>(t) for the 1d Hubbard model";
+
     Application::add_default_options();
 
     // clang-format off

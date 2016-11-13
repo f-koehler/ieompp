@@ -32,12 +32,12 @@ struct Application {
             boost::program_options::parse_command_line(argc, argv, options_description), variables);
         boost::program_options::notify(variables);
 
-        if(variables.count("--help") != 0u) {
+        if(variables.count("help")) {
             print_help();
             std::exit(1);
         }
 
-        if(variables.count("--version") != 0u) {
+        if(variables.count("version")) {
             print_version();
             std::exit(1);
         }
@@ -113,6 +113,7 @@ struct Application {
 
     static void print_version()
     {
+        std::cout << "program:    \t" << name << '\n';
         std::cout << "ieompp:     \t" << ieompp::version << '\n';
         std::cout << "boost:      \t" << ieompp::Platform::boost() << '\n';
         std::cout << "blaze:      \t" << ieompp::blaze_version() << '\n';
