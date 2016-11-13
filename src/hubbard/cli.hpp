@@ -13,7 +13,16 @@ using OptionsDescription = boost::program_options::options_description;
 using VariablesMap       = boost::program_options::variables_map;
 
 template <typename T>
-using Value = boost::program_options::typed_value<T>*;
+auto make_value()
+{
+    return boost::program_options::value<T>();
+}
+
+template <typename T>
+auto make_value(const T& default_value)
+{
+    return boost::program_options::value<T>()->default_value(default_value);
+}
 
 void read_response_file(const std::string& path, VariablesMap& vm,
                         const OptionsDescription& description)

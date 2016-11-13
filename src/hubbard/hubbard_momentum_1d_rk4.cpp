@@ -15,12 +15,12 @@ int main(int argc, char** argv)
 
     // clang-format off
     Application::options_description.add_options()
-        ("N", Value<uint64_t>()->default_value(16), "number of momentum_space sites")
-        ("J", Value<double>()->default_value(1.), "hopping prefactor")
-        ("U", Value<double>()->default_value(1.), "interaction strength")
-        ("dt", Value<double>()->default_value(0.01), "step width of RK4 integrator")
-        ("steps", Value<uint64_t>()->default_value(1000), "number of integrator steps")
-        ("measurement_interval", Value<uint64_t>()->default_value(10), "interval between measurements")
+        ("N", make_value<uint64_t>()->default_value(16), "number of momentum_space sites")
+        ("J", make_value<double>()->default_value(1.), "hopping prefactor")
+        ("U", make_value<double>()->default_value(1.), "interaction strength")
+        ("dt", make_value<double>()->default_value(0.01), "step width of RK4 integrator")
+        ("steps", make_value<uint64_t>()->default_value(1000), "number of integrator steps")
+        ("measurement_interval", make_value<uint64_t>()->default_value(10), "interval between measurements")
         ;
     // clang-format on
 

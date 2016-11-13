@@ -24,6 +24,7 @@ struct Application {
     std::string matrix_path;
     std::string checkpoint_prefix;
     std::ofstream output_file;
+    std::uint64_t step;
 
     Application(int argc, char** argv)
     {
@@ -48,6 +49,7 @@ struct Application {
             boost::filesystem::change_extension(output_path, "").string() + "_matrix.blaze";
         checkpoint_prefix =
             boost::filesystem::change_extension(output_path, "").string() + "_checkpoint_";
+        step = 0;
 
         get_loggers().init(log_path);
 
@@ -90,10 +92,10 @@ struct Application {
         options_description.add_options()
             ("help", "print this help message")
             ("version", "print version information")
-            ("response_file", boost::program_options::value<std::string>(), "file to read program parameters from")
-            ("checkpoint_interval", boost::program_options::value<std::uint64_t>()->default_value(1000), "steps between checkpoints")
-            ("checkpoint", boost::program_options::value<std::string>(), "checkpoint to use for resume")
-            ("out", boost::program_options::value<std::string>()->default_value(name + ".txt"), "output file")
+            ("response_file", make_value<std::string>(), "file to read program parameters from")
+            ("checkpoint_interval", make_value<std::uint64_t>(1000), "steps between checkpoints")
+            ("checkpoint", make_value<std::string>(), "checkpoint to use for resume")
+            ("out", make_value<std::string>(name + ".txt"), "output file")
             ;
         // clang-format on
     }

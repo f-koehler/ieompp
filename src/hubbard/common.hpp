@@ -2,6 +2,8 @@
 #define SRC_COMMON_HPP_
 
 #include <complex>
+#include <regex>
+#include <string>
 
 #include <blaze/math/serialization/MatrixSerializer.h>
 #include <blaze/util/Serialization.h>
@@ -10,6 +12,7 @@
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/ode/rk4.hpp>
 
+#include "application.hpp"
 #include "checkpoint.hpp"
 #include "logging.hpp"
 
@@ -32,6 +35,48 @@ void write_matrix_file(const std::string& path,
     strm.close();
     get_loggers().io->info("Finished writing matrix file \"{}\"", path);
 }
+
+template <typename Basis>
+blaze::DynamicVector<std::complex<double>> init_new_vector(const Basis& basis)
+{
+    get_loggers().main->info(u8"Create {} dimensional vector with initial conditions (1, 0, 0, …)",
+                             basis.size());
+    blaze::DynamicVector<std::complex<double>> vec(basis.size());
+    vec.reset();
+    vec[0] = 1.;
+    get_loggers().main->info("Finish creating vector");
+    return vec;
+}
+
+blaze::DynamicVector<std::complex<double>> read_vector_from_checkpoint(Application& app)
+{
+    get_loggers().main->info("Read initial vector from checkpoint file");
+
+    blaze::DynamicVector<std::complex<double>> vec;
+    read_checkpoint_file(app.variables["checkpoint"].as<std::string>(), vec);
+
+    const std::regex re_checkpoint_file("^.*" + app.checkpoint_prefix + R"((\d+)\.blaze$)");
+    std::smatch m;
+    app.step = strtoul(m[1].str().c_str(), nullptr, 10);
+    get_loggers().main->info(
+        "Clean up output file to be in the state according to checkpoint for step {}", app.step);
+
+    clean_output_file(app.output_path, app.step);
+    get_loggers().main->info("Finished reading vector from checkpoint file");
+
+    return vec;
+}
+
+template <typename Basis>
+blaze::DynamicVector<std::complex<double>> init_vector(Application& app, const Basis& basis)
+{
+    if(app.variables.count("checkpoint") == 0ul) {
+        return init_new_vector(basis);
+    } else {
+        return read_vector_from_checkpoint(app);
+    }
+}
+
 
 template <typename Float>
 ieompp::ode::RK4<Float> init_rk4(std::size_t basis_size, const Float& dt)

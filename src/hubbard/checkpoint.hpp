@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 #include <blaze/math/serialization/VectorSerializer.h>
 #include <blaze/util/Serialization.h>
 
@@ -40,11 +42,20 @@ void read_checkpoint_file(const std::string& path,
 
 void clean_output_file(const std::string& path, uint64_t entries)
 {
+    get_loggers().io->info("Clean output file \"{}\" to contain {} entries", path, entries);
+    get_loggers().io->info("Renam output file \"{}\" -> \"{}\"", path, path + ".bak");
     boost::filesystem::rename(path, path + ".bak");
+    get_loggers().io->info("Finished renaming file");
 
+    get_loggers().io->info("Open old output file \"{}\"", path);
     std::ifstream in_file((path + ".bak").c_str());
+
+    get_loggers().io->info("Open new output \"{}\" file for writing", path);
     std::ofstream out_file(path);
 
+    get_loggers().io->info("Finished opening both files");
+
+    get_loggers().io->info("Start copying \"{}\" entries", entries);
     uint64_t counter = 0;
     std::string buffer;
     while(counter < entries) {
@@ -55,9 +66,12 @@ void clean_output_file(const std::string& path, uint64_t entries)
         out_file << buffer;
     }
     out_file.flush();
+    get_loggers().io->info("Finished copying entries {}", entries);
 
+    get_loggers().io->info("Close files \"{}\" and \"{}\"", path, path + ".bak");
     out_file.close();
     in_file.close();
+    get_loggers().io->info("Finished closing both files");
 }
 
 #endif
