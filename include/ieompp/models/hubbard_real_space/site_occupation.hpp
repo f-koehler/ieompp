@@ -92,38 +92,63 @@ namespace ieompp
                         for(auto j = N; j < basis_size; ++j) {
                             const auto& ops_b = basis[j].operators;
 
-                            results[thread] +=
-                                expectation_value(op_a, ops_b[0])
-                                * expectation_value(ops_b[2], ops_b[1])
-                                * types::add_conjugate_products(vector[i], vector[j]);
+                            if(ops_b[1].index1 == ops_b[2].index1) {
+                                results[thread] +=
+                                    2 * expectation_value(op_a, ops_b[0])
+                                    * (expectation_value(ops_b[2], ops_b[1]) - .5)
+                                    * types::add_conjugate_products(vector[i], vector[j]);
+                            } else {
+                                results[thread] +=
+                                    2 * expectation_value(op_a, ops_b[0])
+                                    * expectation_value(ops_b[2], ops_b[1])
+                                    * types::add_conjugate_products(vector[i], vector[j]);
+                            }
                         }
                     }
 
 #pragma omp parallel for schedule(dynamic, 1)
                     for(auto i = N; i < basis_size; ++i) {
-                        const auto thread = omp_get_thread_num();
-                        const auto& ops_i = basis[i].operators;
+                        const auto thread    = omp_get_thread_num();
+                        const auto& ops_a    = basis[i].operators;
+                        const bool a_special = (ops_a[1].index1 == ops_a[2].index1);
                         for(auto j = N; j < i; ++j) {
-                            const auto& ops_j   = basis[j].operators;
-                            const auto summand1 = expectation_value(ops_i[0], ops_j[0])
-                                                  * expectation_value(ops_i[1], ops_i[2])
-                                                  * expectation_value(ops_j[2], ops_j[1]);
+                            const auto& ops_b    = basis[j].operators;
+                            const bool b_special = (ops_b[1].index1 == ops_b[2].index1);
+                            const auto summand1  = 4 * expectation_value(ops_a[0], ops_b[0])
+                                                  * expectation_value(ops_a[1], ops_a[2])
+                                                  * expectation_value(ops_b[2], ops_b[1]);
                             const auto summand2 =
-                                expectation_value(ops_i[0], ops_j[0])
-                                * expectation_value(ops_i[1], ops_j[1])
-                                * (((ops_i[2].index1 == ops_j[2].index1) ? 1. : 0.)
-                                   - expectation_value(ops_j[2], ops_i[2]));
+                                4 * expectation_value(ops_a[0], ops_b[0])
+                                * expectation_value(ops_a[1], ops_b[1])
+                                * (((ops_a[2].index1 == ops_b[2].index1) ? 1. : 0.)
+                                   - expectation_value(ops_b[2], ops_a[2]));
+                            const auto summand3 = a_special
+                                                      ? -2 * expectation_value(ops_a[0], ops_b[0])
+                                                            * expectation_value(ops_b[1], ops_b[2])
+                                                      : 0.;
+                            const auto summand4 = b_special
+                                                      ? -2 * expectation_value(ops_a[0], ops_b[0])
+                                                            * expectation_value(ops_a[1], ops_a[2])
+                                                      : 0.;
+                            const auto summand5 = (a_special && b_special)
+                                                      ? expectation_value(ops_a[0], ops_b[0])
+                                                      : 0.;
                             results[thread] +=
-                                (summand1 + summand2)
+                                (summand1 + summand2 + summand3 + summand4 + summand5)
                                 * types::add_conjugate_products(vector[i], vector[j]);
                         }
-                        const auto summand1 = expectation_value(ops_i[0], ops_i[0])
-                                              * expectation_value(ops_i[1], ops_i[2])
-                                              * expectation_value(ops_i[2], ops_i[1]);
-                        const auto summand2 = expectation_value(ops_i[0], ops_i[0])
-                                              * expectation_value(ops_i[1], ops_i[1])
-                                              * (1 - expectation_value(ops_i[2], ops_i[2]));
-                        results[thread] += (summand1 + summand2) * std::norm(vector[i]);
+                        const auto summand1 = 4 * expectation_value(ops_a[0], ops_a[0])
+                                              * expectation_value(ops_a[1], ops_a[2])
+                                              * expectation_value(ops_a[2], ops_a[1]);
+                        const auto summand2 = 4 * expectation_value(ops_a[0], ops_a[0])
+                                              * expectation_value(ops_a[1], ops_a[1])
+                                              * (1 - expectation_value(ops_a[2], ops_a[2]));
+                        const auto summand3 = a_special
+                                                  ? -4 * expectation_value(ops_a[0], ops_a[0])
+                                                            * expectation_value(ops_a[1], ops_a[2])
+                                                        + expectation_value(ops_a[0], ops_a[0])
+                                                  : 0.;
+                        results[thread] += (summand1 + summand2 + summand3) * std::norm(vector[i]);
                     }
 
                     return std::accumulate(results.begin(), results.end(), 0.);
