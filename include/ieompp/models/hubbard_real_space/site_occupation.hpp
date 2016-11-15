@@ -77,7 +77,7 @@ namespace ieompp
                     assert(a.operators.size() == 1);
                     assert(b.operators.size() == 1);
 
-                    // return <N[c_{i,↑}^†]N_[c_{j,↑}]> = 2<c_{i,↑}^† c_{j,↑}>
+                    // return <N[c_{a0,↑}^†]N_[c_{b0,↑}]> = 2 * <c_{a0,↑}^† c_{b0,↑}>
                     return 2. * expectation_value(a.operators.front(), b.operators.front());
                 }
 
@@ -86,19 +86,19 @@ namespace ieompp
                     assert(a.operators.size() == 1);
                     assert(b.operators.size() == 3);
 
-                    // start with <c_{k,↓}^† c_{l,↓}>
-                    Float ret = expectation_value(b.operators.back(), b.operators[1]);
+                    // start with <c_{b1,↓}^† c_{b2,↓}>
+                    Float ret = expectation_value(b.operators[2], b.operators[1]);
 
-                    // add -0.5 δ_{k,l}
+                    // add -0.5 δ_{b1,b2}
                     if(b.operators[1] == b.operators[2]) {
                         ret -= 0.5;
                     }
 
-                    // multiply with <c_{i,↑}^† c_{j,↑}>
+                    // multiply with <c_{a0,↑}^† c_{b0,↑}>
                     ret *= expectation_value(a.operators.front(), b.operators.front());
 
-                    // return <N[c_{i,↑}^†] N[c_{j,↑} c_{k,↓}^† c_{l,↓}]>=
-                    // 4 * <c_{i,↑}^† c_{j,↑}> * (<c_{k,↓}^† c_{l,↓}> - 0.5 δ_{k,l})
+                    // return <N[c_{a0,↑}^†] N[c_{b0,↑} c_{b1,↓}^† c_{b2,↓}]>=
+                    // 4 * <c_{a0,↑}^† c_{b0,↑}> * (<c_{b1,↓}^† c_{b2,↓}> - 0.5 δ_{b1,b2})
                     return 4 * ret;
                 }
 
