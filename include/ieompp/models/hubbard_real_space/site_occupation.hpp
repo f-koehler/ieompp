@@ -77,6 +77,7 @@ namespace ieompp
                     assert(a.operators.size() == 1);
                     assert(b.operators.size() == 1);
 
+                    // return <N[c_{i,↑}^†]N_[c_{j,↑}]> = 2<c_{i,↑}^† c_{j,↑}>
                     return 2. * expectation_value(a.operators.front(), b.operators.front());
                 }
 
@@ -85,11 +86,19 @@ namespace ieompp
                     assert(a.operators.size() == 1);
                     assert(b.operators.size() == 3);
 
+                    // start with <c_{k,↓}^† c_{l,↓}>
                     Float ret = expectation_value(b.operators.back(), b.operators[1]);
+
+                    // add -0.5 δ_{k,l}
                     if(b.operators[1] == b.operators[2]) {
                         ret -= 0.5;
                     }
+
+                    // multiply with <c_{i,↑}^† c_{j,↑}>
                     ret *= expectation_value(a.operators.front(), b.operators.front());
+
+                    // return <N[c_{i,↑}^†] N[c_{j,↑} c_{k,↓}^† c_{l,↓}]>=
+                    // 4 * <c_{i,↑}^† c_{j,↑}> * (<c_{k,↓}^† c_{l,↓}> - 0.5 δ_{k,l})
                     return 4 * ret;
                 }
 
@@ -101,8 +110,12 @@ namespace ieompp
                     const auto& ops_a = a.operators;
                     const auto& ops_b = b.operators;
 
+                    // calculate 8 * <c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓} c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
+                    // = 8 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}> <c_{b1,↓}^† c_{b2,↓}>
+                    // + 8 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b2}-<c_{b2,↓}^†
+                    // c_{a2,↓}>)
                     Float ev_6 = 8 * expectation_value(ops_a[0], ops_b[0])
-                                 * expectation_value(ops_a[1], ops_b[1])
+                                 * expectation_value(ops_a[1], ops_a[2])
                                  * expectation_value(ops_b[1], ops_b[2]);
                     ev_6 += 8 * expectation_value(ops_a[0], ops_b[0])
                             * expectation_value(ops_a[1], ops_b[1])
@@ -110,21 +123,28 @@ namespace ieompp
                                - expectation_value(ops_b[2], ops_a[2]));
 
                     Float ev_4 = 0.;
+                    // calculate -4 * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑} c_{a1,↓}^† c_{a2,↓}>
+                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}>
                     if(ops_b[1].index1 == ops_b[2].index1) {
                         ev_4 -= 4 * expectation_value(ops_a[0], ops_b[0])
                                 * expectation_value(ops_a[1], ops_a[2]);
                     }
+                    // calculate -4 * δ_{a1,b2} * <c_{a0,↑}^† c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
+                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}>
                     if(ops_a[1].index1 == ops_a[2].index1) {
                         ev_4 -= 4 * expectation_value(ops_a[0], ops_b[0])
                                 * expectation_value(ops_b[1], ops_b[2]);
                     }
 
                     Float ev_2 = 0.;
+                    // calculate 2 * δ_{a1,a2} * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑}>
                     if((ops_a[1].index1 == ops_a[2].index1)
                        && (ops_b[1].index1 == ops_b[2].index1)) {
                         ev_2 += 2 * expectation_value(ops_a[0], ops_b[0]);
                     }
 
+                    // return <N[c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓}] N[c_{b0,↑} c_{b1,↓}^† c_{b2,↓}]>
+                    // by summing the individual contributions ev_2, ev_4, ev_6
                     return ev_6 + ev_4 + ev_2;
                 }
 
