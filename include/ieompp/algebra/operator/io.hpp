@@ -1,13 +1,13 @@
 #ifndef IEOMPP_ALGEBRA_OPERATOR_IO_HPP_
 #define IEOMPP_ALGEBRA_OPERATOR_IO_HPP_
 
-#include <ostream>
-#include <tuple>
-#include <utility>
-
 #include "ieompp/algebra/operator/get_index.hpp"
 #include "ieompp/algebra/operator/operator.hpp"
 #include "ieompp/tuple.hpp"
+
+#include <ostream>
+#include <tuple>
+#include <utility>
 
 namespace ieompp
 {

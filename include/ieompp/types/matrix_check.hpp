@@ -1,9 +1,9 @@
 #ifndef IEOMPP_TYPES_MATRIX_CHECK_HPP_
 #define IEOMPP_TYPES_MATRIX_CHECK_HPP_
 
-#include <type_traits>
-
 #include "ieompp/types/matrix.hpp"
+
+#include <type_traits>
 
 namespace ieompp
 {

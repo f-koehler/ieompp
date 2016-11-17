@@ -1,12 +1,12 @@
 #ifndef IEOMPP_TYPES_EIGEN_TRIPLET_LIST_HPP_
 #define IEOMPP_TYPES_EIGEN_TRIPLET_LIST_HPP_
 
-#include <algorithm>
-#include <vector>
-
 #include "ieompp/description.hpp"
 #include "ieompp/types/description.hpp"
 #include "ieompp/types/matrix.hpp"
+
+#include <algorithm>
+#include <vector>
 
 namespace ieompp
 {

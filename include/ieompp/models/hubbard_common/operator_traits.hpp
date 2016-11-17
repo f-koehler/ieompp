@@ -1,9 +1,9 @@
 #ifndef IEOMPP_MODELS_HUBBARD_COMMON_OPERATOR_TRAITS_HPP_
 #define IEOMPP_MODELS_HUBBARD_COMMON_OPERATOR_TRAITS_HPP_
 
-#include <type_traits>
-
 #include "ieompp/algebra/operator/get_index.hpp"
+
+#include <type_traits>
 
 namespace ieompp
 {

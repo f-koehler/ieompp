@@ -1,11 +1,11 @@
 #ifndef IEOMPP_TYPES_FUNCTION_MATRIX_HPP_
 #define IEOMPP_TYPES_FUNCTION_MATRIX_HPP_
 
+#include "ieompp/types/number.hpp"
+
 #include <functional>
 #include <iomanip>
 #include <ostream>
-
-#include "ieompp/types/number.hpp"
 
 namespace ieompp
 {

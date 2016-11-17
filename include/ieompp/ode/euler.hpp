@@ -1,10 +1,10 @@
 #ifndef IEOMPP_ODE_EULER_HPP_
 #define IEOMPP_ODE_EULER_HPP_
 
-#include <cassert>
-
 #include "ieompp/description.hpp"
 #include "ieompp/types/eigen/check.hpp"
+
+#include <cassert>
 
 namespace ieompp
 {

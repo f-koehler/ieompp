@@ -1,5 +1,5 @@
-#ifndef IEOMPP_SPDLOG_HPP_
-#define IEOMPP_SPDLOG_HPP_
+#ifndef SRC_HUBBARD_SPDLOG_HPP_
+#define SRC_HUBBARD_SPDLOG_HPP_
 
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>

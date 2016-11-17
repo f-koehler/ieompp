@@ -1,13 +1,13 @@
 #ifndef IEOMPP_TYPES_BLAZE_TRAITS_HPP_
 #define IEOMPP_TYPES_BLAZE_TRAITS_HPP_
 
+#include "ieompp/types/matrix.hpp"
+
 #include <blaze/math/CompressedMatrix.h>
 #include <blaze/math/CompressedVector.h>
 #include <blaze/math/DynamicMatrix.h>
 #include <blaze/math/DynamicVector.h>
 #include <blaze/util/Types.h>
-
-#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {

@@ -1,11 +1,11 @@
 #ifndef IEOMPP_TYPES_BLAZE_MULTIPLY_ASSIGN_HPP_
 #define IEOMPP_TYPES_BLAZE_MULTIPLY_ASSIGN_HPP_
 
+#include "ieompp/types/function_matrix.hpp"
+
 #include <cassert>
 
 #include <blaze/math/DynamicVector.h>
-
-#include "ieompp/types/function_matrix.hpp"
 
 namespace ieompp
 {

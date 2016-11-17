@@ -1,11 +1,11 @@
 #ifndef IEOMPP_ODE_RKCK_HPP_
 #define IEOMPP_ODE_RKCK_HPP_
 
-#include <cassert>
-
 #include "ieompp/description.hpp"
 #include "ieompp/ode/step_size_controller.hpp"
 #include "ieompp/types/matrix_check.hpp"
+
+#include <cassert>
 
 namespace ieompp
 {

@@ -1,6 +1,8 @@
 #ifndef IEOMPP_TYPES_EIGEN_FUNCTION_MATRIX_INTEROP_HPP_
 #define IEOMPP_TYPES_EIGEN_FUNCTION_MATRIX_INTEROP_HPP_
 
+#include "ieompp/types/function_matrix.hpp"
+
 #include <functional>
 
 #if defined(_OPENMP)
@@ -8,8 +10,6 @@
 #endif
 
 #include <Eigen/Dense>
-
-#include "ieompp/types/function_matrix.hpp"
 
 namespace ieompp
 {

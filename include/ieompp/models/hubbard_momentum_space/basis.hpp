@@ -1,9 +1,9 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BASIS_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BASIS_HPP_
 
-#include <vector>
-
 #include "ieompp/models/hubbard_common/operator_traits.hpp"
+
+#include <vector>
 
 namespace ieompp
 {

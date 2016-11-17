@@ -1,14 +1,14 @@
 #ifndef IEOMPP_SYMBOLIC_PREFACTOR_HPP_
 #define IEOMPP_SYMBOLIC_PREFACTOR_HPP_
 
+#include "ieompp/algebra/kronecker.hpp"
+
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
 #include <ostream>
 #include <type_traits>
 #include <vector>
-
-#include "ieompp/algebra/kronecker.hpp"
 
 namespace ieompp
 {

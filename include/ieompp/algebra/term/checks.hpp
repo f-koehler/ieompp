@@ -1,11 +1,11 @@
 #ifndef IEOMPP_ALGEBRA_TERM_CHECKS_HPP_
 #define IEOMPP_ALGEBRA_TERM_CHECKS_HPP_
 
-#include <cstddef>
-#include <type_traits>
-
 #include "ieompp/algebra/operator/get_index.hpp"
 #include "ieompp/algebra/operator/operator.hpp"
+
+#include <cstddef>
+#include <type_traits>
 
 namespace ieompp
 {

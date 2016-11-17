@@ -1,10 +1,10 @@
 #ifndef IEOMPP_TYPES_EIGEN_TRAITS_HPP_
 #define IEOMPP_TYPES_EIGEN_TRAITS_HPP_
 
+#include "ieompp/types/matrix.hpp"
+
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-
-#include "ieompp/types/matrix.hpp"
 
 namespace ieompp
 {

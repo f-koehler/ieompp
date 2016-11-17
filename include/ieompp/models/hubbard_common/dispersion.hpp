@@ -1,11 +1,11 @@
 #ifndef IEOMPP_MODELS_HUBBARD_COMMON_DISPERSION_HPP_
 #define IEOMPP_MODELS_HUBBARD_COMMON_DISPERSION_HPP_
 
-#include <cmath>
-#include <vector>
-
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/matrix.hpp"
+
+#include <cmath>
+#include <vector>
 
 namespace ieompp
 {

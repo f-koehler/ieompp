@@ -1,6 +1,9 @@
 #ifndef IEOMPP_DISCRETIZATION_SQUARE_HPP_
 #define IEOMPP_DISCRETIZATION_SQUARE_HPP_
 
+#include "ieompp/constants.hpp"
+#include "ieompp/iterators/integer_iterator.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -12,9 +15,6 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <Eigen/Dense>
 #pragma GCC diagnostic pop
-
-#include "ieompp/constants.hpp"
-#include "ieompp/iterators/integer_iterator.hpp"
 
 namespace ieompp
 {

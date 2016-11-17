@@ -1,13 +1,13 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_PARTICLE_NUMBER_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_PARTICLE_NUMBER_HPP_
 
-#include <numeric>
-
-#include <omp.h>
-
 #include "ieompp/models/hubbard_momentum_space/basis.hpp"
 #include "ieompp/models/hubbard_momentum_space/non_vanishing_expectation_values.hpp"
 #include "ieompp/types/number.hpp"
+
+#include <numeric>
+
+#include <omp.h>
 
 namespace ieompp
 {

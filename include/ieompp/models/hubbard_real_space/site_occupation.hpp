@@ -1,15 +1,15 @@
 #ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_SITE_OCCUPATION_HPP_
 #define IEOMPP_MODELS_HUBBARD_REAL_SPACE_SITE_OCCUPATION_HPP_
 
+#include "ieompp/models/hubbard_real_space/basis.hpp"
+#include "ieompp/types/matrix.hpp"
+#include "ieompp/types/number.hpp"
+
 #include <functional>
 #include <numeric>
 #include <vector>
 
 #include <omp.h>
-
-#include "ieompp/models/hubbard_real_space/basis.hpp"
-#include "ieompp/types/matrix.hpp"
-#include "ieompp/types/number.hpp"
 
 namespace ieompp
 {

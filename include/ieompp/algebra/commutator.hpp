@@ -1,15 +1,15 @@
 #ifndef IEOMPP_ALGEBRA_COMMUTATOR_HPP_
 #define IEOMPP_ALGEBRA_COMMUTATOR_HPP_
 
+#include "ieompp/algebra/anticommutator.hpp"
+#include "ieompp/algebra/operator.hpp"
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <type_traits>
 #include <vector>
-
-#include "ieompp/algebra/anticommutator.hpp"
-#include "ieompp/algebra/operator.hpp"
 
 namespace ieompp
 {

@@ -1,9 +1,9 @@
 #ifndef IEOMPP_ALGEBRA_OPERATOR_MAKE_HPP_
 #define IEOMPP_ALGEBRA_OPERATOR_MAKE_HPP_
 
-#include <type_traits>
-
 #include "ieompp/algebra/operator/operator.hpp"
+
+#include <type_traits>
 
 namespace ieompp
 {

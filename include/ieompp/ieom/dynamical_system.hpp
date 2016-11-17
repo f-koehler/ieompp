@@ -1,10 +1,10 @@
 #ifndef IEOMPP_IEOM_DYNAMICAL_SYSTEM_HPP_
 #define IEOMPP_IEOM_DYNAMICAL_SYSTEM_HPP_
 
-#include <Eigen/Dense>
-
 #include "ieompp/exception.hpp"
 #include "ieompp/ieom/basis.hpp"
+
+#include <Eigen/Dense>
 
 namespace ieompp
 {

@@ -1,6 +1,10 @@
 #ifndef IEOMPP_PLATFORM_HPP_
 #define IEOMPP_PLATFORM_HPP_
 
+#include "ieompp/description.hpp"
+#include "ieompp/string.hpp"
+#include "ieompp/version.hpp"
+
 #include <cstdlib>
 
 #include <boost/predef.h>
@@ -11,10 +15,6 @@
 #else
 #include <unistd.h>
 #endif
-
-#include "ieompp/description.hpp"
-#include "ieompp/string.hpp"
-#include "ieompp/version.hpp"
 
 namespace ieompp
 {

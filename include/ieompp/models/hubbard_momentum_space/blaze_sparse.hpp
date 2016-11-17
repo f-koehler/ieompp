@@ -1,11 +1,11 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
 
-#include <cstdint>
-
 #include "ieompp/models/hubbard_common/operator_traits.hpp"
 #include "ieompp/models/hubbard_momentum_space/basis.hpp"
 #include "ieompp/models/hubbard_momentum_space/liouvillian.hpp"
+
+#include <cstdint>
 
 namespace ieompp
 {

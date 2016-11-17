@@ -1,13 +1,13 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_NON_VANISHING_EXPECTATION_VALUES_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_NON_VANISHING_EXPECTATION_VALUES_HPP_
 
+#include "ieompp/models/hubbard_momentum_space/basis.hpp"
+#include "ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp"
+
 #include <algorithm>
 #include <vector>
 
 #include <omp.h>
-
-#include "ieompp/models/hubbard_momentum_space/basis.hpp"
-#include "ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp"
 
 namespace ieompp
 {

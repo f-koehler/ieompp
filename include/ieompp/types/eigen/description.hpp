@@ -1,11 +1,11 @@
 #ifndef IEOMPP_TYPES_EIGEN_DESCRIPTION_HPP_
 #define IEOMPP_TYPES_EIGEN_DESCRIPTION_HPP_
 
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
-
 #include "ieompp/description.hpp"
 #include "ieompp/string.hpp"
+
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 namespace ieompp
 {

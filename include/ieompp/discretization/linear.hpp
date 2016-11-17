@@ -1,16 +1,16 @@
 #ifndef IEOMPP_DISCRETIZATION_LINEAR_HPP_
 #define IEOMPP_DISCRETIZATION_LINEAR_HPP_
 
+#include "ieompp/constants.hpp"
+#include "ieompp/description.hpp"
+#include "ieompp/iterators/integer_iterator.hpp"
+#include "ieompp/types/description.hpp"
+
 #include <array>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <type_traits>
-
-#include "ieompp/constants.hpp"
-#include "ieompp/description.hpp"
-#include "ieompp/iterators/integer_iterator.hpp"
-#include "ieompp/types/description.hpp"
 
 namespace ieompp
 {

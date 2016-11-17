@@ -1,11 +1,11 @@
 #ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_BLAZE_SPARSE_HPP_
 #define IEOMPP_MODELS_HUBBARD_REAL_SPACE_BLAZE_SPARSE_HPP_
 
-#include <cstdint>
-
 #include "ieompp/models/hubbard_real_space/basis.hpp"
 #include "ieompp/models/hubbard_real_space/liouvillian.hpp"
 #include "ieompp/types/triplet.hpp"
+
+#include <cstdint>
 
 namespace ieompp
 {

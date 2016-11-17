@@ -1,12 +1,12 @@
 #ifndef IEOMPP_DESCRIPTION_HPP_
 #define IEOMPP_DESCRIPTION_HPP_
 
+#include "ieompp/string.hpp"
+
 #include <ostream>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include "ieompp/string.hpp"
 
 namespace ieompp
 {

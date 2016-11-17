@@ -1,14 +1,14 @@
 #ifndef IEOMPP_TYPES_DESCRIPTION_HPP_
 #define IEOMPP_TYPES_DESCRIPTION_HPP_
 
+#include "ieompp/description.hpp"
+#include "ieompp/string.hpp"
+#include "ieompp/types/names.hpp"
+
 #include <complex>
 #include <cstdint>
 #include <string>
 #include <tuple>
-
-#include "ieompp/description.hpp"
-#include "ieompp/string.hpp"
-#include "ieompp/types/names.hpp"
 
 namespace ieompp
 {

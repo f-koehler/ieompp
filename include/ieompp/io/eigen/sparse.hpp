@@ -1,16 +1,16 @@
 #ifndef IEOMPP_IO_EIGEN_SPARSE_HPP_
 #define IEOMPP_IO_EIGEN_SPARSE_HPP_
 
+#include "ieompp/io/exception.hpp"
+#include "ieompp/io/line.hpp"
+#include "ieompp/string.hpp"
+#include "ieompp/types/eigen.hpp"
+
 #include <cstdlib>
 #include <istream>
 #include <ostream>
 #include <sstream>
 #include <string>
-
-#include "ieompp/io/exception.hpp"
-#include "ieompp/io/line.hpp"
-#include "ieompp/string.hpp"
-#include "ieompp/types/eigen.hpp"
 
 namespace ieompp
 {

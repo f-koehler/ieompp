@@ -1,8 +1,9 @@
 #ifndef SRC_HUBBARD_LOGGING_HPP_
 #define SRC_HUBBARD_LOGGING_HPP_
 
+#include "spdlog.hpp"
+
 #include <ieompp/platform.hpp>
-#include <ieompp/spdlog.hpp>
 #include <ieompp/types/blaze.hpp>
 
 #include <memory>

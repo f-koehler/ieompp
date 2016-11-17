@@ -1,11 +1,11 @@
 #ifndef IEOMPP_ALGEBRA_TERM_LIST_HPP_
 #define IEOMPP_ALGEBRA_TERM_LIST_HPP_
 
+#include "ieompp/algebra/term/order.hpp"
+
 #include <algorithm>
 #include <functional>
 #include <list>
-
-#include "ieompp/algebra/term/order.hpp"
 
 namespace ieompp
 {

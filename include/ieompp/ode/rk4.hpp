@@ -1,12 +1,12 @@
 #ifndef IEOMPP_ODE_RK4_HPP_
 #define IEOMPP_ODE_RK4_HPP_
 
-#include <cassert>
-
 #include "ieompp/description.hpp"
 #include "ieompp/types/function_matrix.hpp"
 #include "ieompp/types/matrix_check.hpp"
 #include "ieompp/types/multiply_assign.hpp"
+
+#include <cassert>
 
 namespace ieompp
 {

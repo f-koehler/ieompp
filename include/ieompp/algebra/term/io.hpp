@@ -1,10 +1,10 @@
 #ifndef IEOMPP_ALGEBRA_TERM_IO_HPP_
 #define IEOMPP_ALGEBRA_TERM_IO_HPP_
 
+#include "ieompp/algebra/term/term.hpp"
+
 #include <iterator>
 #include <ostream>
-
-#include "ieompp/algebra/term/term.hpp"
 
 namespace ieompp
 {
