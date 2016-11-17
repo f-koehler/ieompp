@@ -5,7 +5,6 @@ using namespace std;
 
 #include "momentum_space_1d.hpp"
 
-#include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
 namespace hubbard = ieompp::models::hubbard_momentum_space;
 
 int main(int argc, char** argv)
@@ -16,12 +15,12 @@ int main(int argc, char** argv)
 
     // clang-format off
     Application::options_description.add_options()
-        ("N", make_value<uint64_t>()->default_value(16), "number of momentum_space sites")
+        ("N", make_value<uint64_t>()->default_value(16), "number of points in brillouin zone discretization")
         ("J", make_value<double>()->default_value(1.), "hopping prefactor")
         ("U", make_value<double>()->default_value(1.), "interaction strength")
         ("dt", make_value<double>()->default_value(0.01), "step width of RK4 integrator")
-        ("steps", make_value<uint64_t>()->default_value(1000), "number of integrator steps")
-        ("measurement_interval", make_value<uint64_t>()->default_value(10), "interval between measurements")
+        ("t_end", make_value<double>(10), "stop time for simulation")
+        ("measurement_interval", make_value<double>()->default_value(0.1), "interval between measurements")
         ;
     // clang-format on
 
@@ -32,34 +31,23 @@ int main(int argc, char** argv)
     const auto J                    = app.variables["J"].as<double>();
     const auto U                    = app.variables["U"].as<double>();
     const auto dt                   = app.variables["dt"].as<double>();
-    const auto steps                = app.variables["steps"].as<uint64_t>();
-    const auto measurement_interval = app.variables["measurement_interval"].as<uint_fast64_t>();
+    const auto t_end                = app.variables["t_end"].as<double>();
+    const auto measurement_interval = app.variables["measurement_interval"].as<double>();
 
-    get_loggers().main->info("CLI options:");
-    get_loggers().main->info("  N   = {}", N);
-    get_loggers().main->info("  J   = {}", J);
-    get_loggers().main->info("  U   = {}", U);
-    get_loggers().main->info("  out = {}", app.output_path);
-
-    write_response_file(app.response_path, argc, argv);
-
-    // setting up lattice
-    MomentumSpace momentum_space(N);
+    // setting up lattice and brillouin_zone
+    BrillouinZone brillouin_zone(N);
     Lattice lattice(N, 1.);
 
     // init operator basis
-    get_loggers().main->info("Setting up operator basis");
-    Basis3 basis(0, momentum_space);
+    const auto basis = init_basis<Basis3>(brillouin_zone);
 
     // computing matrix
-    const auto L = hubbard::make_liouvillian(momentum_space, lattice, J, U);
+    const auto L = hubbard::make_liouvillian(brillouin_zone, lattice, J, U);
     const auto M = compute_matrix(L, basis, lattice);
     write_matrix_file(app.matrix_path, M);
 
     // setting up initial vector
-    get_loggers().main->info("Setting up {} dimensional vector with initial conditions",
-                             basis.size());
-    blaze::DynamicVector<std::complex<double>> h(basis.size());
+    auto h = init_vector(app, basis);
 
     uint64_t initial_step = 0;
     if(app.variables.count("checkpoint") == 0) {
@@ -75,7 +63,6 @@ int main(int argc, char** argv)
     }
     get_loggers().main->info("Finished setting up initial conditions");
 
-    const auto rk4 = init_rk4(basis.size(), dt);
     hubbard::ParticleNumber<Basis3> obs(basis, L.dispersion, 0.);
     cout << obs.non_vanishing_expectation_values.size() << '\n';
 

@@ -24,13 +24,11 @@ struct Application {
     std::string matrix_path;
     std::string checkpoint_prefix;
     std::ofstream output_file;
-    std::uint64_t step;
 
     Application(int argc, char** argv)
     {
-        boost::program_options::store(
-            boost::program_options::parse_command_line(argc, argv, options_description), variables);
-        boost::program_options::notify(variables);
+        const auto all_options =
+            parse_command_line_options(argc, argv, options_description, variables);
 
         if(variables.count("help")) {
             print_help();
@@ -49,13 +47,27 @@ struct Application {
             boost::filesystem::change_extension(output_path, "").string() + "_matrix.blaze";
         checkpoint_prefix =
             boost::filesystem::change_extension(output_path, "").string() + "_checkpoint_";
-        step = 0;
 
         get_loggers().init(log_path);
 
+        get_loggers().main->info("CLI options:");
+        for(const auto& option : all_options) {
+            get_loggers().main->info("\t{} = {}", option.first, option.second);
+        }
+
         if(variables.count("response_file") != 0u) {
+            // read simulation parameters from response file
             read_response_file(variables["response_file"].as<std::string>(), variables,
                                Application::options_description);
+        } else {
+            // write a response file with simulation parameters
+            get_loggers().io->info("Write response file \"{}\"", response_path);
+            std::ofstream file(response_path.c_str());
+            for(const auto& opt : all_options) {
+                file << "--" << opt.first << '=' << opt.second << '\n';
+            }
+            file.close();
+            get_loggers().io->info("Close response file \"{}\"", response_path);
         }
 
         get_loggers().io->info("Opening output file \"{}\"", output_path);

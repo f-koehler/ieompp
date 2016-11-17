@@ -13,6 +13,15 @@ using Basis3  = ieompp::models::hubbard_real_space::Basis3Operator<Term1d>;
 using Lattice = ieompp::discretization::LinearDiscretization<double, uint64_t>;
 
 template <typename Basis>
+Basis init_basis(const Lattice& lattice)
+{
+    get_loggers().main->info("Set up basis");
+    auto basis = Basis(lattice);
+    get_loggers().main->info("Finished setting up basis with {} elements", basis.size());
+    return basis;
+}
+
+template <typename Basis>
 ieompp::models::hubbard_real_space::SiteOccupation<Basis>
 init_site_occupation_observable(const Lattice& lattice)
 {

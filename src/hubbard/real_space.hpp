@@ -15,8 +15,9 @@ compute_matrix(const Liouvillian& L, const Basis& basis, const Lattice& lattice)
     M.reserve(basis.size() * 10);
     get_loggers().main->info("Computing matrix elements");
     ieompp::models::hubbard_real_space::init_matrix(L, M, basis, lattice);
-    get_loggers().main->info("  {} out of {} matrix elements are non-zero", M.nonZeros(),
-                             M.rows() * M.columns());
+    get_loggers().main->info("  {} out of {} matrix elements are non-zero ({}% filling)",
+                             M.nonZeros(), M.rows() * M.columns(),
+                             double(M.nonZeros()) / (M.rows() * M.columns()));
     get_loggers().main->info("Multiply matrix with prefactor 1i");
     M *= std::complex<double>(0, 1);
     get_loggers().main->info("Finished matrix initialization");

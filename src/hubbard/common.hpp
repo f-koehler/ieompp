@@ -57,11 +57,11 @@ blaze::DynamicVector<std::complex<double>> read_vector_from_checkpoint(Applicati
 
     const std::regex re_checkpoint_file("^.*" + app.checkpoint_prefix + R"((\d+)\.blaze$)");
     std::smatch m;
-    app.step = strtoul(m[1].str().c_str(), nullptr, 10);
     get_loggers().main->info(
-        "Clean up output file to be in the state according to checkpoint for step {}", app.step);
+        "Clean up output file to be in the state according to checkpoint for step TODO");
 
-    clean_output_file(app.output_path, app.step);
+    // TODO
+    clean_output_file(app.output_path, 42);
     get_loggers().main->info("Finished reading vector from checkpoint file");
 
     return vec;
@@ -85,6 +85,13 @@ ieompp::ode::RK4<Float> init_rk4(std::size_t basis_size, const Float& dt)
     ieompp::ode::RK4<Float> rk4(basis_size, dt);
     get_loggers().ode->info("Finished RK4 initializing integrator");
     return rk4;
+}
+
+template <typename Float>
+bool has_time_interval_passed(const Float& t, const Float& last, const Float& dt, uint64_t interval)
+{
+    if(last >= t) return false;
+    return static_cast<uint64_t>(std::round((t - last) / dt)) >= interval;
 }
 
 #endif

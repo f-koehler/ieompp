@@ -14,18 +14,28 @@
 
 #include "logging.hpp"
 
-template <typename Scalar, bool TransposeFlag>
-void write_checkpoint_file(const std::string& path,
-                           const blaze::DynamicVector<Scalar, TransposeFlag>& vector)
+template <typename Scalar, bool TransposeFlag, typename Time>
+void write_checkpoint_file(const std::string& prefix,
+                           const blaze::DynamicVector<Scalar, TransposeFlag>& vector, const Time& t)
 {
+    static uint64_t check_point_number = 0;
+    std::string path                   = prefix + std::to_string(check_point_number) + ".blaze";
     get_loggers().io->info("Create checkpoint file \"{}\" using vector with {} elements", path,
                            vector.size());
     std::ofstream strm(path.c_str(), std::ofstream::binary);
     blaze::Archive<std::ofstream> archive(strm);
     archive << vector;
-    strm.flush();
     strm.close();
-    get_loggers().io->info("Finished writing checkpoint file \"{}\"");
+    get_loggers().io->info("Finished writing checkpoint file \"{}\"", path);
+
+    path = prefix + std::to_string(check_point_number) + ".info";
+    get_loggers().io->info("Create checkpoint info file \"{}\" for t={}", path, t);
+    strm.open(path.c_str());
+    strm << t << '\n';
+    strm.close();
+    get_loggers().io->info("Finished writing checkpoint info file \"{}\"", path);
+
+    ++check_point_number;
 }
 
 template <typename Scalar, bool TransposeFlag>
