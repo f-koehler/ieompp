@@ -56,18 +56,14 @@ int main(int argc, char** argv)
     const auto integrator = init_rk4(basis.size(), dt);
 
     // setup observable
-    const auto fermi_jump = hubbard::MomentumDistribution1D<double, uint64_t>(lattice, k);
-
-    /* cout << fermi_jump.fourier_coefficient(0) << '\t' << fermi_jump.fourier_coefficient(1) <<
-     * '\t' */
-    /*      << fermi_jump.fourier_coefficient(2) << '\n'; */
-    /* return 0; */
+    const auto fermi_jump = hubbard::MomentumDistribution1D<Basis3>(
+        lattice, k, hubbard::ExpectationValue1DHalfFilled<double, Lattice>{lattice});
 
     double jump, t = 0., last_measurement = 0., last_checkpoint = 0.;
 
     // write initial value of observable to file
     get_loggers().main->info("Measuring at t=0");
-    jump = fermi_jump(h);
+    jump = fermi_jump(basis, h);
     get_loggers().main->info(u8"  <Δn_{{k,↑}}>(0) = {}", jump);
     app.output_file << t << '\t' << jump << '\n';
     app.output_file.flush();
@@ -77,7 +73,7 @@ int main(int argc, char** argv)
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
-            jump = fermi_jump(h);
+            jump = fermi_jump(basis, h);
             get_loggers().main->info(u8"  <Δn_{{k,↑}}>({}) = {}", t, jump);
             app.output_file << t << '\t' << jump << '\n';
             app.output_file.flush();
@@ -98,7 +94,7 @@ int main(int argc, char** argv)
 
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
-        jump = fermi_jump(h);
+        jump = fermi_jump(basis, h);
         get_loggers().main->info(u8"  <Δn_{{k,↑}}>({}) = {}", t, jump);
         app.output_file << t << '\t' << jump << '\n';
         app.output_file.flush();
