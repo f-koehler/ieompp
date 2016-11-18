@@ -11,9 +11,9 @@ add_executable(hubbard_real_1d_rk4 hubbard_real_1d_rk4.cpp)
 target_link_libraries(hubbard_real_1d_rk4  ${Boost_LIBRARIES})
 enable_iwyu(hubbard_real_1d_rk4)
 
-add_executable(hubbard_real_1d_rk4_jump hubbard_real_1d_rk4_jump.cpp)
-target_link_libraries(hubbard_real_1d_rk4_jump  ${Boost_LIBRARIES})
-enable_iwyu(hubbard_real_1d_rk4_jump)
+add_executable(hubbard_real_1d_rk4_momentum_distribution hubbard_real_1d_rk4_momentum_distribution.cpp)
+target_link_libraries(hubbard_real_1d_rk4_momentum_distribution  ${Boost_LIBRARIES})
+enable_iwyu(hubbard_real_1d_rk4_momentum_distribution)
 
 add_executable(hubbard_real_1d_kinetic_rk4 hubbard_real_1d_kinetic_rk4.cpp)
 target_link_libraries(hubbard_real_1d_kinetic_rk4  ${Boost_LIBRARIES})
@@ -30,6 +30,7 @@ install(
         hubbard_momentum_1d_rk4
         hubbard_real_1d_kinetic_rk4
         hubbard_real_1d_kinetic_theory
+        hubbard_real_1d_rk4
     RUNTIME
     DESTINATION bin
     CONFIGURATIONS Release

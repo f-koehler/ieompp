@@ -56,6 +56,11 @@ namespace ieompp
                     return std::norm(
                         std::accumulate(results.begin(), results.end(), Complex(0., 0.)));
                 }
+
+                const Complex& fourier_coefficient(const Index& index) const
+                {
+                    return _fourier_coefficients[index];
+                }
             };
         } // namespace hubbard_real_space
     }     // namespace models

@@ -11,8 +11,8 @@ namespace hubbard = ieompp::models::hubbard_real_space;
 
 int main(int argc, char** argv)
 {
-    Application::name        = "hubbard_real_1d_rk4";
-    Application::description = "Calculate <Δn_{k_F,↑}>(t) for the 1d Hubbard model";
+    Application::name        = "hubbard_real_1d_rk4_momentum_distribution";
+    Application::description = "Calculate <Δn_{k,↑}>(t) for the 1d Hubbard model";
     Application::add_default_options();
 
     // clang-format off
@@ -22,6 +22,7 @@ int main(int argc, char** argv)
         ("U", make_value<double>(1.), "interaction strength")
         ("dt", make_value<double>(0.01), "step width of RK4 integrator")
         ("t_end", make_value<double>(10), "stop time for simulation")
+        ("k", make_value<double>(ieompp::HalfPi<double>::value), "momentum")
         ("measurement_interval", make_value<uint64_t>()->default_value(100), "interval between measurements in units of dt")
         ;
     // clang-format on
@@ -34,6 +35,7 @@ int main(int argc, char** argv)
     const auto U                    = app.variables["U"].as<double>();
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
+    const auto k                    = app.variables["k"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
 
     // setting up a lattice
@@ -54,15 +56,19 @@ int main(int argc, char** argv)
     const auto integrator = init_rk4(basis.size(), dt);
 
     // setup observable
-    const auto k_F        = ieompp::HalfPi<double>::value;
-    const auto fermi_jump = hubbard::MomentumDistribution1D<double, uint64_t>(lattice, k_F);
+    const auto fermi_jump = hubbard::MomentumDistribution1D<double, uint64_t>(lattice, k);
+
+    /* cout << fermi_jump.fourier_coefficient(0) << '\t' << fermi_jump.fourier_coefficient(1) <<
+     * '\t' */
+    /*      << fermi_jump.fourier_coefficient(2) << '\n'; */
+    /* return 0; */
 
     double jump, t = 0., last_measurement = 0., last_checkpoint = 0.;
 
     // write initial value of observable to file
     get_loggers().main->info("Measuring at t=0");
     jump = fermi_jump(h);
-    get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>(0) = {}", jump);
+    get_loggers().main->info(u8"  <Δn_{{k,↑}}>(0) = {}", jump);
     app.output_file << t << '\t' << jump << '\n';
     app.output_file.flush();
     get_loggers().main->info("Finish measurement at t=0");
@@ -72,7 +78,7 @@ int main(int argc, char** argv)
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
             jump = fermi_jump(h);
-            get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>({}) = {}", t, jump);
+            get_loggers().main->info(u8"  <Δn_{{k,↑}}>({}) = {}", t, jump);
             app.output_file << t << '\t' << jump << '\n';
             app.output_file.flush();
             get_loggers().main->info("Finish measurement at t={}", t);
@@ -93,7 +99,7 @@ int main(int argc, char** argv)
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
         jump = fermi_jump(h);
-        get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>({}) = {}", t, jump);
+        get_loggers().main->info(u8"  <Δn_{{k,↑}}>({}) = {}", t, jump);
         app.output_file << t << '\t' << jump << '\n';
         app.output_file.flush();
         get_loggers().main->info("Finish measurement at t={}", t);
