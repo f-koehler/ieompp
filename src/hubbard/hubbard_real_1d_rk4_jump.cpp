@@ -5,13 +5,12 @@ using namespace std;
 
 #include "real_space_1d.hpp"
 
-#include <ieompp/constants.hpp>
 #include <ieompp/models/hubbard_real_space.hpp>
 namespace hubbard = ieompp::models::hubbard_real_space;
 
 int main(int argc, char** argv)
 {
-    Application::name        = "hubbard_real_1d_rk4_momentum_distribution";
+    Application::name        = "hubbard_real_1d_rk4_jump";
     Application::description = "Calculate <Δn_{k,↑}>(t) for the 1d Hubbard model";
     Application::add_default_options();
 
@@ -22,7 +21,6 @@ int main(int argc, char** argv)
         ("U", make_value<double>(1.), "interaction strength")
         ("dt", make_value<double>(0.01), "step width of RK4 integrator")
         ("t_end", make_value<double>(10), "stop time for simulation")
-        ("k", make_value<double>(ieompp::HalfPi<double>::value), "momentum")
         ("measurement_interval", make_value<uint64_t>()->default_value(100), "interval between measurements in units of dt")
         ;
     // clang-format on
@@ -35,7 +33,6 @@ int main(int argc, char** argv)
     const auto U                    = app.variables["U"].as<double>();
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
-    const auto k                    = app.variables["k"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
 
     // setting up a lattice
@@ -56,8 +53,8 @@ int main(int argc, char** argv)
     const auto integrator = init_rk4(basis.size(), dt);
 
     // setup observable
-    const auto fermi_jump = hubbard::MomentumDistribution1D<Basis3>(
-        lattice, k, hubbard::ExpectationValue1DHalfFilled<double, Lattice>{lattice});
+    const auto fermi_jump = hubbard::FermiJump1D<Basis3>(
+        lattice, hubbard::ExpectationValue1DHalfFilled<double, Lattice>{lattice});
 
     double jump, t = 0., last_measurement = 0., last_checkpoint = 0.;
 
