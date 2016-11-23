@@ -17,7 +17,7 @@ config = (
     "\n"
     "namespace ieompp {\n"
     "    constexpr auto version = \"%s\";\n"
-    "}\n"
+    "} // ieompp\n"
     "\n"
     "#endif"
 ) % (version)

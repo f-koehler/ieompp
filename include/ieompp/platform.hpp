@@ -85,8 +85,8 @@ namespace ieompp
 #if BOOST_OS_WINDOWS
 #else
             static char buffer[128];
-            gethostname(buffer, 128);
-            return std::string(buffer);
+            gethostname((char*)buffer, 128);
+            return std::string((char*)buffer);
 #endif
         }
 

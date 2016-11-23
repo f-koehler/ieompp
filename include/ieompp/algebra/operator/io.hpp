@@ -15,7 +15,11 @@ namespace ieompp
     {
         struct BoolSpinPrinter {
 #ifndef IEOMPP_DISABLE_ARROWS
-            static void print(std::ostream& strm, bool b) { strm << (b ? u8"↑" : u8"↓"); }
+            static void print(std::ostream& strm, bool b) {
+                static const std::string up   = u8"↑";
+                static const std::string down = u8"↓";
+                strm << (b ? up : down);
+            }
 #else
             static void print(std::ostream& strm, bool b) { strm << b; }
 #endif

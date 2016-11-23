@@ -26,13 +26,13 @@ int main(int argc, char** argv)
 
     Application app(argc, argv);
 
-    const auto checkpoint_interval  = app.variables["checkpoint_interval"].as<uint64_t>();
+    /* const auto checkpoint_interval  = app.variables["checkpoint_interval"].as<uint64_t>(); */
     const auto N                    = app.variables["N"].as<uint64_t>();
     const auto J                    = app.variables["J"].as<double>();
     const auto U                    = app.variables["U"].as<double>();
-    const auto dt                   = app.variables["dt"].as<double>();
-    const auto t_end                = app.variables["t_end"].as<double>();
-    const auto measurement_interval = app.variables["measurement_interval"].as<double>();
+    /* const auto dt                   = app.variables["dt"].as<double>(); */
+    /* const auto t_end                = app.variables["t_end"].as<double>(); */
+    /* const auto measurement_interval = app.variables["measurement_interval"].as<double>(); */
 
     // setting up lattice and brillouin_zone
     BrillouinZone brillouin_zone(N);
