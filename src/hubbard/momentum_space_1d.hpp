@@ -3,13 +3,13 @@
 
 #include "momentum_space.hpp"
 
-#include <ieompp/discretization/linear.hpp>
+#include <ieompp/lattices/linear.hpp>
 #include <ieompp/models/hubbard_momentum_space/basis.hpp>
 #include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
 
 using Basis3        = ieompp::models::hubbard_momentum_space::Basis3Operator<Term1d>;
-using Lattice       = ieompp::discretization::LinearDiscretization<double, uint64_t>;
-using BrillouinZone = ieompp::discretization::LinearDiscretization<double, uint64_t>;
+using Lattice       = ieompp::lattices::LinearDiscretization<double, uint64_t>;
+using BrillouinZone = ieompp::lattices::LinearDiscretization<double, uint64_t>;
 
 template <typename Basis>
 Basis init_basis(const BrillouinZone& brillouin_zone)

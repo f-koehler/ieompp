@@ -3,14 +3,14 @@
 
 #include "real_space.hpp"
 
-#include <ieompp/discretization/linear.hpp>
+#include <ieompp/lattices/linear.hpp>
 #include <ieompp/models/hubbard_real_space/basis.hpp>
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 #include <ieompp/models/hubbard_real_space/site_occupation.hpp>
 
 using Basis1  = ieompp::models::hubbard_real_space::Basis1Operator<Term1d>;
 using Basis3  = ieompp::models::hubbard_real_space::Basis3Operator<Term1d>;
-using Lattice = ieompp::discretization::LinearDiscretization<double, uint64_t>;
+using Lattice = ieompp::lattices::LinearDiscretization<double, uint64_t>;
 
 template <typename Basis>
 Basis init_basis(const Lattice& lattice)

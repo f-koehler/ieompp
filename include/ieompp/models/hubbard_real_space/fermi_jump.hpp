@@ -9,6 +9,7 @@
 #include <cmath>
 #include <functional>
 #include <numeric>
+#include <utility>
 #include <vector>
 
 #include <omp.h>
@@ -45,7 +46,7 @@ namespace ieompp
             public:
                 template <typename Lattice>
                 FermiJump1D(const Lattice& lattice, ExpectationValueFunction expectation_value)
-                    : _N(lattice.num()), _expectation_value(expectation_value)
+                    : _N(lattice.num()), _expectation_value(std::move(expectation_value))
                 {
                     static const auto k_F = HalfPi<double>::value;
 

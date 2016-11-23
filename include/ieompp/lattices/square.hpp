@@ -1,5 +1,5 @@
-#ifndef IEOMPP_DISCRETIZATION_SQUARE_HPP_
-#define IEOMPP_DISCRETIZATION_SQUARE_HPP_
+#ifndef IEOMPP_LATTICES_SQUARE_HPP_
+#define IEOMPP_LATTICES_SQUARE_HPP_
 
 #include "ieompp/constants.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
@@ -18,7 +18,7 @@
 
 namespace ieompp
 {
-    namespace discretization
+    namespace lattices
     {
         template <typename FloatT, typename IndexT = uint64_t>
         class SquareDiscretization

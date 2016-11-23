@@ -1,10 +1,9 @@
-#ifndef IEOMPP_DISCRETIZATION_LINEAR_HPP_
-#define IEOMPP_DISCRETIZATION_LINEAR_HPP_
+#ifndef IEOMPP_LATICES_LINEAR_HPP_
+#define IEOMPP_LATICES_LINEAR_HPP_
 
 #include "ieompp/constants.hpp"
 #include "ieompp/description.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
-#include "ieompp/types/description.hpp"
 
 #include <array>
 #include <cassert>
@@ -14,7 +13,7 @@
 
 namespace ieompp
 {
-    namespace discretization
+    namespace lattices
     {
         template <typename FloatT, typename IndexT = uint64_t>
         class LinearDiscretization
@@ -272,28 +271,7 @@ namespace ieompp
             }
             return Index(std::round((v - _x_min) / _dx)) % _num;
         }
-    } // namespace discretization
-
-    template <typename Float, typename Index>
-    struct TypeDescription<discretization::LinearDiscretization<Float, Index>> {
-        static Description description()
-        {
-            return Description{{"linear discretization", ""}, {"real type", ""}}
-                   + get_type_description<Float>().indent(2) + Description{{"index type", ""}}
-                   + get_type_description<Index>().indent(2);
-        }
-    };
-
-    template <typename Float, typename Index>
-    struct InstanceDescription<discretization::LinearDiscretization<Float, Index>> {
-        static Description
-        description(const discretization::LinearDiscretization<Float, Index>& disc)
-        {
-            return Description{{"number of sites", std::to_string(disc.num())},
-                               {"dx", std::to_string(disc.dx())}};
-            // TODO: be more verbose
-        }
-    };
+    } // namespace lattices
 } // namespace ieompp
 
 #endif
