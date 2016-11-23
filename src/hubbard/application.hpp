@@ -85,6 +85,11 @@ struct Application {
         output_file << "# compiled by:\t" << ieompp::Platform::user() << '@'
                     << ieompp::Platform::host() << '\n';
         output_file << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
+
+        output_file << "#\n# CLI options:\n";
+        for(const auto& option : all_options) {
+            output_file << "#\t" << option.first << " = " << option.second << '\n';
+        }
     }
 
     Application(const Application&) = delete;
