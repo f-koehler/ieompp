@@ -15,8 +15,13 @@ include(cmake/warnings.cmake)
 # produce native binaries
 option(ieompp_NATIVE_BINARIES "Produce native binaries" ON)
 if(${ieompp_NATIVE_BINARIES})
-    include(cmake/native.cmake)
+    if(NOT CMAKE_BUILD_TYPE MATCHES Quick)
+        include(cmake/native.cmake)
+    endif()
 endif()
+
+# add quick build target
+include(cmake/quick-build.cmake)
 
 # optimization of debug builds
 if(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -60,6 +65,12 @@ if(${ieompp_ENABLE_OPENMP})
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
         endif()
     endif()
+endif()
+
+# option to use ccache
+option(ieompp_ENABLE_CCACHE "Enable building uisng ccache" OFF)
+if(${ieompp_ENABLE_CCACHE})
+    include(cmake/ccache.cmake)
 endif()
 
 # option to build documentation using sphinx

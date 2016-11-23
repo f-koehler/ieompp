@@ -7,3 +7,4 @@ external/eigen
 external/eigen.tar.gz
 include/ieompp/version.hpp
 iwyu.html
+ramdisk
