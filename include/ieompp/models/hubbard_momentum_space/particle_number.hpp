@@ -3,11 +3,10 @@
 
 #include "ieompp/models/hubbard_momentum_space/basis.hpp"
 #include "ieompp/models/hubbard_momentum_space/non_vanishing_expectation_values.hpp"
+#include "ieompp/openmp.hpp"
 #include "ieompp/types/number.hpp"
 
 #include <numeric>
-
-#include <omp.h>
 
 namespace ieompp
 {

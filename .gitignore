@@ -2,7 +2,9 @@
 *.pyc
 *.session
 *.swp
+.idea
 build*
+cmake-build-*
 external/eigen
 external/eigen.tar.gz
 include/ieompp/version.hpp

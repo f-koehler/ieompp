@@ -10,13 +10,12 @@ using namespace std::complex_literals;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
-#include <omp.h>
-
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/algebra/term.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/linear.hpp>
 #include <ieompp/models/hubbard_real_space.hpp>
+#include <ieompp/openmp.hpp>
 namespace hubbard = ieompp::models::hubbard_real_space;
 
 complex<double> minus_i_power(uint64_t power)

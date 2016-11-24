@@ -3,6 +3,7 @@
 
 #include "ieompp/constants.hpp"
 #include "ieompp/models/hubbard_real_space/basis.hpp"
+#include "ieompp/openmp.hpp"
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/number.hpp"
 
@@ -11,8 +12,6 @@
 #include <numeric>
 #include <utility>
 #include <vector>
-
-#include <omp.h>
 
 namespace ieompp
 {
@@ -65,8 +64,8 @@ namespace ieompp
                     // buffer to store h^NO coefficients
                     static Vector h_NO(_N);
 
-// calculate h-coefficients in normally-ordered bases
 #pragma omp parallel for
+                    // calculate h-coefficients in normally-ordered bases
                     for(Index i = 0; i < _N; ++i) {
                         auto& curr = h_NO[i];
                         curr       = h[i];
