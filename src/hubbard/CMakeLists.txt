@@ -25,6 +25,7 @@ enable_iwyu(hubbard_real_1d_kinetic_theory)
 
 install(
     TARGETS
+        hubbard_real_1d_rk4_jump
         hubbard_commutators_momentum_space
         hubbard_commutators_real_space
         hubbard_momentum_1d_rk4

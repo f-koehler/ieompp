@@ -1,7 +1,7 @@
 #!/bin/bash
 NICE_LVL=19
 NPROC=6
-COMMON_FLAGS="-pipe -m64 -isystem/net/sw/gcc/5.3.0/rft/include -L/net/sw/gcc/5.3.0/rtf/lib64"
+COMMON_FLAGS="-pipe -m64 -isystem/net/sw/gcc/5.3.0/rft/include -L/net/sw/gcc/5.3.0/rtf/lib64 -lboost_system -lboost_program_options -lboost_filesystem"
 
 module load gcc/5.3.0-full 
 module load python/3.4.2
