@@ -70,12 +70,14 @@ namespace ieompp
                         auto& curr = h_NO[i];
                         curr       = h[i];
                         for(Index j = 0; j < _N; ++j) {
-                            for(Index k = 0; k < _N; ++k) {
+                            const auto& op_j_0 = basis[j].operators.front();
+                            for(Index k = 0; k < j; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                curr += h[idx] * (2 * _expectation_value(basis[j].operators.front(),
-                                                                         basis[k].operators.front())
-                                                  - ((j == k) ? 1. : 0.));
+                                curr += h[idx] * 4.
+                                        * _expectation_value(op_j_0, basis[k].operators.front());
                             }
+                            const auto idx = basis.get_3op_index(i, j, j);
+                            curr += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
                         }
                     }
 
