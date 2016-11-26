@@ -1,6 +1,8 @@
 #ifndef IEOMPP_ALGEBRA_TERM_TERM_HPP_
 #define IEOMPP_ALGEBRA_TERM_TERM_HPP_
 
+#include "ieompp/types/number.hpp"
+
 #include <algorithm>
 #include <vector>
 
@@ -20,41 +22,30 @@ namespace ieompp
 
             void conjugate()
             {
-                // TODO: conjugate prefactor
+                prefactor = types::conjugate(prefactor);
                 std::reverse(operators.begin(), operators.end());
+                for(auto& op : *this) {
+                    op.conjugate();
+                }
             }
 
             Term get_conjugate() const
             {
-                // TODO: conjugate prefactor
-                Term conj{prefactor, {}};
+                Term conj{types::conjugate(prefactor), {}};
                 std::reverse_copy(operators.begin(), operators.end(),
                                   std::back_inserter(conj.operators));
                 for(auto& op : conj.operators) {
-                    op.creator = !op.creator;
+                    op.conjugate();
                 }
                 return conj;
             }
 
-            bool same_operators(const Term& rhs) const
+            bool have_same_operators(const Term& rhs) const
             {
                 if(operators.size() != rhs.operators.size()) {
                     return false;
                 }
                 return std::equal(operators.begin(), operators.end(), rhs.operators.begin());
-            }
-
-            Term sub_term(std::size_t pos, std::size_t len) const
-            {
-                // TODO: only works with random access iterators
-                return Term{Prefactor(1.),
-                            Container(operators.begin() + pos, operators.begin() + pos + len)};
-            }
-
-            template <typename Iterator>
-            Term sub_term(Iterator first, Iterator last)
-            {
-                return Term{Prefactor(1.), Container(first, last)};
             }
 
             Term& operator*=(const Term& rhs)
@@ -67,11 +58,11 @@ namespace ieompp
 
             Term operator*(const Term& rhs) const
             {
-                Term t(*this);
+                Term prod(*this);
                 std::copy(rhs.operators.begin(), rhs.operators.end(),
-                          std::back_inserter(t.operators));
-                t.prefactor *= rhs.prefactor;
-                return t;
+                          std::back_inserter(prod.operators));
+                prod.prefactor *= rhs.prefactor;
+                return prod;
             }
         };
 

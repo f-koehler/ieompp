@@ -28,6 +28,9 @@ namespace ieompp
 
             bool same_indices(const Operator& rhs) const { return indices == rhs.indices; }
             Indices index_tuple() const { return indices; }
+
+            void conjugate() { creator = !creator; }
+            Operator get_conjugate() const { return Operator{!creator, indices}; }
         };
 
         template <typename IndexT>
@@ -52,6 +55,9 @@ namespace ieompp
 
             bool same_indices(const Operator& rhs) const { return index == rhs.index; }
             Indices index_tuple() const { return std::make_tuple(index); }
+
+            void conjugate() { creator = !creator; }
+            Operator get_conjugate() const { return Operator{!creator, index}; }
         };
 
         template <typename Index1T, typename Index2T>
@@ -81,6 +87,9 @@ namespace ieompp
                 return (index1 == rhs.index1) && (index2 == rhs.index2);
             }
             Indices index_tuple() const { return std::make_tuple(index1, index2); }
+
+            void conjugate() { creator = !creator; }
+            Operator get_conjugate() const { return Operator{!creator, index1, index2}; }
         };
 
         template <typename T>
