@@ -35,13 +35,17 @@ namespace ieompp
 
             bool operator==(const Monomial& rhs) const
             {
-                if(this->size() != rhs.size()) return false;
+                if(this->size() != rhs.size()) {
+                    return false;
+                }
                 return std::equal(this->begin(), this->end(), rhs.begin());
             }
 
             bool operator!=(const Monomial& rhs) const
             {
-                if(this->size() != rhs.size()) return true;
+                if(this->size() != rhs.size()) {
+                    return true;
+                }
                 return !std::equal(this->begin(), this->end(), rhs.begin());
             }
 
@@ -58,7 +62,7 @@ namespace ieompp
                 return prod;
             }
         };
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif

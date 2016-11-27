@@ -11,31 +11,32 @@ namespace ieompp
     {
         namespace hubbard_real_space
         {
-            template <typename TermT>
-            struct Basis1Operator : public std::vector<TermT> {
-                using Term  = TermT;
-                using Index = typename std::vector<Term>::size_type;
+            template <typename MonomialT>
+            struct Basis1Operator : public std::vector<MonomialT> {
+                using Monomial = MonomialT;
+                using Index    = typename std::vector<Monomial>::size_type;
 
                 const Index N;
 
                 template <typename Lattice>
                 Basis1Operator(const Lattice& lattice) : N(lattice.num())
                 {
-                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
-                                  "Operator must be of Hubbard type");
+                    static_assert(
+                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                        "Operator must be of Hubbard type");
 
                     this->reserve(N);
 
                     for(auto i : lattice) {
-                        this->push_back(Term{1, {{true, i, true}}});
+                        this->emplace_back(Monomial{{{true, i, true}}});
                     }
                 }
             };
 
-            template <typename TermT>
-            struct Basis3Operator : public std::vector<TermT> {
-                using Term  = TermT;
-                using Index = typename std::vector<Term>::size_type;
+            template <typename MonomialT>
+            struct Basis3Operator : public std::vector<MonomialT> {
+                using Monomial = MonomialT;
+                using Index    = typename std::vector<Monomial>::size_type;
 
                 const Index N;
                 const Index N_squared;
@@ -43,20 +44,19 @@ namespace ieompp
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
                 {
-                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
-                                  "Operator must be of Hubbard type");
+                    static_assert(
+                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                        "Operator must be of Hubbard type");
 
                     this->reserve(N * (N * N + 1));
-                    const auto prefactor = typename Term::Prefactor(1.);
 
                     for(auto i : lattice) {
-                        this->push_back(Term{prefactor, {{true, i, true}}});
+                        this->emplace_back(Monomial{{{true, i, true}}});
                     }
                     for(auto i1 : lattice) {
                         for(auto i2 : lattice) {
                             for(auto i3 : lattice) {
-                                this->push_back(Term{
-                                    prefactor,
+                                this->emplace_back(Monomial{
                                     {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                             }
                         }
@@ -79,13 +79,13 @@ namespace ieompp
                 static constexpr bool value = false;
             };
 
-            template <typename Term>
-            struct IsOneOperatorBasis<Basis1Operator<Term>> {
+            template <typename Monomial>
+            struct IsOneOperatorBasis<Basis1Operator<Monomial>> {
                 static constexpr bool value = true;
             };
 
-            template <typename Term>
-            struct IsThreeOperatorBasis<Basis3Operator<Term>> {
+            template <typename Monomial>
+            struct IsThreeOperatorBasis<Basis3Operator<Monomial>> {
                 static constexpr bool value = true;
             };
         } // namespace hubbard_real_space

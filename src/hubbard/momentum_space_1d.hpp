@@ -7,7 +7,7 @@
 #include <ieompp/models/hubbard_momentum_space/basis.hpp>
 #include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
 
-using Basis3        = ieompp::models::hubbard_momentum_space::Basis3Operator<Term1d>;
+using Basis3        = ieompp::models::hubbard_momentum_space::Basis3Operator<Monomial1d>;
 using Lattice       = ieompp::lattices::LinearDiscretization<double, uint64_t>;
 using BrillouinZone = ieompp::lattices::LinearDiscretization<double, uint64_t>;
 

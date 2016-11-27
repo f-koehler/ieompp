@@ -19,20 +19,20 @@ namespace ieompp
     {
         namespace hubbard_real_space
         {
-            template <typename Basis>
+            template <typename Float, typename Basis>
             class FermiJump1D
             {
             };
 
-            template <typename TermT>
-            class FermiJump1D<Basis3Operator<TermT>>
+            template <typename FloatT, typename MonomialT>
+            class FermiJump1D<FloatT, Basis3Operator<MonomialT>>
             {
             public:
-                using Term     = TermT;
-                using Operator = typename Term::Operator;
-                using Basis    = Basis3Operator<Term>;
+                using Float    = FloatT;
+                using Monomial = MonomialT;
+                using Operator = typename Monomial::Operator;
+                using Basis    = Basis3Operator<Monomial>;
                 using Index    = typename Operator::Index1;
-                using Float    = typename types::RealType<typename Term::Prefactor>::Type;
                 using Complex  = std::complex<Float>;
                 using ExpectationValueFunction =
                     std::function<Float(const Operator&, const Operator&)>;
@@ -65,16 +65,15 @@ namespace ieompp
                     static Vector h_NO(_N);
 
 #pragma omp parallel for
-                    // calculate h-coefficients in normally-ordered bases
+                    // calculate h-coefficients in normally-ordered basis
                     for(Index i = 0; i < _N; ++i) {
                         auto& curr = h_NO[i];
                         curr       = h[i];
                         for(Index j = 0; j < _N; ++j) {
-                            const auto& op_j_0 = basis[j].operators.front();
+                            const auto& op_j_0 = basis[j].front();
                             for(Index k = 0; k < j; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                curr += h[idx] * 4.
-                                        * _expectation_value(op_j_0, basis[k].operators.front());
+                                curr += h[idx] * 4. * _expectation_value(op_j_0, basis[k].front());
                             }
                             const auto idx = basis.get_3op_index(i, j, j);
                             curr += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);

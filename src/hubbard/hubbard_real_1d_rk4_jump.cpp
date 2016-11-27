@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     const auto integrator = init_rk4(basis.size(), dt);
 
     // setup observable
-    const auto fermi_jump = hubbard::FermiJump1D<Basis3>(
+    const auto fermi_jump = hubbard::FermiJump1D<double, Basis3>(
         lattice, hubbard::ExpectationValue1DHalfFilled<double, Lattice>{lattice});
 
     double jump, t = 0., last_measurement = 0., last_checkpoint = 0.;

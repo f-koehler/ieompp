@@ -8,8 +8,8 @@
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 #include <ieompp/models/hubbard_real_space/site_occupation.hpp>
 
-using Basis1  = ieompp::models::hubbard_real_space::Basis1Operator<Term1d>;
-using Basis3  = ieompp::models::hubbard_real_space::Basis3Operator<Term1d>;
+using Basis1  = ieompp::models::hubbard_real_space::Basis1Operator<Monomial1d>;
+using Basis3  = ieompp::models::hubbard_real_space::Basis3Operator<Monomial1d>;
 using Lattice = ieompp::lattices::LinearDiscretization<double, uint64_t>;
 
 template <typename Basis>
@@ -22,11 +22,11 @@ Basis init_basis(const Lattice& lattice)
 }
 
 template <typename Basis>
-ieompp::models::hubbard_real_space::SiteOccupation<Basis>
+ieompp::models::hubbard_real_space::SiteOccupation<double, Basis>
 init_site_occupation_observable(const Lattice& lattice)
 {
     get_loggers().main->info(u8"Init <n_{0,↑}> observable for half-filled model");
-    auto site_occupation = ieompp::models::hubbard_real_space::SiteOccupation<Basis>{
+    auto site_occupation = ieompp::models::hubbard_real_space::SiteOccupation<double, Basis>{
         ieompp::models::hubbard_real_space::ExpectationValue1DHalfFilled<double, Lattice>{lattice}};
     get_loggers().main->info(u8"Finished initializing <n_{0,↑}> observable");
     return site_occupation;

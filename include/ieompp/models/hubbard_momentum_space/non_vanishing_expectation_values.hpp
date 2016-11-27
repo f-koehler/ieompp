@@ -18,25 +18,25 @@ namespace ieompp
             class NonVanishingExpectationValues : public std::vector<std::pair<Index, Index>>
             {
             public:
-                template <typename Term, typename Dispersion>
-                NonVanishingExpectationValues(const Basis3Operator<Term>& basis,
+                template <typename Monomial, typename Dispersion>
+                NonVanishingExpectationValues(const Basis3Operator<Monomial>& basis,
                                               const Dispersion& dispersion,
                                               const Float& fermi_energy = 0.)
                 {
                     const auto basis_size = basis.size();
 
                     // compute conjugate basis operators
-                    std::vector<Term> conjugate_basis(basis.size());
+                    std::vector<Monomial> conjugate_basis(basis.size());
 #pragma omp parallel for
-                    for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
                         conjugate_basis[i] = basis[i].get_conjugate();
                     }
 
                     // apply conjugate basis operators to FermFermi sea
-                    using Excitation = ExcitedFermiSea<typename Term::Operator::Index1>;
+                    using Excitation = ExcitedFermiSea<typename Monomial::Operator::Index1>;
                     std::vector<Excitation> excited_states(basis_size);
 #pragma omp parallel for
-                    for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
                         excited_states[i] =
                             Excitation(conjugate_basis[i], dispersion, fermi_energy);
                     }
@@ -45,10 +45,10 @@ namespace ieompp
                     std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
                         omp_get_max_threads());
 #pragma omp parallel for schedule(dynamic, 1)
-                    for(typename Basis3Operator<Term>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
                         non_vanishing[thread].push_back(std::make_pair(i, i));
-                        for(typename Basis3Operator<Term>::Index j = 0; j < i; ++j) {
+                        for(typename Basis3Operator<Monomial>::Index j = 0; j < i; ++j) {
                             if(excited_states[i] != excited_states[j]) {
                                 continue;
                             }

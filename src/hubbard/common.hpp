@@ -8,8 +8,8 @@
 #include <blaze/math/serialization/MatrixSerializer.h>
 #include <blaze/util/Serialization.h>
 
+#include <ieompp/algebra/monomial.hpp>
 #include <ieompp/algebra/operator.hpp>
-#include <ieompp/algebra/term.hpp>
 #include <ieompp/ode/rk4.hpp>
 
 #include "application.hpp"
@@ -18,8 +18,8 @@
 
 using Operator1d = ieompp::algebra::Operator<uint64_t, bool>;
 using Operator2d = ieompp::algebra::Operator<uint64_t, uint64_t, bool>;
-using Term1d     = ieompp::algebra::Term<double, Operator1d>;
-using Term2d     = ieompp::algebra::Term<double, Operator2d>;
+using Monomial1d = ieompp::algebra::Monomial<Operator1d>;
+using Monomial2d = ieompp::algebra::Monomial<Operator2d>;
 
 
 template <typename Scalar, bool StorageOrder>

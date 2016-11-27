@@ -11,10 +11,10 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename TermT>
-            struct Basis3Operator : public std::vector<TermT> {
-                using Term  = TermT;
-                using Index = typename std::vector<Term>::size_type;
+            template <typename MonomialT>
+            struct Basis3Operator : public std::vector<MonomialT> {
+                using Monomial = MonomialT;
+                using Index    = typename std::vector<Monomial>::size_type;
 
                 const std::size_t N;
 
@@ -22,20 +22,21 @@ namespace ieompp
                 Basis3Operator(Index q_idx, const MomentumSpace& momentum_space)
                     : N(momentum_space.num())
                 {
-                    static_assert(hubbard_common::IsHubbardOperator<typename Term::Operator>::value,
-                                  "Operator must be of Hubbard type");
+                    static_assert(
+                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                        "Operator must be of Hubbard type");
 
                     this->reserve(N * N + 1);
 
-                    this->push_back(Term{1, {{true, q_idx, true}}});
+                    this->emplace_back(Monomial{{{true, q_idx, true}}});
 
                     const auto q = momentum_space[q_idx];
                     for(auto i1 : momentum_space) {
                         const auto k1 = momentum_space[i1];
                         for(auto i2 : momentum_space) {
                             auto i3 = momentum_space(k1 + momentum_space[i2] - q);
-                            this->push_back(
-                                Term{1, {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
+                            this->emplace_back(Monomial{
+                                {{true, i1, true}, {true, i2, false}, {false, i3, false}}});
                         }
                     }
                 }
@@ -53,8 +54,8 @@ namespace ieompp
                 static constexpr bool value = false;
             };
 
-            template <typename Term>
-            struct IsThreeOperatorBasis<Basis3Operator<Term>> {
+            template <typename Monomial>
+            struct IsThreeOperatorBasis<Basis3Operator<Monomial>> {
                 static constexpr bool value = true;
             };
         } // namespace hubbard_momentum_space

@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     }
     get_loggers().main->info("Finished setting up initial conditions");
 
-    hubbard::ParticleNumber<Basis3> obs(basis, L.dispersion, 0.);
+    hubbard::ParticleNumber<double, Basis3> obs(basis, L.dispersion, 0.);
     cout << obs.non_vanishing_expectation_values.size() << '\n';
 
     return 0;

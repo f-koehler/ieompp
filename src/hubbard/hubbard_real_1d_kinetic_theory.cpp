@@ -10,8 +10,8 @@ using namespace std::complex_literals;
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+#include <ieompp/algebra/monomial.hpp>
 #include <ieompp/algebra/operator.hpp>
-#include <ieompp/algebra/term.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/linear.hpp>
 #include <ieompp/models/hubbard_real_space.hpp>
@@ -36,8 +36,7 @@ int main()
 {
     const uint64_t N = 128;
     ieompp::lattices::LinearDiscretization<double> lattice(N, 1.);
-    hubbard::Basis1Operator<ieompp::algebra::Term<double,
-                                                  ieompp::algebra::Operator<uint64_t, bool>>>
+    hubbard::Basis1Operator<ieompp::algebra::Monomial<ieompp::algebra::Operator<uint64_t, bool>>>
         basis(lattice);
 
     const double dt      = 0.01;
@@ -73,8 +72,7 @@ int main()
 #pragma omp parallel for
     for(uint64_t i = 0; i < N; ++i) {
         for(uint64_t j = 0; j < N; ++j) {
-            const auto ev =
-                expectation_value(basis[i].operators.front(), basis[j].operators.front());
+            const auto ev = expectation_value(basis[i].front(), basis[j].front());
             for(uint64_t step = 0; step < steps; ++step) {
                 results[omp_get_thread_num()][step] +=
                     ev * (h_vals[i][step] * h_vals_conj[j][step]);

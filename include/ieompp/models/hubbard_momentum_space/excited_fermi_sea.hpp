@@ -22,13 +22,11 @@ namespace ieompp
 
                 ExcitedFermiSea() = default;
 
-                template <typename Term, typename Dispersion>
-                ExcitedFermiSea(const Term& term, const Dispersion& dispersion,
+                template <typename Monomial, typename Dispersion>
+                ExcitedFermiSea(const Monomial& monomial, const Dispersion& dispersion,
                                 const typename Dispersion::Float& fermi_energy = 0.)
                 {
-                    const auto& ops = term.operators;
-
-                    for(auto it = ops.crbegin(); it != ops.crend(); ++it) {
+                    for(auto it = monomial.crbegin(); it != monomial.crend(); ++it) {
                         // get energy of next creation/annihilation
                         const auto energy = dispersion(it->index1);
 

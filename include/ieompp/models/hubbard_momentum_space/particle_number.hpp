@@ -14,21 +14,21 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename Basis>
+            template <typename Float, typename Basis>
             struct ParticleNumber {
             };
 
-            template <typename TermT>
-            struct ParticleNumber<Basis3Operator<TermT>> {
-                using Term  = TermT;
-                using Basis = Basis3Operator<Term>;
-                using Index = typename Term::Operator::Index1;
-                using Float = typename types::RealType<typename Term::Prefactor>::Type;
+            template <typename FloatT, typename MonomialT>
+            struct ParticleNumber<FloatT, Basis3Operator<MonomialT>> {
+                using Monomial = MonomialT;
+                using Basis    = Basis3Operator<Monomial>;
+                using Index    = typename Monomial::Operator::Index1;
+                using Float    = FloatT;
 
                 const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
 
                 template <typename Dispersion>
-                ParticleNumber(const Basis3Operator<Term>& basis, const Dispersion& dispersion,
+                ParticleNumber(const Basis3Operator<Monomial>& basis, const Dispersion& dispersion,
                                const Float& fermi_energy = 0.)
                     : non_vanishing_expectation_values(NonVanishingExpectationValues<Index, Float>(
                           basis, dispersion, fermi_energy))

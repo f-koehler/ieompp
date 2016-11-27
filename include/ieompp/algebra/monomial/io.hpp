@@ -17,7 +17,7 @@ namespace ieompp
             strm << monomial.back();
             return strm;
         }
-    }
-}
+    } // namespace algebra
+} // namespace ieompp
 
 #endif
