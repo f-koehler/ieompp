@@ -1,9 +1,9 @@
 #include "operator.hpp"
 using namespace ieompp::algebra;
 
-BOOST_AUTO_TEST_CASE(test_equality_1)
+BOOST_AUTO_TEST_CASE(equality_1)
 {
-    Op1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
+    Operator1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
 
     BOOST_TEST(a == a);
     BOOST_TEST(b == b);
@@ -19,9 +19,9 @@ BOOST_AUTO_TEST_CASE(test_equality_1)
     BOOST_TEST(!(c == b));
 }
 
-BOOST_AUTO_TEST_CASE(test_equality_2)
+BOOST_AUTO_TEST_CASE(equality_2)
 {
-    Op2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
+    Operator2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
 
     BOOST_TEST(a == a);
     BOOST_TEST(b == b);
@@ -45,11 +45,10 @@ BOOST_AUTO_TEST_CASE(test_equality_2)
     BOOST_TEST(!(d == c));
 }
 
-BOOST_AUTO_TEST_CASE(test_equality_3)
+BOOST_AUTO_TEST_CASE(equality_3)
 {
-    Op3 a{true, std::make_tuple(0ul, true, 'a')}, b{true, std::make_tuple(1ul, true, 'a')},
-        c{true, std::make_tuple(0ul, false, 'a')}, d{true, std::make_tuple(0ul, true, 'b')},
-        e{false, std::make_tuple(0ul, true, 'a')};
+    Operator3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
+        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
 
     BOOST_TEST(a == a);
     BOOST_TEST(b == b);
@@ -83,9 +82,9 @@ BOOST_AUTO_TEST_CASE(test_equality_3)
     BOOST_TEST(!(e == d));
 }
 
-BOOST_AUTO_TEST_CASE(test_inequality_1)
+BOOST_AUTO_TEST_CASE(inequality_1)
 {
-    Op1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
+    Operator1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
 
     BOOST_TEST(!(a != a));
     BOOST_TEST(!(b != b));
@@ -101,9 +100,9 @@ BOOST_AUTO_TEST_CASE(test_inequality_1)
     BOOST_TEST(c != b);
 }
 
-BOOST_AUTO_TEST_CASE(test_inequality_2)
+BOOST_AUTO_TEST_CASE(inequality_2)
 {
-    Op2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
+    Operator2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
 
     BOOST_TEST(!(a != a));
     BOOST_TEST(!(b != b));
@@ -127,11 +126,10 @@ BOOST_AUTO_TEST_CASE(test_inequality_2)
     BOOST_TEST(d != c);
 }
 
-BOOST_AUTO_TEST_CASE(test_inequality_3)
+BOOST_AUTO_TEST_CASE(inequality_3)
 {
-    Op3 a{true, std::make_tuple(0ul, true, 'a')}, b{true, std::make_tuple(1ul, true, 'a')},
-        c{true, std::make_tuple(0ul, false, 'a')}, d{true, std::make_tuple(0ul, true, 'b')},
-        e{false, std::make_tuple(0ul, true, 'a')};
+    Operator3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
+        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
 
     BOOST_TEST(!(a != a));
     BOOST_TEST(!(b != b));

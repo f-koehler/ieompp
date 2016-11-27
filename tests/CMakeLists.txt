@@ -6,16 +6,22 @@ function(add_ieompp_test test_name)
 endfunction()
 
 add_executable(
-    algebra test_algebra.cpp
-    algebra/operator_comparison.cpp
-    algebra/operator_creation.cpp
-    algebra/operator_get_index.cpp
-    algebra/operator_index_tuple.cpp
-    algebra/operator_same_indices.cpp
+    algebra.monomial
+    algebra/test_monomial.cpp
+    algebra/monomial/comparison.cpp
+    algebra/monomial/conjugate.cpp
+    algebra/monomial/multiply.cpp
 )
-add_ieompp_test(algebra)
+add_ieompp_test(algebra.monomial)
 
-# add_executable(
-#     models.hubbard_momentum_space
-#     models/hubbard_momentum_space/operator_traits.cpp
-# )
+add_executable(
+    algebra.operator
+    algebra/test_operator.cpp
+    algebra/operator/comparison.cpp
+    algebra/operator/conjugate.cpp
+    algebra/operator/get_index.cpp
+    algebra/operator/index_tuple.cpp
+    algebra/operator/make.cpp
+    algebra/operator/same_indices.cpp
+)
+add_ieompp_test(algebra.operator)

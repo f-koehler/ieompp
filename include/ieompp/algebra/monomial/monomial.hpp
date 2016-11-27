@@ -12,6 +12,9 @@ namespace ieompp
         struct Monomial : public std::vector<OperatorT> {
             using Operator = OperatorT;
 
+            // make Monomial construtible in the same manner as std::vector
+            using std::vector<Operator>::vector;
+
             void conjugate()
             {
                 std::reverse(this->begin(), this->end());
@@ -22,8 +25,8 @@ namespace ieompp
 
             Monomial get_conjugate() const
             {
-                Monomial conj(*this);
-                std::reverse_copy(conj.begin(), conj.end(), std::back_inserter(conj));
+                Monomial conj;
+                std::reverse_copy(this->begin(), this->end(), std::back_inserter(conj));
                 for(auto& op : conj) {
                     op.conjugate();
                 }
@@ -33,13 +36,13 @@ namespace ieompp
             bool operator==(const Monomial& rhs) const
             {
                 if(this->size() != rhs.size()) return false;
-                return std::equal(this->begin(), this->end(), rhs.end());
+                return std::equal(this->begin(), this->end(), rhs.begin());
             }
 
             bool operator!=(const Monomial& rhs) const
             {
                 if(this->size() != rhs.size()) return true;
-                return !std::equal(this->begin(), this->end(), rhs.end());
+                return !std::equal(this->begin(), this->end(), rhs.begin());
             }
 
             Monomial& operator*=(const Monomial& rhs)
@@ -48,7 +51,7 @@ namespace ieompp
                 return *this;
             }
 
-            Monomial& operator*(const Monomial& rhs) const
+            Monomial operator*(const Monomial& rhs) const
             {
                 Monomial prod(*this);
                 std::copy(rhs.begin(), rhs.end(), std::back_inserter(prod));
