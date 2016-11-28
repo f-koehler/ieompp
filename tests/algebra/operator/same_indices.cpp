@@ -3,7 +3,7 @@ using namespace ieompp::algebra;
 
 TEST_CASE("same_indices_1")
 {
-    Operator1 a{true, 0ul}, b{false, 1ul};
+    const auto a = Operator1::make_creator(0ul), b = Operator1::make_annihilator(1ul);
 
     REQUIRE(a.same_indices(a));
     REQUIRE(b.same_indices(b));
@@ -14,7 +14,8 @@ TEST_CASE("same_indices_1")
 
 TEST_CASE("same_indices_2")
 {
-    Operator2 a{true, 0ul, true}, b{false, 0ul, false}, c{true, 1ul, true};
+    const auto a = Operator2::make_creator(0ul, true), b = Operator2::make_annihilator(0ul, false),
+               c = Operator2::make_creator(1ul, true);
 
     REQUIRE(a.same_indices(a));
     REQUIRE(b.same_indices(b));
@@ -32,8 +33,10 @@ TEST_CASE("same_indices_2")
 
 TEST_CASE("same_indices_3")
 {
-    Operator3 a{true, {0ul, true, 'a'}}, b{false, {0ul, true, 'b'}}, c{true, {0ul, false, 'a'}},
-        d{false, {1ul, true, 'a'}};
+    const auto a = Operator3::make_creator(0ul, true, 'a'),
+               b = Operator3::make_annihilator(0ul, true, 'b'),
+               c = Operator3::make_creator(0ul, false, 'a'),
+               d = Operator3::make_annihilator(1ul, true, 'a');
 
     REQUIRE(a.same_indices(a));
     REQUIRE(b.same_indices(b));

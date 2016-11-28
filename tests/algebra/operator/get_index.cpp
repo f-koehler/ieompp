@@ -20,14 +20,14 @@ static_assert(std::is_same<IndexType<2, Operator3>::Type, char>::value,
 
 TEST_CASE("get_index1")
 {
-    Operator1 op{true, 1ul};
+    const auto op = Operator1::make_creator(1ul);
 
     REQUIRE(get_index<0>(op) == 1ul);
 }
 
 TEST_CASE("get_index2")
 {
-    Operator2 op{true, 1ul, true};
+    const auto op = Operator2::make_creator(1ul, true);
 
     REQUIRE(get_index<0>(op) == 1ul);
     REQUIRE(get_index<1>(op) == true);
@@ -35,7 +35,7 @@ TEST_CASE("get_index2")
 
 TEST_CASE("get_index3")
 {
-    Operator3 op{true, {1ul, true, 'a'}};
+    const auto op = Operator3::make_creator(1ul, true, 'a');
 
     REQUIRE(get_index<0>(op) == 1ul);
     REQUIRE(get_index<1>(op) == true);

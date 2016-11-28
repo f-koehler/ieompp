@@ -47,10 +47,14 @@ namespace ieompp
 #pragma omp parallel for schedule(dynamic, 1)
                     for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
-                        if(excited_states[i].vanishes) continue;
+                        if(excited_states[i].vanishes) {
+                            continue;
+                        }
                         non_vanishing[thread].push_back(std::make_pair(i, i));
                         for(typename Basis3Operator<Monomial>::Index j = 0; j < i; ++j) {
-                            if(excited_states[j].vanishes) continue;
+                            if(excited_states[j].vanishes) {
+                                continue;
+                            }
                             if(excited_states[i] != excited_states[j]) {
                                 continue;
                             }
