@@ -133,10 +133,14 @@ namespace ieompp
                             const auto& op_j_0 = basis[j].front();
                             for(Index k = 0; k < j; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                curr += h[idx] * 4. * _expectation_value(op_j_0, basis[k].front());
+                                curr += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
                             }
                             const auto idx = basis.get_3op_index(i, j, j);
                             curr += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
+                            for(Index k = j + 1; k < _N; ++k) {
+                                const auto idx = basis.get_3op_index(i, j, k);
+                                curr += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                            }
                         }
                     }
 

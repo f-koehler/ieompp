@@ -53,7 +53,7 @@ namespace ieompp
                                     annihilated_particles.erase(pos);
                                 }
                             } else {
-                                // initially the particle does not exist -> check if creation took
+                                // initially, the particle does not exist -> check if creation took
                                 // place
                                 auto pos = std::find(created_particles.begin(),
                                                      created_particles.end(), indices);
@@ -69,7 +69,8 @@ namespace ieompp
                         } else {
                             // check if annihilation is below fermi level
                             if(energy < fermi_energy) {
-                                // initially the particle exists -> check if annihilation took place
+                                // initially, the particle exists -> check if annihilation took
+                                // place
                                 auto pos = std::find(annihilated_particles.begin(),
                                                      annihilated_particles.end(), indices);
                                 if(pos != annihilated_particles.end()) {

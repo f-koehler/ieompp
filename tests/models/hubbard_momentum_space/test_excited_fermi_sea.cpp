@@ -24,7 +24,7 @@ TEST_CASE("single_creator")
         monomials.emplace_back(Monomial{{{true, k, true}}});
     }
 
-    for(uint64_t k = 0; k < N1; ++k) {
+    for(uint64_t k = 0; k < 1; ++k) {
         const models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state(monomials[k],
                                                                               dispersion, 0.);
         REQUIRE(state.vanishes);
