@@ -3,6 +3,7 @@
 
 #include "ieompp/constants.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
+#include "ieompp/types/blaze.hpp"
 
 #include <algorithm>
 #include <array>
@@ -10,11 +11,6 @@
 #include <cmath>
 #include <cstddef>
 #include <type_traits>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <Eigen/Dense>
-#pragma GCC diagnostic pop
 
 namespace ieompp
 {
@@ -28,7 +24,7 @@ namespace ieompp
             using Index              = IndexT;
             using IndexIterator      = iterators::IntegerIterator<Index, false>;
             using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
-            using Vector             = Eigen::Matrix<Float, 2, 1>;
+            using Vector             = blaze::StaticVector<Float, 2ul, blaze::columnVector>;
 
             static constexpr uint64_t coordination_number = 4;
 
@@ -89,7 +85,7 @@ namespace ieompp
               _x_min(-Pi<Float>::value), _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value),
               _dx(TwoPi<Float>::value / num_x), _y_min(-Pi<Float>::value), _y_max(Pi<Float>::value),
               _y_length(TwoPi<Float>::value), _dy(TwoPi<Float>::value / num_y),
-              _lattice_vectors{{Vector(_dx, 0.), Vector(0., _dy)}}
+              _lattice_vectors{{Vector{_dx, 0.}, Vector{0., _dy}}}
         {
             assert(_num_x > 0);
             assert(_num_y > 0);
@@ -103,7 +99,7 @@ namespace ieompp
             : _num_x(num_x), _num_y(num_y), _num(num_x * num_y), _first(0), _last(_num - 1),
               _x_min(0.), _x_max((num_x - 1) * dx), _x_length(_num_x * dx), _dx(dx), _y_min(0.),
               _y_max((num_y - 1) * dy), _y_length(_num_y * dy), _dy(dy),
-              _lattice_vectors{{Vector(_dx, 0.), Vector(0., _dy)}}
+              _lattice_vectors{{Vector{_dx, 0.}, Vector{0., _dy}}}
         {
             assert(_num_x > 0);
             assert(_num_y > 0);
@@ -144,14 +140,15 @@ namespace ieompp
         {
             const auto dx2 = _dx / 2;
             const auto dy2 = _dy / 2;
-            while(v(0) < _x_min - dx2) v(0) += _x_length;
-            while(v(0) > _x_max + dx2) v(0) -= _x_length;
-            while(v(1) < _y_min - dy2) v(1) += _y_length;
-            while(v(1) > _y_max + dy2) v(1) -= _y_length;
-            Float min_dist = (v - (*this)[Index(0)]).dot(v - (*this)[Index(0)]), dist;
-            Index min      = 0;
+            while(v[0] < _x_min - dx2) v[0] += _x_length;
+            while(v[0] > _x_max + dx2) v[0] -= _x_length;
+            while(v[1] < _y_min - dy2) v[1] += _y_length;
+            while(v[1] > _y_max + dy2) v[1] -= _y_length;
+            Float min_dist = types::dot_product(v - (*this)[Index(0)], v - (*this)[Index(0)]);
+            Float dist;
+            Index min = 0;
             for(auto idx : *this) {
-                dist = (v - (*this)[idx]).dot(v - (*this)[idx]);
+                dist = types::dot_product(v - (*this)[idx], v - (*this)[idx]);
                 if(dist < min_dist) {
                     std::swap(min_dist, dist);
                     min = idx;
@@ -305,19 +302,19 @@ namespace ieompp
         {
             const auto i = idx / _num_x;
             const auto j = idx % _num_x;
-            return Vector(_x_min + i * _dx, _y_min + j * _dy);
+            return Vector{_x_min + i * _dx, _y_min + j * _dy};
         }
 
         template <typename Float, typename Index>
         Index SquareDiscretization<Float, Index>::
         operator()(typename SquareDiscretization<Float, Index>::Vector v) const
         {
-            while(v(0) < _x_min) v(0) += _x_length;
-            while(v(0) > _x_max) v(0) -= _x_length;
-            while(v(1) < _y_min) v(1) += _y_length;
-            while(v(1) > _y_max) v(1) -= _y_length;
-            const auto i = Index(std::round((v(0) - _x_min) / _dx));
-            const auto j = Index(std::round((v(1) - _y_min) / _dy));
+            while(v[0] < _x_min) v[0] += _x_length;
+            while(v[0] > _x_max) v[0] -= _x_length;
+            while(v[1] < _y_min) v[1] += _y_length;
+            while(v[1] > _y_max) v[1] -= _y_length;
+            const auto i = Index(std::round((v[0] - _x_min) / _dx));
+            const auto j = Index(std::round((v[1] - _y_min) / _dy));
             return i * _num_x + j;
         }
     }

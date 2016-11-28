@@ -7,10 +7,10 @@ namespace ieompp
 {
     namespace types
     {
-        template <typename T>
-        typename std::enable_if<ieompp::types::IsBlazeVector<T>::value,
-                                typename ieompp::types::ScalarType<T>::type>::type
-        dot_product(const T& a, const T& b)
+        template <typename A, typename B>
+        typename std::enable_if<!std::is_arithmetic<A>::value && !std::is_arithmetic<B>::value,
+                                typename A::ElementType>::type
+        dot_product(const A& a, const B& b)
         {
             return blaze::trans(a) * b;
         }

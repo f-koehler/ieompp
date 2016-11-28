@@ -68,6 +68,11 @@ namespace ieompp
             using Type = Scalar;
         };
 
+        template <typename Scalar, size_t N, bool TransposeFlag>
+        struct ScalarType<blaze::StaticVector<Scalar, N, TransposeFlag>> {
+            using Type = Scalar;
+        };
+
         template <typename Scalar, bool TransposeFlag>
         struct ScalarType<blaze::CompressedVector<Scalar, TransposeFlag>> {
             using Type = Scalar;
@@ -127,6 +132,11 @@ namespace ieompp
 
         template <typename Scalar, bool TransposeFlag>
         struct IsBlazeVector<blaze::DynamicVector<Scalar, TransposeFlag>> {
+            static constexpr bool value = true;
+        };
+
+        template <typename Scalar, size_t N, bool TransposeFlag>
+        struct IsBlazeVector<blaze::StaticVector<Scalar, N, TransposeFlag>> {
             static constexpr bool value = true;
         };
 
