@@ -26,14 +26,14 @@ namespace ieompp
                 template <typename MomentumSpace, typename Lattice>
                 Dispersion(const MomentumSpace& momentum_space, const Lattice& lattice,
                            const Float& J = 1.)
-                    : _values(momentum_space.num(), Float(0.))
+                    : _values(momentum_space.size(), Float(0.))
                 {
-                    const auto num = momentum_space.num();
+                    const auto N = momentum_space.size();
 
                     const auto lattice_vectors = lattice.lattice_vectors();
 
 #pragma omp parallel for
-                    for(typename MomentumSpace::SiteIndex i = 0; i < num; ++i) {
+                    for(typename MomentumSpace::SiteIndex i = 0; i < N; ++i) {
                         const auto& momentum = momentum_space[i];
                         Float val            = 0.;
                         for(const auto& vec : lattice_vectors) {

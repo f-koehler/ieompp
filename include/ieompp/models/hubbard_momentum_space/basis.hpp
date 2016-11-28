@@ -20,7 +20,7 @@ namespace ieompp
 
                 template <typename MomentumSpace>
                 Basis3Operator(BasisIndex q_idx, const MomentumSpace& momentum_space)
-                    : N(momentum_space.num())
+                    : N(momentum_space.size())
                 {
                     static_assert(
                         hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,

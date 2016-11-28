@@ -45,7 +45,7 @@ namespace ieompp
             public:
                 template <typename Lattice>
                 FermiJump1D(const Lattice& lattice, ExpectationValueFunction expectation_value)
-                    : _N(lattice.num()), _expectation_value(std::move(expectation_value))
+                    : _N(lattice.size()), _expectation_value(std::move(expectation_value))
                 {
                     static const auto k_F = HalfPi<double>::value;
 
@@ -105,7 +105,7 @@ namespace ieompp
             public:
                 template <typename Lattice>
                 FermiJump1D(const Lattice& lattice, ExpectationValueFunction expectation_value)
-                    : _N(lattice.num()), _expectation_value(std::move(expectation_value))
+                    : _N(lattice.size()), _expectation_value(std::move(expectation_value))
                 {
                     static const auto k_F = HalfPi<double>::value;
 

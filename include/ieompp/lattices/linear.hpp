@@ -28,21 +28,21 @@ namespace ieompp
             static constexpr uint64_t coordination_number = 2;
 
         private:
-            const SiteIndex _num;
+            const SiteIndex _size;
             const SiteIndex _first, _last;
             const Float _x_min, _x_max;
             const Float _x_length, _dx;
             const std::array<Vector, 1> _lattice_vectors;
 
         public:
-            LinearDiscretization(const SiteIndex& num);
-            LinearDiscretization(const SiteIndex& num, const Float& dx);
+            LinearDiscretization(const SiteIndex& N);
+            LinearDiscretization(const SiteIndex& N, const Float& dx);
 
             std::array<SiteIndex, 2> neighbors(const SiteIndex& idx) const;
             std::array<SiteIndex, 1> unique_neighbors(const SiteIndex& idx) const;
             SiteIndex closest(Vector v) const;
 
-            const SiteIndex& num() const;
+            const SiteIndex& size() const;
             const SiteIndex& first() const;
             const SiteIndex& last() const;
             const Float& x_min() const;
@@ -74,21 +74,21 @@ namespace ieompp
 
 
         template <typename Float, typename SiteIndex>
-        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& num)
-            : _num(num), _first(0), _last(num - 1), _x_min(-Pi<Float>::value),
-              _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value), _dx(_x_length / _num),
+        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& N)
+            : _size(N), _first(0), _last(N - 1), _x_min(-Pi<Float>::value),
+              _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value), _dx(_x_length / _size),
               _lattice_vectors{{_dx}}
         {
-            assert(num > 0);
+            assert(N > 0);
         }
 
         template <typename Float, typename SiteIndex>
-        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& num,
+        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& N,
                                                                      const Float& dx)
-            : _num(num), _first(0), _last(num - 1), _x_min(0.), _x_max(dx * (_num - 1)),
-              _x_length(num * dx), _dx(dx), _lattice_vectors{{_dx}}
+            : _size(N), _first(0), _last(N - 1), _x_min(0.), _x_max(dx * (_size - 1)),
+              _x_length(N * dx), _dx(dx), _lattice_vectors{{_dx}}
         {
-            assert(num > 0);
+            assert(N > 0);
         }
 
         template <typename Float, typename SiteIndex>
@@ -129,9 +129,9 @@ namespace ieompp
         }
 
         template <typename Float, typename SiteIndex>
-        const SiteIndex& LinearDiscretization<Float, SiteIndex>::num() const
+        const SiteIndex& LinearDiscretization<Float, SiteIndex>::size() const
         {
-            return _num;
+            return _size;
         }
 
         template <typename Float, typename SiteIndex>
@@ -182,7 +182,7 @@ namespace ieompp
         SiteIndex LinearDiscretization<Float, SiteIndex>::lattice_distance(const SiteIndex& a,
                                                                            const SiteIndex& b) const
         {
-            static const SiteIndex max_dist = _num / 2;
+            static const SiteIndex max_dist = _size / 2;
             SiteIndex dist                  = 0;
             if(b > a) {
                 dist = b - a;
@@ -190,7 +190,7 @@ namespace ieompp
                 dist = a - b;
             }
             if(dist > max_dist) {
-                return _num - dist;
+                return _size - dist;
             }
             return dist;
         }
@@ -200,7 +200,7 @@ namespace ieompp
         bool LinearDiscretization<Float, SiteIndex>::neighboring(const SiteIndex a,
                                                                  const SiteIndex b) const
         {
-            return ((a + 1) % _num == b) || ((b + 1) % _num == a);
+            return ((a + 1) % _size == b) || ((b + 1) % _size == a);
         }
 
         template <typename Float, typename SiteIndex>
@@ -268,7 +268,7 @@ namespace ieompp
             while(v > _x_max) {
                 v -= _x_length;
             }
-            return SiteIndex(std::round((v - _x_min) / _dx)) % _num;
+            return SiteIndex(std::round((v - _x_min) / _dx)) % _size;
         }
     } // namespace lattices
 } // namespace ieompp

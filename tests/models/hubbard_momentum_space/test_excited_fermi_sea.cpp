@@ -18,7 +18,7 @@ TEST_CASE("single_creator")
     const auto dispersion = models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
 
     std::vector<Monomial> monomials;
-    monomials.reserve(brillouin_zone.num());
+    monomials.reserve(brillouin_zone.size());
 
     for(const auto& k : brillouin_zone) {
         monomials.emplace_back(Monomial{{{true, k, true}}});

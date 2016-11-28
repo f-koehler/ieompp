@@ -24,10 +24,10 @@ namespace ieompp
 
             public:
                 ExpectationValue1DHalfFilled(const Lattice& lattice)
-                    : _lattice(lattice), _values(lattice.num() / 2 + 1, 0.)
+                    : _lattice(lattice), _values(lattice.size() / 2 + 1, 0.)
                 {
                     static const auto pi = Pi<Float>::value;
-                    const auto max_dist  = lattice.num() / 2;
+                    const auto max_dist  = lattice.size() / 2;
 
                     _values[0] = static_cast<Float>(0.5);
 

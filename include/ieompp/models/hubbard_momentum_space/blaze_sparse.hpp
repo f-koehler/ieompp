@@ -29,7 +29,7 @@ namespace ieompp
                 using Index = typename types::IndexType<Matrix>::Type;
 
                 const auto interaction1 = liouvillian.U / 2.,
-                           interaction2 = liouvillian.U / (2. * lattice.num());
+                           interaction2 = liouvillian.U / (2. * lattice.size());
 
                 matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();

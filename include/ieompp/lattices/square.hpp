@@ -29,7 +29,7 @@ namespace ieompp
             static constexpr uint64_t coordination_number = 4;
 
         private:
-            const Index _num_x, _num_y, _num;
+            const Index _size_x, _size_y, _size;
             const Index _first, _last;
             const Float _x_min, _x_max;
             const Float _x_length, _dx;
@@ -38,8 +38,8 @@ namespace ieompp
             const std::array<Vector, 2> _lattice_vectors;
 
         public:
-            SquareDiscretization(const Index& num_x, const Index& num_y);
-            SquareDiscretization(const Index& num_x, const Index& num_y, const Float& dx,
+            SquareDiscretization(const Index& size_x, const Index& size_y);
+            SquareDiscretization(const Index& size_x, const Index& size_y, const Float& dx,
                                  const Float& dy);
 
             Index index(const Index& i, const Index& j) const;
@@ -48,7 +48,7 @@ namespace ieompp
             std::array<Index, 2> unique_neighbors(const Index& idx) const;
             Index closest(Vector v) const;
 
-            const Index& num() const;
+            const Index& size() const;
             const Index& first() const;
             const Index& last() const;
             const Float& x_min() const;
@@ -79,59 +79,58 @@ namespace ieompp
 
 
         template <typename Float, typename Index>
-        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& num_x,
-                                                                 const Index& num_y)
-            : _num_x(num_x), _num_y(num_y), _num(num_x * num_y), _first(0), _last(_num - 1),
+        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& Nx, const Index& Ny)
+            : _size_x(Nx), _size_y(Ny), _size(Nx * Ny), _first(0), _last(_size - 1),
               _x_min(-Pi<Float>::value), _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value),
-              _dx(TwoPi<Float>::value / num_x), _y_min(-Pi<Float>::value), _y_max(Pi<Float>::value),
-              _y_length(TwoPi<Float>::value), _dy(TwoPi<Float>::value / num_y),
+              _dx(TwoPi<Float>::value / Nx), _y_min(-Pi<Float>::value), _y_max(Pi<Float>::value),
+              _y_length(TwoPi<Float>::value), _dy(TwoPi<Float>::value / Ny),
               _lattice_vectors{{Vector{_dx, 0.}, Vector{0., _dy}}}
         {
-            assert(_num_x > 0);
-            assert(_num_y > 0);
-            assert(_num > 0);
+            assert(_size_x > 0);
+            assert(_size_y > 0);
+            assert(_size > 0);
         }
 
         template <typename Float, typename Index>
-        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& num_x,
-                                                                 const Index& num_y,
+        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& Nx, const Index& Ny,
                                                                  const Float& dx, const Float& dy)
-            : _num_x(num_x), _num_y(num_y), _num(num_x * num_y), _first(0), _last(_num - 1),
-              _x_min(0.), _x_max((num_x - 1) * dx), _x_length(_num_x * dx), _dx(dx), _y_min(0.),
-              _y_max((num_y - 1) * dy), _y_length(_num_y * dy), _dy(dy),
+            : _size_x(Nx), _size_y(Ny), _size(Nx * Ny), _first(0), _last(_size - 1), _x_min(0.),
+              _x_max((Nx - 1) * dx), _x_length(_size_x * dx), _dx(dx), _y_min(0.),
+              _y_max((Ny - 1) * dy), _y_length(_size_y * dy), _dy(dy),
               _lattice_vectors{{Vector{_dx, 0.}, Vector{0., _dy}}}
         {
-            assert(_num_x > 0);
-            assert(_num_y > 0);
-            assert(_num > 0);
+            assert(_size_x > 0);
+            assert(_size_y > 0);
+            assert(_size > 0);
         }
 
         template <typename Float, typename Index>
         typename SquareDiscretization<Float, Index>::Index
         SquareDiscretization<Float, Index>::index(const Index& i, const Index& j) const
         {
-            return i * _num_x + j;
+            return i * _size_x + j;
         }
 
         template <typename Float, typename Index>
         std::array<typename SquareDiscretization<Float, Index>::Index, 4>
         SquareDiscretization<Float, Index>::neighbors(const Index& idx) const
         {
-            const auto i = idx / _num_y;
-            const auto j = idx % _num_x;
-            return std::array<Index, 4>{
-                {index((i == 0) ? _num_x - 1 : i - 1, j), index(i, (j == 0) ? _num_y - 1 : j - 1),
-                 index((i == _num_x - 1) ? 0 : i + 1, j), index(i, (j == _num_y - 1) ? 0 : j + 1)}};
+            const auto i = idx / _size_y;
+            const auto j = idx % _size_x;
+            return std::array<Index, 4>{{index((i == 0) ? _size_x - 1 : i - 1, j),
+                                         index(i, (j == 0) ? _size_y - 1 : j - 1),
+                                         index((i == _size_x - 1) ? 0 : i + 1, j),
+                                         index(i, (j == _size_y - 1) ? 0 : j + 1)}};
         }
 
         template <typename Float, typename Index>
         std::array<typename SquareDiscretization<Float, Index>::Index, 2>
         SquareDiscretization<Float, Index>::unique_neighbors(const Index& idx) const
         {
-            const auto i = idx / _num_y;
-            const auto j = idx % _num_x;
-            return std::array<Index, 2>{
-                {index((i == _num_x - 1) ? 0 : i + 1, j), index(i, (j == _num_y - 1) ? 0 : j + 1)}};
+            const auto i = idx / _size_y;
+            const auto j = idx % _size_x;
+            return std::array<Index, 2>{{index((i == _size_x - 1) ? 0 : i + 1, j),
+                                         index(i, (j == _size_y - 1) ? 0 : j + 1)}};
         }
 
         template <typename Float, typename Index>
@@ -159,9 +158,9 @@ namespace ieompp
 
         template <typename Float, typename Index>
         const typename SquareDiscretization<Float, Index>::Index&
-        SquareDiscretization<Float, Index>::num() const
+        SquareDiscretization<Float, Index>::size() const
         {
-            return _num;
+            return _size;
         }
 
         template <typename Float, typename Index>
@@ -236,17 +235,17 @@ namespace ieompp
         template <typename Float, typename Index>
         bool SquareDiscretization<Float, Index>::neighboring(const Index a, const Index b) const
         {
-            const auto x_a = a / _num_y;
-            const auto y_a = a % _num_x;
-            const auto x_b = b / _num_y;
-            const auto y_b = b % _num_x;
+            const auto x_a = a / _size_y;
+            const auto y_a = a % _size_x;
+            const auto x_b = b / _size_y;
+            const auto y_b = b % _size_x;
 
             if(x_a == x_b) {
-                return ((y_a + 1) % _num_y == y_b) || ((y_b + 1) % _num_y == y_a);
+                return ((y_a + 1) % _size_y == y_b) || ((y_b + 1) % _size_y == y_a);
             }
 
             if(y_a == y_b) {
-                return ((x_a + 1) % _num_x == x_b) || ((x_b + 1) % _num_x == x_a);
+                return ((x_a + 1) % _size_x == x_b) || ((x_b + 1) % _size_x == x_a);
             }
 
             return false;
@@ -300,8 +299,8 @@ namespace ieompp
                                 typename SquareDiscretization<Float, Index>::Vector>::type
             SquareDiscretization<Float, Index>::operator[](const IndexT& idx) const
         {
-            const auto i = idx / _num_x;
-            const auto j = idx % _num_x;
+            const auto i = idx / _size_x;
+            const auto j = idx % _size_x;
             return Vector{_x_min + i * _dx, _y_min + j * _dy};
         }
 
@@ -315,7 +314,7 @@ namespace ieompp
             while(v[1] > _y_max) v[1] -= _y_length;
             const auto i = Index(std::round((v[0] - _x_min) / _dx));
             const auto j = Index(std::round((v[1] - _y_min) / _dy));
-            return i * _num_x + j;
+            return i * _size_x + j;
         }
     }
 }

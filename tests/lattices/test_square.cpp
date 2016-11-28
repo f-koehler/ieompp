@@ -18,7 +18,7 @@ void test_initialization_real_space()
     REQUIRE(disc.end() - disc.begin() == N);
     REQUIRE(disc.cend() - disc.cbegin() == N);
 
-    REQUIRE(disc.num() == N);
+    REQUIRE(disc.size() == N);
     REQUIRE(disc.first() == 0);
     REQUIRE(disc.last() == N - 1);
     REQUIRE(disc.x_min() == Approx(0.));
@@ -51,7 +51,7 @@ void test_initialization_momentum_space()
 {
     lattices::SquareDiscretization<Real> disc(NX, NY);
 
-    REQUIRE(disc.num() == N);
+    REQUIRE(disc.size() == N);
     REQUIRE(disc.first() == 0);
     REQUIRE(disc.last() == N - 1);
     REQUIRE(disc.x_min() == Approx(-Pi<Real>::value));
