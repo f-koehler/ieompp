@@ -1,0 +1,2 @@
+add_subdirectory(hubbard_common)
+add_subdirectory(hubbard_momentum_space)
