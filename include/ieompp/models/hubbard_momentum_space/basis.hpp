@@ -13,13 +13,13 @@ namespace ieompp
         {
             template <typename MonomialT>
             struct Basis3Operator : public std::vector<MonomialT> {
-                using Monomial = MonomialT;
-                using Index    = typename std::vector<Monomial>::size_type;
+                using Monomial   = MonomialT;
+                using BasisIndex = typename std::vector<Monomial>::size_type;
 
                 const std::size_t N;
 
                 template <typename MomentumSpace>
-                Basis3Operator(Index q_idx, const MomentumSpace& momentum_space)
+                Basis3Operator(BasisIndex q_idx, const MomentumSpace& momentum_space)
                     : N(momentum_space.num())
                 {
                     static_assert(
@@ -41,7 +41,10 @@ namespace ieompp
                     }
                 }
 
-                Index get_3op_index(Index i1, Index i2) const { return 1 + i1 * N + i2; }
+                BasisIndex get_3op_index(BasisIndex i1, BasisIndex i2) const
+                {
+                    return 1 + i1 * N + i2;
+                }
             };
 
             template <typename Basis>

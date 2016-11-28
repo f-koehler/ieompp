@@ -28,7 +28,7 @@ namespace ieompp
                     // compute conjugate basis operators
                     std::vector<Monomial> conjugate_basis(basis.size());
 #pragma omp parallel for
-                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
                         conjugate_basis[i] = basis[i].get_conjugate();
                     }
 
@@ -36,7 +36,7 @@ namespace ieompp
                     using Excitation = ExcitedFermiSea<Monomial>;
                     std::vector<Excitation> excited_states(basis_size);
 #pragma omp parallel for
-                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
                         excited_states[i] =
                             Excitation(conjugate_basis[i], dispersion, fermi_energy);
                     }
@@ -45,13 +45,13 @@ namespace ieompp
                     std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
                         omp_get_max_threads());
 #pragma omp parallel for schedule(dynamic, 1)
-                    for(typename Basis3Operator<Monomial>::Index i = 0; i < basis_size; ++i) {
+                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
                         if(excited_states[i].vanishes) {
                             continue;
                         }
                         non_vanishing[thread].push_back(std::make_pair(i, i));
-                        for(typename Basis3Operator<Monomial>::Index j = 0; j < i; ++j) {
+                        for(typename Basis3Operator<Monomial>::BasisIndex j = 0; j < i; ++j) {
                             if(excited_states[j].vanishes) {
                                 continue;
                             }

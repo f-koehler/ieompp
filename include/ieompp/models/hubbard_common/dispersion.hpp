@@ -13,12 +13,11 @@ namespace ieompp
     {
         namespace hubbard_common
         {
-            template <typename FloatT, typename IndexT>
+            template <typename FloatT>
             class Dispersion
             {
             public:
                 using Float = FloatT;
-                using Index = IndexT;
 
             private:
                 std::vector<Float> _values;
@@ -34,7 +33,7 @@ namespace ieompp
                     const auto lattice_vectors = lattice.lattice_vectors();
 
 #pragma omp parallel for
-                    for(Index i = 0; i < num; ++i) {
+                    for(typename MomentumSpace::SiteIndex i = 0; i < num; ++i) {
                         const auto& momentum = momentum_space[i];
                         Float val            = 0.;
                         for(const auto& vec : lattice_vectors) {
@@ -51,12 +50,11 @@ namespace ieompp
             };
 
             template <typename MomentumSpace, typename Lattice>
-            Dispersion<typename MomentumSpace::Float, typename MomentumSpace::Index>
+            Dispersion<typename MomentumSpace::Float>
             make_dispersion(const MomentumSpace& momentum_space, const Lattice& lattice,
                             const typename MomentumSpace::Float& J = 1.)
             {
-                return Dispersion<typename MomentumSpace::Float, typename MomentumSpace::Index>(
-                    momentum_space, lattice, J);
+                return Dispersion<typename MomentumSpace::Float>(momentum_space, lattice, J);
             }
         } // namespace hubbard_common
     }     // namespace models

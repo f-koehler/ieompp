@@ -15,36 +15,36 @@ namespace ieompp
 {
     namespace lattices
     {
-        template <typename FloatT, typename IndexT = uint64_t>
+        template <typename FloatT, typename SiteIndexT = uint64_t>
         class LinearDiscretization
         {
         public:
-            using Float              = FloatT;
-            using Index              = IndexT;
-            using IndexIterator      = iterators::IntegerIterator<Index, false>;
-            using ConstIndexIterator = iterators::IntegerIterator<Index, true>;
-            using Vector             = Float;
+            using Float         = FloatT;
+            using SiteIndex     = SiteIndexT;
+            using Iterator      = iterators::IntegerIterator<SiteIndex, false>;
+            using ConstIterator = iterators::IntegerIterator<SiteIndex, true>;
+            using Vector        = Float;
 
             static constexpr uint64_t coordination_number = 2;
 
         private:
-            const Index _num;
-            const Index _first, _last;
+            const SiteIndex _num;
+            const SiteIndex _first, _last;
             const Float _x_min, _x_max;
             const Float _x_length, _dx;
             const std::array<Vector, 1> _lattice_vectors;
 
         public:
-            LinearDiscretization(const Index& num);
-            LinearDiscretization(const Index& num, const Float& dx);
+            LinearDiscretization(const SiteIndex& num);
+            LinearDiscretization(const SiteIndex& num, const Float& dx);
 
-            std::array<Index, 2> neighbors(const Index& idx) const;
-            std::array<Index, 1> unique_neighbors(const Index& idx) const;
-            Index closest(Vector v) const;
+            std::array<SiteIndex, 2> neighbors(const SiteIndex& idx) const;
+            std::array<SiteIndex, 1> unique_neighbors(const SiteIndex& idx) const;
+            SiteIndex closest(Vector v) const;
 
-            const Index& num() const;
-            const Index& first() const;
-            const Index& last() const;
+            const SiteIndex& num() const;
+            const SiteIndex& first() const;
+            const SiteIndex& last() const;
             const Float& x_min() const;
             const Float& x_max() const;
             const Float& x_length() const;
@@ -52,29 +52,29 @@ namespace ieompp
             const std::array<Vector, 1>& lattice_vectors() const;
 
             template <uint64_t axis = 0>
-            Index lattice_distance(const Index& a, const Index& b) const;
+            SiteIndex lattice_distance(const SiteIndex& a, const SiteIndex& b) const;
 
-            bool neighboring(Index a, Index b) const;
+            bool neighboring(SiteIndex a, SiteIndex b) const;
 
-            ConstIndexIterator begin() const;
-            ConstIndexIterator end() const;
-            IndexIterator begin();
-            IndexIterator end();
-            ConstIndexIterator cbegin() const;
-            ConstIndexIterator cend() const;
+            ConstIterator begin() const;
+            ConstIterator end() const;
+            Iterator begin();
+            Iterator end();
+            ConstIterator cbegin() const;
+            ConstIterator cend() const;
 
-            template <typename IndexT_>
-            typename std::enable_if<std::is_same<Index, IndexT_>::value, Vector>::type
-            operator[](const IndexT_& i) const;
+            template <typename SiteIndex_>
+            typename std::enable_if<std::is_same<SiteIndex, SiteIndex_>::value, Vector>::type
+            operator[](const SiteIndex_& i) const;
 
-            template <typename VectorT>
-            typename std::enable_if<std::is_same<Vector, VectorT>::value, Index>::type
-            operator()(VectorT v) const;
+            template <typename Vector_>
+            typename std::enable_if<std::is_same<Vector, Vector_>::value, SiteIndex>::type
+            operator()(Vector_ v) const;
         };
 
 
-        template <typename Float, typename Index>
-        LinearDiscretization<Float, Index>::LinearDiscretization(const Index& num)
+        template <typename Float, typename SiteIndex>
+        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& num)
             : _num(num), _first(0), _last(num - 1), _x_min(-Pi<Float>::value),
               _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value), _dx(_x_length / _num),
               _lattice_vectors{{_dx}}
@@ -82,32 +82,32 @@ namespace ieompp
             assert(num > 0);
         }
 
-        template <typename Float, typename Index>
-        LinearDiscretization<Float, Index>::LinearDiscretization(const Index& num, const Float& dx)
+        template <typename Float, typename SiteIndex>
+        LinearDiscretization<Float, SiteIndex>::LinearDiscretization(const SiteIndex& num,
+                                                                     const Float& dx)
             : _num(num), _first(0), _last(num - 1), _x_min(0.), _x_max(dx * (_num - 1)),
               _x_length(num * dx), _dx(dx), _lattice_vectors{{_dx}}
         {
             assert(num > 0);
         }
 
-        template <typename Float, typename Index>
-        std::array<typename LinearDiscretization<Float, Index>::Index, 2>
-        LinearDiscretization<Float, Index>::neighbors(const Index& idx) const
+        template <typename Float, typename SiteIndex>
+        std::array<SiteIndex, 2>
+        LinearDiscretization<Float, SiteIndex>::neighbors(const SiteIndex& idx) const
         {
-            return std::array<Index, 2>{
+            return std::array<SiteIndex, 2>{
                 {(idx > 0) ? idx - 1 : _last, (idx < _last) ? idx + 1 : _first}};
         }
 
-        template <typename Float, typename Index>
-        std::array<typename LinearDiscretization<Float, Index>::Index, 1>
-        LinearDiscretization<Float, Index>::unique_neighbors(const Index& idx) const
+        template <typename Float, typename SiteIndex>
+        std::array<SiteIndex, 1>
+        LinearDiscretization<Float, SiteIndex>::unique_neighbors(const SiteIndex& idx) const
         {
-            return std::array<Index, 1>{{(idx < _last) ? idx + 1 : _first}};
+            return std::array<SiteIndex, 1>{{(idx < _last) ? idx + 1 : _first}};
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::Index
-        LinearDiscretization<Float, Index>::closest(Vector v) const
+        template <typename Float, typename SiteIndex>
+        SiteIndex LinearDiscretization<Float, SiteIndex>::closest(Vector v) const
         {
             const auto dx2 = _dx / 2;
             while(v < _x_min - dx2) {
@@ -116,8 +116,8 @@ namespace ieompp
             while(v > _x_max + dx2) {
                 v -= _x_length;
             }
-            Float min_dist = ((*this)[Index(0)] - v) * ((*this)[Index(0)] - v), dist;
-            Index min      = 0;
+            Float min_dist = ((*this)[SiteIndex(0)] - v) * ((*this)[SiteIndex(0)] - v), dist;
+            SiteIndex min  = 0;
             for(auto idx : *this) {
                 dist = ((*this)[idx] - v) * ((*this)[idx] - v);
                 if(dist < min_dist) {
@@ -128,65 +128,62 @@ namespace ieompp
             return min;
         }
 
-        template <typename Float, typename Index>
-        const typename LinearDiscretization<Float, Index>::Index&
-        LinearDiscretization<Float, Index>::num() const
+        template <typename Float, typename SiteIndex>
+        const SiteIndex& LinearDiscretization<Float, SiteIndex>::num() const
         {
             return _num;
         }
 
-        template <typename Float, typename Index>
-        const typename LinearDiscretization<Float, Index>::Index&
-        LinearDiscretization<Float, Index>::first() const
+        template <typename Float, typename SiteIndex>
+        const SiteIndex& LinearDiscretization<Float, SiteIndex>::first() const
         {
             return _first;
         }
 
-        template <typename Float, typename Index>
-        const typename LinearDiscretization<Float, Index>::Index&
-        LinearDiscretization<Float, Index>::last() const
+        template <typename Float, typename SiteIndex>
+        const SiteIndex& LinearDiscretization<Float, SiteIndex>::last() const
         {
             return _last;
         }
 
-        template <typename Float, typename Index>
-        const Float& LinearDiscretization<Float, Index>::x_min() const
+        template <typename Float, typename SiteIndex>
+        const Float& LinearDiscretization<Float, SiteIndex>::x_min() const
         {
             return _x_min;
         }
 
-        template <typename Float, typename Index>
-        const Float& LinearDiscretization<Float, Index>::x_max() const
+        template <typename Float, typename SiteIndex>
+        const Float& LinearDiscretization<Float, SiteIndex>::x_max() const
         {
             return _x_max;
         }
 
-        template <typename Float, typename Index>
-        const Float& LinearDiscretization<Float, Index>::x_length() const
+        template <typename Float, typename SiteIndex>
+        const Float& LinearDiscretization<Float, SiteIndex>::x_length() const
         {
             return _x_length;
         }
 
-        template <typename Float, typename Index>
-        const Float& LinearDiscretization<Float, Index>::dx() const
+        template <typename Float, typename SiteIndex>
+        const Float& LinearDiscretization<Float, SiteIndex>::dx() const
         {
             return _dx;
         }
 
-        template <typename Float, typename Index>
-        const std::array<typename LinearDiscretization<Float, Index>::Vector, 1>&
-        LinearDiscretization<Float, Index>::lattice_vectors() const
+        template <typename Float, typename SiteIndex>
+        const std::array<typename LinearDiscretization<Float, SiteIndex>::Vector, 1>&
+        LinearDiscretization<Float, SiteIndex>::lattice_vectors() const
         {
             return _lattice_vectors;
         }
 
-        template <typename Float, typename Index>
+        template <typename Float, typename SiteIndex>
         template <uint64_t axis>
-        Index LinearDiscretization<Float, Index>::lattice_distance(const Index& a,
-                                                                   const Index& b) const
+        SiteIndex LinearDiscretization<Float, SiteIndex>::lattice_distance(const SiteIndex& a,
+                                                                           const SiteIndex& b) const
         {
-            static const Index max_dist = _num / 2;
-            Index dist                  = 0;
+            static const SiteIndex max_dist = _num / 2;
+            SiteIndex dist                  = 0;
             if(b > a) {
                 dist = b - a;
             } else {
@@ -199,69 +196,71 @@ namespace ieompp
         }
 
 
-        template <typename Float, typename Index>
-        bool LinearDiscretization<Float, Index>::neighboring(const Index a, const Index b) const
+        template <typename Float, typename SiteIndex>
+        bool LinearDiscretization<Float, SiteIndex>::neighboring(const SiteIndex a,
+                                                                 const SiteIndex b) const
         {
             return ((a + 1) % _num == b) || ((b + 1) % _num == a);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::ConstIndexIterator
-        LinearDiscretization<Float, Index>::begin() const
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::ConstIterator
+        LinearDiscretization<Float, SiteIndex>::begin() const
         {
-            return ConstIndexIterator(_first);
+            return ConstIterator(_first);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::ConstIndexIterator
-        LinearDiscretization<Float, Index>::end() const
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::ConstIterator
+        LinearDiscretization<Float, SiteIndex>::end() const
         {
-            return ConstIndexIterator(_last + 1);
+            return ConstIterator(_last + 1);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::IndexIterator
-        LinearDiscretization<Float, Index>::begin()
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::Iterator
+        LinearDiscretization<Float, SiteIndex>::begin()
         {
-            return IndexIterator(_first);
+            return Iterator(_first);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::IndexIterator
-        LinearDiscretization<Float, Index>::end()
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::Iterator
+        LinearDiscretization<Float, SiteIndex>::end()
         {
-            return IndexIterator(_last + 1);
+            return Iterator(_last + 1);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::ConstIndexIterator
-        LinearDiscretization<Float, Index>::cbegin() const
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::ConstIterator
+        LinearDiscretization<Float, SiteIndex>::cbegin() const
         {
-            return ConstIndexIterator(_first);
+            return ConstIterator(_first);
         }
 
-        template <typename Float, typename Index>
-        typename LinearDiscretization<Float, Index>::ConstIndexIterator
-        LinearDiscretization<Float, Index>::cend() const
+        template <typename Float, typename SiteIndex>
+        typename LinearDiscretization<Float, SiteIndex>::ConstIterator
+        LinearDiscretization<Float, SiteIndex>::cend() const
         {
-            return ConstIndexIterator(_last + 1);
+            return ConstIterator(_last + 1);
         }
 
-        template <typename Float, typename Index>
-        template <typename IndexT>
-        typename std::enable_if<std::is_same<Index, IndexT>::value,
-                                typename LinearDiscretization<Float, Index>::Vector>::type
-            LinearDiscretization<Float, Index>::operator[](const IndexT& i) const
+        template <typename Float, typename SiteIndex>
+        template <typename SiteIndex_>
+        typename std::enable_if<std::is_same<SiteIndex, SiteIndex_>::value,
+                                typename LinearDiscretization<Float, SiteIndex>::Vector>::type
+            LinearDiscretization<Float, SiteIndex>::operator[](const SiteIndex_& i) const
         {
             return _x_min + i * _dx;
         }
 
-        template <typename Float, typename Index>
-        template <typename VectorT>
-        typename std::enable_if<std::is_same<typename LinearDiscretization<Float, Index>::Vector,
-                                             VectorT>::value,
-                                Index>::type
-        LinearDiscretization<Float, Index>::operator()(VectorT v) const
+        template <typename Float, typename SiteIndex>
+        template <typename Vector_>
+        typename std::
+            enable_if<std::is_same<typename LinearDiscretization<Float, SiteIndex>::Vector,
+                                   Vector_>::value,
+                      SiteIndex>::type
+            LinearDiscretization<Float, SiteIndex>::operator()(Vector_ v) const
         {
             while(v < _x_min) {
                 v += _x_length;
@@ -269,7 +268,7 @@ namespace ieompp
             while(v > _x_max) {
                 v -= _x_length;
             }
-            return Index(std::round((v - _x_min) / _dx)) % _num;
+            return SiteIndex(std::round((v - _x_min) / _dx)) % _num;
         }
     } // namespace lattices
 } // namespace ieompp

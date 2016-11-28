@@ -26,15 +26,13 @@ namespace ieompp
                 ExpectationValue1DHalfFilled(const Lattice& lattice)
                     : _lattice(lattice), _values(lattice.num() / 2 + 1, 0.)
                 {
-                    using Index = typename Lattice::Index;
-
                     static const auto pi = Pi<Float>::value;
                     const auto max_dist  = lattice.num() / 2;
 
                     _values[0] = static_cast<Float>(0.5);
 
 #pragma omp parallel for
-                    for(Index dist = 1; dist <= max_dist; ++dist) {
+                    for(typename Lattice::SiteIndex dist = 1; dist <= max_dist; ++dist) {
                         if(dist % 2 == 0) {
                             continue;
                         }

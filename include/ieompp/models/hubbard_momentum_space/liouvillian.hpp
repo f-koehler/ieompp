@@ -19,14 +19,12 @@ namespace ieompp
             };
 
             template <typename Prefactor, typename MomentumSpace, typename Lattice>
-            Liouvillian<Prefactor, hubbard_common::Dispersion<typename MomentumSpace::Float,
-                                                              typename MomentumSpace::Index>>
+            Liouvillian<Prefactor, hubbard_common::Dispersion<typename MomentumSpace::Float>>
             make_liouvillian(const MomentumSpace& momentum_space, const Lattice& lattice,
                              const Prefactor& J = 1., const Prefactor& U = 1.)
             {
                 return Liouvillian<Prefactor,
-                                   hubbard_common::Dispersion<typename MomentumSpace::Float,
-                                                              typename MomentumSpace::Index>>{
+                                   hubbard_common::Dispersion<typename MomentumSpace::Float>>{
                     hubbard_common::make_dispersion(momentum_space, lattice, J), U};
             }
         } // namespace hubbard_momentum_space

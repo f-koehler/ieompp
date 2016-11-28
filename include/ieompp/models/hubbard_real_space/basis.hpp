@@ -13,10 +13,10 @@ namespace ieompp
         {
             template <typename MonomialT>
             struct Basis1Operator : public std::vector<MonomialT> {
-                using Monomial = MonomialT;
-                using Index    = typename std::vector<Monomial>::size_type;
+                using Monomial   = MonomialT;
+                using BasisIndex = typename std::vector<Monomial>::size_type;
 
-                const Index N;
+                const BasisIndex N;
 
                 template <typename Lattice>
                 Basis1Operator(const Lattice& lattice) : N(lattice.num())
@@ -35,11 +35,11 @@ namespace ieompp
 
             template <typename MonomialT>
             struct Basis3Operator : public std::vector<MonomialT> {
-                using Monomial = MonomialT;
-                using Index    = typename std::vector<Monomial>::size_type;
+                using Monomial   = MonomialT;
+                using BasisIndex = typename std::vector<Monomial>::size_type;
 
-                const Index N;
-                const Index N_squared;
+                const BasisIndex N;
+                const BasisIndex N_squared;
 
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.num()), N_squared(N * N)
@@ -63,7 +63,7 @@ namespace ieompp
                     }
                 }
 
-                Index get_3op_index(Index i1, Index i2, Index i3) const
+                BasisIndex get_3op_index(BasisIndex i1, BasisIndex i2, BasisIndex i3) const
                 {
                     return N + N_squared * i1 + N * i2 + i3;
                 }
