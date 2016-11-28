@@ -16,10 +16,8 @@
 #include "checkpoint.hpp"
 #include "logging.hpp"
 
-using Operator1d = ieompp::algebra::Operator<uint64_t, bool>;
-using Operator2d = ieompp::algebra::Operator<uint64_t, uint64_t, bool>;
-using Monomial1d = ieompp::algebra::Monomial<Operator1d>;
-using Monomial2d = ieompp::algebra::Monomial<Operator2d>;
+using Operator = ieompp::algebra::Operator<uint64_t, bool>;
+using Monomial = ieompp::algebra::Monomial<Operator>;
 
 
 template <typename Scalar, bool StorageOrder>
