@@ -13,7 +13,7 @@ namespace po = boost::program_options;
 #include <ieompp/algebra/monomial.hpp>
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
-#include <ieompp/lattices/linear.hpp>
+#include <ieompp/lattices/periodic_chain.hpp>
 #include <ieompp/models/hubbard_real_space.hpp>
 #include <ieompp/openmp.hpp>
 namespace hubbard = ieompp::models::hubbard_real_space;
@@ -35,7 +35,7 @@ complex<double> minus_i_power(uint64_t power)
 int main()
 {
     const uint64_t N = 128;
-    ieompp::lattices::LinearDiscretization<double> lattice(N, 1.);
+    ieompp::lattices::PeriodicChain<double> lattice(N, 1.);
     hubbard::Basis1Operator<ieompp::algebra::Monomial<ieompp::algebra::Operator<uint64_t, bool>>>
         basis(lattice);
 

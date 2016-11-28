@@ -1,18 +1,18 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <catch.hpp>
 
-#include <ieompp/lattices/linear.hpp>
+#include <ieompp/lattices/periodic_chain.hpp>
 using namespace ieompp;
 
 const std::size_t N = 10000;
 
-static_assert(lattices::LinearDiscretization<double>::coordination_number == 2,
-              "Linear lattices must have coordination number 2");
+static_assert(lattices::PeriodicChain<double>::coordination_number == 2,
+              "Linear chain must have coordination number 2");
 
 template <typename Real>
 void test_initialization_real_space()
 {
-    lattices::LinearDiscretization<Real> disc(N, 1.);
+    lattices::PeriodicChain<Real> disc(N, 1.);
 
     REQUIRE(disc.end() - disc.begin() == N);
     REQUIRE(disc.cend() - disc.cbegin() == N);
@@ -37,7 +37,7 @@ void test_initialization_real_space()
 template <typename Real>
 void test_initialization_momentum_space()
 {
-    lattices::LinearDiscretization<Real> disc(N);
+    lattices::PeriodicChain<Real> disc(N);
 
     REQUIRE(disc.size() == N);
     REQUIRE(disc.first() == 0);
@@ -59,7 +59,7 @@ void test_initialization_momentum_space()
 template <typename Real>
 void test_neighbors()
 {
-    lattices::LinearDiscretization<Real> disc(N, 1.);
+    lattices::PeriodicChain<Real> disc(N, 1.);
 
     auto neigh = disc.neighbors(0);
     REQUIRE(neigh[0] == N - 1);
@@ -77,7 +77,7 @@ void test_neighbors()
 template <typename Real>
 void test_unique_neighbors()
 {
-    lattices::LinearDiscretization<Real> disc(N, 1.);
+    lattices::PeriodicChain<Real> disc(N, 1.);
 
     auto neigh = disc.unique_neighbors(0);
     REQUIRE(neigh[0] == 1);
@@ -92,7 +92,7 @@ void test_unique_neighbors()
 template <typename Real>
 void test_closest()
 {
-    lattices::LinearDiscretization<Real> disc(N, 1.);
+    lattices::PeriodicChain<Real> disc(N, 1.);
     REQUIRE(disc.closest(0.49) == 0);
     REQUIRE(disc.closest(0.51) == 1);
     REQUIRE(disc.closest(-0.49) == 0);

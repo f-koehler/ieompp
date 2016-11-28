@@ -1,5 +1,5 @@
-#ifndef IEOMPP_LATTICES_SQUARE_HPP_
-#define IEOMPP_LATTICES_SQUARE_HPP_
+#ifndef IEOMPP_LATTICES_PERIODIC_SQUARE_LATTICE_HPP_
+#define IEOMPP_LATTICES_PERIODIC_SQUARE_LATTICE_HPP_
 
 #include "ieompp/constants.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
@@ -17,7 +17,7 @@ namespace ieompp
     namespace lattices
     {
         template <typename FloatT, typename IndexT = uint64_t>
-        class SquareDiscretization
+        class PeriodicSquareLattice
         {
         public:
             using Float              = FloatT;
@@ -38,9 +38,9 @@ namespace ieompp
             const std::array<Vector, 2> _lattice_vectors;
 
         public:
-            SquareDiscretization(const Index& size_x, const Index& size_y);
-            SquareDiscretization(const Index& size_x, const Index& size_y, const Float& dx,
-                                 const Float& dy);
+            PeriodicSquareLattice(const Index& size_x, const Index& size_y);
+            PeriodicSquareLattice(const Index& size_x, const Index& size_y, const Float& dx,
+                                  const Float& dy);
 
             Index index(const Index& i, const Index& j) const;
 
@@ -79,7 +79,7 @@ namespace ieompp
 
 
         template <typename Float, typename Index>
-        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& Nx, const Index& Ny)
+        PeriodicSquareLattice<Float, Index>::PeriodicSquareLattice(const Index& Nx, const Index& Ny)
             : _size_x(Nx), _size_y(Ny), _size(Nx * Ny), _first(0), _last(_size - 1),
               _x_min(-Pi<Float>::value), _x_max(Pi<Float>::value), _x_length(TwoPi<Float>::value),
               _dx(TwoPi<Float>::value / Nx), _y_min(-Pi<Float>::value), _y_max(Pi<Float>::value),
@@ -92,8 +92,8 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        SquareDiscretization<Float, Index>::SquareDiscretization(const Index& Nx, const Index& Ny,
-                                                                 const Float& dx, const Float& dy)
+        PeriodicSquareLattice<Float, Index>::PeriodicSquareLattice(const Index& Nx, const Index& Ny,
+                                                                   const Float& dx, const Float& dy)
             : _size_x(Nx), _size_y(Ny), _size(Nx * Ny), _first(0), _last(_size - 1), _x_min(0.),
               _x_max((Nx - 1) * dx), _x_length(_size_x * dx), _dx(dx), _y_min(0.),
               _y_max((Ny - 1) * dy), _y_length(_size_y * dy), _dy(dy),
@@ -105,15 +105,15 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::Index
-        SquareDiscretization<Float, Index>::index(const Index& i, const Index& j) const
+        typename PeriodicSquareLattice<Float, Index>::Index
+        PeriodicSquareLattice<Float, Index>::index(const Index& i, const Index& j) const
         {
             return i * _size_x + j;
         }
 
         template <typename Float, typename Index>
-        std::array<typename SquareDiscretization<Float, Index>::Index, 4>
-        SquareDiscretization<Float, Index>::neighbors(const Index& idx) const
+        std::array<typename PeriodicSquareLattice<Float, Index>::Index, 4>
+        PeriodicSquareLattice<Float, Index>::neighbors(const Index& idx) const
         {
             const auto i = idx / _size_y;
             const auto j = idx % _size_x;
@@ -124,8 +124,8 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        std::array<typename SquareDiscretization<Float, Index>::Index, 2>
-        SquareDiscretization<Float, Index>::unique_neighbors(const Index& idx) const
+        std::array<typename PeriodicSquareLattice<Float, Index>::Index, 2>
+        PeriodicSquareLattice<Float, Index>::unique_neighbors(const Index& idx) const
         {
             const auto i = idx / _size_y;
             const auto j = idx % _size_x;
@@ -134,8 +134,8 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::Index
-        SquareDiscretization<Float, Index>::closest(Vector v) const
+        typename PeriodicSquareLattice<Float, Index>::Index
+        PeriodicSquareLattice<Float, Index>::closest(Vector v) const
         {
             const auto dx2 = _dx / 2;
             const auto dy2 = _dy / 2;
@@ -157,83 +157,83 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        const typename SquareDiscretization<Float, Index>::Index&
-        SquareDiscretization<Float, Index>::size() const
+        const typename PeriodicSquareLattice<Float, Index>::Index&
+        PeriodicSquareLattice<Float, Index>::size() const
         {
             return _size;
         }
 
         template <typename Float, typename Index>
-        const typename SquareDiscretization<Float, Index>::Index&
-        SquareDiscretization<Float, Index>::first() const
+        const typename PeriodicSquareLattice<Float, Index>::Index&
+        PeriodicSquareLattice<Float, Index>::first() const
         {
             return _first;
         }
 
         template <typename Float, typename Index>
-        const typename SquareDiscretization<Float, Index>::Index&
-        SquareDiscretization<Float, Index>::last() const
+        const typename PeriodicSquareLattice<Float, Index>::Index&
+        PeriodicSquareLattice<Float, Index>::last() const
         {
             return _last;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::x_min() const
+        const Float& PeriodicSquareLattice<Float, Index>::x_min() const
         {
             return _x_min;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::x_max() const
+        const Float& PeriodicSquareLattice<Float, Index>::x_max() const
         {
             return _x_max;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::x_length() const
+        const Float& PeriodicSquareLattice<Float, Index>::x_length() const
         {
             return _x_length;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::dx() const
+        const Float& PeriodicSquareLattice<Float, Index>::dx() const
         {
             return _dx;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::y_min() const
+        const Float& PeriodicSquareLattice<Float, Index>::y_min() const
         {
             return _y_min;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::y_max() const
+        const Float& PeriodicSquareLattice<Float, Index>::y_max() const
         {
             return _y_max;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::y_length() const
+        const Float& PeriodicSquareLattice<Float, Index>::y_length() const
         {
             return _y_length;
         }
 
         template <typename Float, typename Index>
-        const Float& SquareDiscretization<Float, Index>::dy() const
+        const Float& PeriodicSquareLattice<Float, Index>::dy() const
         {
             return _dy;
         }
 
         template <typename Float, typename Index>
-        const std::array<typename SquareDiscretization<Float, Index>::Vector, 2>&
-        SquareDiscretization<Float, Index>::lattice_vectors() const
+        const std::array<typename PeriodicSquareLattice<Float, Index>::Vector, 2>&
+        PeriodicSquareLattice<Float, Index>::lattice_vectors() const
         {
             return _lattice_vectors;
         }
 
         template <typename Float, typename Index>
-        bool SquareDiscretization<Float, Index>::neighboring(const Index a, const Index b) const
+        bool PeriodicSquareLattice<Float, Index>::neighboring(const Index a, const Index b) const
         {
             const auto x_a = a / _size_y;
             const auto y_a = a % _size_x;
@@ -252,43 +252,43 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::ConstIndexIterator
-        SquareDiscretization<Float, Index>::begin() const
+        typename PeriodicSquareLattice<Float, Index>::ConstIndexIterator
+        PeriodicSquareLattice<Float, Index>::begin() const
         {
             return ConstIndexIterator(_first);
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::ConstIndexIterator
-        SquareDiscretization<Float, Index>::end() const
+        typename PeriodicSquareLattice<Float, Index>::ConstIndexIterator
+        PeriodicSquareLattice<Float, Index>::end() const
         {
             return ConstIndexIterator(_last + 1);
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::IndexIterator
-        SquareDiscretization<Float, Index>::begin()
+        typename PeriodicSquareLattice<Float, Index>::IndexIterator
+        PeriodicSquareLattice<Float, Index>::begin()
         {
             return IndexIterator(_first);
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::IndexIterator
-        SquareDiscretization<Float, Index>::end()
+        typename PeriodicSquareLattice<Float, Index>::IndexIterator
+        PeriodicSquareLattice<Float, Index>::end()
         {
             return IndexIterator(_last + 1);
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::ConstIndexIterator
-        SquareDiscretization<Float, Index>::cbegin() const
+        typename PeriodicSquareLattice<Float, Index>::ConstIndexIterator
+        PeriodicSquareLattice<Float, Index>::cbegin() const
         {
             return ConstIndexIterator(_first);
         }
 
         template <typename Float, typename Index>
-        typename SquareDiscretization<Float, Index>::ConstIndexIterator
-        SquareDiscretization<Float, Index>::cend() const
+        typename PeriodicSquareLattice<Float, Index>::ConstIndexIterator
+        PeriodicSquareLattice<Float, Index>::cend() const
         {
             return ConstIndexIterator(_last + 1);
         }
@@ -296,8 +296,8 @@ namespace ieompp
         template <typename Float, typename Index>
         template <typename IndexT>
         typename std::enable_if<std::is_same<Index, IndexT>::value,
-                                typename SquareDiscretization<Float, Index>::Vector>::type
-            SquareDiscretization<Float, Index>::operator[](const IndexT& idx) const
+                                typename PeriodicSquareLattice<Float, Index>::Vector>::type
+            PeriodicSquareLattice<Float, Index>::operator[](const IndexT& idx) const
         {
             const auto i = idx / _size_x;
             const auto j = idx % _size_x;
@@ -305,8 +305,8 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        Index SquareDiscretization<Float, Index>::
-        operator()(typename SquareDiscretization<Float, Index>::Vector v) const
+        Index PeriodicSquareLattice<Float, Index>::
+        operator()(typename PeriodicSquareLattice<Float, Index>::Vector v) const
         {
             while(v[0] < _x_min) v[0] += _x_length;
             while(v[0] > _x_max) v[0] -= _x_length;

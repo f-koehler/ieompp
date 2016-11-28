@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 
-#include <ieompp/lattices/square.hpp>
+#include <ieompp/lattices/periodic_square_lattice.hpp>
 using namespace ieompp;
 
 #define VEC_APPROX(a, b) ((Approx(a[0]) == b[0]) && (Approx(a[1]) == b[1]))
@@ -10,10 +10,13 @@ const std::size_t NX = 100;
 const std::size_t NY = 100;
 const std::size_t N  = NX * NY;
 
+static_assert(lattices::PeriodicSquareLattice<double>::coordination_number == 4,
+              "Square lattice must have coordination number 4");
+
 template <typename Real>
 void test_initialization_real_space()
 {
-    lattices::SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    lattices::PeriodicSquareLattice<Real> disc(NX, NY, 1., 1.);
 
     REQUIRE(disc.end() - disc.begin() == N);
     REQUIRE(disc.cend() - disc.cbegin() == N);
@@ -31,15 +34,15 @@ void test_initialization_real_space()
     REQUIRE(disc.dy() == Approx(1.));
     REQUIRE(disc.lattice_vectors().size() == 2);
     REQUIRE(VEC_APPROX(disc.lattice_vectors()[0],
-                       (typename lattices::SquareDiscretization<Real>::Vector{1., 0.})));
+                       (typename lattices::PeriodicSquareLattice<Real>::Vector{1., 0.})));
     REQUIRE(VEC_APPROX(disc.lattice_vectors()[1],
-                       (typename lattices::SquareDiscretization<Real>::Vector{0., 1.})));
+                       (typename lattices::PeriodicSquareLattice<Real>::Vector{0., 1.})));
 
     for(std::size_t i = 0; i < NX; ++i) {
         for(std::size_t j = 0; j < NY; ++j) {
             const auto idx = disc.index(i, j);
             REQUIRE(disc.begin()[idx] == idx);
-            REQUIRE(VEC_APPROX(disc[idx], (typename lattices::SquareDiscretization<Real>::Vector{
+            REQUIRE(VEC_APPROX(disc[idx], (typename lattices::PeriodicSquareLattice<Real>::Vector{
                                               Real(i), Real(j)})));
             REQUIRE(disc(disc[idx]) == idx);
         }
@@ -49,7 +52,7 @@ void test_initialization_real_space()
 template <typename Real>
 void test_initialization_momentum_space()
 {
-    lattices::SquareDiscretization<Real> disc(NX, NY);
+    lattices::PeriodicSquareLattice<Real> disc(NX, NY);
 
     REQUIRE(disc.size() == N);
     REQUIRE(disc.first() == 0);
@@ -64,15 +67,15 @@ void test_initialization_momentum_space()
     REQUIRE(disc.dy() == Approx(TwoPi<Real>::value / NY));
     REQUIRE(disc.lattice_vectors().size() == 2);
     REQUIRE(VEC_APPROX(disc.lattice_vectors()[0],
-                       (typename lattices::SquareDiscretization<Real>::Vector{disc.dx(), 0.})));
+                       (typename lattices::PeriodicSquareLattice<Real>::Vector{disc.dx(), 0.})));
     REQUIRE(VEC_APPROX(disc.lattice_vectors()[1],
-                       (typename lattices::SquareDiscretization<Real>::Vector{0., disc.dy()})));
+                       (typename lattices::PeriodicSquareLattice<Real>::Vector{0., disc.dy()})));
 
     for(std::size_t i = 0; i < NX; ++i) {
         for(std::size_t j = 0; j < NY; ++j) {
             const auto idx = disc.index(i, j);
             REQUIRE(disc.begin()[idx] == idx);
-            REQUIRE(VEC_APPROX(disc[idx], (typename lattices::SquareDiscretization<Real>::Vector{
+            REQUIRE(VEC_APPROX(disc[idx], (typename lattices::PeriodicSquareLattice<Real>::Vector{
                                               -Pi<Real>::value + i * disc.dx(),
                                               -Pi<Real>::value + j * disc.dy()})));
             REQUIRE(disc(disc[idx]) == idx);
@@ -83,9 +86,9 @@ void test_initialization_momentum_space()
 template <typename Real>
 void test_neighbors()
 {
-    lattices::SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    lattices::PeriodicSquareLattice<Real> disc(NX, NY, 1., 1.);
 
-    std::array<typename lattices::SquareDiscretization<Real>::Index, 4> neigh;
+    std::array<typename lattices::PeriodicSquareLattice<Real>::Index, 4> neigh;
 
     neigh = disc.neighbors(disc.index(0, 0));
     REQUIRE(neigh[0] == disc.index(NX - 1, 0));
@@ -153,7 +156,7 @@ void test_neighbors()
 template <typename Real>
 void test_unique_neighbors()
 {
-    lattices::SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    lattices::PeriodicSquareLattice<Real> disc(NX, NY, 1., 1.);
 
     auto neigh = disc.unique_neighbors(disc.index(0, 0));
     REQUIRE(neigh[0] == disc.index(1, 0));
@@ -203,9 +206,9 @@ void test_unique_neighbors()
 template <typename Real>
 void test_closest()
 {
-    using Vector = typename lattices::SquareDiscretization<Real>::Vector;
+    using Vector = typename lattices::PeriodicSquareLattice<Real>::Vector;
 
-    lattices::SquareDiscretization<Real> disc(NX, NY, 1., 1.);
+    lattices::PeriodicSquareLattice<Real> disc(NX, NY, 1., 1.);
     REQUIRE(disc.closest(Vector{0.49, 0.49}) == disc.index(0, 0));
     REQUIRE(disc.closest(Vector{0.51, 0.49}) == disc.index(1, 0));
     REQUIRE(disc.closest(Vector{0.49, 0.51}) == disc.index(0, 1));

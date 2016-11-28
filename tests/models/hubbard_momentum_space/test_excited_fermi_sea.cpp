@@ -3,7 +3,7 @@
 
 #include <ieompp/algebra/monomial.hpp>
 #include <ieompp/algebra/operator.hpp>
-#include <ieompp/lattices/linear.hpp>
+#include <ieompp/lattices/periodic_chain.hpp>
 #include <ieompp/models/hubbard_common/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp>
 
@@ -14,7 +14,7 @@ TEST_CASE("single_creator")
     using Monomial   = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
     const uint64_t N = 128, N1 = N / 4 + 1, N2 = (N - N / 4) + 1;
 
-    const lattices::LinearDiscretization<double, uint64_t> brillouin_zone(N), lattice(N, 1.);
+    const lattices::PeriodicChain<double, uint64_t> brillouin_zone(N), lattice(N, 1.);
     const auto dispersion = models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
 
     std::vector<Monomial> monomials;
