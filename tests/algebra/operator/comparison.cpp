@@ -3,7 +3,8 @@ using namespace ieompp::algebra;
 
 TEST_CASE("equality_1")
 {
-    Operator1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
+    const auto a = Operator1::make_creator(0ul), b = Operator1::make_creator(1ul),
+               c = Operator1::make_annihilator(0ul);
 
     REQUIRE(a == a);
     REQUIRE(b == b);
@@ -21,7 +22,8 @@ TEST_CASE("equality_1")
 
 TEST_CASE("equality_2")
 {
-    Operator2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
+    const auto a = Operator2::make_creator(0ul, true), b = Operator2::make_creator(1ul, false),
+               c = Operator2::make_creator(0ul, false), d = Operator2::make_annihilator(0ul, true);
 
     REQUIRE(a == a);
     REQUIRE(b == b);
@@ -47,8 +49,11 @@ TEST_CASE("equality_2")
 
 TEST_CASE("equality_3")
 {
-    Operator3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
-        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
+    const auto a = Operator3::make_creator(0ul, true, 'a'),
+               b = Operator3::make_creator(1ul, true, 'a'),
+               c = Operator3::make_creator(0ul, false, 'a'),
+               d = Operator3::make_creator(0ul, true, 'b'),
+               e = Operator3::make_annihilator(0ul, true, 'a');
 
     REQUIRE(a == a);
     REQUIRE(b == b);
@@ -84,7 +89,8 @@ TEST_CASE("equality_3")
 
 TEST_CASE("inequality_1")
 {
-    Operator1 a{true, 0ul}, b{true, 1ul}, c{false, 0ul};
+    const auto a = Operator1::make_creator(0ul), b = Operator1::make_creator(1ul),
+               c = Operator1::make_annihilator(0ul);
 
     REQUIRE(!(a != a));
     REQUIRE(!(b != b));
@@ -102,7 +108,8 @@ TEST_CASE("inequality_1")
 
 TEST_CASE("inequality_2")
 {
-    Operator2 a{true, 0ul, true}, b{true, 1ul, false}, c{true, 0ul, false}, d{false, 0ul, true};
+    const auto a = Operator2::make_creator(0ul, true), b = Operator2::make_creator(1ul, false),
+               c = Operator2::make_creator(0ul, false), d = Operator2::make_annihilator(0ul, true);
 
     REQUIRE(!(a != a));
     REQUIRE(!(b != b));
@@ -128,8 +135,11 @@ TEST_CASE("inequality_2")
 
 TEST_CASE("inequality_3")
 {
-    Operator3 a{true, {0ul, true, 'a'}}, b{true, {1ul, true, 'a'}}, c{true, {0ul, false, 'a'}},
-        d{true, {0ul, true, 'b'}}, e{false, {0ul, true, 'a'}};
+    const auto a = Operator3::make_creator(0ul, true, 'a'),
+               b = Operator3::make_creator(1ul, true, 'a'),
+               c = Operator3::make_creator(0ul, false, 'a'),
+               d = Operator3::make_creator(0ul, true, 'b'),
+               e = Operator3::make_annihilator(0ul, true, 'a');
 
     REQUIRE(!(a != a));
     REQUIRE(!(b != b));
