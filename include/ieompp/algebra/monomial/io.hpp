@@ -3,6 +3,7 @@
 
 #include "ieompp/algebra/monomial/monomial.hpp"
 
+#include <iterator>
 #include <ostream>
 
 namespace ieompp
@@ -13,7 +14,7 @@ namespace ieompp
         std::ostream& operator<<(std::ostream& strm, const Monomial<Operator>& monomial)
         {
             std::copy(monomial.begin(), --monomial.end(),
-                      std::ostreambuf_iterator<Operator>(strm, " "));
+                      std::ostream_iterator<Operator>(strm, " "));
             strm << monomial.back();
             return strm;
         }

@@ -96,6 +96,25 @@ namespace ieompp
         {
             return std::get<I>(op.indices);
         }
+
+        template <typename Index>
+        constexpr typename Operator<Index>::Indices get_indices(const Operator<Index>& op)
+        {
+            return typename Operator<Index>::Indices{op.index};
+        }
+
+        template <typename Index1, typename Index2>
+        constexpr typename Operator<Index1, Index2>::Indices
+        get_indices(const Operator<Index1, Index2>& op)
+        {
+            return typename Operator<Index1, Index2>::Indices{op.index1, op.index2};
+        }
+
+        template <typename... Ts>
+        constexpr typename Operator<Ts...>::Indices get_indices(const Operator<Ts...>& op)
+        {
+            return op.indices;
+        }
     } // namespace algebra
 } // namespace ieompp
 

@@ -7,7 +7,7 @@
 
 #include <type_traits>
 
-#include <boost/test/unit_test.hpp>
+#include <catch.hpp>
 
 using Operator1 = ieompp::algebra::Operator<int>;
 using Monomial1 = ieompp::algebra::Monomial<Operator1>;

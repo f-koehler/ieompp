@@ -18,26 +18,26 @@ static_assert(std::is_same<IndexType<1, Operator3>::Type, bool>::value,
 static_assert(std::is_same<IndexType<2, Operator3>::Type, char>::value,
               "Index 2 of Operator3 should be of type char");
 
-BOOST_AUTO_TEST_CASE(get_index1)
+TEST_CASE("get_index1")
 {
     Operator1 op{true, 1ul};
 
-    BOOST_TEST(get_index<0>(op) == 1ul);
+    REQUIRE(get_index<0>(op) == 1ul);
 }
 
-BOOST_AUTO_TEST_CASE(get_index2)
+TEST_CASE("get_index2")
 {
     Operator2 op{true, 1ul, true};
 
-    BOOST_TEST(get_index<0>(op) == 1ul);
-    BOOST_TEST(get_index<1>(op) == true);
+    REQUIRE(get_index<0>(op) == 1ul);
+    REQUIRE(get_index<1>(op) == true);
 }
 
-BOOST_AUTO_TEST_CASE(get_index3)
+TEST_CASE("get_index3")
 {
     Operator3 op{true, {1ul, true, 'a'}};
 
-    BOOST_TEST(get_index<0>(op) == 1ul);
-    BOOST_TEST(get_index<1>(op) == true);
-    BOOST_TEST(get_index<2>(op) == 'a');
+    REQUIRE(get_index<0>(op) == 1ul);
+    REQUIRE(get_index<1>(op) == true);
+    REQUIRE(get_index<2>(op) == 'a');
 }

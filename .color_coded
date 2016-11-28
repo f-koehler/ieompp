@@ -6,6 +6,8 @@ c++
 -std=gnu++14
 -fcolor-diagnostics
 -isystem
+external/catch/include
+-isystem
 external/eigen
 -isystem
 external/spdlog/include

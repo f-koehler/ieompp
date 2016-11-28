@@ -7,7 +7,7 @@
 
 #include <type_traits>
 
-#include <boost/test/unit_test.hpp>
+#include <catch.hpp>
 
 using Operator1 = ieompp::algebra::Operator<std::size_t>;
 using Operator2 = ieompp::algebra::Operator<std::size_t, bool>;

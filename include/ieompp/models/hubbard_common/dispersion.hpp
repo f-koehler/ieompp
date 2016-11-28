@@ -38,9 +38,9 @@ namespace ieompp
                         const auto& momentum = momentum_space[i];
                         Float val            = 0.;
                         for(const auto& vec : lattice_vectors) {
-                            val += types::dot_product(momentum, vec);
+                            val += std::cos(types::dot_product(momentum, vec));
                         }
-                        _values[i] = -4 * J * val;
+                        _values[i] = -2. * Lattice::coordination_number * J * val;
                     }
                 }
 
