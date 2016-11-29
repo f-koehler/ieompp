@@ -3,7 +3,7 @@
 #include <regex>
 using namespace std;
 
-#include "momentum_space_1d.hpp"
+#include "include/momentum_space_1d.hpp"
 
 namespace hubbard = ieompp::models::hubbard_momentum_space;
 
