@@ -12,7 +12,6 @@ compute_matrix(const Liouvillian& L, const Basis& basis, const Lattice& lattice)
 {
     get_loggers().main->info("Creating {}x{} complex sparse matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
-    M.reserve(basis.size() * 10);
     get_loggers().main->info("Computing matrix elements");
     ieompp::models::hubbard_real_space::init_matrix(L, M, basis, lattice);
     get_loggers().main->info("  {} out of {} matrix elements are non-zero ({}% filling)",
@@ -30,7 +29,6 @@ compute_kinetic_matrix(const Liouvillian& L, const Basis& basis, const Lattice& 
 {
     get_loggers().main->info("Creating {}x{} complex sparse matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
-    M.reserve(basis.size() * 10);
     get_loggers().main->info("Computing matrix elements");
     ieompp::models::hubbard_real_space::init_kinetic_matrix(L, M, basis, lattice);
     get_loggers().main->info("  {} out of {} matrix elements are non-zero ({:.5f}% filling)",

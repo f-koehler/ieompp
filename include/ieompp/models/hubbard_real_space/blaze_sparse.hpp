@@ -67,11 +67,13 @@ namespace ieompp
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                              const Basis3Operator<Monomial>& basis, const Lattice& lattice)
             {
+                using Scalar = typename types::ScalarType<Matrix>::Type;
+                using Index  = typename types::IndexType<Matrix>::Type;
+
                 static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
-                using Scalar = typename types::ScalarType<Matrix>::Type;
-                using Index  = typename types::IndexType<Matrix>::Type;
+                matrix.resize(basis.size(), basis.size(), false);
                 matrix.reset();
                 matrix.reserve(number_of_kinetic_elements<Monomial, Lattice>(basis)
                                + number_of_interaction_elements(basis));
