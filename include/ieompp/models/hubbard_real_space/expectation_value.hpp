@@ -29,26 +29,27 @@ namespace ieompp
                 ExpectationValue1DHalfFilled(const Lattice& lattice)
                     : _lattice(lattice), _values(lattice.size() / 2 + 1, 0.)
                 {
-                    static const auto pi = Pi<Float>::value;
-                    const auto max_dist  = lattice.size() / 2;
+                    static const auto pi      = Pi<Float>::value;
+                    static const auto pi_half = HalfPi<Float>::value;
+                    const auto max_dist       = lattice.size() / 2;
 
                     _values[0] = static_cast<Float>(0.5);
 
 #pragma omp parallel for
                     for(typename Lattice::SiteIndex dist = 1; dist <= max_dist; ++dist) {
-                        if(dist % 2 == 0) {
-                            continue;
-                        }
-                        if(((dist - 1) / 2) % 2 == 0) {
-                            _values[dist] = 1 / (dist * pi);
-                        }
-                        _values[dist] = -1 / (dist * pi);
+                        _values[dist] =
+                            std::sin(pi_half * dist * lattice.dx()) / (pi * dist * lattice.dx());
                     }
                 }
 
                 Float operator()(const SiteIndex& a, const SiteIndex& b) const
                 {
                     return _values[_lattice.get().lattice_distance(a, b)];
+                }
+
+                auto lattice_distance(const SiteIndex& a, const SiteIndex& b) const
+                {
+                    return _lattice.get().lattice_distance(a, b);
                 }
             };
         } // namespace hubbard_real_space

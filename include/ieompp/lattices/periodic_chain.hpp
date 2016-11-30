@@ -181,17 +181,8 @@ namespace ieompp
         SiteIndex PeriodicChain<Float, SiteIndex>::lattice_distance(const SiteIndex& a,
                                                                     const SiteIndex& b) const
         {
-            static const SiteIndex max_dist = _size / 2;
-            SiteIndex dist                  = 0;
-            if(b > a) {
-                dist = b - a;
-            } else {
-                dist = a - b;
-            }
-            if(dist > max_dist) {
-                return _size - dist;
-            }
-            return dist;
+            const SiteIndex dist = (b > a) ? b - a : a - b;
+            return std::min(dist, _size - dist);
         }
 
 
