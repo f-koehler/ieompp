@@ -110,8 +110,8 @@ struct Application {
             ("help", "print this help message")
             ("version", "print version information")
             ("response_file", make_value<std::string>(), "file to read program parameters from")
-            ("checkpoint_interval", make_value<std::uint64_t>(1000), "steps between checkpoints")
-            ("checkpoint", make_value<std::string>(), "checkpoint to use for resume")
+            /* ("checkpoint_interval", make_value<std::uint64_t>(1000), "steps between checkpoints") */
+            /* ("checkpoint", make_value<std::string>(), "checkpoint to use for resume") */
             ("out", make_value<std::string>(name + ".txt"), "output file")
             ;
         // clang-format on

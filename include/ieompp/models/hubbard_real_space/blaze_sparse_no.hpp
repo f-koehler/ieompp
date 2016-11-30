@@ -3,6 +3,7 @@
 
 #include "ieompp/models/hubbard_real_space/basis.hpp"
 #include "ieompp/models/hubbard_real_space/liouvillian.hpp"
+#include "ieompp/types/number.hpp"
 #include "ieompp/types/triplet.hpp"
 
 #include <cstdint>
@@ -131,24 +132,27 @@ namespace ieompp
                                               liouvillian.J);
                     }
 
+                    // 1-operator monomials
                     // clang-format off
-                    /* triplets.emplace_back(row, row, liouvillian.U * expectation_value(op1, op1)); */
-                    /* triplets.emplace_back(row, basis.get_3op_index(r1, r1, r3), -liouvillian.U * expectation_value(op2, op1)); */
-                    /* triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), -liouvillian.U * expectation_value(op1, op3)); */
-                    /* triplets.emplace_back(row, r1, -liouvillian.U * expectation_value(op2, op1) * expectation_value(op1, op3)); */
+                    triplets.emplace_back(row, r1, -liouvillian.U * expectation_value(op2, op1) * expectation_value(op1, op3));
+                    triplets.emplace_back(row, r2, -liouvillian.U * expectation_value(op1, op2) * expectation_value(op2, op3));
+                    triplets.emplace_back(row, r3, liouvillian.U * expectation_value(op1, op3) * expectation_value(op2, op3));
                     // clang-format on
 
+                    // 3-operator monomials
+                    // clang-format off
+                    triplets.emplace_back(row, row, liouvillian.U * expectation_value(op1, op1));
+                    triplets.emplace_back(row, basis.get_3op_index(r1, r1, r3), -liouvillian.U * expectation_value(op2, op1));
+                    triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), -liouvillian.U * expectation_value(op1, op3));
                     if(r2 != r3) {
-                        // clang-format off
                         triplets.emplace_back(row, basis.get_3op_index(r2, r2, r3), -liouvillian.U * expectation_value(op1, op2));
-                        triplets.emplace_back(row, r2, -liouvillian.U * expectation_value(op1, op2) * expectation_value(op2, op3));
-
                         triplets.emplace_back(row, basis.get_3op_index(r3, r2, r3), liouvillian.U * expectation_value(op1, op3));
-                        triplets.emplace_back(row, r3, liouvillian.U * expectation_value(op1, op3) * expectation_value(op2, op3));
-                        // clang-format on
                     }
+                    // clang-format on
 
-                    triplets.sort();
+                    // triplet list may contain triplets for the same column
+                    triplets = triplets.make_columns_unique();
+
                     for(const auto triplet : triplets) {
                         matrix.append(row, triplet.column, triplet.value);
                     }

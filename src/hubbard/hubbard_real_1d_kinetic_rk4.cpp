@@ -1,16 +1,21 @@
-#include <fstream>
-#include <iostream>
-#include <regex>
+#include "include/application.hpp"
+#include "include/common.hpp"
+#include "include/rk4.hpp"
+#include "real_space/basis1.hpp"
+#include "real_space/expectation_value_1d.hpp"
+#include "real_space/liouvillian.hpp"
+#include "real_space/matrix.hpp"
+#include "real_space/periodic_chain.hpp"
+#include "real_space/site_occupation.hpp"
+#include "real_space/vector.hpp"
 using namespace std;
-
-#include "include/real_space_1d.hpp"
 
 namespace hubbard = ieompp::models::hubbard_real_space;
 
 int main(int argc, char** argv)
 {
     Application::name        = "hubbard_real_1d_kinetic_rk4";
-    Application::description = "Calculate <n_{0,↑}>(t) for the 1d Hubbard model (kinetic only)";
+    Application::description = "Calculate <n_{0,↑}>(t) for the 1d Hubbard model";
     Application::add_default_options();
 
     // clang-format off
@@ -25,44 +30,32 @@ int main(int argc, char** argv)
 
     Application app(argc, argv);
 
-    const auto checkpoint_interval  = app.variables["checkpoint_interval"].as<uint64_t>();
     const auto N                    = app.variables["N"].as<uint64_t>();
     const auto J                    = app.variables["J"].as<double>();
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
 
-    // setting up a lattice
-    Lattice lattice(N, 1.);
+    const auto lattice = init_lattice(N, 1.);
+    const auto basis   = init_basis(lattice);
+    const auto ev      = init_expectation_value(lattice);
+    const auto L       = init_liouvillian(J);
+    const auto M       = compute_kinetic_matrix(L, basis, lattice);
 
-    // init operator basis
-    const auto basis = init_basis<Basis1>(lattice);
+    auto h                     = init_vector(basis);
+    const auto integrator      = init_rk4(basis.size(), dt);
+    const auto site_occupation = init_site_occupation(basis, ev);
 
-    // compute matrix
-    const auto L = hubbard::make_liouvillian(J, 0.);
-    const auto M = compute_kinetic_matrix(L, basis, lattice);
-    write_matrix_file(app.matrix_path, M);
-
-    // setting up initial vector
-    auto h = init_vector(app, basis);
-
-    // setup integrator
-    const auto integrator = init_rk4(basis.size(), dt);
-
-    // setup observable
-    const auto site_occupation = init_site_occupation_observable<Basis1>(lattice);
-
-    // write initial value of observable to file
     app.output_file << 0. << "\t" << 0.5 << "\n";
 
-    double n_ev, t, last_measurement = 0., last_checkpoint = 0.;
+    double obs, t, last_measurement = 0.;
 
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
-            n_ev = site_occupation(basis, h);
-            get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-            app.output_file << t << '\t' << n_ev << '\n';
+            obs = site_occupation(basis, h);
+            get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
+            app.output_file << t << '\t' << obs << '\n';
             app.output_file.flush();
             get_loggers().main->info("Finish measurement at t={}", t);
             last_measurement = t;
@@ -72,18 +65,13 @@ int main(int argc, char** argv)
         integrator.step(M, h);
         get_loggers().ode->info("Finished integration t={} -> t={}", t, t + integrator.step_size());
         t += integrator.step_size();
-
-        if(has_time_interval_passed(t, last_checkpoint, dt, checkpoint_interval)) {
-            write_checkpoint_file(app.checkpoint_prefix, h, t);
-            last_checkpoint = t;
-        }
     }
 
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
-        n_ev = site_occupation(basis, h);
-        get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, n_ev);
-        app.output_file << t << '\t' << n_ev << '\n';
+        obs = site_occupation(basis, h);
+        get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
+        app.output_file << t << '\t' << obs << '\n';
         app.output_file.flush();
         get_loggers().main->info("Finish measurement at t={}", t);
         last_measurement = t;

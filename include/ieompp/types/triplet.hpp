@@ -1,6 +1,8 @@
 #ifndef IEOMPP_TYPES_TRIPLET_HPP_
 #define IEOMPP_TYPES_TRIPLET_HPP_
 
+#include "ieompp/types/number.hpp"
+
 #include <algorithm>
 #include <vector>
 
@@ -27,6 +29,25 @@ namespace ieompp
                           [](const Triplet<Scalar, Index>& a, const Triplet<Scalar, Index>& b) {
                               return a.column < b.column;
                           });
+            }
+
+            TripletList make_columns_unique()
+            {
+                this->sort();
+                TripletList filtered;
+                auto triplet = this->front();
+                for(auto it = this->begin() + 1; it != this->end(); ++it) {
+                    if(it->column == triplet.column) {
+                        triplet.value += it->value;
+                    } else {
+                        if(!types::IsZero(triplet.value)) {
+                            filtered.push_back(triplet);
+                        }
+                        triplet = *it;
+                    }
+                }
+                filtered.push_back(triplet);
+                return filtered;
             }
         };
     } // namespace types

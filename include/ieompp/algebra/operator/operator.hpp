@@ -22,6 +22,15 @@ namespace ieompp
                 return Operator{false, std::make_tuple(std::forward<IndexTs>(indices)...)};
             }
 
+            static constexpr Operator make_creator(const IndexTs&... indices)
+            {
+                return Operator{true, std::make_tuple(indices...)};
+            }
+            static constexpr Operator make_annihilator(const IndexTs&... indices)
+            {
+                return Operator{false, std::make_tuple(indices...)};
+            }
+
             bool creator;
             Indices indices;
 
@@ -56,6 +65,15 @@ namespace ieompp
             static constexpr Operator make_annihilator(Index&& index)
             {
                 return Operator{false, std::forward<Index>(index)};
+            }
+
+            static constexpr Operator make_creator(const Index& index)
+            {
+                return Operator{true, index};
+            }
+            static constexpr Operator make_annihilator(const Index& index)
+            {
+                return Operator{false, index};
             }
 
             bool creator;
@@ -93,6 +111,15 @@ namespace ieompp
             static constexpr Operator make_annihilator(Index1&& index1, Index2&& index2)
             {
                 return Operator{false, std::forward<Index1>(index1), std::forward<Index2>(index2)};
+            }
+
+            static constexpr Operator make_creator(const Index1& index1, const Index2& index2)
+            {
+                return Operator{true, index1, index2};
+            }
+            static constexpr Operator make_annihilator(const Index1& index1, const Index2& index2)
+            {
+                return Operator{false, index1, index2};
             }
 
             bool creator;
