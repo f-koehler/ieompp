@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(ieompp)
 
+# load conan config if available
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    message(STATUS "Found Conan config, include it")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif()
+
 include_directories(include)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

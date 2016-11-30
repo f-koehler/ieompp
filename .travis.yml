@@ -18,10 +18,12 @@ matrix:
 cache: pip
 
 install:
+  - mkdir build && cd build
   - pip install --user conan
-  - conan install
+  - conan install ..
 
 script:
-  - mkdir build && cd build
+  - export OMP_NUM_THREADS=4
+  - cd build
   - CXX=$COMPILER_CXX CC=$COMPILER_CC cmake -DCMAKE_BUILD_TYPE=Quick ..
   - make -j$(nproc)
