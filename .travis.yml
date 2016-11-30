@@ -6,22 +6,22 @@ matrix:
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test', 'boost-latest']
-          packages: ['gcc-4.9', 'g++-4.9', 'libboost1.55-all-dev']
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
       env:
-        - COMPILER_CC=gcc-4.9
-        - COMPILER_CXX=g++-4.9
+        - COMPILER_CC=gcc-5
+        - COMPILER_CXX=g++-5
+
+cache: pip
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then tools/travis-cmake.sh; export PATH="$HOME/local/bin:$PATH"; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install cmake boost || brew upgrade cmake boost; fi
-
-cache:
-    directories:
-      - $HOME/local
+  - pip install conan
+  - conan install
 
 script:
-  - mkdir build
-  - cd build
-  - CXX=$COMPILER_CXX CC=$COMPILER_CC cmake ..
+  - mkdir build && cd build
+  - CXX=$COMPILER_CXX CC=$COMPILER_CC cmake -DCMAKE_BUILD_TYPE=Quick ..
   - make -j$(nproc)
