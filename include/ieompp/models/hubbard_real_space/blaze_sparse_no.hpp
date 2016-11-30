@@ -93,7 +93,7 @@ namespace ieompp
 
                     // clang-format off
                     triplets.emplace_back(row, row, liouvillian.U);
-                    triplets.emplace_back(row, basis.get_3op_index(row, row, row), liouvillian.U * expectation_value(basis[row].front(), basis[row].front()));
+                    triplets.emplace_back(row, basis.get_3op_index(row, row, row), liouvillian.U * expectation_value(basis[row].front().index1, basis[row].front().index1));
                     // clang-format on
 
                     triplets.sort();
@@ -134,19 +134,19 @@ namespace ieompp
 
                     // 1-operator monomials
                     // clang-format off
-                    triplets.emplace_back(row, r1, -liouvillian.U * expectation_value(op2, op1) * expectation_value(op1, op3));
-                    triplets.emplace_back(row, r2, -liouvillian.U * expectation_value(op1, op2) * expectation_value(op2, op3));
-                    triplets.emplace_back(row, r3, liouvillian.U * expectation_value(op1, op3) * expectation_value(op2, op3));
+                    triplets.emplace_back(row, r1, -liouvillian.U * expectation_value(op2.index1, op1.index1) * expectation_value(op1.index1, op3.index1));
+                    triplets.emplace_back(row, r2, -liouvillian.U * expectation_value(op1.index1, op2.index1) * expectation_value(op2.index1, op3.index1));
+                    triplets.emplace_back(row, r3, liouvillian.U * expectation_value(op1.index1, op3.index1) * expectation_value(op2.index1, op3.index1));
                     // clang-format on
 
                     // 3-operator monomials
                     // clang-format off
-                    triplets.emplace_back(row, row, liouvillian.U * expectation_value(op1, op1));
-                    triplets.emplace_back(row, basis.get_3op_index(r1, r1, r3), -liouvillian.U * expectation_value(op2, op1));
-                    triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), -liouvillian.U * expectation_value(op1, op3));
+                    triplets.emplace_back(row, row, liouvillian.U * expectation_value(op1.index1, op1.index1));
+                    triplets.emplace_back(row, basis.get_3op_index(r1, r1, r3), -liouvillian.U * expectation_value(op2.index1, op1.index1));
+                    triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), -liouvillian.U * expectation_value(op1.index1, op3.index1));
                     if(r2 != r3) {
-                        triplets.emplace_back(row, basis.get_3op_index(r2, r2, r3), -liouvillian.U * expectation_value(op1, op2));
-                        triplets.emplace_back(row, basis.get_3op_index(r3, r2, r3), liouvillian.U * expectation_value(op1, op3));
+                        triplets.emplace_back(row, basis.get_3op_index(r2, r2, r3), -liouvillian.U * expectation_value(op1.index1, op2.index1));
+                        triplets.emplace_back(row, basis.get_3op_index(r3, r2, r3), liouvillian.U * expectation_value(op1.index1, op3.index1));
                     }
                     // clang-format on
 

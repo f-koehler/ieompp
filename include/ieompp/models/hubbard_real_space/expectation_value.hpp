@@ -18,6 +18,9 @@ namespace ieompp
             template <typename Float, typename Lattice>
             class ExpectationValue1DHalfFilled
             {
+            public:
+                using SiteIndex = typename Lattice::SiteIndex;
+
             private:
                 std::reference_wrapper<const Lattice> _lattice;
                 std::vector<Float> _values;
@@ -43,14 +46,9 @@ namespace ieompp
                     }
                 }
 
-                template <typename Operator>
-                Float operator()(const Operator& a, const Operator& b) const
+                Float operator()(const SiteIndex& a, const SiteIndex& b) const
                 {
-                    static_assert(hubbard_common::IsHubbardOperator<Operator>::value,
-                                  "Operator must be of Hubbard type");
-                    static_assert(Operator::number_of_indices == 2, "Operator must have 2 indices");
-
-                    return _values[_lattice.get().lattice_distance(a.index1, b.index1)];
+                    return _values[_lattice.get().lattice_distance(a, b)];
                 }
             };
         } // namespace hubbard_real_space

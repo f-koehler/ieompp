@@ -72,7 +72,7 @@ int main()
 #pragma omp parallel for
     for(uint64_t i = 0; i < N; ++i) {
         for(uint64_t j = 0; j < N; ++j) {
-            const auto ev = expectation_value(basis[i].front(), basis[j].front());
+            const auto ev = expectation_value(basis[i].front().index1, basis[j].front().index1);
             for(uint64_t step = 0; step < steps; ++step) {
                 results[omp_get_thread_num()][step] +=
                     ev * (h_vals[i][step] * h_vals_conj[j][step]);
