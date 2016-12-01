@@ -43,21 +43,23 @@ namespace ieompp
                 Float operator()(const Basis& basis, const Vector& vector) const
                 {
                     const auto size = basis.size();
-                    std::vector<Float> results(omp_get_max_threads(), 0);
+                    std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
 
 #pragma omp parallel for schedule(dynamic, 1)
                     for(auto i = 0ul; i < size; ++i) {
                         const auto thread = omp_get_thread_num();
-                        for(auto j = 0ul; j < i; ++j) {
-                            results[thread] += expectation_value_1_1(basis[i], basis[j])
-                                               * types::add_conjugate_products(vector[i], vector[j])
-                                               / 2.;
+                        for(auto j = 0ul; j < size; ++j) {
+                            results[thread] +=
+                                expectation_value_1_1(basis[i], basis[j])
+                                * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
                         }
-                        results[thread] +=
-                            std::norm(vector[i]) * expectation_value_1_1(basis[i], basis[i]) / 2.;
                     }
 
-                    return std::accumulate(results.begin(), results.end(), 0.);
+                    const auto result =
+                        std::accumulate(results.begin(), results.end(), std::complex<Float>(0.));
+
+                    assert(result.imag() < 1e-15);
+                    return result.real();
                 }
             };
 
@@ -86,11 +88,11 @@ namespace ieompp
                     assert(a.size() == 1);
                     assert(b.size() == 3);
 
-                    // start with <c_{b1,↓}^† c_{b2,↓}>
+                    // start with <c_{b2,↓}^† c_{b1,↓}>
                     Float ret = expectation_value(b[2], b[1]);
 
                     // add -0.5 δ_{b1,b2}
-                    if(b[1] == b[2]) {
+                    if(b[1].index1 == b[2].index1) {
                         ret -= 0.5;
                     }
 
@@ -145,43 +147,44 @@ namespace ieompp
                 {
                     const auto N          = basis.N;
                     const auto basis_size = basis.size();
-                    std::vector<Float> results(omp_get_max_threads(), 0);
+                    std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
 
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
-                        for(auto j = 0ul; j < i; ++j) {
-                            results[thread] += expectation_value_1_1(basis[i], basis[j])
-                                               * types::add_conjugate_products(vector[i], vector[j])
-                                               / 2.;
+                        for(auto j = 0ul; j < N; ++j) {
+                            results[thread] +=
+                                expectation_value_1_1(basis[i], basis[j]) / 2.
+                                * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
-                        results[thread] +=
-                            std::norm(vector[i]) * expectation_value_1_1(basis[i], basis[i]) / 2.;
                     }
 
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
-                            results[thread] += expectation_value_1_3(basis[i], basis[j])
-                                               * types::add_conjugate_products(vector[i], vector[j])
-                                               / 2.;
+                            results[thread] +=
+                                expectation_value_1_3(basis[i], basis[j]) / 2.
+                                * types::add_conjugate_products(vector[i], vector[j]);
                         }
                     }
 
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel
                     for(auto i = N; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
-                        for(auto j = N; j < i; ++j) {
-                            results[thread] += expectation_value_3_3(basis[i], basis[j])
-                                               * types::add_conjugate_products(vector[i], vector[j])
-                                               / 2.;
+                        for(auto j = N; j < basis_size; ++j) {
+                            results[thread] +=
+                                expectation_value_3_3(basis[i], basis[j]) / 2.
+                                * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
-                        results[thread] +=
-                            expectation_value_3_3(basis[i], basis[i]) * std::norm(vector[i]) / 2.;
                     }
 
-                    return std::accumulate(results.begin(), results.end(), 0.);
+                    const auto result =
+                        std::accumulate(results.begin(), results.end(), std::complex<Float>(0.));
+
+                    assert(result.imag() < 1e-15);
+
+                    return result.real();
                 }
             };
         } // namespace hubbard_real_space
