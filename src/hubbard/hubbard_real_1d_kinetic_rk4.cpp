@@ -48,7 +48,15 @@ int main(int argc, char** argv)
 
     app.output_file << 0. << "\t" << 0.5 << "\n";
 
-    double obs, t, last_measurement = 0.;
+    double obs, t, last_measurement;
+
+    get_loggers().main->info("Measuring at t=0");
+    obs = site_occupation(basis, h);
+    get_loggers().main->info(u8"  <n_{{0,↑}}>(0) = {}", obs);
+    app.output_file << 0 << '\t' << obs << '\n';
+    app.output_file.flush();
+    get_loggers().main->info("Finish measurement at t=0");
+    last_measurement = 0;
 
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
