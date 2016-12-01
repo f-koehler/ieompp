@@ -48,8 +48,6 @@ int main(int argc, char** argv)
     const auto integrator = init_rk4(basis.size(), dt);
     const auto fermi_jump = init_fermi_jump(basis, lattice, ev);
 
-    app.output_file << 0. << "\t" << 0.5 << "\n";
-
     double obs, t, last_measurement = 0.;
 
     get_loggers().main->info("Measuring at t=0");

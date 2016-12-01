@@ -48,8 +48,6 @@ int main(int argc, char** argv)
     const auto integrator      = init_rk4(basis.size(), dt);
     const auto site_occupation = init_site_occupation(basis, ev);
 
-    app.output_file << 0. << "\t" << 0.5 << "\n";
-
     double obs, t, last_measurement;
 
     get_loggers().main->info("Measuring at t=0");

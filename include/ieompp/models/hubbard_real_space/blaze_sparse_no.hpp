@@ -24,13 +24,13 @@ namespace ieompp
             uint64_t number_of_kinetic_elements_no(const Basis3Operator<Monomial>& basis)
             {
                 return (basis.N * Lattice::coordination_number)
-                       + (basis.N * basis.N_squared * 6 * Lattice::coordination_number);
+                       + ((basis.size() - basis.N) * 6 * Lattice::coordination_number);
             }
 
             template <typename Monomial>
             uint64_t number_of_interaction_elements_no(const Basis3Operator<Monomial>& basis)
             {
-                return (basis.N * 2) + (basis.N_squared * 8);
+                return (basis.N * 2) + ((basis.size() - basis.N) * 8);
             }
 
             template <typename Liouvillian, typename Matrix, typename Monomial, typename Lattice>
@@ -103,6 +103,8 @@ namespace ieompp
                     matrix.finalize(row);
                 }
 
+                triplets.clear();
+                triplets.reserve((Lattice::coordination_number * 3) + 8);
                 for(Index row = basis.N; row < basis.size(); ++row) {
                     triplets.clear();
 
@@ -151,6 +153,7 @@ namespace ieompp
                     // clang-format on
 
                     // triplet list may contain triplets for the same column
+                    triplets.sort();
                     triplets = triplets.make_columns_unique();
 
                     for(const auto triplet : triplets) {

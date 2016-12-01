@@ -31,10 +31,11 @@ namespace ieompp
                           });
             }
 
-            TripletList make_columns_unique()
+            TripletList make_columns_unique() const
             {
-                this->sort();
                 TripletList filtered;
+                filtered.reserve(this->size());
+
                 auto triplet = this->front();
                 for(auto it = this->begin() + 1; it != this->end(); ++it) {
                     if(it->column == triplet.column) {
@@ -48,6 +49,14 @@ namespace ieompp
                 }
                 filtered.push_back(triplet);
                 return filtered;
+            }
+
+            bool has_unique_columns() const
+            {
+                for(auto it = this->begin() + 1; it != this->end(); ++it) {
+                    if(it->column == (it - 1)->column) return false;
+                }
+                return true;
             }
         };
     } // namespace types
