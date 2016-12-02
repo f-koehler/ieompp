@@ -30,6 +30,8 @@ namespace ieompp
                     std::function<Float(const Operator&, const Operator&)>;
 
                 ExpectationValueFunction expectation_value;
+                std::reference_wrapper<const Basis1Operator<Monomial>> basis_ref;
+                std::reference_wrapper<const Basis1Operator<Monomial>> conjugate_basis_ref;
 
                 Float expectation_value_1_1(const Monomial& a, const Monomial& b) const
                 {
@@ -40,9 +42,12 @@ namespace ieompp
                 }
 
                 template <typename Vector>
-                Float operator()(const Basis& basis, const Vector& vector) const
+                Float operator()(const Vector& vector) const
                 {
-                    const auto size = basis.size();
+                    const auto& basis           = basis_ref.get();
+                    const auto& conjugate_basis = conjugate_basis_ref.get();
+                    const auto size             = basis.size();
+
                     std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
 
 #pragma omp parallel for schedule(dynamic, 1)
@@ -73,6 +78,8 @@ namespace ieompp
                     std::function<Float(const Operator&, const Operator&)>;
 
                 ExpectationValueFunction expectation_value;
+                std::reference_wrapper<const Basis3Operator<Monomial>> basis_ref;
+                std::reference_wrapper<const Basis3Operator<Monomial>> conjugate_basis_ref;
 
                 Float expectation_value_1_1(const Monomial& a, const Monomial& b) const
                 {
@@ -143,10 +150,12 @@ namespace ieompp
                 }
 
                 template <typename Vector>
-                Float operator()(const Basis& basis, const Vector& vector) const
+                Float operator()(const Vector& vector) const
                 {
-                    const auto N          = basis.N;
-                    const auto basis_size = basis.size();
+                    const auto& basis           = basis_ref.get();
+                    const auto& conjugate_basis = conjugate_basis_ref.get();
+                    const auto N                = basis.N;
+                    const auto basis_size       = basis.size();
                     std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
 
 #pragma omp parallel
