@@ -31,6 +31,28 @@ namespace ieompp
                         this->emplace_back(Monomial{{{true, i, true}}});
                     }
                 }
+
+                void conjugate()
+                {
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        (*this)[i].conjugate();
+                    }
+                }
+
+                Basis1Operator get_conjugate() const
+                {
+                    Basis1Operator conj_basis(*this);
+
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        conj_basis.conjugate();
+                    }
+
+                    return conj_basis;
+                }
             };
 
             template <typename MonomialT>
@@ -66,6 +88,28 @@ namespace ieompp
                 BasisIndex get_3op_index(BasisIndex i1, BasisIndex i2, BasisIndex i3) const
                 {
                     return N + N_squared * i1 + N * i2 + i3;
+                }
+
+                void conjugate()
+                {
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        (*this)[i].conjugate();
+                    }
+                }
+
+                Basis3Operator get_conjugate() const
+                {
+                    Basis3Operator conj_basis(*this);
+
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        conj_basis.conjugate();
+                    }
+
+                    return conj_basis;
                 }
             };
 

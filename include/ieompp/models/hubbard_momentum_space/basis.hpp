@@ -45,6 +45,28 @@ namespace ieompp
                 {
                     return 1 + i1 * N + i2;
                 }
+
+                void conjugate()
+                {
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        (*this)[i].conjugate();
+                    }
+                }
+
+                Basis3Operator get_conjugate() const
+                {
+                    Basis3Operator conj_basis(*this);
+
+                    const auto size = this->size();
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < size; ++i) {
+                        conj_basis.conjugate();
+                    }
+
+                    return conj_basis;
+                }
             };
 
             template <typename Basis>
