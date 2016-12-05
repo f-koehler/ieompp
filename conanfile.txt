@@ -1,8 +1,0 @@
-[requires]
-Boost/1.60.0@lasote/stable
-
-[options]
-boost:shared=true
-
-[generators]
-cmake
