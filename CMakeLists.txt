@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(ieompp)
 
-# load conan config if available
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    message(STATUS "Found Conan config, include it")
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
-endif()
-
 include_directories(include)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -52,7 +45,12 @@ include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/eigen)
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/external/blaze)
 
 # use boost
-if(${ieompp_OVERRIDE_BOOST})
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    message(STATUS "Found Conan config, include it")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+    find_package(Boost REQUIRED COMPONENTS program_options filesystem)
+elseif(${ieompp_OVERRIDE_BOOST})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lboost_program_options -lboost_unit_test_framework -lboost_filesystem")
 else()
     find_package(Boost REQUIRED COMPONENTS program_options filesystem)
