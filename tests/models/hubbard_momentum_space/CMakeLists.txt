@@ -6,4 +6,10 @@ add_executable(
     excited_fermi_sea/is_initially_occupied_1d.cpp
 )
 
+add_executable(
+    models.hubbard_momentum_space.particle_number
+    test_particle_number.cpp
+)
+
 add_ieompp_test(models.hubbard_momentum_space.excited_fermi_sea)
+add_ieompp_test(models.hubbard_momentum_space.particle_number)

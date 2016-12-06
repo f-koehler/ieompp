@@ -14,7 +14,7 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename Float, typename Basis>
+            template <typename Float, typename Monomial>
             struct ParticleNumber {
             };
 

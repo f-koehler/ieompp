@@ -137,7 +137,8 @@ namespace ieompp
                 /*     } */
                 /*     return std::equal(created_particles.begin(), created_particles.end(), */
                 /*                       rhs.created_particles.begin()) */
-                /*            && std::equal(annihilated_particles.begin(), annihilated_particles.end(), */
+                /*            && std::equal(annihilated_particles.begin(),
+                 * annihilated_particles.end(), */
                 /*                          rhs.annihilated_particles.begin()); */
                 /* } */
 

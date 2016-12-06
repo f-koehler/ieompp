@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     Lattice lattice(N, 1.);
 
     // init operator basis
-    const auto basis           = hubbard::Basis3Operator<Monomial>(N/2, brillouin_zone);
+    const auto basis           = hubbard::Basis3Operator<Monomial>(N / 2, brillouin_zone);
     const auto conjugate_basis = basis.get_conjugate();
 
     // computing matrix
