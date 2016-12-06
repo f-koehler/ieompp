@@ -1,5 +1,5 @@
-#ifndef SRC_HUBBARD_MOMENTUM_SPACE_1D_HPP_
-#define SRC_HUBBARD_MOMENTUM_SPACE_1D_HPP_
+#ifndef MOMENTUM_SPACE_1D_HPP_
+#define MOMENTUM_SPACE_1D_HPP_
 
 #include "momentum_space.hpp"
 
@@ -12,7 +12,7 @@ using Lattice       = ieompp::lattices::PeriodicChain<double, uint64_t>;
 using BrillouinZone = ieompp::lattices::PeriodicChain<double, uint64_t>;
 
 template <typename Basis>
-Basis init_basis(const BrillouinZone& brillouin_zone)
+auto init_basis(const BrillouinZone& brillouin_zone)
 {
     get_loggers().main->info("Set up basis");
     auto basis = Basis(0, brillouin_zone);

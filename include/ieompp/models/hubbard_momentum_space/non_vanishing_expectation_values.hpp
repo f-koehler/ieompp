@@ -37,7 +37,7 @@ namespace ieompp
 // apply conjugate basis monomials to fermi_sea
 #pragma omp parallel for
                     for(BasisIndex i = 0; i < basis_size; ++i) {
-                        states[i].apply(conjugate_basis[i], dispersion, fermi_energy);
+                        states[i].apply_monomial(conjugate_basis[i], dispersion, fermi_energy);
                     }
 
                     // apply basis monomials and check for non-vanishing combinations
@@ -50,7 +50,7 @@ namespace ieompp
 
                         for(BasisIndex j = 0; j < basis_size; ++j) {
                             State state = states[i];
-                            state.apply(basis[j], dispersion, fermi_energy);
+                            state.apply_monomial(basis[j], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
                                 non_vanishing[thread].emplace_back(std::pair<Index, Index>{j, i});
                             }

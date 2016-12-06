@@ -25,7 +25,7 @@ namespace ieompp
                 using Index    = typename Monomial::Operator::Index1;
                 using Float    = FloatT;
 
-                const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
+                const NonVanishingExpectationValues<Index> non_vanishing_expectation_values;
 
                 template <typename Dispersion>
                 ParticleNumber(const Basis3Operator<Monomial>& basis,

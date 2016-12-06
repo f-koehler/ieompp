@@ -1,7 +1,7 @@
 #ifndef VECTOR_HPP_
 #define VECTOR_HPP_
 
-#include "../include/logging.hpp"
+#include "logging.hpp"
 
 #include <blaze/Blaze.h>
 

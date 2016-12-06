@@ -1,9 +1,11 @@
-#include <fstream>
-#include <iostream>
-#include <regex>
+#include "include/application.hpp"
+#include "include/common.hpp"
+#include "include/rk4.hpp"
+#include "include/vector.hpp"
+#include "momentum_space/momentum_space_1d.hpp"
 using namespace std;
 
-#include "include/momentum_space_1d.hpp"
+#include "momentum_space/momentum_space_1d.hpp"
 
 namespace hubbard = ieompp::models::hubbard_momentum_space;
 
@@ -39,7 +41,8 @@ int main(int argc, char** argv)
     Lattice lattice(N, 1.);
 
     // init operator basis
-    const auto basis = init_basis<Basis3>(brillouin_zone);
+    const auto basis           = hubbard::Basis3Operator<Monomial>(N/2, brillouin_zone);
+    const auto conjugate_basis = basis.get_conjugate();
 
     // computing matrix
     const auto L = hubbard::make_liouvillian(brillouin_zone, lattice, J, U);
@@ -47,23 +50,11 @@ int main(int argc, char** argv)
     write_matrix_file(app.matrix_path, M);
 
     // setting up initial vector
-    auto h = init_vector(app, basis);
+    auto h = init_vector(basis);
 
-    uint64_t initial_step = 0;
-    if(app.variables.count("checkpoint") == 0) {
-        h.reset();
-        h[0] = 1.;
-    } else {
-        read_checkpoint_file(app.variables["checkpoint"].as<string>(), h);
-        const regex re_checkpoint_file("^.*" + app.checkpoint_prefix + R"((\d+)\.blaze$)");
-        smatch m;
-        regex_match(app.variables["checkpoint"].as<string>(), m, re_checkpoint_file);
-        initial_step = strtoul(m[1].str().c_str(), nullptr, 10);
-        clean_output_file(app.output_path, initial_step);
-    }
-    get_loggers().main->info("Finished setting up initial conditions");
-
-    hubbard::ParticleNumber<double, Basis3> obs(basis, L.dispersion, 0.);
+    hubbard::ParticleNumber<double, Basis3> obs(basis, conjugate_basis, L.dispersion, 0.);
+    cout << basis[0] << '\n';
+    cout << lattice[basis[0].front().index1] << '\n';
     cout << obs(h) << '\n';
 
     return 0;
