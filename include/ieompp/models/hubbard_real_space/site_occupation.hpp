@@ -95,8 +95,8 @@ namespace ieompp
                     assert(a.size() == 1);
                     assert(b.size() == 3);
 
-                    // start with <c_{b2,↓}^† c_{b1,↓}>
-                    Float ret = expectation_value(b[2], b[1]);
+                    // start with <c_{b1,↓}^† c_{b2,↓}>
+                    Float ret = expectation_value(b[1], b[2]);
 
                     // add -0.5 δ_{b1,b2}
                     if(b[1].index1 == b[2].index1) {
@@ -122,9 +122,9 @@ namespace ieompp
                     // c_{a2,↓}>)
                     Float ev_6 = 8 * expectation_value(a[0], b[0]) * expectation_value(a[1], a[2])
                                  * expectation_value(b[1], b[2]);
-                    ev_6 += 8 * expectation_value(a[0], b[0]) * expectation_value(a[1], b[1])
-                            * (((a[2].index1 == b[2].index1) ? 1. : 0.)
-                               - expectation_value(b[2], a[2]));
+                    ev_6 += 8 * expectation_value(a[0], b[0]) * expectation_value(a[1], b[2])
+                            * (((a[2].index1 == b[1].index1) ? 1. : 0.)
+                               - expectation_value(a[2], b[1]));
 
                     Float ev_4 = 0.;
                     // calculate -4 * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑} c_{a1,↓}^† c_{a2,↓}>
@@ -132,8 +132,8 @@ namespace ieompp
                     if(b[1].index1 == b[2].index1) {
                         ev_4 -= 4 * expectation_value(a[0], b[0]) * expectation_value(a[1], a[2]);
                     }
-                    // calculate -4 * δ_{a1,b2} * <c_{a0,↑}^† c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
-                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}>
+                    // calculate -4 * δ_{a1,a2} * <c_{a0,↑}^† c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
+                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{b1,↓}^† c_{b2,↓}>
                     if(a[1].index1 == a[2].index1) {
                         ev_4 -= 4 * expectation_value(a[0], b[0]) * expectation_value(b[1], b[2]);
                     }
@@ -163,7 +163,7 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < N; ++j) {
                             results[thread] +=
-                                expectation_value_1_1(basis[i], basis[j]) / 2.
+                                expectation_value_1_1(basis[i], conjugate_basis[j]) / 2.
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -173,7 +173,7 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
                             results[thread] +=
-                                expectation_value_1_3(basis[i], basis[j]) / 2.
+                                expectation_value_1_3(basis[i], conjugate_basis[j]) / 2.
                                 * types::add_conjugate_products(vector[i], vector[j]);
                         }
                     }
@@ -183,7 +183,7 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
                             results[thread] +=
-                                expectation_value_3_3(basis[i], basis[j]) / 2.
+                                expectation_value_3_3(basis[i], conjugate_basis[j]) / 2.
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
@@ -191,7 +191,9 @@ namespace ieompp
                     const auto result =
                         std::accumulate(results.begin(), results.end(), std::complex<Float>(0.));
 
-                    assert(result.imag() < 1e-15);
+                    if(result.imag() > 1e-12) {
+                        throw std::runtime_error(std::to_string(result.imag()));
+                    }
 
                     return result.real();
                 }
