@@ -14,51 +14,46 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename Index, typename Float>
-            class NonVanishingExpectationValues : public std::vector<std::pair<Index, Index>>
+            template <typename IndexT>
+            class NonVanishingExpectationValues : public std::vector<std::pair<IndexT, IndexT>>
             {
             public:
+                using Index = IndexT;
+
                 template <typename Monomial, typename Dispersion>
                 NonVanishingExpectationValues(const Basis3Operator<Monomial>& basis,
+                                              const Basis3Operator<Monomial>& conjugate_basis,
                                               const Dispersion& dispersion,
-                                              const Float& fermi_energy = 0.)
+                                              const typename Dispersion::Float& fermi_energy = 0.)
                 {
                     const auto basis_size = basis.size();
+                    assert(basis.size() == conjugate_basis.size());
 
-                    // compute conjugate basis operators
-                    std::vector<Monomial> conjugate_basis(basis.size());
+                    using State      = ExcitedFermiSea<Monomial>;
+                    using BasisIndex = typename Basis3Operator<Monomial>::BasisIndex;
+
+                    std::vector<State> states(basis_size);
+
+// apply conjugate basis monomials to fermi_sea
 #pragma omp parallel for
-                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
-                        conjugate_basis[i] = basis[i].get_conjugate();
+                    for(BasisIndex i = 0; i < basis_size; ++i) {
+                        states[i].apply(conjugate_basis[i], dispersion, fermi_energy);
                     }
 
-                    // apply conjugate basis operators to FermFermi sea
-                    using Excitation = ExcitedFermiSea<Monomial>;
-                    std::vector<Excitation> excited_states(basis_size);
-#pragma omp parallel for
-                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
-                        excited_states[i] =
-                            Excitation(conjugate_basis[i], dispersion, fermi_energy);
-                    }
-
-                    // store all non-vanishing combinations in vectors
+                    // apply basis monomials and check for non-vanishing combinations
                     std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
                         omp_get_max_threads());
-#pragma omp parallel for schedule(dynamic, 1)
-                    for(typename Basis3Operator<Monomial>::BasisIndex i = 0; i < basis_size; ++i) {
+#pragma omp parallel for
+                    for(BasisIndex i = 0; i < basis_size; ++i) {
+                        if(states[i].vanishes) continue;
                         const auto thread = omp_get_thread_num();
-                        if(excited_states[i].vanishes) {
-                            continue;
-                        }
-                        non_vanishing[thread].push_back(std::make_pair(i, i));
-                        for(typename Basis3Operator<Monomial>::BasisIndex j = 0; j < i; ++j) {
-                            if(excited_states[j].vanishes) {
-                                continue;
+
+                        for(BasisIndex j = 0; j < basis_size; ++j) {
+                            State state = states[i];
+                            state.apply(basis[j], dispersion, fermi_energy);
+                            if(state.is_initial_fermi_sea()) {
+                                non_vanishing[thread].emplace_back(std::pair<Index, Index>{j, i});
                             }
-                            if(excited_states[i] != excited_states[j]) {
-                                continue;
-                            }
-                            non_vanishing[thread].push_back(std::make_pair(i, j));
                         }
                     }
 

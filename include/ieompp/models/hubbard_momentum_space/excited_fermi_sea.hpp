@@ -27,8 +27,8 @@ namespace ieompp
                 ExcitedFermiSea() = default;
 
                 template <typename Monomial, typename Dispersion>
-                ExcitedFermiSea(const Monomial& monomial, const Dispersion& dispersion,
-                                const typename Dispersion::Float& fermi_energy = 0.)
+                bool apply_monomial(const Monomial& monomial, const Dispersion& dispersion,
+                                    const typename Dispersion::Float& fermi_energy = 0.)
                 {
                     for(auto it = monomial.crbegin(); it != monomial.crend(); ++it) {
                         if(it->creator) {
@@ -45,6 +45,8 @@ namespace ieompp
                         created_particles.sort();
                         annihilated_particles.sort();
                     }
+
+                    return vanishes;
                 }
 
                 template <typename Indices, typename Dispersion>
@@ -117,40 +119,45 @@ namespace ieompp
                     }
                 }
 
-                bool operator==(const ExcitedFermiSea& rhs) const
+                bool is_initial_fermi_sea() const
                 {
-                    if(vanishes || rhs.vanishes) {
-                        return false;
-                    }
-                    if(created_particles.size() != rhs.created_particles.size()) {
-                        return false;
-                    }
-                    if(annihilated_particles.size() != rhs.annihilated_particles.size()) {
-                        return false;
-                    }
-                    return std::equal(created_particles.begin(), created_particles.end(),
-                                      rhs.created_particles.begin())
-                           && std::equal(annihilated_particles.begin(), annihilated_particles.end(),
-                                         rhs.annihilated_particles.begin());
+                    return !vanishes && created_particles.empty() && annihilated_particles.empty();
                 }
 
-                bool operator!=(const ExcitedFermiSea& rhs) const
-                {
-                    if(vanishes || rhs.vanishes) {
-                        return true;
-                    }
-                    if(created_particles.size() != rhs.created_particles.size()) {
-                        return true;
-                    }
-                    if(annihilated_particles.size() != rhs.annihilated_particles.size()) {
-                        return true;
-                    }
-                    return !std::equal(created_particles.begin(), created_particles.end(),
-                                       rhs.created_particles.begin())
-                           || !std::equal(annihilated_particles.begin(),
-                                          annihilated_particles.end(),
-                                          rhs.annihilated_particles.begin());
-                }
+                /* bool operator==(const ExcitedFermiSea& rhs) const */
+                /* { */
+                /*     if(vanishes || rhs.vanishes) { */
+                /*         return false; */
+                /*     } */
+                /*     if(created_particles.size() != rhs.created_particles.size()) { */
+                /*         return false; */
+                /*     } */
+                /*     if(annihilated_particles.size() != rhs.annihilated_particles.size()) { */
+                /*         return false; */
+                /*     } */
+                /*     return std::equal(created_particles.begin(), created_particles.end(), */
+                /*                       rhs.created_particles.begin()) */
+                /*            && std::equal(annihilated_particles.begin(), annihilated_particles.end(), */
+                /*                          rhs.annihilated_particles.begin()); */
+                /* } */
+
+                /* bool operator!=(const ExcitedFermiSea& rhs) const */
+                /* { */
+                /*     if(vanishes || rhs.vanishes) { */
+                /*         return true; */
+                /*     } */
+                /*     if(created_particles.size() != rhs.created_particles.size()) { */
+                /*         return true; */
+                /*     } */
+                /*     if(annihilated_particles.size() != rhs.annihilated_particles.size()) { */
+                /*         return true; */
+                /*     } */
+                /*     return !std::equal(created_particles.begin(), created_particles.end(), */
+                /*                        rhs.created_particles.begin()) */
+                /*            || !std::equal(annihilated_particles.begin(), */
+                /*                           annihilated_particles.end(), */
+                /*                           rhs.annihilated_particles.begin()); */
+                /* } */
             };
         } // namespace hubbard_momentum_space
     }     // namespace models

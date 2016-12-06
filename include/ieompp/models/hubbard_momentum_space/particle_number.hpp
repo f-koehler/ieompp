@@ -28,10 +28,11 @@ namespace ieompp
                 const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
 
                 template <typename Dispersion>
-                ParticleNumber(const Basis3Operator<Monomial>& basis, const Dispersion& dispersion,
-                               const Float& fermi_energy = 0.)
-                    : non_vanishing_expectation_values(NonVanishingExpectationValues<Index, Float>(
-                          basis, dispersion, fermi_energy))
+                ParticleNumber(const Basis3Operator<Monomial>& basis,
+                               const Basis3Operator<Monomial>& conjugate_basis,
+                               const Dispersion& dispersion, const Float& fermi_energy = 0.)
+                    : non_vanishing_expectation_values(basis, conjugate_basis, dispersion,
+                                                       fermi_energy)
                 {
                 }
 
