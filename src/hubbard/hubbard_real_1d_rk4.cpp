@@ -38,20 +38,21 @@ int main(int argc, char** argv)
     const auto t_end                = app.variables["t_end"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
 
-    const auto lattice = init_lattice(N, 1.);
-    const auto basis   = init_basis(lattice);
-    const auto ev      = init_expectation_value(lattice);
-    const auto L       = init_liouvillian(J, U);
-    const auto M       = compute_matrix(L, basis, lattice);
+    const auto lattice         = init_lattice(N, 1.);
+    const auto basis           = init_basis(lattice);
+    const auto conjugate_basis = basis.get_conjugate();
+    const auto ev              = init_expectation_value(lattice);
+    const auto L               = init_liouvillian(J, U);
+    const auto M               = compute_matrix(L, basis, lattice);
 
     auto h                     = init_vector(basis);
     const auto integrator      = init_rk4(basis.size(), dt);
-    const auto site_occupation = init_site_occupation(basis, ev);
+    const auto site_occupation = init_site_occupation(basis, conjugate_basis, ev);
 
     double obs, t, last_measurement;
 
     get_loggers().main->info("Measuring at t=0");
-    obs = site_occupation(basis, h);
+    obs = site_occupation(h);
     get_loggers().main->info(u8"  <n_{{0,↑}}>(0) = {}", obs);
     app.output_file << 0 << '\t' << obs << '\n';
     app.output_file.flush();
@@ -61,7 +62,7 @@ int main(int argc, char** argv)
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
-            obs = site_occupation(basis, h);
+            obs = site_occupation(h);
             get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
             app.output_file << t << '\t' << obs << '\n';
             app.output_file.flush();
@@ -77,7 +78,7 @@ int main(int argc, char** argv)
 
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
-        obs = site_occupation(basis, h);
+        obs = site_occupation(h);
         get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
         app.output_file << t << '\t' << obs << '\n';
         app.output_file.flush();
