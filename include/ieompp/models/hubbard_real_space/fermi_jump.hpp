@@ -7,6 +7,7 @@
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/number.hpp"
 
+#include <iostream>
 #include <cmath>
 #include <functional>
 #include <numeric>
@@ -127,19 +128,18 @@ namespace ieompp
 #pragma omp parallel for
                     // calculate h-coefficients in normally-ordered basis
                     for(Index i = 0; i < _N; ++i) {
-                        auto& curr = h_NO[i];
-                        curr       = h[i];
+                        h_NO[i] = h[i];
                         for(Index j = 0; j < _N; ++j) {
                             const auto& op_j_0 = basis[j].front();
                             for(Index k = 0; k < j; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                curr += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                                h_NO[i] += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
                             }
                             const auto idx = basis.get_3op_index(i, j, j);
-                            curr += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
+                            h_NO[i] += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
                             for(Index k = j + 1; k < _N; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                curr += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                                h_NO[i] += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
                             }
                         }
                     }
