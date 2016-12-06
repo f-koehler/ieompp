@@ -2,7 +2,6 @@
 #define IEOMPP_LATICES_PERIODIC_CHAIN_HPP_
 
 #include "ieompp/constants.hpp"
-#include "ieompp/description.hpp"
 #include "ieompp/iterators/integer_iterator.hpp"
 
 #include <array>

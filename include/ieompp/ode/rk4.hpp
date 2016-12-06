@@ -1,7 +1,6 @@
 #ifndef IEOMPP_ODE_RK4_HPP_
 #define IEOMPP_ODE_RK4_HPP_
 
-#include "ieompp/description.hpp"
 #include "ieompp/types/function_matrix.hpp"
 #include "ieompp/types/matrix_check.hpp"
 #include "ieompp/types/multiply_assign.hpp"
@@ -75,16 +74,6 @@ namespace ieompp
             }
         };
     } // namespace ode
-
-    template <typename Float>
-    struct TypeDescription<ode::RK4<Float>> {
-        static const Description description;
-    };
-
-    template <typename Float>
-    const Description TypeDescription<ode::RK4<Float>>::description =
-        Description{{"type", "RK4 integrator"}, {"real type", ""}}
-        + get_type_description<Float>().indent(2);
 } // namespace ieompp
 
 #endif
