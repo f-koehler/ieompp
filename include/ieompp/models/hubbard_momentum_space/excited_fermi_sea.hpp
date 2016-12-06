@@ -31,78 +31,89 @@ namespace ieompp
                                 const typename Dispersion::Float& fermi_energy = 0.)
                 {
                     for(auto it = monomial.crbegin(); it != monomial.crend(); ++it) {
-                        // get indices of next operator
-                        const auto indices = algebra::get_indices(*it);
-
-                        // get energy of next creation/annihilation
-                        const auto energy = dispersion(std::get<0>(indices));
-
                         if(it->creator) {
-                            // check if creation is below fermi level
-                            if(energy < fermi_energy) {
-                                // initially the particle exists -> check if annihilation took place
-                                auto pos = std::find(annihilated_particles.begin(),
-                                                     annihilated_particles.end(), indices);
-                                if(pos == annihilated_particles.end()) {
-                                    // initial particle still exists -> cannot create another
-                                    vanishes = true;
-                                    break;
-                                } else {
-                                    // initial particle was annihilated -> creation is possible
-                                    // this reverts the annihilation
-                                    annihilated_particles.erase(pos);
-                                }
-                            } else {
-                                // initially, the particle does not exist -> check if creation took
-                                // place
-                                auto pos = std::find(created_particles.begin(),
-                                                     created_particles.end(), indices);
-                                if(pos != created_particles.end()) {
-                                    // particle was already created -> creation is impossible
-                                    vanishes = true;
-                                    break;
-                                } else {
-                                    // particle was not yet created
-                                    created_particles.push_back(indices);
-                                }
-                            }
+                            vanishes = !create_particle(algebra::get_indices(*it), dispersion,
+                                                        fermi_energy);
                         } else {
-                            // check if annihilation is below fermi level
-                            if(energy < fermi_energy) {
-                                // initially, the particle exists -> check if annihilation took
-                                // place
-                                auto pos = std::find(annihilated_particles.begin(),
-                                                     annihilated_particles.end(), indices);
-                                if(pos != annihilated_particles.end()) {
-                                    // initial particle was already annihilated -> annihilation
-                                    // impossible
-                                    vanishes = true;
-                                    break;
-                                } else {
-                                    // initial particle was not yet annihilated -> annihilation
-                                    // possible
-                                    annihilated_particles.push_back(indices);
-                                }
-                            } else {
-                                // initially the particle does not exist -> check if creation took
-                                // place
-                                auto pos = std::find(created_particles.begin(),
-                                                     created_particles.end(), indices);
-                                if(pos == created_particles.end()) {
-                                    // particle was not created -> annihilation impossible
-                                    vanishes = true;
-                                    break;
-                                } else {
-                                    // particle was created -> annihilation possible
-                                    created_particles.erase(pos);
-                                }
-                            }
+                            vanishes = !annihilate_particle(algebra::get_indices(*it), dispersion,
+                                                            fermi_energy);
                         }
+                        if(vanishes) break;
                     }
 
                     if(!vanishes) {
                         created_particles.sort();
                         annihilated_particles.sort();
+                    }
+                }
+
+                template <typename Indices, typename Dispersion>
+                static bool is_initially_occupied(const Indices& indices,
+                                                  const Dispersion& dispersion,
+                                                  const typename Dispersion::Float& fermi_energy)
+                {
+                    return dispersion(std::get<0>(indices)) < fermi_energy;
+                }
+
+                template <typename Indices, typename Dispersion>
+                bool create_particle(const Indices& indices, const Dispersion& dispersion,
+                                     const typename Dispersion::Float& fermi_energy)
+                {
+                    if(is_initially_occupied(indices, dispersion, fermi_energy)) {
+                        // particle is initially present -> check for annihilation
+                        auto pos = std::find(annihilated_particles.begin(),
+                                             annihilated_particles.end(), indices);
+                        if(pos == annihilated_particles.end()) {
+                            // particle is still present -> creation not possible
+                            return false;
+                        } else {
+                            // particle has been annihilated -> reverse annihilation
+                            annihilated_particles.erase(pos);
+                            return true;
+                        }
+                    } else {
+                        // particle is initially absent -> check for creation
+                        auto pos =
+                            std::find(created_particles.begin(), created_particles.end(), indices);
+                        if(pos == created_particles.end()) {
+                            // particle has not been created yet -> create it
+                            created_particles.push_back(indices);
+                            return true;
+                        } else {
+                            // particle has alread been created -> creation is not possible
+                            return false;
+                        }
+                    }
+                }
+
+                template <typename Indices, typename Dispersion>
+                bool annihilate_particle(const Indices& indices, const Dispersion& dispersion,
+                                         const typename Dispersion::Float& fermi_energy)
+                {
+                    if(is_initially_occupied(indices, dispersion, fermi_energy)) {
+                        // particle is initially present -> check for annihilation
+                        auto pos = std::find(annihilated_particles.begin(),
+                                             annihilated_particles.end(), indices);
+                        if(pos == annihilated_particles.end()) {
+                            // particle is still present -> annihilate it
+                            annihilated_particles.push_back(indices);
+                            return true;
+                        } else {
+                            // particle has been annihilated -> annihilation is not possible
+                            return false;
+                        }
+                    } else {
+                        // particle is initially absent -> check for creation
+                        auto pos =
+                            std::find(created_particles.begin(), created_particles.end(), indices);
+                        if(pos == created_particles.end()) {
+                            // particle has not been created yet -> annihilation is not possible
+                            return false;
+                        } else {
+                            // particle has alread been created -> reverse creation
+                            created_particles.erase(pos);
+                            return true;
+                        }
                     }
                 }
 

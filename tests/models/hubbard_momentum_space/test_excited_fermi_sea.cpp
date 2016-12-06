@@ -3,42 +3,120 @@
 
 #include <ieompp/algebra/monomial.hpp>
 #include <ieompp/algebra/operator.hpp>
+#include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
 #include <ieompp/models/hubbard_common/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp>
 
 using namespace ieompp;
 
-TEST_CASE("single_creator")
+TEST_CASE("is_initially_occupied (1d, half-filled)")
 {
-    using Monomial   = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
-    const uint64_t N = 128, N1 = N / 4 + 1, N2 = (N - N / 4) + 1;
+    using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
 
-    const lattices::PeriodicChain<double, uint64_t> brillouin_zone(N), lattice(N, 1.);
-    const auto dispersion = models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+    const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
+    const std::vector<uint64_t> Ns = {3, 4, 8, 9, 16, 17, 32, 33, 64, 67, 128, 131, 256, 512, 2123};
 
-    std::vector<Monomial> monomials;
-    monomials.reserve(brillouin_zone.size());
+    for(const auto N : Ns) {
+        const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(N);
+        const auto lattice        = lattices::PeriodicChain<double, uint64_t>(N, 1.);
+        const auto dispersion =
+            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
 
-    for(const auto& k : brillouin_zone) {
-        monomials.emplace_back(Monomial{{{true, k, true}}});
+        for(auto momentum_index : brillouin_zone) {
+            const auto momentum = brillouin_zone[momentum_index];
+            if((momentum < kF_1) || (momentum > kF_2)) {
+                CAPTURE(momentum_index);
+                CAPTURE(momentum);
+                CAPTURE(kF_1);
+                REQUIRE(!models::hubbard_momentum_space::ExcitedFermiSea<Monomial>::
+                            is_initially_occupied(std::make_tuple(momentum_index, true), dispersion,
+                                                  0.));
+                REQUIRE(!models::hubbard_momentum_space::ExcitedFermiSea<Monomial>::
+                            is_initially_occupied(std::make_tuple(momentum_index, false),
+                                                  dispersion, 0.));
+            } else {
+                CAPTURE(momentum_index);
+                CAPTURE(momentum);
+                REQUIRE(models::hubbard_momentum_space::ExcitedFermiSea<Monomial>::
+                            is_initially_occupied(std::make_tuple(momentum_index, true), dispersion,
+                                                  0.));
+                REQUIRE(models::hubbard_momentum_space::ExcitedFermiSea<Monomial>::
+                            is_initially_occupied(std::make_tuple(momentum_index, false),
+                                                  dispersion, 0.));
+            }
+        }
     }
+}
 
-    for(uint64_t k = 0; k < 1; ++k) {
-        const models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state(monomials[k],
-                                                                              dispersion, 0.);
-        REQUIRE(state.vanishes);
+TEST_CASE("create_particle (1d, half-filled)")
+{
+    using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
+
+    const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
+    const std::vector<uint64_t> Ns = {3, 4, 8, 9, 16, 17, 32, 33, 64, 67, 128, 131, 256, 512, 2123};
+
+    for(const auto N : Ns) {
+        const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(N);
+        const auto lattice        = lattices::PeriodicChain<double, uint64_t>(N, 1.);
+        const auto dispersion =
+            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+
+        for(auto momentum_index : brillouin_zone) {
+            const auto momentum = brillouin_zone[momentum_index];
+            if((momentum < kF_1) || (momentum > kF_2)) {
+                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
+                REQUIRE(
+                    state.create_particle(std::make_tuple(momentum_index, true), dispersion, 0.));
+                REQUIRE(
+                    state.create_particle(std::make_tuple(momentum_index, false), dispersion, 0.));
+                REQUIRE(
+                    !state.create_particle(std::make_tuple(momentum_index, true), dispersion, 0.));
+                REQUIRE(
+                    !state.create_particle(std::make_tuple(momentum_index, false), dispersion, 0.));
+            } else {
+                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
+                REQUIRE(
+                    !state.create_particle(std::make_tuple(momentum_index, true), dispersion, 0.));
+                REQUIRE(
+                    !state.create_particle(std::make_tuple(momentum_index, false), dispersion, 0.));
+            }
+        }
     }
+}
 
-    /* for(uint64_t k = N1; k < N2; ++k) { */
-    /*     const models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state(monomials[k], */
-    /*                                                                           dispersion, 0.); */
-    /*     BOOST_CHECK(!state.vanishes); */
-    /* } */
+TEST_CASE("annihilate_particle (1d, half-filled)")
+{
+    using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
 
-    /* for(uint64_t k = N2; k < N; ++k) { */
-    /*     const models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state(monomials[k], */
-    /*                                                                           dispersion, 0.); */
-    /*     REQUIRE(state.vanishes); */
-    /* } */
+    const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
+    const std::vector<uint64_t> Ns = {3, 4, 8, 9, 16, 17, 32, 33, 64, 67, 128, 131, 256, 512, 2123};
+
+    for(const auto N : Ns) {
+        const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(N);
+        const auto lattice        = lattices::PeriodicChain<double, uint64_t>(N, 1.);
+        const auto dispersion =
+            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+
+        for(auto momentum_index : brillouin_zone) {
+            const auto momentum = brillouin_zone[momentum_index];
+            if((momentum < kF_1) || (momentum > kF_2)) {
+                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true),
+                                                   dispersion, 0.));
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false),
+                                                   dispersion, 0.));
+            } else {
+                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
+                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, true), dispersion,
+                                                  0.));
+                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, false),
+                                                  dispersion, 0.));
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true),
+                                                   dispersion, 0.));
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false),
+                                                   dispersion, 0.));
+            }
+        }
+    }
 }
