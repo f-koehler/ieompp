@@ -1,7 +1,6 @@
 #ifndef IEOMPP_PLATFORM_HPP_
 #define IEOMPP_PLATFORM_HPP_
 
-#include "ieompp/description.hpp"
 #include "ieompp/string.hpp"
 #include "ieompp/version.hpp"
 
@@ -135,21 +134,6 @@ namespace ieompp
                 return strm;
         }
     }
-
-    template <>
-    struct TypeDescription<Platform> {
-        static Description description()
-        {
-            return {{"Platform", ""},
-                    {"  ieompp", version},
-                    {"  Compiler", Platform::compiler()},
-                    {"  C++ std lib", Platform::cpp_library()},
-                    {"  OS", Platform::operating_system()},
-                    {"  Compiled by", compose(Platform::user(), '@', Platform::host())},
-                    {"  Architecture", Platform::architecture()},
-                    {"  Endian", compose(Platform::endianess())}};
-        }
-    };
 } // namespace ieompp
 
 #endif

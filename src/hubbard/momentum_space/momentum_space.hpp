@@ -1,14 +1,13 @@
-#ifndef SRC_HUBBARD_MOMENTUM_SPACE_HPP_
-#define SRC_HUBBARD_MOMENTUM_SPACE_HPP_
+#ifndef MOMENTUM_SPACE_HPP_
+#define MOMENTUM_SPACE_HPP_
 
-#include "application.hpp"
-#include "common.hpp"
+#include "../include/common.hpp"
+#include "../include/logging.hpp"
 
 #include <ieompp/models/hubbard_momentum_space/blaze_sparse.hpp>
 
 template <typename Liouvillian, typename Basis, typename Lattice>
-blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor>
-compute_matrix(const Liouvillian& L, const Basis& basis, const Lattice& lattice)
+auto compute_matrix(const Liouvillian& L, const Basis& basis, const Lattice& lattice)
 {
     get_loggers().main->info("Creating {}x{} complex sparse matrix", basis.size(), basis.size());
     blaze::CompressedMatrix<std::complex<double>, blaze::rowMajor> M(basis.size(), basis.size());
