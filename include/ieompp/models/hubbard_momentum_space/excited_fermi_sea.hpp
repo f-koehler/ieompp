@@ -38,7 +38,9 @@ namespace ieompp
                             vanishes = !annihilate_particle(algebra::get_indices(*it), dispersion,
                                                             fermi_energy);
                         }
-                        if(vanishes) break;
+                        if(vanishes) {
+                            break;
+                        }
                     }
 
                     if(!vanishes) {
@@ -68,11 +70,11 @@ namespace ieompp
                         if(pos == annihilated_particles.end()) {
                             // particle is still present -> creation not possible
                             return false;
-                        } else {
-                            // particle has been annihilated -> reverse annihilation
-                            annihilated_particles.erase(pos);
-                            return true;
                         }
+                        // particle has been annihilated -> reverse annihilation
+                        annihilated_particles.erase(pos);
+                        return true;
+
                     } else {
                         // particle is initially absent -> check for creation
                         auto pos =
@@ -81,10 +83,9 @@ namespace ieompp
                             // particle has not been created yet -> create it
                             created_particles.push_back(indices);
                             return true;
-                        } else {
-                            // particle has alread been created -> creation is not possible
-                            return false;
                         }
+                        // particle has alread been created -> creation is not possible
+                        return false;
                     }
                 }
 
@@ -100,10 +101,10 @@ namespace ieompp
                             // particle is still present -> annihilate it
                             annihilated_particles.push_back(indices);
                             return true;
-                        } else {
-                            // particle has been annihilated -> annihilation is not possible
-                            return false;
                         }
+                        // particle has been annihilated -> annihilation is not possible
+                        return false;
+
                     } else {
                         // particle is initially absent -> check for creation
                         auto pos =
@@ -111,11 +112,10 @@ namespace ieompp
                         if(pos == created_particles.end()) {
                             // particle has not been created yet -> annihilation is not possible
                             return false;
-                        } else {
-                            // particle has alread been created -> reverse creation
-                            created_particles.erase(pos);
-                            return true;
                         }
+                        // particle has alread been created -> reverse creation
+                        created_particles.erase(pos);
+                        return true;
                     }
                 }
 
@@ -123,42 +123,6 @@ namespace ieompp
                 {
                     return !vanishes && created_particles.empty() && annihilated_particles.empty();
                 }
-
-                /* bool operator==(const ExcitedFermiSea& rhs) const */
-                /* { */
-                /*     if(vanishes || rhs.vanishes) { */
-                /*         return false; */
-                /*     } */
-                /*     if(created_particles.size() != rhs.created_particles.size()) { */
-                /*         return false; */
-                /*     } */
-                /*     if(annihilated_particles.size() != rhs.annihilated_particles.size()) { */
-                /*         return false; */
-                /*     } */
-                /*     return std::equal(created_particles.begin(), created_particles.end(), */
-                /*                       rhs.created_particles.begin()) */
-                /*            && std::equal(annihilated_particles.begin(),
-                 * annihilated_particles.end(), */
-                /*                          rhs.annihilated_particles.begin()); */
-                /* } */
-
-                /* bool operator!=(const ExcitedFermiSea& rhs) const */
-                /* { */
-                /*     if(vanishes || rhs.vanishes) { */
-                /*         return true; */
-                /*     } */
-                /*     if(created_particles.size() != rhs.created_particles.size()) { */
-                /*         return true; */
-                /*     } */
-                /*     if(annihilated_particles.size() != rhs.annihilated_particles.size()) { */
-                /*         return true; */
-                /*     } */
-                /*     return !std::equal(created_particles.begin(), created_particles.end(), */
-                /*                        rhs.created_particles.begin()) */
-                /*            || !std::equal(annihilated_particles.begin(), */
-                /*                           annihilated_particles.end(), */
-                /*                           rhs.annihilated_particles.begin()); */
-                /* } */
             };
         } // namespace hubbard_momentum_space
     }     // namespace models

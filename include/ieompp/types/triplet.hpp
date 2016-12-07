@@ -54,7 +54,9 @@ namespace ieompp
             bool has_unique_columns() const
             {
                 for(auto it = this->begin() + 1; it != this->end(); ++it) {
-                    if(it->column == (it - 1)->column) return false;
+                    if(it->column == (it - 1)->column) {
+                        return false;
+                    }
                 }
                 return true;
             }

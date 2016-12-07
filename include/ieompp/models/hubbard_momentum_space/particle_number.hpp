@@ -39,23 +39,25 @@ namespace ieompp
                 template <typename Vector>
                 Float operator()(const Vector& vec) const
                 {
-                    const auto num = non_vanishing_expectation_values.size();
-                    std::vector<Float> results(omp_get_max_threads(), 0);
+                    const auto num             = non_vanishing_expectation_values.size();
+                    std::complex<Float> result = 0.;
 
-#pragma omp parallel for
                     for(std::size_t i = 0; i < num; ++i) {
-                        const auto thread = omp_get_thread_num();
-                        const auto& pair  = non_vanishing_expectation_values[i];
+                        const auto& pair = non_vanishing_expectation_values[i];
 
                         if(pair.first == pair.second) {
-                            results[thread] += std::norm(vec[pair.first]);
+                            result += std::norm(vec[pair.first]);
                         } else {
-                            results[thread] +=
-                                types::add_conjugate_products(vec[pair.first], vec[pair.second]);
+                            result +=
+                                types::multiply_with_conjugate(vec[pair.first], vec[pair.second]);
                         }
                     }
 
-                    return std::accumulate(results.begin(), results.end(), 0.);
+                    if(result.imag() > 1e-12) {
+                        throw std::runtime_error(std::to_string(result.imag()));
+                    }
+
+                    return result.real();
                 }
             };
         } // namespace hubbard_momentum_space

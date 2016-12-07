@@ -34,37 +34,24 @@ namespace ieompp
 
                     std::vector<State> states(basis_size);
 
-// apply conjugate basis monomials to fermi_sea
-#pragma omp parallel for
+                    // apply conjugate basis monomials to fermi_sea
                     for(BasisIndex i = 0; i < basis_size; ++i) {
                         states[i].apply_monomial(conjugate_basis[i], dispersion, fermi_energy);
                     }
 
                     // apply basis monomials and check for non-vanishing combinations
-                    std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
-                        omp_get_max_threads());
-#pragma omp parallel for
                     for(BasisIndex i = 0; i < basis_size; ++i) {
-                        if(states[i].vanishes) continue;
-                        const auto thread = omp_get_thread_num();
+                        if(states[i].vanishes) {
+                            continue;
+                        }
 
                         for(BasisIndex j = 0; j < basis_size; ++j) {
                             State state = states[i];
                             state.apply_monomial(basis[j], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
-                                non_vanishing[thread].emplace_back(std::pair<Index, Index>{j, i});
+                                this->emplace_back(std::pair<Index, Index>{j, i});
                             }
                         }
-                    }
-
-                    // merge vectors into one
-                    std::size_t total_size = 0;
-                    for(const auto& vec : non_vanishing) {
-                        total_size += vec.size();
-                    }
-                    this->reserve(total_size);
-                    for(const auto& vec : non_vanishing) {
-                        this->insert(this->end(), vec.begin(), vec.end());
                     }
                 }
             };
