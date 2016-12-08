@@ -44,7 +44,16 @@ TEST_CASE("simple operators, half-filled, 1d")
             basis, conjugate_basis, dispersion, 0.);
         nvevs.sort();
 
-        REQUIRE(!nvevs.empty());
+        REQUIRE(nvevs.size() == 10);
         REQUIRE(nvevs[0] == std::make_pair(0ul, 0ul));
+        REQUIRE(nvevs[1] == std::make_pair(0ul, 5ul));
+        REQUIRE(nvevs[2] == std::make_pair(0ul, 6ul));
+        REQUIRE(nvevs[3] == std::make_pair(5ul, 0ul));
+        REQUIRE(nvevs[4] == std::make_pair(5ul, 5ul));
+        REQUIRE(nvevs[5] == std::make_pair(5ul, 6ul));
+        REQUIRE(nvevs[6] == std::make_pair(6ul, 0ul));
+        REQUIRE(nvevs[7] == std::make_pair(6ul, 5ul));
+        REQUIRE(nvevs[8] == std::make_pair(6ul, 6ul));
+        REQUIRE(nvevs[9] == std::make_pair(9ul, 9ul));
     }
 }
