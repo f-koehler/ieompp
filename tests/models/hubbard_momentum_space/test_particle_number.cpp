@@ -16,7 +16,7 @@ using namespace ieompp;
 TEST_CASE("half-filled, 1d")
 {
     const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
-    const std::vector<uint64_t> Ns = {63};
+    const std::vector<uint64_t> Ns = {6};
 
     using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
 

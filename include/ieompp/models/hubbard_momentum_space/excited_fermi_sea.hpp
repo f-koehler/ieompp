@@ -30,13 +30,13 @@ namespace ieompp
                 bool apply_monomial(const Monomial& monomial, const Dispersion& dispersion,
                                     const typename Dispersion::Float& fermi_energy = 0.)
                 {
+                    if(vanishes) return false;
                     for(auto it = monomial.crbegin(); it != monomial.crend(); ++it) {
                         if(it->creator) {
-                            vanishes = !create_particle(algebra::get_indices(*it), dispersion,
-                                                        fermi_energy);
+                            create_particle(algebra::get_indices(*it), dispersion, fermi_energy);
                         } else {
-                            vanishes = !annihilate_particle(algebra::get_indices(*it), dispersion,
-                                                            fermi_energy);
+                            annihilate_particle(algebra::get_indices(*it), dispersion,
+                                                fermi_energy);
                         }
                         if(vanishes) {
                             break;
@@ -63,12 +63,14 @@ namespace ieompp
                 bool create_particle(const Indices& indices, const Dispersion& dispersion,
                                      const typename Dispersion::Float& fermi_energy)
                 {
+                    if(vanishes) return false;
                     if(is_initially_occupied(indices, dispersion, fermi_energy)) {
                         // particle is initially present -> check for annihilation
                         auto pos = std::find(annihilated_particles.begin(),
                                              annihilated_particles.end(), indices);
                         if(pos == annihilated_particles.end()) {
                             // particle is still present -> creation not possible
+                            vanishes = true;
                             return false;
                         }
                         // particle has been annihilated -> reverse annihilation
@@ -85,6 +87,7 @@ namespace ieompp
                             return true;
                         }
                         // particle has alread been created -> creation is not possible
+                        vanishes = true;
                         return false;
                     }
                 }
@@ -93,6 +96,7 @@ namespace ieompp
                 bool annihilate_particle(const Indices& indices, const Dispersion& dispersion,
                                          const typename Dispersion::Float& fermi_energy)
                 {
+                    if(vanishes) return false;
                     if(is_initially_occupied(indices, dispersion, fermi_energy)) {
                         // particle is initially present -> check for annihilation
                         auto pos = std::find(annihilated_particles.begin(),
@@ -103,6 +107,7 @@ namespace ieompp
                             return true;
                         }
                         // particle has been annihilated -> annihilation is not possible
+                        vanishes = true;
                         return false;
 
                     } else {
@@ -111,6 +116,7 @@ namespace ieompp
                             std::find(created_particles.begin(), created_particles.end(), indices);
                         if(pos == created_particles.end()) {
                             // particle has not been created yet -> annihilation is not possible
+                            vanishes = true;
                             return false;
                         }
                         // particle has alread been created -> reverse creation
