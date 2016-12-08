@@ -8,9 +8,15 @@ add_executable(
 )
 
 add_executable(
+    models.hubbard_momentum_space.non_vanishing_expectation_values
+    test_non_vanishing_expectation_values.cpp
+)
+
+add_executable(
     models.hubbard_momentum_space.particle_number
     test_particle_number.cpp
 )
 
 add_ieompp_test(models.hubbard_momentum_space.excited_fermi_sea)
+add_ieompp_test(models.hubbard_momentum_space.non_vanishing_expectation_values)
 add_ieompp_test(models.hubbard_momentum_space.particle_number)
