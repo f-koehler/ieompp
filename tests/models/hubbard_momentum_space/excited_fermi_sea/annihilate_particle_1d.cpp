@@ -16,31 +16,39 @@ TEST_CASE("annihilate_particle (1d, half-filled)")
 
         for(auto momentum_index : brillouin_zone) {
             const auto momentum = brillouin_zone[momentum_index];
-            if((momentum < (kF_1 - k_tol)) || (momentum > (kF_2 + k_tol))) {
-                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
-                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true),
-                                                   dispersion, 0.));
-                REQUIRE(state.vanishes);
-                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false),
-                                                   dispersion, 0.));
-                REQUIRE(state.vanishes);
-            } else {
-                models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
-                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, true), dispersion,
-                                                  0.));
-                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, false),
-                                                  dispersion, 0.));
-                REQUIRE(state.annihilated_particles.front()
-                        == std::make_tuple(momentum_index, true));
-                REQUIRE(state.annihilated_particles.back()
-                        == std::make_tuple(momentum_index, false));
+            models::hubbard_momentum_space::ExcitedFermiSea<Monomial> state;
 
-                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true),
-                                                   dispersion, 0.));
+            if((momentum < (kF_1 - k_tol)) || (momentum > (kF_2 + k_tol))) {
+                // clang-format off
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true),dispersion, 0.));
                 REQUIRE(state.vanishes);
-                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false),
-                                                   dispersion, 0.));
+                REQUIRE(!state.is_initial_fermi_sea());
+
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false),dispersion, 0.));
                 REQUIRE(state.vanishes);
+                REQUIRE(!state.is_initial_fermi_sea());
+                // clang-format on
+            } else {
+                // clang-format off
+                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, true), dispersion, 0.));
+                REQUIRE(!state.vanishes);
+                REQUIRE(!state.is_initial_fermi_sea());
+
+                REQUIRE(state.annihilate_particle(std::make_tuple(momentum_index, false), dispersion, 0.));
+                REQUIRE(!state.vanishes);
+                REQUIRE(!state.is_initial_fermi_sea());
+
+                REQUIRE(state.annihilated_particles.front() == std::make_tuple(momentum_index, true));
+                REQUIRE(state.annihilated_particles.back() == std::make_tuple(momentum_index, false));
+
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, true), dispersion, 0.));
+                REQUIRE(state.vanishes);
+                REQUIRE(!state.is_initial_fermi_sea());
+
+                REQUIRE(!state.annihilate_particle(std::make_tuple(momentum_index, false), dispersion, 0.));
+                REQUIRE(state.vanishes);
+                REQUIRE(!state.is_initial_fermi_sea());
+                // clang-format on
             }
         }
     }

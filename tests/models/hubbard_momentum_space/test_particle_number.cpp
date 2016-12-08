@@ -16,7 +16,7 @@ using namespace ieompp;
 TEST_CASE("half-filled, 1d")
 {
     const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
-    const std::vector<uint64_t> Ns = {6};
+    const std::vector<uint64_t> Ns = {3};
 
     using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
 
@@ -60,8 +60,7 @@ TEST_CASE("half-filled, 1d")
                 CAPTURE(kF_2);
                 CAPTURE(n);
                 CAPTURE(dispersion(k_idx));
-                CAPTURE(obs.non_vanishing_expectation_values.front().first);
-                CAPTURE(obs.non_vanishing_expectation_values.front().second);
+
                 REQUIRE(types::IsEqual(n, 1.));
             }
         }
