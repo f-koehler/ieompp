@@ -60,6 +60,15 @@ namespace ieompp
                     return result.real();
                 }
             };
+
+            template <typename Basis, typename Dispersion, typename Float>
+            ParticleNumber<Float, Basis>
+            make_particle_number(const Basis& basis, const Basis& conjugate_basis,
+                                 const Dispersion& dispersion, const Float& fermi_energy = 0.)
+            {
+                return ParticleNumber<Float, Basis>(basis, conjugate_basis, dispersion,
+                                                    fermi_energy);
+            }
         } // namespace hubbard_momentum_space
     }     // namespace models
 } // namespace ieompp

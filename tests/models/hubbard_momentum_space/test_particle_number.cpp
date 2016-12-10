@@ -16,7 +16,7 @@ using namespace ieompp;
 TEST_CASE("half-filled, 1d")
 {
     const auto kF_1 = -HalfPi<double>::value, kF_2 = HalfPi<double>::value;
-    const std::vector<uint64_t> Ns = {3, 4, 5, 6, 7, 16, 17, 32, 63};
+    const std::vector<uint64_t> Ns = {3, 5, 6, 7, 8, 9, 10, 15, 16, 23, 24, 32, 35, 42};
 
     using Monomial = algebra::Monomial<algebra::Operator<uint64_t, bool>>;
 
@@ -26,41 +26,27 @@ TEST_CASE("half-filled, 1d")
         const auto dispersion =
             models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
 
-        blaze::DynamicVector<std::complex<double>> h(N);
-        h[0] = 1.;
-
-        const auto k_tol = brillouin_zone.dx() / 100.;
-
         for(const auto k_idx : brillouin_zone) {
+            blaze::DynamicVector<std::complex<double>> h(N);
+            h[0] = 1.;
+
+            const auto k_tol = brillouin_zone.dx() / 100.;
+
             const auto k = brillouin_zone[k_idx];
             const models::hubbard_momentum_space::Basis3Operator<Monomial> basis(k_idx,
                                                                                  brillouin_zone);
             const auto conjugate_basis = basis.get_conjugate();
-            const models::hubbard_momentum_space::
-                ParticleNumber<double, models::hubbard_momentum_space::Basis3Operator<Monomial>>
-                    obs(basis, conjugate_basis, dispersion, 0.);
-
-            const auto n = obs(h);
+            const auto observable      = models::hubbard_momentum_space::make_particle_number(
+                basis, conjugate_basis, dispersion, 0.);
+            const auto n = observable(h);
 
             if((k < (kF_1 - k_tol)) || (k > (kF_2 + k_tol))) {
                 CAPTURE(N);
-                CAPTURE(k_idx);
-                CAPTURE(k);
-                CAPTURE(k_tol);
-                CAPTURE(kF_1);
-                CAPTURE(kF_2);
                 CAPTURE(n);
                 REQUIRE(types::IsZero(n));
             } else {
                 CAPTURE(N);
-                CAPTURE(k_idx);
-                CAPTURE(k);
-                CAPTURE(k_tol);
-                CAPTURE(kF_1);
-                CAPTURE(kF_2);
                 CAPTURE(n);
-                CAPTURE(dispersion(k_idx));
-
                 REQUIRE(types::IsEqual(n, 1.));
             }
         }
