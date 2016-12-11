@@ -25,7 +25,7 @@ namespace ieompp
                 using Index    = typename Monomial::Operator::Index1;
                 using Float    = FloatT;
 
-                const NonVanishingExpectationValues<Index> non_vanishing_expectation_values;
+                const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
 
                 template <typename Dispersion>
                 ParticleNumber(const Basis3Operator<Monomial>& basis,
@@ -43,13 +43,14 @@ namespace ieompp
                     std::complex<Float> result = 0.;
 
                     for(std::size_t i = 0; i < num; ++i) {
-                        const auto& pair = non_vanishing_expectation_values[i];
+                        const auto& contribution = non_vanishing_expectation_values[i];
 
-                        if(pair.first == pair.second) {
-                            result += std::norm(vec[pair.first]);
+                        if(contribution.left_index == contribution.right_index) {
+                            result += std::norm(vec[contribution.left_index]) * contribution.value;
                         } else {
-                            result +=
-                                types::multiply_with_conjugate(vec[pair.first], vec[pair.second]);
+                            result += types::multiply_with_conjugate(vec[contribution.left_index],
+                                                                     vec[contribution.right_index])
+                                      * contribution.value;
                         }
                     }
 

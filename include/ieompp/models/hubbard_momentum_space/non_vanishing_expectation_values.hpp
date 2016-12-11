@@ -19,8 +19,8 @@ namespace ieompp
                 using Index = IndexT;
                 using Float = FloatT;
 
-                const Index left_index, right_index;
-                const Float value;
+                Index left_index, right_index;
+                Float value;
             };
 
             template <typename IndexT, typename FloatT>
@@ -49,12 +49,10 @@ namespace ieompp
                     }
 
                     // check if b_0 b_0^† |FS> vanishes
-                    auto state        = states[0];
-                    bool n_q_vanishes = true;
+                    auto state = states[0];
                     state.apply_monomial(basis[0], dispersion, fermi_energy);
                     if(state.is_initial_fermi_sea()) {
-                        this->emplace_back(0, 0, 0.5);
-                        n_q_vanishes = false;
+                        this->emplace_back(Contribution{0, 0, 0.5});
                     }
 
                     // check if b_i b_0^† |FS> vanishes
@@ -70,12 +68,19 @@ namespace ieompp
                         }
 
                         const bool kronecker = (basis[i][1].index1 == basis[i][2].index1);
-                        if(kronecker && !n_q_vanishes) {
-                            value += 0.5;
-                            vanishes = false;
+                        if(kronecker) {
+                            state = State();
+                            state.apply_operator(conjugate_basis[0][0], dispersion, fermi_energy);
+                            state.apply_operator(basis[i][0], dispersion, fermi_energy);
+                            if(state.is_initial_fermi_sea()) {
+                                value += 0.5;
+                                vanishes = false;
+                            }
                         }
 
-                        if(!vanishes) this->emplace_back(i, 0, value);
+                        if(!vanishes) {
+                            this->emplace_back(Contribution{i, 0, value});
+                        }
                     }
 
                     // check if b_0 b_i^† |FS> vanishes
@@ -91,13 +96,20 @@ namespace ieompp
                         }
 
                         const bool kronecker =
-                            (conjugate_basis[i][1].index1 == conjugate_basis[i][2].index1);
-                        if(kronecker && !n_q_vanishes) {
-                            value += 0.5;
-                            vanishes = false;
+                            (conjugate_basis[i][0].index1 == conjugate_basis[i][1].index1);
+                        if(kronecker) {
+                            state = State();
+                            state.apply_operator(conjugate_basis[i][2], dispersion, fermi_energy);
+                            state.apply_operator(basis[0][0], dispersion, fermi_energy);
+                            if(state.is_initial_fermi_sea()) {
+                                value += 0.5;
+                                vanishes = false;
+                            }
                         }
 
-                        if(!vanishes) this->emplace_back(0, i, value);
+                        if(!vanishes) {
+                            this->emplace_back(Contribution{0, i, value});
+                        }
                     }
 
                     // check if b_i b_j^† |FS> vanishes
@@ -115,11 +127,11 @@ namespace ieompp
 
                             const bool kronecker1 = (basis[i][1].index1 == basis[i][2].index1);
                             const bool kronecker2 =
-                                (conjugate_basis[i][1].index1 == conjugate_basis[i][2].index1);
+                                (conjugate_basis[j][0].index1 == conjugate_basis[j][1].index1);
 
                             if(kronecker1) {
-                                auto state = states[j];
-                                state.apply_monomial(basis[0], dispersion, fermi_energy);
+                                state = states[j];
+                                state.apply_operator(basis[0][0], dispersion, fermi_energy);
                                 if(state.is_initial_fermi_sea()) {
                                     value += 0.25;
                                     vanishes = false;
@@ -127,7 +139,7 @@ namespace ieompp
                             }
 
                             if(kronecker2) {
-                                auto state = states[0];
+                                state = states[0];
                                 state.apply_monomial(basis[i], dispersion, fermi_energy);
                                 if(state.is_initial_fermi_sea()) {
                                     value += 0.25;
@@ -135,12 +147,20 @@ namespace ieompp
                                 }
                             }
 
-                            if(kronecker1 && kronecker2 && !n_q_vanishes) {
-                                value += 0.5;
-                                vanishes = false;
+                            if(kronecker1 && kronecker2) {
+                                state = State();
+                                state.apply_operator(conjugate_basis[j][2], dispersion,
+                                                     fermi_energy);
+                                state.apply_operator(basis[i][0], dispersion, fermi_energy);
+                                if(state.is_initial_fermi_sea()) {
+                                    value += 0.5;
+                                    vanishes = false;
+                                }
                             }
 
-                            if(!vanishes) this->emplace_back(i, j, value);
+                            if(!vanishes) {
+                                this->emplace_back(Contribution{i, j, value});
+                            }
                         }
                     }
                 }
@@ -149,9 +169,12 @@ namespace ieompp
                 {
                     std::sort(this->begin(), this->end(),
                               [](const Contribution& a, const Contribution& b) {
-                                  if(a.left_index < b.left_index) return true;
-                                  if(a.left_index == b.left_index)
+                                  if(a.left_index < b.left_index) {
+                                      return true;
+                                  }
+                                  if(a.left_index == b.left_index) {
                                       return (a.right_index < b.right_index);
+                                  }
                                   return false;
                               });
                 }

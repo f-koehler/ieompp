@@ -30,7 +30,9 @@ namespace ieompp
                 bool apply_monomial(const Monomial& monomial, const Dispersion& dispersion,
                                     const typename Dispersion::Float& fermi_energy = 0.)
                 {
-                    if(vanishes) return false;
+                    if(vanishes) {
+                        return false;
+                    }
                     for(auto it = monomial.crbegin(); it != monomial.crend(); ++it) {
                         if(it->creator) {
                             create_particle(algebra::get_indices(*it), dispersion, fermi_energy);
@@ -51,6 +53,26 @@ namespace ieompp
                     return vanishes;
                 }
 
+                template <typename Operator, typename Dispersion>
+                bool apply_operator(const Operator& op, const Dispersion& dispersion,
+                                    const typename Dispersion::Float& fermi_energy = 0.)
+                {
+                    if(vanishes) {
+                        return false;
+                    }
+                    if(op.creator) {
+                        create_particle(algebra::get_indices(op), dispersion, fermi_energy);
+                    } else {
+                        annihilate_particle(algebra::get_indices(op), dispersion, fermi_energy);
+                    }
+
+                    if(!vanishes) {
+                        created_particles.sort();
+                        annihilated_particles.sort();
+                    }
+                    return vanishes;
+                }
+
                 template <typename Indices, typename Dispersion>
                 static bool is_initially_occupied(const Indices& indices,
                                                   const Dispersion& dispersion,
@@ -63,7 +85,9 @@ namespace ieompp
                 bool create_particle(const Indices& indices, const Dispersion& dispersion,
                                      const typename Dispersion::Float& fermi_energy)
                 {
-                    if(vanishes) return false;
+                    if(vanishes) {
+                        return false;
+                    }
                     if(is_initially_occupied(indices, dispersion, fermi_energy)) {
                         // particle is initially present -> check for annihilation
                         auto pos = std::find(annihilated_particles.begin(),
@@ -76,27 +100,27 @@ namespace ieompp
                         // particle has been annihilated -> reverse annihilation
                         annihilated_particles.erase(pos);
                         return true;
-
-                    } else {
-                        // particle is initially absent -> check for creation
-                        auto pos =
-                            std::find(created_particles.begin(), created_particles.end(), indices);
-                        if(pos == created_particles.end()) {
-                            // particle has not been created yet -> create it
-                            created_particles.push_back(indices);
-                            return true;
-                        }
-                        // particle has alread been created -> creation is not possible
-                        vanishes = true;
-                        return false;
                     }
+                    // particle is initially absent -> check for creation
+                    auto pos =
+                        std::find(created_particles.begin(), created_particles.end(), indices);
+                    if(pos == created_particles.end()) {
+                        // particle has not been created yet -> create it
+                        created_particles.push_back(indices);
+                        return true;
+                    }
+                    // particle has alread been created -> creation is not possible
+                    vanishes = true;
+                    return false;
                 }
 
                 template <typename Indices, typename Dispersion>
                 bool annihilate_particle(const Indices& indices, const Dispersion& dispersion,
                                          const typename Dispersion::Float& fermi_energy)
                 {
-                    if(vanishes) return false;
+                    if(vanishes) {
+                        return false;
+                    }
                     if(is_initially_occupied(indices, dispersion, fermi_energy)) {
                         // particle is initially present -> check for annihilation
                         auto pos = std::find(annihilated_particles.begin(),
@@ -109,20 +133,18 @@ namespace ieompp
                         // particle has been annihilated -> annihilation is not possible
                         vanishes = true;
                         return false;
-
-                    } else {
-                        // particle is initially absent -> check for creation
-                        auto pos =
-                            std::find(created_particles.begin(), created_particles.end(), indices);
-                        if(pos == created_particles.end()) {
-                            // particle has not been created yet -> annihilation is not possible
-                            vanishes = true;
-                            return false;
-                        }
-                        // particle has alread been created -> reverse creation
-                        created_particles.erase(pos);
-                        return true;
                     }
+                    // particle is initially absent -> check for creation
+                    auto pos =
+                        std::find(created_particles.begin(), created_particles.end(), indices);
+                    if(pos == created_particles.end()) {
+                        // particle has not been created yet -> annihilation is not possible
+                        vanishes = true;
+                        return false;
+                    }
+                    // particle has alread been created -> reverse creation
+                    created_particles.erase(pos);
+                    return true;
                 }
 
                 bool is_initial_fermi_sea() const

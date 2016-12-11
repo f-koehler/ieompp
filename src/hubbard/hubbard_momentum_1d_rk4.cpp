@@ -54,11 +54,6 @@ int main(int argc, char** argv)
     auto h = init_vector(basis);
 
     hubbard::ParticleNumber<double, Basis3> obs(basis, conjugate_basis, L.dispersion, 0.);
-    cout << obs.non_vanishing_expectation_values.front().first << '\t'
-         << obs.non_vanishing_expectation_values.front().second << '\n';
-    cout << basis[0] << '\n';
-    cout << brillouin_zone[k_idx] << '\n';
-    cout << obs(h) << '\n';
 
     return 0;
 }
