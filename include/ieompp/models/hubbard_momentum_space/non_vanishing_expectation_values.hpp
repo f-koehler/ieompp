@@ -52,18 +52,18 @@ namespace ieompp
                     auto state = states[0];
                     state.apply_monomial(basis[0], dispersion, fermi_energy);
                     if(state.is_initial_fermi_sea()) {
-                        this->emplace_back(Contribution{0, 0, 0.5});
+                        this->emplace_back(Contribution{0, 0, 1.0});
                     }
 
                     // check if b_i b_0^† |FS> vanishes
                     for(BasisIndex i = 1; i < basis_size; ++i) {
                         bool vanishes                      = true;
-                        typename Contribution::Float value = 0.;
+                        typename Contribution::Float value = 0.0;
 
                         state = states[0];
                         state.apply_monomial(basis[i], dispersion, fermi_energy);
                         if(state.is_initial_fermi_sea()) {
-                            value    = 0.25;
+                            value    = 2.0;
                             vanishes = false;
                         }
 
@@ -73,7 +73,7 @@ namespace ieompp
                             state.apply_operator(conjugate_basis[0][0], dispersion, fermi_energy);
                             state.apply_operator(basis[i][0], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
-                                value += 0.5;
+                                value += 1.;
                                 vanishes = false;
                             }
                         }
@@ -86,12 +86,12 @@ namespace ieompp
                     // check if b_0 b_i^† |FS> vanishes
                     for(BasisIndex i = 1; i < basis_size; ++i) {
                         bool vanishes                      = true;
-                        typename Contribution::Float value = 0.;
+                        typename Contribution::Float value = 0.0;
 
                         state = states[i];
                         state.apply_monomial(basis[0], dispersion, fermi_energy);
                         if(state.is_initial_fermi_sea()) {
-                            value    = 0.25;
+                            value    = 2.0;
                             vanishes = false;
                         }
 
@@ -102,7 +102,7 @@ namespace ieompp
                             state.apply_operator(conjugate_basis[i][2], dispersion, fermi_energy);
                             state.apply_operator(basis[0][0], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
-                                value += 0.5;
+                                value += 1.0;
                                 vanishes = false;
                             }
                         }
@@ -121,7 +121,7 @@ namespace ieompp
                             state = states[j];
                             state.apply_monomial(basis[i], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
-                                value    = 0.125;
+                                value    = 4.0;
                                 vanishes = false;
                             }
 
@@ -133,7 +133,7 @@ namespace ieompp
                                 state = states[j];
                                 state.apply_operator(basis[0][0], dispersion, fermi_energy);
                                 if(state.is_initial_fermi_sea()) {
-                                    value += 0.25;
+                                    value += 2.0;
                                     vanishes = false;
                                 }
                             }
@@ -142,7 +142,7 @@ namespace ieompp
                                 state = states[0];
                                 state.apply_monomial(basis[i], dispersion, fermi_energy);
                                 if(state.is_initial_fermi_sea()) {
-                                    value += 0.25;
+                                    value += 2.0;
                                     vanishes = false;
                                 }
                             }
@@ -153,7 +153,7 @@ namespace ieompp
                                                      fermi_energy);
                                 state.apply_operator(basis[i][0], dispersion, fermi_energy);
                                 if(state.is_initial_fermi_sea()) {
-                                    value += 0.5;
+                                    value += 1.0;
                                     vanishes = false;
                                 }
                             }

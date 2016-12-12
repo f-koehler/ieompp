@@ -67,22 +67,22 @@ TEST_CASE("simple operators (half-filled, 1d)")
         using Contribution =
             models::hubbard_momentum_space::NonVanishingExpectationValue<uint64_t, double>;
 
-        REQUIRE(nvevs[0] == (Contribution{0ul, 0ul, 0.5}));
-        REQUIRE(nvevs[1] == (Contribution{0ul, 4ul, 0.5}));
-        REQUIRE(nvevs[2] == (Contribution{0ul, 5ul, 0.75}));
-        REQUIRE(nvevs[3] == (Contribution{0ul, 6ul, 0.75}));
-        REQUIRE(nvevs[4] == (Contribution{4ul, 0ul, 0.5}));
-        REQUIRE(nvevs[5] == (Contribution{4ul, 4ul, 0.5}));
-        REQUIRE(nvevs[6] == (Contribution{4ul, 5ul, 0.75}));
-        REQUIRE(nvevs[7] == (Contribution{4ul, 6ul, 0.75}));
-        REQUIRE(nvevs[8] == (Contribution{5ul, 0ul, 0.75}));
-        REQUIRE(nvevs[9] == (Contribution{5ul, 4ul, 0.75}));
-        REQUIRE(nvevs[10] == (Contribution{5ul, 5ul, 1.125}));
-        REQUIRE(nvevs[11] == (Contribution{5ul, 6ul, 1.125}));
-        REQUIRE(nvevs[12] == (Contribution{6ul, 0ul, 0.75}));
-        REQUIRE(nvevs[13] == (Contribution{6ul, 4ul, 0.75}));
-        REQUIRE(nvevs[14] == (Contribution{6ul, 5ul, 1.125}));
-        REQUIRE(nvevs[15] == (Contribution{6ul, 6ul, 1.125}));
-        REQUIRE(nvevs[16] == (Contribution{9ul, 9ul, 0.125}));
+        REQUIRE(nvevs[0] == (Contribution{0ul, 0ul, 1.0}));
+        REQUIRE(nvevs[1] == (Contribution{0ul, 4ul, 1.0}));
+        REQUIRE(nvevs[2] == (Contribution{0ul, 5ul, 3.0}));
+        REQUIRE(nvevs[3] == (Contribution{0ul, 6ul, 3.0}));
+        REQUIRE(nvevs[4] == (Contribution{4ul, 0ul, 1.0}));
+        REQUIRE(nvevs[5] == (Contribution{4ul, 4ul, 1.0}));
+        REQUIRE(nvevs[6] == (Contribution{4ul, 5ul, 3.0}));
+        REQUIRE(nvevs[7] == (Contribution{4ul, 6ul, 3.0}));
+        REQUIRE(nvevs[8] == (Contribution{5ul, 0ul, 3.0}));
+        REQUIRE(nvevs[9] == (Contribution{5ul, 4ul, 3.0}));
+        REQUIRE(nvevs[10] == (Contribution{5ul, 5ul, 9.0}));
+        REQUIRE(nvevs[11] == (Contribution{5ul, 6ul, 9.0}));
+        REQUIRE(nvevs[12] == (Contribution{6ul, 0ul, 3.0}));
+        REQUIRE(nvevs[13] == (Contribution{6ul, 4ul, 3.0}));
+        REQUIRE(nvevs[14] == (Contribution{6ul, 5ul, 9.0}));
+        REQUIRE(nvevs[15] == (Contribution{6ul, 6ul, 9.0}));
+        REQUIRE(nvevs[16] == (Contribution{9ul, 9ul, 4.0}));
     }
 }
