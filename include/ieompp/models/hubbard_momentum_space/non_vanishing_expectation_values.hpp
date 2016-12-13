@@ -14,17 +14,27 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename IndexT>
-            class NonVanishingExpectationValues : public std::vector<std::pair<IndexT, IndexT>>
+            template <typename IndexT, typename FloatT>
+            struct NonVanishingExpectationValue {
+                using Index = IndexT;
+                using Float = FloatT;
+
+                Index left_index, right_index;
+                Float value;
+            };
+
+            template <typename IndexT, typename FloatT>
+            class NonVanishingExpectationValues
+                : public std::vector<NonVanishingExpectationValue<IndexT, FloatT>>
             {
             public:
-                using Index = IndexT;
+                using Contribution = NonVanishingExpectationValue<IndexT, FloatT>;
 
                 template <typename Monomial, typename Dispersion>
                 NonVanishingExpectationValues(const Basis3Operator<Monomial>& basis,
                                               const Basis3Operator<Monomial>& conjugate_basis,
                                               const Dispersion& dispersion,
-                                              const typename Dispersion::Float& fermi_energy = 0.)
+                                              const typename Contribution::Float& fermi_energy = 0.)
                 {
                     const auto basis_size = basis.size();
                     assert(basis.size() == conjugate_basis.size());
@@ -32,40 +42,141 @@ namespace ieompp
                     using State      = ExcitedFermiSea<Monomial>;
                     using BasisIndex = typename Basis3Operator<Monomial>::BasisIndex;
 
+                    // calculate b_i^† |FS>
                     std::vector<State> states(basis_size);
-
-// apply conjugate basis monomials to fermi_sea
-#pragma omp parallel for
                     for(BasisIndex i = 0; i < basis_size; ++i) {
                         states[i].apply_monomial(conjugate_basis[i], dispersion, fermi_energy);
                     }
 
-                    // apply basis monomials and check for non-vanishing combinations
-                    std::vector<std::vector<std::pair<Index, Index>>> non_vanishing(
-                        omp_get_max_threads());
-#pragma omp parallel for
-                    for(BasisIndex i = 0; i < basis_size; ++i) {
-                        if(states[i].vanishes) continue;
-                        const auto thread = omp_get_thread_num();
+                    // check if b_0 b_0^† |FS> vanishes
+                    auto state = states[0];
+                    state.apply_monomial(basis[0], dispersion, fermi_energy);
+                    if(state.is_initial_fermi_sea()) {
+                        this->emplace_back(Contribution{0, 0, 1.0});
+                    }
 
-                        for(BasisIndex j = 0; j < basis_size; ++j) {
-                            State state = states[i];
-                            state.apply_monomial(basis[j], dispersion, fermi_energy);
+                    // check if b_i b_0^† |FS> vanishes
+                    for(BasisIndex i = 1; i < basis_size; ++i) {
+                        bool vanishes                      = true;
+                        typename Contribution::Float value = 0.0;
+
+                        state = states[0];
+                        state.apply_monomial(basis[i], dispersion, fermi_energy);
+                        if(state.is_initial_fermi_sea()) {
+                            value    = 2.0;
+                            vanishes = false;
+                        }
+
+                        const bool kronecker = (basis[i][1].index1 == basis[i][2].index1);
+                        if(kronecker) {
+                            state = State();
+                            state.apply_operator(conjugate_basis[0][0], dispersion, fermi_energy);
+                            state.apply_operator(basis[i][0], dispersion, fermi_energy);
                             if(state.is_initial_fermi_sea()) {
-                                non_vanishing[thread].emplace_back(std::pair<Index, Index>{j, i});
+                                value += 1.;
+                                vanishes = false;
                             }
+                        }
+
+                        if(!vanishes) {
+                            this->emplace_back(Contribution{i, 0, value});
                         }
                     }
 
-                    // merge vectors into one
-                    std::size_t total_size = 0;
-                    for(const auto& vec : non_vanishing) {
-                        total_size += vec.size();
+                    // check if b_0 b_i^† |FS> vanishes
+                    for(BasisIndex i = 1; i < basis_size; ++i) {
+                        bool vanishes                      = true;
+                        typename Contribution::Float value = 0.0;
+
+                        state = states[i];
+                        state.apply_monomial(basis[0], dispersion, fermi_energy);
+                        if(state.is_initial_fermi_sea()) {
+                            value    = 2.0;
+                            vanishes = false;
+                        }
+
+                        const bool kronecker =
+                            (conjugate_basis[i][0].index1 == conjugate_basis[i][1].index1);
+                        if(kronecker) {
+                            state = State();
+                            state.apply_operator(conjugate_basis[i][2], dispersion, fermi_energy);
+                            state.apply_operator(basis[0][0], dispersion, fermi_energy);
+                            if(state.is_initial_fermi_sea()) {
+                                value += 1.0;
+                                vanishes = false;
+                            }
+                        }
+
+                        if(!vanishes) {
+                            this->emplace_back(Contribution{0, i, value});
+                        }
                     }
-                    this->reserve(total_size);
-                    for(const auto& vec : non_vanishing) {
-                        this->insert(this->end(), vec.begin(), vec.end());
+
+                    // check if b_i b_j^† |FS> vanishes
+                    for(BasisIndex i = 1; i < basis_size; ++i) {
+                        for(BasisIndex j = 1; j < basis_size; ++j) {
+                            bool vanishes                      = true;
+                            typename Contribution::Float value = 0.;
+
+                            state = states[j];
+                            state.apply_monomial(basis[i], dispersion, fermi_energy);
+                            if(state.is_initial_fermi_sea()) {
+                                value    = 4.0;
+                                vanishes = false;
+                            }
+
+                            const bool kronecker1 = (basis[i][1].index1 == basis[i][2].index1);
+                            const bool kronecker2 =
+                                (conjugate_basis[j][0].index1 == conjugate_basis[j][1].index1);
+
+                            if(kronecker1) {
+                                state = states[j];
+                                state.apply_operator(basis[0][0], dispersion, fermi_energy);
+                                if(state.is_initial_fermi_sea()) {
+                                    value += 2.0;
+                                    vanishes = false;
+                                }
+                            }
+
+                            if(kronecker2) {
+                                state = states[0];
+                                state.apply_monomial(basis[i], dispersion, fermi_energy);
+                                if(state.is_initial_fermi_sea()) {
+                                    value += 2.0;
+                                    vanishes = false;
+                                }
+                            }
+
+                            if(kronecker1 && kronecker2) {
+                                state = State();
+                                state.apply_operator(conjugate_basis[j][2], dispersion,
+                                                     fermi_energy);
+                                state.apply_operator(basis[i][0], dispersion, fermi_energy);
+                                if(state.is_initial_fermi_sea()) {
+                                    value += 1.0;
+                                    vanishes = false;
+                                }
+                            }
+
+                            if(!vanishes) {
+                                this->emplace_back(Contribution{i, j, value});
+                            }
+                        }
                     }
+                }
+
+                void sort()
+                {
+                    std::sort(this->begin(), this->end(),
+                              [](const Contribution& a, const Contribution& b) {
+                                  if(a.left_index < b.left_index) {
+                                      return true;
+                                  }
+                                  if(a.left_index == b.left_index) {
+                                      return (a.right_index < b.right_index);
+                                  }
+                                  return false;
+                              });
                 }
             };
         } // namespace hubbard_momentum_space

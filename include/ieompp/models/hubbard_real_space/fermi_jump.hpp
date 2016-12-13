@@ -7,9 +7,9 @@
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/number.hpp"
 
-#include <iostream>
 #include <cmath>
 #include <functional>
+#include <iostream>
 #include <numeric>
 #include <utility>
 #include <vector>
@@ -133,13 +133,15 @@ namespace ieompp
                             const auto& op_j_0 = basis[j].front();
                             for(Index k = 0; k < j; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                h_NO[i] += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                                h_NO[i] +=
+                                    h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
                             }
                             const auto idx = basis.get_3op_index(i, j, j);
                             h_NO[i] += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
                             for(Index k = j + 1; k < _N; ++k) {
                                 const auto idx = basis.get_3op_index(i, j, k);
-                                h_NO[i] += h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                                h_NO[i] +=
+                                    h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
                             }
                         }
                     }

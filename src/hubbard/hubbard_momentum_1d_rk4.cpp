@@ -35,13 +35,14 @@ int main(int argc, char** argv)
     /* const auto dt                   = app.variables["dt"].as<double>(); */
     /* const auto t_end                = app.variables["t_end"].as<double>(); */
     /* const auto measurement_interval = app.variables["measurement_interval"].as<double>(); */
+    const auto k_idx = 0ul;
 
     // setting up lattice and brillouin_zone
     BrillouinZone brillouin_zone(N);
     Lattice lattice(N, 1.);
 
     // init operator basis
-    const auto basis           = hubbard::Basis3Operator<Monomial>(N/2, brillouin_zone);
+    const auto basis           = hubbard::Basis3Operator<Monomial>(k_idx, brillouin_zone);
     const auto conjugate_basis = basis.get_conjugate();
 
     // computing matrix
@@ -53,9 +54,6 @@ int main(int argc, char** argv)
     auto h = init_vector(basis);
 
     hubbard::ParticleNumber<double, Basis3> obs(basis, conjugate_basis, L.dispersion, 0.);
-    cout << basis[0] << '\n';
-    cout << lattice[basis[0].front().index1] << '\n';
-    cout << obs(h) << '\n';
 
     return 0;
 }

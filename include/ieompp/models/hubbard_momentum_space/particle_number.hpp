@@ -14,7 +14,7 @@ namespace ieompp
     {
         namespace hubbard_momentum_space
         {
-            template <typename Float, typename Basis>
+            template <typename Float, typename Monomial>
             struct ParticleNumber {
             };
 
@@ -25,7 +25,7 @@ namespace ieompp
                 using Index    = typename Monomial::Operator::Index1;
                 using Float    = FloatT;
 
-                const NonVanishingExpectationValues<Index> non_vanishing_expectation_values;
+                const NonVanishingExpectationValues<Index, Float> non_vanishing_expectation_values;
 
                 template <typename Dispersion>
                 ParticleNumber(const Basis3Operator<Monomial>& basis,
@@ -39,25 +39,37 @@ namespace ieompp
                 template <typename Vector>
                 Float operator()(const Vector& vec) const
                 {
-                    const auto num = non_vanishing_expectation_values.size();
-                    std::vector<Float> results(omp_get_max_threads(), 0);
+                    const auto num             = non_vanishing_expectation_values.size();
+                    std::complex<Float> result = 0.;
 
-#pragma omp parallel for
                     for(std::size_t i = 0; i < num; ++i) {
-                        const auto thread = omp_get_thread_num();
-                        const auto& pair  = non_vanishing_expectation_values[i];
+                        const auto& contribution = non_vanishing_expectation_values[i];
 
-                        if(pair.first == pair.second) {
-                            results[thread] += std::norm(vec[pair.first]);
+                        if(contribution.left_index == contribution.right_index) {
+                            result += std::norm(vec[contribution.left_index]) * contribution.value;
                         } else {
-                            results[thread] +=
-                                types::add_conjugate_products(vec[pair.first], vec[pair.second]);
+                            result += types::multiply_with_conjugate(vec[contribution.left_index],
+                                                                     vec[contribution.right_index])
+                                      * contribution.value;
                         }
                     }
 
-                    return std::accumulate(results.begin(), results.end(), 0.);
+                    if(result.imag() > 1e-12) {
+                        throw std::runtime_error(std::to_string(result.imag()));
+                    }
+
+                    return result.real();
                 }
             };
+
+            template <typename Basis, typename Dispersion, typename Float>
+            ParticleNumber<Float, Basis>
+            make_particle_number(const Basis& basis, const Basis& conjugate_basis,
+                                 const Dispersion& dispersion, const Float& fermi_energy = 0.)
+            {
+                return ParticleNumber<Float, Basis>(basis, conjugate_basis, dispersion,
+                                                    fermi_energy);
+            }
         } // namespace hubbard_momentum_space
     }     // namespace models
 } // namespace ieompp

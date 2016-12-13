@@ -48,7 +48,7 @@ namespace ieompp
                     const auto size = this->size();
 #pragma omp parallel for
                     for(BasisIndex i = 0; i < size; ++i) {
-                        conj_basis.conjugate();
+                        conj_basis[i].conjugate();
                     }
 
                     return conj_basis;
@@ -106,7 +106,7 @@ namespace ieompp
                     const auto size = this->size();
 #pragma omp parallel for
                     for(BasisIndex i = 0; i < size; ++i) {
-                        conj_basis.conjugate();
+                        conj_basis[i].conjugate();
                     }
 
                     return conj_basis;
