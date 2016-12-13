@@ -55,8 +55,7 @@ namespace ieompp
                 const BasisIndex N_squared;
 
                 template <typename Lattice>
-                Basis3Operator(const Lattice& lattice)
-                    : N(lattice.size()), N_squared(N * N)
+                Basis3Operator(const Lattice& lattice) : N(lattice.size()), N_squared(N * N)
                 {
                     static_assert(
                         hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,

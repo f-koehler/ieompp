@@ -49,6 +49,11 @@ namespace ieompp
 
             void conjugate() { creator = !creator; }
             Operator get_conjugate() const { return Operator{!creator, indices}; }
+
+            bool is_conjugate(const Operator& rhs) const
+            {
+                return (creator == !rhs.creator) && same_indices(rhs);
+            }
         };
 
         template <typename IndexT>
@@ -94,6 +99,11 @@ namespace ieompp
 
             void conjugate() { creator = !creator; }
             Operator get_conjugate() const { return Operator{!creator, index}; }
+
+            bool is_conjugate(const Operator& rhs) const
+            {
+                return (creator == !rhs.creator) && same_indices(rhs);
+            }
         };
 
         template <typename Index1T, typename Index2T>
@@ -144,6 +154,11 @@ namespace ieompp
 
             void conjugate() { creator = !creator; }
             Operator get_conjugate() const { return Operator{!creator, index1, index2}; }
+
+            bool is_conjugate(const Operator& rhs) const
+            {
+                return (creator == !rhs.creator) && same_indices(rhs);
+            }
         };
 
         template <typename T>

@@ -55,7 +55,7 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < size; ++j) {
                             results[thread] +=
-                                expectation_value_1_1(basis[i], basis[j])
+                                expectation_value_1_1(basis[i], conjugate_basis[j])
                                 * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
                         }
                     }

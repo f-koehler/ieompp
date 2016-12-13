@@ -33,6 +33,20 @@ namespace ieompp
                 return conj;
             }
 
+            bool is_conjugate(const Monomial& mon) const
+            {
+                if(this->size() != mon.size()) return false;
+
+                auto it_1 = this->begin();
+                auto it_2 = mon.rbegin();
+
+                for(; it_1 != this->end(); ++it_1, ++it_2) {
+                    if(!it_1->is_conjugate(*it_2)) return false;
+                }
+
+                return true;
+            }
+
             bool operator==(const Monomial& rhs) const
             {
                 if(this->size() != rhs.size()) {
