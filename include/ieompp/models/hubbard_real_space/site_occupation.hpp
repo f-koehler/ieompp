@@ -86,6 +86,12 @@ namespace ieompp
                     assert(a.size() == 1);
                     assert(b.size() == 1);
 
+                    assert(a[0].creator);
+                    assert(!b[0].creator);
+
+                    assert(a[0].index2);
+                    assert(b[0].index2);
+
                     // return <N[c_{a0,↑}^†]N_[c_{b0,↑}]> = 2 * <c_{a0,↑}^† c_{b0,↑}>
                     return 2. * expectation_value(a.front(), b.front());
                 }
@@ -95,19 +101,60 @@ namespace ieompp
                     assert(a.size() == 1);
                     assert(b.size() == 3);
 
-                    // start with <c_{b1,↓}^† c_{b2,↓}>
-                    Float ret = expectation_value(b[1], b[2]);
+                    assert(a[0].creator);
+                    assert(b[0].creator);
+                    assert(!b[1].creator);
+                    assert(!b[2].creator);
 
-                    // add -0.5 δ_{b1,b2}
+                    assert(a[0].index2);
+                    assert(!b[0].index2);
+                    assert(!b[1].index2);
+                    assert(b[2].index2);
+
+                    // start with <c_{b0,↓}^† c_{b1,↓}>
+                    Float ret = expectation_value(b[0], b[1]);
+
+                    // add -0.5 δ_{b0,b1}
                     if(b[1].index1 == b[2].index1) {
                         ret -= 0.5;
                     }
 
-                    // multiply with <c_{a0,↑}^† c_{b0,↑}>
-                    ret *= expectation_value(a.front(), b.front());
+                    // multiply with <c_{a0,↑}^† c_{b2,↑}>
+                    ret *= expectation_value(a[0], b[2]);
 
-                    // return <N[c_{a0,↑}^†] N[c_{b0,↑} c_{b1,↓}^† c_{b2,↓}]>=
-                    // 4 * <c_{a0,↑}^† c_{b0,↑}> * (<c_{b1,↓}^† c_{b2,↓}> - 0.5 δ_{b1,b2})
+                    // return <N[c_{a0,↑}^†] N[c_{b0,↓}^† c_{b1,↓} c_{b2,↑}]>
+                    // = 4 * <c_{a0,↑}^† c_{b2,↑}> * (<c_{b0,↓}^† c_{b1,↓}> - 0.5 δ_{b0,b1})
+                    return 4 * ret;
+                }
+
+                Float expectation_value_3_1(const Monomial& a, const Monomial& b) const
+                {
+                    assert(a.size() == 3);
+                    assert(b.size() == 1);
+
+                    assert(a[0].creator);
+                    assert(a[1].creator);
+                    assert(!a[2].creator);
+                    assert(!b[0].creator);
+
+                    assert(a[0].index2);
+                    assert(!a[1].index2);
+                    assert(!a[2].index2);
+                    assert(b[0].index2);
+
+                    // start with <c_{a1,↓}^†c_{a2,↓}>
+                    Float ret = expectation_value(a[1], a[2]);
+
+                    // add -0.5 δ_{a1,a2}
+                    if(a[1].index1 == a[2].index1) {
+                        ret -= 0.5;
+                    }
+
+                    // multiply with <c_{a0,↑}^† c_{b0,↑}>
+                    ret *= expectation_value(a[0], b[0]);
+
+                    // return <N[c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓}] N[c_{b0,↑}]>
+                    // = 4 * <c_{a0,↑}^† c_{b0,↑}> * (<c_{a1,↓}^†c_{a2,↓}> - 0.5 δ_{a1,a2})
                     return 4 * ret;
                 }
 
@@ -116,31 +163,51 @@ namespace ieompp
                     assert(a.size() == 3);
                     assert(b.size() == 3);
 
-                    // calculate 8 * <c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓} c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
-                    // = 8 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}> <c_{b1,↓}^† c_{b2,↓}>
-                    // + 8 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b2}-<c_{b2,↓}^†
+                    assert(a[0].creator);
+                    assert(a[1].creator);
+                    assert(!a[2].creator);
+                    assert(b[0].creator);
+                    assert(!b[1].creator);
+                    assert(!b[2].creator);
+
+                    assert(a[0].index2);
+                    assert(!a[1].index2);
+                    assert(!a[2].index2);
+                    assert(!b[0].index2);
+                    assert(!b[1].index2);
+                    assert(b[2].index2);
+
+                    // calculate 8 * <c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓} c_{b0,↓}^† c_{b1,↓} c_{b2,↑}>
+                    // = 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{a2,↓}> <c_{b0,↓}^† c_{b1,↓}>
+                    // + 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b0}-<c_{b0,↓}^†
                     // c_{a2,↓}>)
-                    Float ev_6 = 8 * expectation_value(a[0], b[0]) * expectation_value(a[1], a[2])
-                                 * expectation_value(b[1], b[2]);
-                    ev_6 += 8 * expectation_value(a[0], b[0]) * expectation_value(a[1], b[2])
-                            * (((a[2].index1 == b[1].index1) ? 1. : 0.)
-                               - expectation_value(a[2], b[1]));
+                    Float ev_6 = 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2])
+                                 * expectation_value(b[0], b[1]);
+                    ev_6 += 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], b[1])
+                            * (((a[2].index1 == b[0].index1) ? 1. : 0.)
+                               - expectation_value(b[0], a[2]));
+
+                    // calculate δ_{a1,a2}
+                    const bool kronecker1 = (a[1].index1 == a[2].index1);
+
+                    // calculate δ_{b0,b1}
+                    const bool kronecker2 = (b[0].index1 == b[1].index1);
 
                     Float ev_4 = 0.;
-                    // calculate -4 * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑} c_{a1,↓}^† c_{a2,↓}>
-                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{a1,↓}^† c_{a2,↓}>
-                    if(b[1].index1 == b[2].index1) {
-                        ev_4 -= 4 * expectation_value(a[0], b[0]) * expectation_value(a[1], a[2]);
+                    // calculate -4 * δ_{a1,a2} * <c_{a0,↑}^† c_{b0,↓}^† c_{b1,↓} c_{b2,↑}>
+                    // = -4 * δ_{a1,a2} * <c_{a0,↑}^† c_{b2,↑}> <c_{b0,↓}^† c_{b1,↓}>
+                    if(kronecker1) {
+                        ev_4 -= 4 * expectation_value(a[0], b[2]) * expectation_value(b[0], b[1]);
                     }
-                    // calculate -4 * δ_{a1,a2} * <c_{a0,↑}^† c_{b0,↑} c_{b1,↓}^† c_{b2,↓}>
-                    // = -4 * <c_{a0,↑}^† c_{b0,↑}> <c_{b1,↓}^† c_{b2,↓}>
-                    if(a[1].index1 == a[2].index1) {
-                        ev_4 -= 4 * expectation_value(a[0], b[0]) * expectation_value(b[1], b[2]);
+                    // calculate -4 * δ_{b0,b1} * <c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓} c_{b_2,↑}>
+                    // = -4 * δ_{b0,b1} * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{a2,↓}>
+                    if(kronecker2) {
+                        ev_4 -= 4 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2]);
                     }
 
                     Float ev_2 = 0.;
                     // calculate 2 * δ_{a1,a2} * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑}>
-                    if((a[1].index1 == a[2].index1) && (b[1].index1 == b[2].index1)) {
+                    if(kronecker1 && kronecker2) {
                         ev_2 += 2 * expectation_value(a[0], b[0]);
                     }
 
@@ -174,7 +241,17 @@ namespace ieompp
                         for(auto j = N; j < basis_size; ++j) {
                             results[thread] +=
                                 expectation_value_1_3(basis[i], conjugate_basis[j]) / 2.
-                                * types::add_conjugate_products(vector[i], vector[j]);
+                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                        }
+                    }
+
+#pragma omp parallel
+                    for(auto i = N; i < basis_size; ++i) {
+                        const auto thread = omp_get_thread_num();
+                        for(auto j = 0ul; j < N; ++j) {
+                            results[thread] +=
+                                expectation_value_3_1(basis[i], conjugate_basis[j]) / 2.
+                                * types::multiply_with_conjugate(vector[i], vector[j]);
                         }
                     }
 

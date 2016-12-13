@@ -3,6 +3,7 @@
 
 #include "ieompp/models/hubbard_common/operator_traits.hpp"
 
+#include <algorithm>
 #include <vector>
 
 namespace ieompp
@@ -97,6 +98,7 @@ namespace ieompp
                     for(BasisIndex i = 0; i < size; ++i) {
                         (*this)[i].conjugate();
                     }
+                    this->sort();
                 }
 
                 Basis3Operator get_conjugate() const
@@ -108,8 +110,27 @@ namespace ieompp
                     for(BasisIndex i = 0; i < size; ++i) {
                         conj_basis[i].conjugate();
                     }
+                    conj_basis.sort();
 
                     return conj_basis;
+                }
+
+                void sort()
+                {
+                    static const auto comp = [](const Monomial& a, const Monomial& b) {
+                        if(a.size() == 1) {
+                            if(b.size() == 1) return a[0].index1 < b[0].index1;
+                            return true;
+                        }
+                        if(b.size() == 1) return false;
+                        if(a[0].index1 < b[0].index1) return true;
+                        if(a[0].index1 > b[0].index1) return false;
+                        if(a[1].index1 < b[1].index1) return true;
+                        if(a[1].index1 > b[1].index1) return false;
+                        return a[2].index1 < b[2].index1;
+                    };
+
+                    std::sort(this->begin(), this->end(), comp);
                 }
             };
 
