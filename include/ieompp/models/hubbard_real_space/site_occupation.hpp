@@ -115,7 +115,7 @@ namespace ieompp
                     Float ret = expectation_value(b[0], b[1]);
 
                     // add -0.5 δ_{b0,b1}
-                    if(b[1].index1 == b[2].index1) {
+                    if(b[0].index1 == b[1].index1) {
                         ret -= 0.5;
                     }
 
@@ -177,11 +177,13 @@ namespace ieompp
                     assert(!b[1].index2);
                     assert(b[2].index2);
 
+                    Float ev_6 = 0.;
+
                     // calculate 8 * <c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓} c_{b0,↓}^† c_{b1,↓} c_{b2,↑}>
                     // = 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{a2,↓}> <c_{b0,↓}^† c_{b1,↓}>
                     // + 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b0}-<c_{b0,↓}^†
                     // c_{a2,↓}>)
-                    Float ev_6 = 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2])
+                    ev_6 = 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2])
                                  * expectation_value(b[0], b[1]);
                     ev_6 += 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], b[1])
                             * (((a[2].index1 == b[0].index1) ? 1. : 0.)
@@ -206,9 +208,9 @@ namespace ieompp
                     }
 
                     Float ev_2 = 0.;
-                    // calculate 2 * δ_{a1,a2} * δ_{b1,b2} * <c_{a0,↑}^† c_{b0,↑}>
+                    // calculate 2 * δ_{a1,a2} * δ_{b1,b2} * <c_{a0,↑}^† c_{b2,↑}>
                     if(kronecker1 && kronecker2) {
-                        ev_2 += 2 * expectation_value(a[0], b[0]);
+                        ev_2 += 2 * expectation_value(a[0], b[2]);
                     }
 
                     // return <N[c_{a0,↑}^† c_{a1,↓}^† c_{a2,↓}] N[c_{b0,↑} c_{b1,↓}^† c_{b2,↓}]>
@@ -225,7 +227,7 @@ namespace ieompp
                     const auto basis_size       = basis.size();
                     std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
 
-#pragma omp parallel
+#pragma omp parallel for
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < N; ++j) {
@@ -235,27 +237,22 @@ namespace ieompp
                         }
                     }
 
-#pragma omp parallel
+#pragma omp parallel for
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
-                            results[thread] +=
+                            const auto val1 =
                                 expectation_value_1_3(basis[i], conjugate_basis[j]) / 2.
                                 * types::multiply_with_conjugate(vector[i], vector[j]);
+                            const auto val2 =
+                                expectation_value_3_1(basis[j], conjugate_basis[i]) / 2.
+                                * types::multiply_with_conjugate(vector[j], vector[i]);
+                            results[thread] += val1 + val2;
+                            //assert(types::IsEqual(val1, val2));
                         }
                     }
 
-#pragma omp parallel
-                    for(auto i = N; i < basis_size; ++i) {
-                        const auto thread = omp_get_thread_num();
-                        for(auto j = 0ul; j < N; ++j) {
-                            results[thread] +=
-                                expectation_value_3_1(basis[i], conjugate_basis[j]) / 2.
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
-                        }
-                    }
-
-#pragma omp parallel
+#pragma omp parallel for
                     for(auto i = N; i < basis_size; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
@@ -268,9 +265,7 @@ namespace ieompp
                     const auto result =
                         std::accumulate(results.begin(), results.end(), std::complex<Float>(0.));
 
-                    if(result.imag() > 1e-12) {
-                        throw std::runtime_error(std::to_string(result.imag()));
-                    }
+                    assert(types::IsZero(result.imag()));
 
                     return result.real();
                 }

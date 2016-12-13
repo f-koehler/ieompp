@@ -45,5 +45,15 @@ TEST_CASE("")
             == Approx(4 * ev(0, 1) * ev(0, 1)));
     REQUIRE(site_occupation.expectation_value_3_1(basis[basis.get_3op_index(0, 0, 1)], conjugate_basis[0])
             == Approx(4 * ev(0, 0) * ev(0, 1)));
+    REQUIRE(site_occupation.expectation_value_3_1(basis[basis.get_3op_index(N-1, N-1, N-1)], conjugate_basis[0])
+            == Approx(4 * ev(N-1, 0) * ev(N-1, N-1) - 2 * ev(N-1, 0)));
+    // clang-format on
+
+    // clang-format off
+    REQUIRE(site_occupation.expectation_value_1_3(basis[0], conjugate_basis[conjugate_basis.get_3op_index(0, 0, 0)])
+            == Approx(4 * ev(0, 0) * ev(0, 0) - 2 * ev(0, 0)));
+    CAPTURE(conjugate_basis[basis.get_3op_index(1, 2, 3)]);
+    REQUIRE(site_occupation.expectation_value_1_3(basis[0], conjugate_basis[conjugate_basis.get_3op_index(3, 2, 1)])
+            == Approx(4 * ev(0, 3) * ev(1, 2)));
     // clang-format on
 }

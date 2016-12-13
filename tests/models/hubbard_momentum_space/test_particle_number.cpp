@@ -10,7 +10,6 @@
 #include <ieompp/models/hubbard_common/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/basis.hpp>
 #include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
-#include <ieompp/types/number.hpp>
 using namespace ieompp;
 
 TEST_CASE("half-filled, 1d")
