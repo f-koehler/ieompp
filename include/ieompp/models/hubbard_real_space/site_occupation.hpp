@@ -184,7 +184,7 @@ namespace ieompp
                     // + 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b0}-<c_{b0,↓}^†
                     // c_{a2,↓}>)
                     ev_6 = 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2])
-                                 * expectation_value(b[0], b[1]);
+                           * expectation_value(b[0], b[1]);
                     ev_6 += 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], b[1])
                             * (((a[2].index1 == b[0].index1) ? 1. : 0.)
                                - expectation_value(b[0], a[2]));
@@ -225,15 +225,15 @@ namespace ieompp
                     const auto& conjugate_basis = conjugate_basis_ref.get();
                     const auto N                = basis.N;
                     const auto basis_size       = basis.size();
-                    std::vector<std::complex<Float>> results(omp_get_max_threads(), 0);
+                    std::vector<std::complex<Float>> results(omp_get_max_threads(), 0.0);
 
 #pragma omp parallel for
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = 0ul; j < N; ++j) {
                             results[thread] +=
-                                expectation_value_1_1(basis[i], conjugate_basis[j]) / 2.
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                expectation_value_1_1(basis[i], conjugate_basis[j])
+                                * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
                         }
                     }
 
@@ -241,14 +241,19 @@ namespace ieompp
                     for(auto i = 0ul; i < N; ++i) {
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
-                            const auto val1 =
-                                expectation_value_1_3(basis[i], conjugate_basis[j]) / 2.
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
-                            const auto val2 =
-                                expectation_value_3_1(basis[j], conjugate_basis[i]) / 2.
-                                * types::multiply_with_conjugate(vector[j], vector[i]);
-                            results[thread] += val1 + val2;
-                            //assert(types::IsEqual(val1, val2));
+                            results[thread] +=
+                                expectation_value_1_3(basis[i], conjugate_basis[j])
+                                * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
+                        }
+                    }
+
+#pragma omp parallel for
+                    for(auto i = N; i < basis_size; ++i) {
+                        const auto thread = omp_get_thread_num();
+                        for(auto j = 0; j < N; ++j) {
+                            results[thread] +=
+                                expectation_value_3_1(basis[i], conjugate_basis[j])
+                                * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
                         }
                     }
 
@@ -257,8 +262,8 @@ namespace ieompp
                         const auto thread = omp_get_thread_num();
                         for(auto j = N; j < basis_size; ++j) {
                             results[thread] +=
-                                expectation_value_3_3(basis[i], conjugate_basis[j]) / 2.
-                                * types::multiply_with_conjugate(vector[i], vector[j]);
+                                expectation_value_3_3(basis[i], conjugate_basis[j])
+                                * types::multiply_with_conjugate(vector[i], vector[j]) / 2.;
                         }
                     }
 
