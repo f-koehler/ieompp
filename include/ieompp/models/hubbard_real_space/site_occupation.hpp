@@ -184,7 +184,7 @@ namespace ieompp
                     // + 8 * <c_{a0,↑}^† c_{b2,↑}> <c_{a1,↓}^† c_{b1,↓}> (δ_{a2,b0}-<c_{b0,↓}^†
                     // c_{a2,↓}>)
                     ev_6 = 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], a[2])
-                                 * expectation_value(b[0], b[1]);
+                           * expectation_value(b[0], b[1]);
                     ev_6 += 8 * expectation_value(a[0], b[2]) * expectation_value(a[1], b[1])
                             * (((a[2].index1 == b[0].index1) ? 1. : 0.)
                                - expectation_value(b[0], a[2]));
@@ -248,7 +248,7 @@ namespace ieompp
                                 expectation_value_3_1(basis[j], conjugate_basis[i]) / 2.
                                 * types::multiply_with_conjugate(vector[j], vector[i]);
                             results[thread] += val1 + val2;
-                            //assert(types::IsEqual(val1, val2));
+                            // assert(types::IsEqual(val1, val2));
                         }
                     }
 

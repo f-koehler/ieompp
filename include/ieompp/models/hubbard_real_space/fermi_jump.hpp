@@ -14,6 +14,8 @@
 #include <utility>
 #include <vector>
 
+#include <iostream>
+
 namespace ieompp
 {
     namespace models
@@ -91,80 +93,60 @@ namespace ieompp
             public:
                 using Float    = FloatT;
                 using Monomial = MonomialT;
-                using Operator = typename Monomial::Operator;
                 using Basis    = Basis3Operator<Monomial>;
-                using Index    = typename Operator::Index1;
-                using Complex  = std::complex<Float>;
+                using Operator = typename Monomial::Operator;
                 using ExpectationValueFunction =
                     std::function<Float(const Operator&, const Operator&)>;
+                using Complex = std::complex<Float>;
+                using Index   = typename Operator::Index1;
 
             private:
+                const std::reference_wrapper<const Basis> _basis_ref;
                 std::vector<Complex> _fourier_coefficients;
-                const Index _N;
-                const ExpectationValueFunction _expectation_value;
+                ExpectationValueFunction _expectation_value;
 
             public:
                 template <typename Lattice>
-                FermiJump1D(const Lattice& lattice, ExpectationValueFunction expectation_value)
-                    : _N(lattice.size()), _expectation_value(std::move(expectation_value))
+                FermiJump1D(const Basis& basis, const Lattice& lattice, ExpectationValueFunction ev)
+                    : _basis_ref(basis), _fourier_coefficients(basis.N, 0.), _expectation_value(ev)
                 {
                     static const auto k_F = HalfPi<double>::value;
 
-                    _fourier_coefficients.reserve(_N);
-
 #pragma omp parallel for
-                    for(Index i = 0; i < _N; ++i) {
-                        const auto prod          = k_F * lattice[i];
-                        _fourier_coefficients[i] = Complex(std::cos(prod), std::sin(prod));
+                    for(Index i = 0; i < basis.N; ++i) {
+                        const auto prod = k_F * lattice[i];
+                        _fourier_coefficients[i].real(std::cos(prod));
+                        _fourier_coefficients[i].imag(std::sin(prod));
                     }
                 }
 
                 template <typename Vector>
-                const Float operator()(const Basis& basis, const Vector& h) const
+                Float operator()(const Vector& h) const
                 {
-                    // buffer to store h^NO coefficients
-                    static Vector h_NO(_N);
+                    const auto& basis = _basis_ref.get();
+                    static Vector h_NO(basis.N);
+                    static Vector h_(basis.N);
 
 #pragma omp parallel for
-                    // calculate h-coefficients in normally-ordered basis
-                    for(Index i = 0; i < _N; ++i) {
+                    for(Index i = 0; i < basis.N; ++i) {
                         h_NO[i] = h[i];
-                        for(Index j = 0; j < _N; ++j) {
-                            const auto& op_j_0 = basis[j].front();
-                            for(Index k = 0; k < j; ++k) {
-                                const auto idx = basis.get_3op_index(i, j, k);
-                                h_NO[i] +=
-                                    h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
-                            }
-                            const auto idx = basis.get_3op_index(i, j, j);
-                            h_NO[i] += h[idx] * (2. * _expectation_value(op_j_0, op_j_0) - 1.);
-                            for(Index k = j + 1; k < _N; ++k) {
-                                const auto idx = basis.get_3op_index(i, j, k);
-                                h_NO[i] +=
-                                    h[idx] * 2. * _expectation_value(op_j_0, basis[k].front());
+                        h_      = h[i];
+                        for(Index j = 0; j < basis.N; ++j) {
+                            for(Index k = 0; k < basis.N; ++k) {
+                                auto prefactor = 2 * _expectation_value(basis[j][0], basis[k][0]);
+                                if(j == k) prefactor -= 1.;
+                                h_NO[i] += prefactor * h[basis.get_3op_index(i, j, k)];
                             }
                         }
                     }
 
                     std::vector<Complex> results(omp_get_max_threads(), 0.);
-
 #pragma omp parallel for
-                    for(Index i = 0; i < _N; ++i) {
+                    for(Index i = 0; i < basis.N; ++i) {
                         results[omp_get_thread_num()] += _fourier_coefficients[i] * h_NO[i];
                     }
 
-                    return std::norm(
-                        std::accumulate(results.begin(), results.end(), Complex(0., 0.)));
-                }
-
-                const Complex& fourier_coefficient(const Index& index) const
-                {
-                    return _fourier_coefficients[index];
-                }
-
-                const Float expectation_value(const Operator& a, const Operator& b)
-                {
-                    return _expectation_value(a, b);
+                    return std::norm(std::accumulate(results.begin(), results.end(), Complex(0.)));
                 }
             };
         } // namespace hubbard_real_space
