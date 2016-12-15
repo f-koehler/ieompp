@@ -9,8 +9,7 @@ TEST_CASE("annihilate_particle (1d, half-filled)")
     for(const auto N : Ns) {
         const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(N);
         const auto lattice        = lattices::PeriodicChain<double, uint64_t>(N, 1.);
-        const auto dispersion =
-            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+        const auto dispersion     = models::hubbard::make_dispersion(brillouin_zone, lattice, 1.);
 
         const auto k_tol = brillouin_zone.dx() / 10.;
 

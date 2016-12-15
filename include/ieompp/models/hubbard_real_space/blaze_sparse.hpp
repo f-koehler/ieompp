@@ -39,7 +39,7 @@ namespace ieompp
                 using Scalar = typename types::ScalarType<Matrix>::Type;
                 using Index  = typename types::IndexType<Matrix>::Type;
 
-                static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -70,7 +70,7 @@ namespace ieompp
                 using Scalar = typename types::ScalarType<Matrix>::Type;
                 using Index  = typename types::IndexType<Matrix>::Type;
 
-                static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);

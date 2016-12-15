@@ -7,7 +7,7 @@
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
-#include <ieompp/models/hubbard_common/dispersion.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/basis.hpp>
 #include <ieompp/models/hubbard_momentum_space/particle_number.hpp>
 using namespace ieompp;
@@ -22,8 +22,7 @@ TEST_CASE("half-filled, 1d")
     for(const auto N : Ns) {
         const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(N);
         const auto lattice        = lattices::PeriodicChain<double, uint64_t>(N, 1.);
-        const auto dispersion =
-            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+        const auto dispersion     = models::hubbard::make_dispersion(brillouin_zone, lattice, 1.);
 
         for(const auto k_idx : brillouin_zone) {
             const auto k_tol = brillouin_zone.dx() / 100.;

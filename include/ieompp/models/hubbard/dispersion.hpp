@@ -1,5 +1,5 @@
-#ifndef IEOMPP_MODELS_HUBBARD_COMMON_DISPERSION_HPP_
-#define IEOMPP_MODELS_HUBBARD_COMMON_DISPERSION_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
+#define IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
 
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/matrix.hpp"
@@ -11,7 +11,7 @@ namespace ieompp
 {
     namespace models
     {
-        namespace hubbard_common
+        namespace hubbard
         {
             template <typename FloatT>
             class Dispersion
@@ -56,7 +56,7 @@ namespace ieompp
             {
                 return Dispersion<typename MomentumSpace::Float>(momentum_space, lattice, J);
             }
-        } // namespace hubbard_common
+        } // namespace hubbard
     }     // namespace models
 } // namespace ieompp
 

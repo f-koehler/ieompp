@@ -1,8 +1,6 @@
 #ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_LIOUVILLIAN_HPP_
 #define IEOMPP_MODELS_HUBBARD_REAL_SPACE_LIOUVILLIAN_HPP_
 
-#include "ieompp/models/hubbard_common/dispersion.hpp"
-
 namespace ieompp
 {
     namespace models

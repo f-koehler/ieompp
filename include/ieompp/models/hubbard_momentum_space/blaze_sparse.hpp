@@ -1,7 +1,7 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BLAZE_SPARSE_HPP_
 
-#include "ieompp/models/hubbard_common/operator_traits.hpp"
+#include "ieompp/models/hubbard/operator_traits.hpp"
 #include "ieompp/models/hubbard_momentum_space/basis.hpp"
 #include "ieompp/models/hubbard_momentum_space/liouvillian.hpp"
 
@@ -23,7 +23,7 @@ namespace ieompp
             void init_matrix(const Liouvillian& liouvillian, Matrix& matrix,
                              const Basis3Operator<Monomial>& basis, const Lattice& lattice)
             {
-                static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
                 using Index = typename types::IndexType<Matrix>::Type;

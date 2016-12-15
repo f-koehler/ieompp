@@ -1,7 +1,7 @@
 #ifndef IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BASIS_HPP_
 #define IEOMPP_MODELS_HUBBARD_MOMENTUM_SPACE_BASIS_HPP_
 
-#include "ieompp/models/hubbard_common/operator_traits.hpp"
+#include "ieompp/models/hubbard/operator_traits.hpp"
 
 #include <vector>
 
@@ -22,9 +22,8 @@ namespace ieompp
                 Basis3Operator(BasisIndex q_idx, const MomentumSpace& momentum_space)
                     : N(momentum_space.size())
                 {
-                    static_assert(
-                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N * N + 1);
 

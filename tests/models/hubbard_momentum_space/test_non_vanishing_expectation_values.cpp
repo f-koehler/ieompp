@@ -5,7 +5,7 @@
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
-#include <ieompp/models/hubbard_common/dispersion.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/basis.hpp>
 #include <ieompp/models/hubbard_momentum_space/non_vanishing_expectation_values.hpp>
 #include <ieompp/types/number/is_equal.hpp>
@@ -53,8 +53,7 @@ TEST_CASE("simple operators (half-filled, 1d)")
     {
         const auto brillouin_zone = lattices::PeriodicChain<double, uint64_t>(3);
         const auto lattice        = lattices::PeriodicChain<double, uint64_t>(3, 1.);
-        const auto dispersion =
-            models::hubbard_common::make_dispersion(brillouin_zone, lattice, 1.);
+        const auto dispersion     = models::hubbard::make_dispersion(brillouin_zone, lattice, 1.);
 
         const auto basis =
             models::hubbard_momentum_space::Basis3Operator<Monomial>(1, brillouin_zone);

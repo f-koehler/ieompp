@@ -1,5 +1,5 @@
-#ifndef IEOMPP_MODELS_HUBBARD_COMMON_OPERATOR_TRAITS_HPP_
-#define IEOMPP_MODELS_HUBBARD_COMMON_OPERATOR_TRAITS_HPP_
+#ifndef IEOMPP_MODELS_HUBBARD_OPERATOR_TRAITS_HPP_
+#define IEOMPP_MODELS_HUBBARD_OPERATOR_TRAITS_HPP_
 
 #include "ieompp/algebra/operator/get_index.hpp"
 
@@ -9,7 +9,7 @@ namespace ieompp
 {
     namespace models
     {
-        namespace hubbard_common
+        namespace hubbard
         {
             namespace detail
             {
@@ -68,7 +68,7 @@ namespace ieompp
                                 std::pair<typename algebra::IndexType<0, Operator>::Type,
                                           typename algebra::IndexType<1, Operator>::Type>>::type;
             };
-        } // namespace hubbard_common
+        } // namespace hubbard
     }     // namespace models
 } // namespace ieompp
 
