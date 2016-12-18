@@ -85,6 +85,7 @@ struct Application {
         output_file << "# compiled by:\t" << ieompp::Platform::user() << '@'
                     << ieompp::Platform::host() << '\n';
         output_file << "# endianess   \t" << ieompp::Platform::endianess() << '\n';
+        output_file << "# max threads:\t" << ieompp::Platform::max_threads() << '\n';
 
         output_file << "#\n# CLI options:\n";
         for(const auto& option : all_options) {
@@ -141,6 +142,7 @@ struct Application {
         std::cout << "compiled by:\t" << ieompp::Platform::user() << '@' << ieompp::Platform::host()
                   << '\n';
         std::cout << "endianess   \t" << ieompp::Platform::endianess() << '\n';
+        std::cout << "max threads:\t" << ieompp::Platform::max_threads() << '\n';
     }
 };
 
