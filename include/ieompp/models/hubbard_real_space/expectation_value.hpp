@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ieompp/constants.hpp"
+#include "ieompp/models/hubbard/dispersion.hpp"
 #include "ieompp/models/hubbard_real_space/basis.hpp"
 #include "ieompp/types/number.hpp"
 
@@ -25,19 +26,20 @@ namespace ieompp
                 std::vector<Float> _values;
 
             public:
-                ExpectationValue1DHalfFilled(const Lattice& lattice)
+                ExpectationValue1DHalfFilled(const Lattice& lattice, const Float& J, const Float& filling_factor)
                     : _lattice(lattice), _values(lattice.size() / 2 + 1, 0.)
                 {
-                    static const auto pi      = Pi<Float>::value;
-                    static const auto pi_half = HalfPi<Float>::value;
-                    const auto max_dist       = lattice.size() / 2;
+                    static const auto pi = Pi<Float>::value;
+                    const auto max_dist  = lattice.size() / 2;
 
-                    _values[0] = static_cast<Float>(0.5);
+                    _values[0] = static_cast<Float>(filling_factor);
+
+                    const auto fermi_momentum = hubbard::calculate_fermi_momentum_1d(J, filling_factor);
 
 #pragma omp parallel for
                     for(typename Lattice::SiteIndex dist = 1; dist <= max_dist; ++dist) {
-                        _values[dist] =
-                            std::sin(pi_half * dist * lattice.dx()) / (pi * dist * lattice.dx());
+                        _values[dist] = std::sin(fermi_momentum * dist * lattice.dx())
+                                        / (pi * dist * lattice.dx());
                     }
                 }
 

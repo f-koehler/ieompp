@@ -26,6 +26,7 @@ int main(int argc, char** argv)
         ("dt", make_value<double>(0.01), "step width of RK4 integrator")
         ("t_end", make_value<double>(10), "stop time for simulation")
         ("measurement_interval", make_value<uint64_t>()->default_value(100), "interval between measurements in units of dt")
+        ("filling_factor", make_value<double>(0.5), "filling factor of the initial Fermi sea")
         ;
     // clang-format on
 
@@ -37,11 +38,12 @@ int main(int argc, char** argv)
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
+    const auto filling_factor       = app.variables["filling_factor"].as<double>();
 
     const auto lattice         = init_lattice(N, 1.);
     const auto basis           = init_basis(lattice);
     const auto conjugate_basis = basis.get_conjugate();
-    const auto ev              = init_expectation_value(lattice);
+    const auto ev              = init_expectation_value(lattice, J, filling_factor);
     const auto L               = init_liouvillian(J, U);
     const auto M               = compute_matrix(L, basis, lattice);
 
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
     const auto integrator      = init_rk4(basis.size(), dt);
     const auto site_occupation = init_site_occupation(basis, conjugate_basis, ev);
 
-    double obs, t, last_measurement;
+    double obs, t, last_measurement = 0.;
 
     get_loggers().main->info("Measuring at t=0");
     obs = site_occupation(h);
@@ -58,6 +60,8 @@ int main(int argc, char** argv)
     app.output_file.flush();
     get_loggers().main->info("Finish measurement at t=0");
     last_measurement = 0;
+
+    get_loggers().main->info("h[0] = {}", h[0]);
 
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
