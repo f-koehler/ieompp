@@ -18,7 +18,7 @@ TEST_CASE("")
     const uint64_t N = 5;
     const lattices::PeriodicChain<double, uint64_t> lattice(N, 1.);
     const models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(
-        lattice);
+        lattice, 1., 0.5);
     const Basis basis(lattice);
     const auto conjugate_basis = basis.get_conjugate();
 

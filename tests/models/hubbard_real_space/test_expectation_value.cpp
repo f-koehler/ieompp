@@ -10,7 +10,8 @@ TEST_CASE("ExpectationValue1DHalfFilled (explicit)")
 {
     const auto pi = Pi<double>::value;
     const lattices::PeriodicChain<double, uint64_t> lattice(5, 1.);
-    models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(lattice);
+    models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(lattice,
+                                                                                           1., 0.5);
 
     REQUIRE(ev(0, 0) == Approx(0.5));
     REQUIRE(ev(1, 1) == Approx(0.5));
@@ -60,7 +61,7 @@ TEST_CASE("ExpectationValue1DHalfFilled")
     for(uint64_t N = 3; N <= 512; ++N) {
         const lattices::PeriodicChain<double, uint64_t> lattice(N, dx);
         models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(
-            lattice);
+            lattice, 1., 0.5);
 
         const auto max_dist = N / 2;
         for(auto dist = 1ul; dist <= max_dist; ++dist) {

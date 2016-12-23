@@ -21,7 +21,7 @@ TEST_CASE("fourier coefficients")
     for(uint64_t N = 3; N <= 32; ++N) {
         const lattices::PeriodicChain<double, uint64_t> lattice(N, 1.);
         const models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)>
-            ev(lattice);
+            ev(lattice, 1., 0.5);
         const Basis basis(lattice);
         const models::hubbard_real_space::FermiJump1D<double, Basis> jump(
             basis, lattice,
