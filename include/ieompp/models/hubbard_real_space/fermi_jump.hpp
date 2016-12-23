@@ -137,7 +137,8 @@ namespace ieompp
                         for(Index j = 0; j < basis.N; ++j) {
                             for(Index k = 0; k < basis.N; ++k) {
                                 // calculate 2*<c_{j,↓}^† c_{k,↓}>
-                                auto prefactor = 2 * _expectation_value(basis[j].front(), basis[k].front());
+                                auto prefactor =
+                                    2 * _expectation_value(basis[j].front(), basis[k].front());
 
                                 // subtract δ_{j,k}
                                 if(j == k) prefactor -= 1.;

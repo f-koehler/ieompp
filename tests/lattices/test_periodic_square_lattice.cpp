@@ -88,7 +88,7 @@ void test_neighbors()
 {
     lattices::PeriodicSquareLattice<Real> disc(NX, NY, 1., 1.);
 
-    std::array<typename lattices::PeriodicSquareLattice<Real>::Index, 4> neigh;
+    std::array<typename lattices::PeriodicSquareLattice<Real>::SiteIndex, 4> neigh;
 
     neigh = disc.neighbors(disc.index(0, 0));
     REQUIRE(neigh[0] == disc.index(NX - 1, 0));
