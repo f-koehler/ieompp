@@ -45,7 +45,7 @@ namespace ieompp
                         for(const auto& vec : lattice_vectors) {
                             val += std::cos(types::dot_product(momentum, vec));
                         }
-                        _values[i] = -2. * Lattice::coordination_number * J * val;
+                        _values[i] = -2. * J * val;
                     }
                 }
 
