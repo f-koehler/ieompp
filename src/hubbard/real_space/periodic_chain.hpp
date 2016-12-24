@@ -5,7 +5,7 @@
 
 #include <ieompp/lattices/periodic_chain.hpp>
 
-auto init_lattice(uint64_t N, uint64_t dx = 1.)
+auto init_lattice(uint64_t N, double dx = 1.)
 {
     get_loggers().main->info("Init periodic chain with N = {} sites");
     ieompp::lattices::PeriodicChain<double> chain(N, dx);

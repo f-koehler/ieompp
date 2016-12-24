@@ -5,12 +5,11 @@
 
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 
-template <typename Lattice, typename Float>
-auto init_expectation_value(const Lattice& lattice, const Float& J, const Float& filling_factor)
+template <typename Lattice>
+auto init_expectation_value(const Lattice& lattice)
 {
     get_loggers().main->info("Start to precalculate expectation values");
-    ieompp::models::hubbard_real_space::ExpectationValue1DHalfFilled<Float, Lattice> ev(
-        lattice, J, filling_factor);
+    ieompp::models::hubbard_real_space::ExpectationValue2DHalfFilled<double, Lattice> ev(lattice);
     get_loggers().main->info("Finish precalculating expectation values");
     return ev;
 }
