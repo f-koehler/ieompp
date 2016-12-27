@@ -38,11 +38,11 @@ namespace ieompp
             const std::array<Vector, 2> _lattice_vectors;
 
         public:
-            PeriodicSquareLattice(const SiteIndex& size_x, const SiteIndex& size_y);
-            PeriodicSquareLattice(const SiteIndex& size_x, const SiteIndex& size_y, const Float& dx,
+            PeriodicSquareLattice(const SiteIndex& Nx, const SiteIndex& Ny);
+            PeriodicSquareLattice(const SiteIndex& Nx, const SiteIndex& Ny, const Float& dx,
                                   const Float& dy);
 
-            SiteIndex index(const SiteIndex& i, const SiteIndex& j) const;
+            SiteIndex index(const SiteIndex& x, const SiteIndex& y) const;
             SiteIndex x_index(const SiteIndex& i) const;
             SiteIndex y_index(const SiteIndex& i) const;
 
@@ -68,7 +68,7 @@ namespace ieompp
             SiteIndex lattice_distance_x(const SiteIndex& a, const SiteIndex& b) const;
             SiteIndex lattice_distance_y(const SiteIndex& a, const SiteIndex& b) const;
 
-            bool neighboring(const SiteIndex a, const SiteIndex b) const;
+            bool neighboring(SiteIndex a, SiteIndex b) const;
 
             ConstIndexIterator begin() const;
             ConstIndexIterator end() const;
@@ -79,7 +79,7 @@ namespace ieompp
 
             template <typename IndexT_>
             typename std::enable_if<std::is_same<SiteIndex, IndexT_>::value, Vector>::type
-            operator[](const IndexT_& i) const;
+            operator[](const IndexT_& idx) const;
 
             SiteIndex operator()(Vector v) const;
         };
@@ -112,21 +112,21 @@ namespace ieompp
         }
 
         template <typename Float, typename Index>
-        Index PeriodicSquareLattice<Float, Index>::index(const Index& i, const Index& j) const
+        Index PeriodicSquareLattice<Float, Index>::index(const Index& x, const Index& y) const
         {
-            return i * _size_x + j;
+            return x * _size_x + y;
         }
 
         template <typename Float, typename Index>
         Index PeriodicSquareLattice<Float, Index>::x_index(const Index& i) const
         {
-            return i % _size_x;
+            return i / _size_x;
         }
 
         template <typename Float, typename Index>
         Index PeriodicSquareLattice<Float, Index>::y_index(const Index& i) const
         {
-            return i / _size_x;
+            return i % _size_x;
         }
 
         template <typename Float, typename Index>
@@ -155,10 +155,18 @@ namespace ieompp
         {
             const auto dx2 = _dx / 2;
             const auto dy2 = _dy / 2;
-            while(v[0] < _x_min - dx2) v[0] += _x_length;
-            while(v[0] > _x_max + dx2) v[0] -= _x_length;
-            while(v[1] < _y_min - dy2) v[1] += _y_length;
-            while(v[1] > _y_max + dy2) v[1] -= _y_length;
+            while(v[0] < _x_min - dx2) {
+                v[0] += _x_length;
+            }
+            while(v[0] > _x_max + dx2) {
+                v[0] -= _x_length;
+            }
+            while(v[1] < _y_min - dy2) {
+                v[1] += _y_length;
+            }
+            while(v[1] > _y_max + dy2) {
+                v[1] -= _y_length;
+            }
             Float min_dist = types::dot_product(v - (*this)[Index(0)], v - (*this)[Index(0)]);
             Float dist;
             Index min = 0;
@@ -281,10 +289,10 @@ namespace ieompp
         template <typename Float, typename Index>
         bool PeriodicSquareLattice<Float, Index>::neighboring(const Index a, const Index b) const
         {
-            const auto x_a = a / _size_y;
-            const auto y_a = a % _size_x;
-            const auto x_b = b / _size_y;
-            const auto y_b = b % _size_x;
+            const auto x_a = x_index(a);
+            const auto y_a = y_index(a);
+            const auto x_b = x_index(b);
+            const auto y_b = y_index(b);
 
             if(x_a == x_b) {
                 return ((y_a + 1) % _size_y == y_b) || ((y_b + 1) % _size_y == y_a);
@@ -345,8 +353,8 @@ namespace ieompp
                                 typename PeriodicSquareLattice<Float, Index>::Vector>::type
             PeriodicSquareLattice<Float, Index>::operator[](const IndexT& idx) const
         {
-            const auto i = idx / _size_x;
-            const auto j = idx % _size_x;
+            const Index i = idx / _size_x;
+            const Index j = idx % _size_x;
             return Vector{_x_min + i * _dx, _y_min + j * _dy};
         }
 
@@ -354,15 +362,23 @@ namespace ieompp
         Index PeriodicSquareLattice<Float, Index>::
         operator()(typename PeriodicSquareLattice<Float, Index>::Vector v) const
         {
-            while(v[0] < _x_min) v[0] += _x_length;
-            while(v[0] > _x_max) v[0] -= _x_length;
-            while(v[1] < _y_min) v[1] += _y_length;
-            while(v[1] > _y_max) v[1] -= _y_length;
+            while(v[0] < _x_min) {
+                v[0] += _x_length;
+            }
+            while(v[0] > _x_max) {
+                v[0] -= _x_length;
+            }
+            while(v[1] < _y_min) {
+                v[1] += _y_length;
+            }
+            while(v[1] > _y_max) {
+                v[1] -= _y_length;
+            }
             const auto i = Index(std::round((v[0] - _x_min) / _dx));
             const auto j = Index(std::round((v[1] - _y_min) / _dy));
             return i * _size_x + j;
         }
-    }
-}
+    } // namespace lattices
+} // namespace ieompp
 
 #endif

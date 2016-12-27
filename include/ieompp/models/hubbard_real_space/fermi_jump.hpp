@@ -108,7 +108,8 @@ namespace ieompp
             public:
                 template <typename Lattice>
                 FermiJump1D(const Basis& basis, const Lattice& lattice, ExpectationValueFunction ev)
-                    : _basis_ref(basis), _fourier_coefficients(basis.N, 0.), _expectation_value(ev)
+                    : _basis_ref(basis), _fourier_coefficients(basis.N, 0.),
+                      _expectation_value(std::move(ev))
                 {
                     static const auto k_F = HalfPi<double>::value;
 
@@ -141,7 +142,9 @@ namespace ieompp
                                     2 * _expectation_value(basis[j].front(), basis[k].front());
 
                                 // subtract δ_{j,k}
-                                if(j == k) prefactor -= 1.;
+                                if(j == k) {
+                                    prefactor -= 1.;
+                                }
 
                                 // add (2*<c_{j,↓}^† c_{k,↓}> - δ_{j,k}) * h_{i,j,k}(t) to h_i^NO(t)
                                 h_NO[i] += prefactor * h[basis.get_3op_index(i, j, k)];

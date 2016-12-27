@@ -226,12 +226,15 @@ namespace ieompp
                 Float expectation_value(const Monomial& a, const Monomial& b) const
                 {
                     if(a.size() == 1) {
-                        if(b.size() == 1) return expectation_value_1_1(a, b);
+                        if(b.size() == 1) {
+                            return expectation_value_1_1(a, b);
+                        }
                         return expectation_value_1_3(a, b);
-                    } else {
-                        if(b.size() == 1) return expectation_value_3_1(a, b);
-                        return expectation_value_3_3();
                     }
+                    if(b.size() == 1) {
+                        return expectation_value_3_1(a, b);
+                    }
+                    return expectation_value_3_3();
                 }
 
                 template <typename Vector>
