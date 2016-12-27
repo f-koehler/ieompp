@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     double obs, t, last_measurement = 0.;
 
     get_loggers().main->info("Measuring at t=0");
-    obs = fermi_jump(basis, h);
+    obs = fermi_jump(h);
     get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>(0) = {}", obs);
     app.output_file << 0 << '\t' << obs << '\n';
     app.output_file.flush();
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
-            obs = fermi_jump(basis, h);
+            obs = fermi_jump(h);
             get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>({}) = {}", t, obs);
             app.output_file << t << '\t' << obs << '\n';
             app.output_file.flush();
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
-        obs = fermi_jump(basis, h);
+        obs = fermi_jump(h);
         get_loggers().main->info(u8"  <Δn_{{k_F,↑}}>({}) = {}", t, obs);
         app.output_file << t << '\t' << obs << '\n';
         app.output_file.flush();

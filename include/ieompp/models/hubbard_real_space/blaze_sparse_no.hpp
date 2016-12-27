@@ -41,7 +41,7 @@ namespace ieompp
                 using Scalar = typename types::ScalarType<Matrix>::Type;
                 using Index  = typename types::IndexType<Matrix>::Type;
 
-                static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -74,7 +74,7 @@ namespace ieompp
                 using Scalar = typename types::ScalarType<Matrix>::Type;
                 using Index  = typename types::IndexType<Matrix>::Type;
 
-                static_assert(hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
+                static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
                               "Operator-type in Monomial-type must be a Hubbard like operator!");
 
                 matrix.resize(basis.size(), basis.size(), false);
@@ -134,21 +134,26 @@ namespace ieompp
                                               liouvillian.J);
                     }
 
+                    const auto expectation_value_conj = [&expectation_value](const Index& a,
+                                                                             const Index& b) {
+                        return ((a == b) ? 1 : 0) - expectation_value(b, a);
+                    };
+
                     // 1-operator monomials
                     // clang-format off
-                    triplets.emplace_back(row, r1, -liouvillian.U * expectation_value(op2.index1, op1.index1) * expectation_value(op1.index1, op3.index1));
-                    triplets.emplace_back(row, r2, -liouvillian.U * expectation_value(op1.index1, op2.index1) * expectation_value(op2.index1, op3.index1));
-                    triplets.emplace_back(row, r3, liouvillian.U * expectation_value(op1.index1, op3.index1) * expectation_value(op2.index1, op3.index1));
+                    triplets.emplace_back(row, r1, liouvillian.U * expectation_value(op2.index1, op1.index1) * expectation_value_conj(op3.index1, op1.index1));
+                    triplets.emplace_back(row, r2, liouvillian.U * expectation_value_conj(op2.index1, op1.index1) * expectation_value(op2.index1, op3.index1));
+                    triplets.emplace_back(row, r3, -liouvillian.U * expectation_value(op3.index1, op1.index1) * expectation_value(op2.index1, op3.index1));
                     // clang-format on
 
                     // 3-operator monomials
                     // clang-format off
                     triplets.emplace_back(row, row, liouvillian.U * expectation_value(op1.index1, op1.index1));
                     triplets.emplace_back(row, basis.get_3op_index(r1, r1, r3), -liouvillian.U * expectation_value(op2.index1, op1.index1));
-                    triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), -liouvillian.U * expectation_value(op1.index1, op3.index1));
+                    triplets.emplace_back(row, basis.get_3op_index(r1, r2, r1), liouvillian.U * expectation_value_conj(op3.index1, op1.index1));
                     if(r2 != r3) {
-                        triplets.emplace_back(row, basis.get_3op_index(r2, r2, r3), -liouvillian.U * expectation_value(op1.index1, op2.index1));
-                        triplets.emplace_back(row, basis.get_3op_index(r3, r2, r3), liouvillian.U * expectation_value(op1.index1, op3.index1));
+                        triplets.emplace_back(row, basis.get_3op_index(r2, r2, r3), liouvillian.U * expectation_value(op2.index1, op1.index1));
+                        triplets.emplace_back(row, basis.get_3op_index(r3, r2, r3), -liouvillian.U * expectation_value(op3.index1, op1.index1));
                     }
                     // clang-format on
 

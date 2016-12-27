@@ -14,7 +14,8 @@ namespace po = boost::program_options;
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
-#include <ieompp/models/hubbard_real_space.hpp>
+#include <ieompp/models/hubbard_real_space/basis.hpp>
+#include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 #include <ieompp/openmp.hpp>
 namespace hubbard = ieompp::models::hubbard_real_space;
 

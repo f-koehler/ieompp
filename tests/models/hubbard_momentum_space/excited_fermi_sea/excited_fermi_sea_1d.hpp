@@ -5,7 +5,7 @@
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
-#include <ieompp/models/hubbard_common/dispersion.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_momentum_space/excited_fermi_sea.hpp>
 
 #include <catch.hpp>

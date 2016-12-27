@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "ieompp/constants.hpp"
-#include "ieompp/models/hubbard_common/operator_traits.hpp"
 #include "ieompp/models/hubbard_real_space/basis.hpp"
 #include "ieompp/types/number.hpp"
 

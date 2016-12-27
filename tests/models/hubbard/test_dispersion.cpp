@@ -2,7 +2,7 @@
 #include <catch.hpp>
 
 #include <ieompp/lattices/periodic_chain.hpp>
-#include <ieompp/models/hubbard_common/dispersion.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 
 using namespace ieompp;
 
@@ -14,8 +14,7 @@ TEST_CASE("dispersion_1d")
     for(const auto& N : sizes) {
         for(const auto& J : Js) {
             const lattices::PeriodicChain<double, uint64_t> lattice(N, 1.), brillouin_zone(N);
-            const auto dispersion =
-                models::hubbard_common::make_dispersion(brillouin_zone, lattice, J);
+            const auto dispersion = models::hubbard::make_dispersion(brillouin_zone, lattice, J);
             for(const auto& k : brillouin_zone) {
                 const auto expected = -4 * J * std::cos(brillouin_zone[k]);
                 REQUIRE(dispersion(k) == Approx(expected).epsilon(0.000000001));

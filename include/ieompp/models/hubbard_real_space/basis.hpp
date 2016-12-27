@@ -1,7 +1,7 @@
 #ifndef IEOMPP_MODELS_HUBBARD_REAL_SPACE_BASIS_HPP_
 #define IEOMPP_MODELS_HUBBARD_REAL_SPACE_BASIS_HPP_
 
-#include "ieompp/models/hubbard_common/operator_traits.hpp"
+#include "ieompp/models/hubbard/operator_traits.hpp"
 
 #include <vector>
 
@@ -21,23 +21,13 @@ namespace ieompp
                 template <typename Lattice>
                 Basis1Operator(const Lattice& lattice) : N(lattice.size())
                 {
-                    static_assert(
-                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N);
 
                     for(auto i : lattice) {
                         this->emplace_back(Monomial{{{true, i, true}}});
-                    }
-                }
-
-                void conjugate()
-                {
-                    const auto size = this->size();
-#pragma omp parallel for
-                    for(BasisIndex i = 0; i < size; ++i) {
-                        (*this)[i].conjugate();
                     }
                 }
 
@@ -48,7 +38,7 @@ namespace ieompp
                     const auto size = this->size();
 #pragma omp parallel for
                     for(BasisIndex i = 0; i < size; ++i) {
-                        conj_basis.conjugate();
+                        conj_basis[i].conjugate();
                     }
 
                     return conj_basis;
@@ -66,9 +56,8 @@ namespace ieompp
                 template <typename Lattice>
                 Basis3Operator(const Lattice& lattice) : N(lattice.size()), N_squared(N * N)
                 {
-                    static_assert(
-                        hubbard_common::IsHubbardOperator<typename Monomial::Operator>::value,
-                        "Operator must be of Hubbard type");
+                    static_assert(hubbard::IsHubbardOperator<typename Monomial::Operator>::value,
+                                  "Operator must be of Hubbard type");
 
                     this->reserve(N * (N * N + 1));
 
@@ -90,15 +79,6 @@ namespace ieompp
                     return N + N_squared * i1 + N * i2 + i3;
                 }
 
-                void conjugate()
-                {
-                    const auto size = this->size();
-#pragma omp parallel for
-                    for(BasisIndex i = 0; i < size; ++i) {
-                        (*this)[i].conjugate();
-                    }
-                }
-
                 Basis3Operator get_conjugate() const
                 {
                     Basis3Operator conj_basis(*this);
@@ -106,7 +86,7 @@ namespace ieompp
                     const auto size = this->size();
 #pragma omp parallel for
                     for(BasisIndex i = 0; i < size; ++i) {
-                        conj_basis.conjugate();
+                        conj_basis[i].conjugate();
                     }
 
                     return conj_basis;
