@@ -2,6 +2,7 @@
 
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 using namespace ieompp;
 
@@ -9,8 +10,8 @@ TEST_CASE("ExpectationValue1DHalfFilled (explicit)")
 {
     const auto pi = Pi<double>::value;
     const lattices::PeriodicChain<double, uint64_t> lattice(5, 1.);
-    models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(lattice,
-                                                                                           1., 0.5);
+    models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(
+        lattice, 0.5, models::hubbard::calculate_fermi_momentum_1d(0.5));
 
     REQUIRE(ev(0, 0) == Approx(0.5));
     REQUIRE(ev(1, 1) == Approx(0.5));
@@ -53,19 +54,20 @@ TEST_CASE("ExpectationValue1DHalfFilled (explicit)")
 
 TEST_CASE("ExpectationValue1DHalfFilled")
 {
-    const auto pi      = Pi<double>::value;
-    const auto pi_half = HalfPi<double>::value;
-    const auto dx      = .3;
+    const auto pi  = Pi<double>::value;
+    const auto k_F = models::hubbard::calculate_fermi_momentum_1d(.5);
 
     for(uint64_t N = 3; N <= 512; ++N) {
-        const lattices::PeriodicChain<double, uint64_t> lattice(N, dx);
+        const lattices::PeriodicChain<double, uint64_t> lattice(N, 1.);
         models::hubbard_real_space::ExpectationValue1DHalfFilled<double, decltype(lattice)> ev(
-            lattice, 1., 0.5);
+            lattice, .5, models::hubbard::calculate_fermi_momentum_1d(0.5));
 
         const auto max_dist = N / 2;
         for(auto dist = 1ul; dist <= max_dist; ++dist) {
             const auto lattice_dist = ev.lattice_distance(0, dist);
-            const auto val          = std::sin(pi_half * dx * dist) / (dx * dist * pi);
+            CAPTURE(N);
+            CAPTURE(k_F);
+            const auto val = std::sin(k_F * dist) / (dist * pi);
             REQUIRE(lattice_dist == dist);
             REQUIRE(ev(0, dist) == Approx(val));
             REQUIRE(ev(dist, 0) == Approx(val));

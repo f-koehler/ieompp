@@ -12,9 +12,6 @@ target_link_libraries(hubbard_real_1d_rk4 ${Boost_LIBRARIES})
 add_executable(hubbard_real_1d_rk4_jump hubbard_real_1d_rk4_jump.cpp)
 target_link_libraries(hubbard_real_1d_rk4_jump ${Boost_LIBRARIES})
 
-add_executable(hubbard_real_1d_rk4_jump_no hubbard_real_1d_rk4_jump_no.cpp)
-target_link_libraries(hubbard_real_1d_rk4_jump_no ${Boost_LIBRARIES})
-
 add_executable(hubbard_real_1d_kinetic_rk4 hubbard_real_1d_kinetic_rk4.cpp)
 target_link_libraries(hubbard_real_1d_kinetic_rk4 ${Boost_LIBRARIES})
 

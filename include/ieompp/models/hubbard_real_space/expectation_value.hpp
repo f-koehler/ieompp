@@ -26,22 +26,22 @@ namespace ieompp
                 std::vector<Float> _values;
 
             public:
-                ExpectationValue1DHalfFilled(const Lattice& lattice, const Float& J,
-                                             const Float& filling_factor)
+                ExpectationValue1DHalfFilled(const Lattice& lattice, const Float& filling_factor,
+                                             const Float& k_F)
                     : _lattice(lattice), _values(lattice.size() / 2 + 1, 0.)
                 {
+                    assert(filling_factor >= 0.);
+                    assert(filling_factor <= 1.);
+
                     static const auto pi = Pi<Float>::value;
                     const auto max_dist  = lattice.size() / 2;
 
                     _values[0] = static_cast<Float>(filling_factor);
 
-                    const auto fermi_momentum =
-                        hubbard::calculate_fermi_momentum_1d(J, filling_factor);
-
 #pragma omp parallel for
                     for(typename Lattice::SiteIndex dist = 1; dist <= max_dist; ++dist) {
-                        _values[dist] = std::sin(fermi_momentum * dist * lattice.dx())
-                                        / (pi * dist * lattice.dx());
+                        _values[dist] =
+                            std::sin(k_F * dist * lattice.dx()) / (pi * dist * lattice.dx());
                     }
                 }
 
@@ -73,9 +73,8 @@ namespace ieompp
                       _max_dist_y(lattice.size_y() / 2),
                       _values((_max_dist_x + 1) * (_max_dist_y + 1))
                 {
-                    static const auto prefactor1 = 2. / (Pi<Float>::value * Pi<Float>::value);
-                    static const auto prefactor2 = 1. / Pi<Float>::value;
-                    static const auto pi_half    = HalfPi<Float>::value;
+                    static const auto prefactor = 2. / (Pi<Float>::value * Pi<Float>::value);
+                    static const auto pi_half   = HalfPi<Float>::value;
 
 #pragma omp parallel for
                     for(SiteIndex dist_x = 0; dist_x <= _max_dist_x; ++dist_x) {
@@ -89,7 +88,7 @@ namespace ieompp
                             const auto sum  = dist_x + dist_y;
                             const auto diff = (dist_x > dist_y) ? dist_x - dist_y : dist_y - dist_x;
 
-                            _values[index] = prefactor1 * (std::sin(pi_half * sum) / sum)
+                            _values[index] = prefactor * (std::sin(pi_half * sum) / sum)
                                              * (std::sin(pi_half * diff) / diff);
                         }
                     }

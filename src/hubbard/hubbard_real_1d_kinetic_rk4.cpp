@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     const auto lattice         = init_lattice(N, 1.);
     const auto basis           = init_basis(lattice);
     const auto conjugate_basis = basis.get_conjugate();
-    const auto ev              = init_expectation_value(lattice, J, filling_factor);
+    const auto ev              = init_expectation_value(lattice, filling_factor);
     const auto L               = init_liouvillian(J);
     const auto M               = compute_kinetic_matrix(L, basis, lattice);
 

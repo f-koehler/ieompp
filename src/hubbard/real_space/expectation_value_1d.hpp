@@ -3,14 +3,16 @@
 
 #include "../include/logging.hpp"
 
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 
 template <typename Lattice, typename Float>
-auto init_expectation_value(const Lattice& lattice, const Float& J, const Float& filling_factor)
+auto init_expectation_value(const Lattice& lattice, const Float& filling_factor)
 {
     get_loggers().main->info("Start to precalculate expectation values");
     ieompp::models::hubbard_real_space::ExpectationValue1DHalfFilled<Float, Lattice> ev(
-        lattice, J, filling_factor);
+        lattice, filling_factor,
+        ieompp::models::hubbard::calculate_fermi_momentum_1d(filling_factor));
     get_loggers().main->info("Finish precalculating expectation values");
     return ev;
 }

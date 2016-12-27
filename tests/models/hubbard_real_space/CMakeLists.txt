@@ -7,6 +7,7 @@ add_executable(
 add_executable(
     models.hubbard_real_space.expectation_value
     test_expectation_value.cpp
+    expectation_value/1d.cpp
     expectation_value/1d_half_filled.cpp
     expectation_value/2d_half_filled.cpp
 )

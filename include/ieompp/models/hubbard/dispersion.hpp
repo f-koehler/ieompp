@@ -14,9 +14,9 @@ namespace ieompp
         namespace hubbard
         {
             template <typename Float>
-            Float calculate_fermi_momentum_1d(const Float& J, const Float& filling_factor)
+            Float calculate_fermi_momentum_1d(const Float& filling_factor)
             {
-                return std::acos((1 - 2 * filling_factor) / (2 * J));
+                return std::acos(1 - 2 * filling_factor);
             }
 
             template <typename FloatT>

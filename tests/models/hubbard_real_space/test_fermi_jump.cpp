@@ -5,6 +5,7 @@
 #include <ieompp/algebra/operator.hpp>
 #include <ieompp/constants.hpp>
 #include <ieompp/lattices/periodic_chain.hpp>
+#include <ieompp/models/hubbard/dispersion.hpp>
 #include <ieompp/models/hubbard_real_space/basis.hpp>
 #include <ieompp/models/hubbard_real_space/expectation_value.hpp>
 #include <ieompp/models/hubbard_real_space/fermi_jump.hpp>
@@ -26,7 +27,8 @@ TEST_CASE("fourier coefficients")
         const models::hubbard_real_space::FermiJump1D<double, Basis> jump(
             basis, lattice,
             [&ev](const typename Basis::Monomial::Operator& a,
-                  const typename Basis::Monomial::Operator& b) { return ev(a.index1, b.index1); });
+                  const typename Basis::Monomial::Operator& b) { return ev(a.index1, b.index1); },
+            models::hubbard::calculate_fermi_momentum_1d(0.5));
 
         for(auto site : lattice) {
             REQUIRE(jump.fourier_coefficients()[site].real()

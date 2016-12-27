@@ -16,7 +16,7 @@ struct Loggers {
     void init(const std::string& log_path)
     {
         sinks.push_back(std::make_shared<spdlog::sinks::stderr_sink_mt>());
-        sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_mt>(log_path));
+        sinks.push_back(std::make_shared<spdlog::sinks::simple_file_sink_mt>(log_path, true));
         main = std::make_shared<spdlog::logger>("main", sinks.begin(), sinks.end());
         io   = std::make_shared<spdlog::logger>("io", sinks.begin(), sinks.end());
         ode  = std::make_shared<spdlog::logger>("ode", sinks.begin(), sinks.end());

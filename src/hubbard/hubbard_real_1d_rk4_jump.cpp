@@ -42,13 +42,13 @@ int main(int argc, char** argv)
 
     const auto lattice = init_lattice(N, 1.);
     const auto basis   = init_basis(lattice);
-    const auto ev      = init_expectation_value(lattice, J, filling_factor);
+    const auto ev      = init_expectation_value(lattice, filling_factor);
     const auto L       = init_liouvillian(J, U);
     const auto M       = compute_matrix(L, basis, lattice);
 
     auto h                = init_vector(basis);
     const auto integrator = init_rk4(basis.size(), dt);
-    const auto fermi_jump = init_fermi_jump(basis, lattice, ev);
+    const auto fermi_jump = init_fermi_jump(basis, lattice, ev, filling_factor);
 
     double obs, t, last_measurement = 0.;
 
