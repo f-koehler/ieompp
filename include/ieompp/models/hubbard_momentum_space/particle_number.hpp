@@ -54,9 +54,7 @@ namespace ieompp
                         }
                     }
 
-                    if(result.imag() > 1e-12) {
-                        throw std::runtime_error(std::to_string(result.imag()));
-                    }
+                    assert(types::IsZero(result.imag()));
 
                     return result.real();
                 }

@@ -1,6 +1,7 @@
 #ifndef IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
 #define IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
 
+#include "ieompp/constants.hpp"
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/matrix.hpp"
 
@@ -16,7 +17,7 @@ namespace ieompp
             template <typename Float>
             Float calculate_fermi_momentum_1d(const Float& filling_factor)
             {
-                return std::acos(1 - 2 * filling_factor);
+                return filling_factor * Pi<Float>::value;
             }
 
             template <typename FloatT>

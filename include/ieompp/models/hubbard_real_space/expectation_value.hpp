@@ -73,22 +73,29 @@ namespace ieompp
                       _max_dist_y(lattice.size_y() / 2),
                       _values((_max_dist_x + 1) * (_max_dist_y + 1))
                 {
-                    static const auto prefactor = 2. / (Pi<Float>::value * Pi<Float>::value);
-                    static const auto pi_half   = HalfPi<Float>::value;
+                    static const auto prefactor1 = 2. / (Pi<Float>::value * Pi<Float>::value);
+                    static const auto prefactor2 = 1. / Pi<Float>::value;
+                    static const auto pi_half    = HalfPi<Float>::value;
 
 #pragma omp parallel for
                     for(SiteIndex dist_x = 0; dist_x <= _max_dist_x; ++dist_x) {
                         for(SiteIndex dist_y = 0; dist_y <= _max_dist_y; ++dist_y) {
                             const auto index = (_max_dist_y + 1) * dist_x + dist_y;
-                            if(dist_x == dist_y) {
-                                _values[index] = 0.5;
-                                continue;
-                            }
 
                             const auto sum  = dist_x + dist_y;
                             const auto diff = (dist_x > dist_y) ? dist_x - dist_y : dist_y - dist_x;
 
-                            _values[index] = prefactor * (std::sin(pi_half * sum) / sum)
+                            if(dist_x == dist_y) {
+                                if(dist_x == 0) {
+                                    _values[index] = 0.5;
+                                    continue;
+                                }
+
+                                _values[index] = prefactor2 * std::sin(pi_half * sum) / sum;
+                                continue;
+                            }
+
+                            _values[index] = prefactor1 * (std::sin(pi_half * sum) / sum)
                                              * (std::sin(pi_half * diff) / diff);
                         }
                     }

@@ -5,19 +5,6 @@
 
 using namespace ieompp;
 
-TEST_CASE("calculate_1d_fermi_momentum")
-{
-    const auto pi_half = ieompp::HalfPi<double>::value;
-    REQUIRE(ieompp::models::hubbard::calculate_fermi_momentum_1d(0.5) == Approx(pi_half));
-    REQUIRE(ieompp::models::hubbard::calculate_fermi_momentum_1d(0.25)
-            == Approx(1.047197551196597746154214461093167628065723133125035273658));
-
-    for(double n = 0.; n < 1.; n += 0.0001) {
-        REQUIRE(ieompp::models::hubbard::calculate_fermi_momentum_1d(n)
-                == Approx(std::acos(1 - 2 * n)));
-    }
-}
-
 TEST_CASE("dispersion_1d")
 {
     const std::vector<uint64_t> sizes = {4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};

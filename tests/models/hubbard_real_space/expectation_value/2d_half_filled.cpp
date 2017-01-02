@@ -28,13 +28,15 @@ TEST_CASE("ExpectationValue2DHalfFilled")
                     const auto lattice_dist_y = lattice.lattice_distance_y(0, index);
 
                     auto expectation = 0.5;
+                    const auto sum   = lattice_dist_x + lattice_dist_y;
+                    const auto diff  = (lattice_dist_x > lattice_dist_y)
+                                          ? lattice_dist_x - lattice_dist_y
+                                          : lattice_dist_y - lattice_dist_x;
                     if(lattice_dist_x != lattice_dist_y) {
-                        const auto sum  = lattice_dist_x + lattice_dist_y;
-                        const auto diff = (lattice_dist_x > lattice_dist_y)
-                                              ? lattice_dist_x - lattice_dist_y
-                                              : lattice_dist_y - lattice_dist_x;
                         expectation = prefactor1 * (std::sin(pi_half * sum) / sum)
                                       * (std::sin(pi_half * diff) / diff);
+                    } else if(lattice_dist_x != 0) {
+                        expectation = prefactor2 * std::sin(pi_half * sum) / sum;
                     }
                 }
             }
