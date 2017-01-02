@@ -18,6 +18,9 @@ target_link_libraries(hubbard_real_1d_rk4_jump ${Boost_LIBRARIES})
 add_executable(hubbard_real_1d_kinetic_rk4 hubbard_real_1d_kinetic_rk4.cpp)
 target_link_libraries(hubbard_real_1d_kinetic_rk4 ${Boost_LIBRARIES})
 
+add_executable(hubbard_real_1d_kinetic_rk4_coefficients hubbard_real_1d_kinetic_rk4_coefficients.cpp)
+target_link_libraries(hubbard_real_1d_kinetic_rk4_coefficients ${Boost_LIBRARIES})
+
 add_executable(hubbard_real_1d_kinetic_theory hubbard_real_1d_kinetic_theory.cpp)
 target_link_libraries(hubbard_real_1d_kinetic_theory ${Boost_LIBRARIES})
 
@@ -32,6 +35,7 @@ install(
         hubbard_commutators_real_space
         hubbard_momentum_1d_rk4
         hubbard_real_1d_kinetic_rk4
+        hubbard_real_1d_kinetic_rk4_coefficients
         hubbard_real_1d_kinetic_theory
         hubbard_real_1d_rk4
         hubbard_real_1d_rk4_coefficients
