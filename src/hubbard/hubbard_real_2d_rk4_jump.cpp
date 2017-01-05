@@ -7,7 +7,7 @@
 #include "real_space/liouvillian.hpp"
 #include "real_space/matrix.hpp"
 #include "real_space/periodic_square_lattice.hpp"
-#include "real_space/site_occupation.hpp"
+#include <ieompp/models/hubbard_real_space/fermi_jump/2d.hpp>
 using namespace std;
 
 namespace hubbard = ieompp::models::hubbard_real_space;
@@ -27,6 +27,8 @@ int main(int argc, char** argv)
         ("dt", make_value<double>(0.01), "step width of RK4 integrator")
         ("t_end", make_value<double>(10), "stop time for simulation")
         ("measurement_interval", make_value<uint64_t>()->default_value(100), "interval between measurements in units of dt")
+        ("kx", make_value<double>()->default_value(ieompp::HalfPi<double>::value), "x component of the fermi momentum")
+        ("ky", make_value<double>()->default_value(ieompp::HalfPi<double>::value), "y component of the fermi momentum")
         ;
     // clang-format on
 
@@ -39,6 +41,8 @@ int main(int argc, char** argv)
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
+    const auto kx                   = app.variables["kx"].as<double>();
+    const auto ky                   = app.variables["ky"].as<double>();
 
     const auto lattice         = init_lattice(Nx, Ny);
     const auto basis           = init_basis(lattice);
@@ -46,16 +50,20 @@ int main(int argc, char** argv)
     const auto ev              = init_expectation_value(lattice);
     const auto L               = init_liouvillian(J, U);
     const auto M               = compute_matrix(L, basis, lattice);
+    const auto jump            = hubbard::FermiJump2D<double, Basis>(
+        basis, lattice,
+        [&ev](const typename Basis::Monomial::Operator& a,
+              const typename Basis::Monomial::Operator& b) { return ev(a.index1, b.index1); },
+        typename decltype(lattice)::Vector{kx, ky});
 
     auto h                     = init_vector(basis);
     const auto integrator      = init_rk4(basis.size(), dt);
-    const auto site_occupation = init_site_occupation(basis, conjugate_basis, ev);
 
     double obs, t, last_measurement = 0.;
 
     get_loggers().main->info("Measuring at t=0");
-    obs = site_occupation(h);
-    get_loggers().main->info(u8"  <n_{{0,↑}}>(0) = {}", obs);
+    obs = jump(h);
+    get_loggers().main->info(u8"  Δn_{{k_F,↑}}(0) = {}", obs);
     app.output_file << 0 << '\t' << obs << '\n';
     app.output_file.flush();
     get_loggers().main->info("Finish measurement at t=0");
@@ -66,8 +74,8 @@ int main(int argc, char** argv)
     for(t = 0.; t < t_end;) {
         if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
             get_loggers().main->info("Measuring at t={}", t);
-            obs = site_occupation(h);
-            get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
+            obs = jump(h);
+            get_loggers().main->info(u8"  Δn_{{k_F,↑}}({}) = {}", t, obs);
             app.output_file << t << '\t' << obs << '\n';
             app.output_file.flush();
             get_loggers().main->info("Finish measurement at t={}", t);
@@ -82,8 +90,8 @@ int main(int argc, char** argv)
 
     if(has_time_interval_passed(t, last_measurement, dt, measurement_interval)) {
         get_loggers().main->info("Measuring at t={}", t);
-        obs = site_occupation(h);
-        get_loggers().main->info(u8"  <n_{{0,↑}}>({}) = {}", t, obs);
+        obs = jump(h);
+        get_loggers().main->info(u8"  Δn_{{k_F,↑}}({}) = {}", t, obs);
         app.output_file << t << '\t' << obs << '\n';
         app.output_file.flush();
         get_loggers().main->info("Finish measurement at t={}", t);

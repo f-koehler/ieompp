@@ -26,8 +26,8 @@ target_link_libraries(hubbard_real_1d_kinetic_theory ${Boost_LIBRARIES})
 
 add_executable(hubbard_dispersion_1d hubbard_dispersion_1d.cpp)
 
-add_executable(hubbard_real_2d_rk4 hubbard_real_2d_rk4.cpp)
-target_link_libraries(hubbard_real_2d_rk4 ${Boost_LIBRARIES})
+add_executable(hubbard_real_2d_rk4_jump hubbard_real_2d_rk4_jump.cpp)
+target_link_libraries(hubbard_real_2d_rk4_jump ${Boost_LIBRARIES})
 
 install(
     TARGETS
@@ -40,7 +40,7 @@ install(
         hubbard_real_1d_rk4
         hubbard_real_1d_rk4_coefficients
         hubbard_real_1d_rk4_jump
-        hubbard_real_2d_rk4
+        hubbard_real_2d_rk4_jump
     RUNTIME
     DESTINATION bin
     CONFIGURATIONS Release

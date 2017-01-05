@@ -47,7 +47,7 @@ namespace ieompp
                 {
 #pragma omp parallel for
                     for(Index i = 0; i < basis.N; ++i) {
-                        const auto prod = types::dot_product(k_F, lattice[basis[i].index1]);
+                        const auto prod = types::dot_product(k_F, lattice[basis[i].front().index1]);
 
                         // calculate e^{i k_F * r_i}
                         _fourier_coefficients[i] = Complex(std::cos(prod), std::sin(prod));
