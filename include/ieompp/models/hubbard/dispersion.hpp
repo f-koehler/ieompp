@@ -1,6 +1,7 @@
 #ifndef IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
 #define IEOMPP_MODELS_HUBBARD_DISPERSION_HPP_
 
+#include "ieompp/constants.hpp"
 #include "ieompp/types/dot_product.hpp"
 #include "ieompp/types/matrix.hpp"
 
@@ -13,6 +14,12 @@ namespace ieompp
     {
         namespace hubbard
         {
+            template <typename Float>
+            Float calculate_fermi_momentum_1d(const Float& filling_factor)
+            {
+                return filling_factor * Pi<Float>::value;
+            }
+
             template <typename FloatT>
             class Dispersion
             {
@@ -39,7 +46,7 @@ namespace ieompp
                         for(const auto& vec : lattice_vectors) {
                             val += std::cos(types::dot_product(momentum, vec));
                         }
-                        _values[i] = -2. * Lattice::coordination_number * J * val;
+                        _values[i] = -2. * J * val;
                     }
                 }
 

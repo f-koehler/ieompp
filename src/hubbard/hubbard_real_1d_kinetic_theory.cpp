@@ -59,7 +59,7 @@ int main()
     }
 
     const hubbard::ExpectationValue1DHalfFilled<double, decltype(lattice)> expectation_value(
-        lattice);
+        lattice, 1., 0.5);
 
     vector<vector<complex<double>>> results;
 #pragma omp parallel

@@ -1,6 +1,7 @@
 #ifndef IEOMPP_PLATFORM_HPP_
 #define IEOMPP_PLATFORM_HPP_
 
+#include "ieompp/openmp.hpp"
 #include "ieompp/string.hpp"
 #include "ieompp/version.hpp"
 
@@ -112,6 +113,8 @@ namespace ieompp
             return Endian::Unkown;
 #endif
         }
+
+        static auto max_threads() { return compose(omp_get_max_threads()); }
     };
 
     std::ostream& operator<<(std::ostream& strm, Platform::Endian e)

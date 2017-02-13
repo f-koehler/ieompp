@@ -50,7 +50,6 @@ namespace ieompp
             const Float& dx() const;
             const std::array<Vector, 1>& lattice_vectors() const;
 
-            template <uint64_t axis = 0>
             SiteIndex lattice_distance(const SiteIndex& a, const SiteIndex& b) const;
 
             bool neighboring(SiteIndex a, SiteIndex b) const;
@@ -176,7 +175,6 @@ namespace ieompp
         }
 
         template <typename Float, typename SiteIndex>
-        template <uint64_t axis>
         SiteIndex PeriodicChain<Float, SiteIndex>::lattice_distance(const SiteIndex& a,
                                                                     const SiteIndex& b) const
         {

@@ -26,6 +26,7 @@ int main(int argc, char** argv)
         ("dt", make_value<double>(0.01), "step width of RK4 integrator")
         ("t_end", make_value<double>(10), "stop time for simulation")
         ("measurement_interval", make_value<uint64_t>()->default_value(100), "interval between measurements in units of dt")
+        ("filling_factor", make_value<double>(0.5), "filling factor of the initial Fermi sea")
         ;
     // clang-format on
 
@@ -37,16 +38,17 @@ int main(int argc, char** argv)
     const auto dt                   = app.variables["dt"].as<double>();
     const auto t_end                = app.variables["t_end"].as<double>();
     const auto measurement_interval = app.variables["measurement_interval"].as<uint64_t>();
+    const auto filling_factor       = app.variables["filling_factor"].as<double>();
 
     const auto lattice = init_lattice(N, 1.);
     const auto basis   = init_basis(lattice);
-    const auto ev      = init_expectation_value(lattice);
+    const auto ev      = init_expectation_value(lattice, filling_factor);
     const auto L       = init_liouvillian(J, U);
     const auto M       = compute_matrix(L, basis, lattice);
 
     auto h                = init_vector(basis);
     const auto integrator = init_rk4(basis.size(), dt);
-    const auto fermi_jump = init_fermi_jump(basis, lattice, ev);
+    const auto fermi_jump = init_fermi_jump(basis, lattice, ev, filling_factor);
 
     double obs, t, last_measurement = 0.;
 

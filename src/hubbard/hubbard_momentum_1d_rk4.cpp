@@ -29,13 +29,13 @@ int main(int argc, char** argv)
     Application app(argc, argv);
 
     /* const auto checkpoint_interval  = app.variables["checkpoint_interval"].as<uint64_t>(); */
-    const auto N = app.variables["N"].as<uint64_t>();
-    const auto J = app.variables["J"].as<double>();
-    const auto U = app.variables["U"].as<double>();
-    /* const auto dt                   = app.variables["dt"].as<double>(); */
-    /* const auto t_end                = app.variables["t_end"].as<double>(); */
-    /* const auto measurement_interval = app.variables["measurement_interval"].as<double>(); */
-    const auto k_idx = 0ul;
+    const auto N                    = app.variables["N"].as<uint64_t>();
+    const auto J                    = app.variables["J"].as<double>();
+    const auto U                    = app.variables["U"].as<double>();
+    const auto dt                   = app.variables["dt"].as<double>();
+    const auto t_end                = app.variables["t_end"].as<double>();
+    const auto measurement_interval = app.variables["measurement_interval"].as<double>();
+    const auto k_idx                = N/2;
 
     // setting up lattice and brillouin_zone
     BrillouinZone brillouin_zone(N);
@@ -51,9 +51,23 @@ int main(int argc, char** argv)
     write_matrix_file(app.matrix_path, M);
 
     // setting up initial vector
-    auto h = init_vector(basis);
+    auto h                = init_vector(basis);
+    const auto integrator = init_rk4(basis.size(), dt);
+    hubbard::ParticleNumber<double, Basis3> particle_number(basis, conjugate_basis, L.dispersion,
+                                                            0.);
 
-    hubbard::ParticleNumber<double, Basis3> obs(basis, conjugate_basis, L.dispersion, 0.);
+    double obs, t, last_measurement = 0.;
+
+    cout << particle_number(h) << '\n';
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    integrator.step(M, h);
+    cout <<  particle_number(h) << '\n';
 
     return 0;
 }
